@@ -1,0 +1,1 @@
+const pathToAppLogo = 'assets/images/logo.png';
