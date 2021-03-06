@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(Idealog());
 
-class MyApp extends StatelessWidget {
+class Idealog extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

@@ -7,6 +7,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+//   run flutter pub get
+// flutter pub run flutter_launcher_icons:main
   //add redirect to login screen
   @override
   Widget build(BuildContext context) {
