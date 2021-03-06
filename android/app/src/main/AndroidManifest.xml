@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mobile.idealog">
    <application
-        android:label="idealog"
+        android:label="Idealog"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

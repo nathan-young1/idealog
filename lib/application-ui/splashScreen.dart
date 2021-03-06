@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/global/strings.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -7,15 +11,34 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-//   run flutter pub get
-// flutter pub run flutter_launcher_icons:main
-  //add redirect to login screen
+
+  Timer? timer;
+  changeRoute() =>Navigator.pushReplacementNamed(context, 'AuthPage');
+  @override
+    void initState() {
+      // TODO: implement initState
+      super.initState();
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+        timer = Timer(Duration(seconds: 2),()=>changeRoute());
+        await Firebase.initializeApp();
+      });
+    }
+
+    @override
+      void dispose() {
+        // TODO: implement dispose
+        super.dispose();
+        timer!.cancel();
+      }
+      
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Center(
-        child: Image.asset(pathToAppLogo)
+        child: Hero(
+          tag: 'Logo',
+          child: Image.asset(pathToAppLogo,height: 150.h,width: 150.w,))
       ),),
     );
   }
