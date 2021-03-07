@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_screenutil/screen_util.dart';
+import 'package:idealog/Schedule/addSchedule/ui/addSchedule.dart';
+import 'package:idealog/Schedule/checkSchedule/checkSchedule.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/idea/newIdea/ui/newIdea.dart';
 
@@ -33,7 +35,9 @@ class Idealog extends StatelessWidget {
             routes: {
               '/': (context) => SplashScreen(),
               'AuthPage': (context) => Login(),
-              'AddNewIdea': (context) => NewIdea()
+              'AddNewIdea': (context) => NewIdea(),
+              'AddSchedule': (context) => AddSchedule(),
+              'CheckSchedule': (context) => CheckSchedule()
             },
           ),
         );

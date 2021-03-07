@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+enum repeatSchedule{DAILY,WEEKLY,MONTHLY,YEARLY}
+
+class AddSchedule extends StatefulWidget {
+  @override
+  _AddScheduleState createState() => _AddScheduleState();
+}
+
+class _AddScheduleState extends State<AddSchedule> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: Padding(
+            padding: EdgeInsets.all(30.w),
+            child: Icon(Icons.arrow_back_ios,size: 35.r,),
+          ),
+          title: Padding(
+            padding: EdgeInsets.only(top: 30.w),
+            child: Text('ADD SCHEDULE'),
+          ),
+          shadowColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          toolbarHeight: kToolbarHeight*1.2,
+        ),
+        body: Form(
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.text_fields),
+                  labelText: 'Title'
+                ),
+              ),
+              Row(
+                children: [
+                Icon(Icons.watch),
+                Container(
+                  width: 50.w,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Start time'
+                    ),
+                  ),
+                ),
+                Text('To'),
+                Container(
+                  width: 50.w,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'End time'
+                    ),
+                  ),
+                ),
+              ],),
+              TextFormField(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.date_range),
+                  labelText: 'Date',
+                ),
+              ),
+              TextFormField(
+                maxLines: null,
+                minLines: 5,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.text_fields),
+                  labelText: 'More details on schedule...'
+                ),
+              ),
+              Row(
+                children: [
+                  Text('Repeat: '),
+                  Container(
+                    width: 150.w,
+                    child: DropdownButtonFormField(
+                      hint: Text('NONE'),
+                      onChanged: (value){
+                        print(value);
+                      },
+                      items: [
+                        DropdownMenuItem(
+                          value: repeatSchedule.DAILY,
+                          child: Text('Daily')),
+                        DropdownMenuItem(
+                          value: repeatSchedule.WEEKLY,
+                          child: Text('Weekly')),
+                        DropdownMenuItem(
+                          value: repeatSchedule.MONTHLY,
+                          child: Text('Monthly')),
+                        DropdownMenuItem(
+                          value: repeatSchedule.YEARLY,
+                          child: Text('Yearly'))
+                        ]),
+                  )
+                ],
+              ),
+              CheckboxListTile(
+               value: true,
+               onChanged: (value){},
+               title: Text('Set alarm for task'),),
+            ],
+          ),
+        ),
+        bottomNavigationBar: Container(
+            height: 50,
+            color: Colors.green,
+            child: Center(
+              child: ElevatedButton(
+                onPressed: ()=> Navigator.pushNamed(context, 'CheckSchedule'),
+                child: Text('Save')),
+            ),),
+      ),
+    );
+  }
+}

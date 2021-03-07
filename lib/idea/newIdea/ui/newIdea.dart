@@ -26,7 +26,7 @@ class _NewIdeaState extends State<NewIdea> {
             padding: EdgeInsets.only(top: 30.w),
             child: Text('ADD IDEA'),
           ),
-          titleTextStyle: TextStyle(fontSize: 19),
+          titleTextStyle: TextStyle(fontSize: 30),
         ),
         body: SingleChildScrollView(
           child: Form(
@@ -101,7 +101,9 @@ class _NewIdeaState extends State<NewIdea> {
             height: 50,
             color: Colors.green,
             child: Center(
-              child: Text('Save'),
+              child: ElevatedButton(
+                onPressed: ()=>Navigator.pushNamed(context, 'AddSchedule'),
+                child: Text('Save')),
             ),),
       ),
     );
