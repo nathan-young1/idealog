@@ -2,3 +2,4 @@
 ...Remeber to solve our logo problem
 ...To set alarm for schedule user should be pro
 ...add select multiple date for schedule
+...add a dropdown button to navigate through the years

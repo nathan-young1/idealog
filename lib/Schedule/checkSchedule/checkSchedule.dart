@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CheckSchedule extends StatelessWidget {
+class CheckSchedule extends StatefulWidget {
 
+  @override
+  _CheckScheduleState createState() => _CheckScheduleState();
+}
+
+class _CheckScheduleState extends State<CheckSchedule> {
   DateRangePickerController? _controller = DateRangePickerController()..view = DateRangePickerView.month;
-
   @override
   Widget build(BuildContext context) {
     Map<int,int> schDay = {1:5,9:2,20:1};
+    Map<int,String> monthInString = {1:'Jan',2:'Feb',3:'Mar',4:'Apr',5:'May',6:'Jun',
+    7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'};
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -26,6 +32,7 @@ class CheckSchedule extends StatelessWidget {
         ),
         body: Container(
           child: SfDateRangePicker(
+            // minDate: DateTime.now(),
             controller: _controller,
             showNavigationArrow: true,
             todayHighlightColor: Colors.deepOrange,
@@ -33,8 +40,15 @@ class CheckSchedule extends StatelessWidget {
             onSelectionChanged: (value){
               print(value.value);
             },
+            onViewChanged: (value){
+              print(value.view);
+              if(value.view == DateRangePickerView.century){
+                print('true');
+                setState(()=>_controller!..view = DateRangePickerView.decade);
+              }
+            },
             navigationDirection: DateRangePickerNavigationDirection.vertical,
-            allowViewNavigation: true,
+            // allowViewNavigation: false,
             cellBuilder: (BuildContext context, DateRangePickerCellDetails cellDetails){
               
           if (_controller!.view == DateRangePickerView.month) {
@@ -60,7 +74,7 @@ class CheckSchedule extends StatelessWidget {
             width: cellDetails.bounds.width,
             height: cellDetails.bounds.height,
             alignment: Alignment.center,
-            child: Text(cellDetails.date.month.toString()),
+            child: Text(monthInString[cellDetails.date.month]!),
           );
         } else if (_controller!.view == DateRangePickerView.decade) {
           return Container(
