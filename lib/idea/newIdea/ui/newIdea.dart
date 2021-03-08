@@ -1,5 +1,9 @@
+import 'dart:isolate';
+
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:idealog/customAppBar/appBar.dart';
 
 class NewIdea extends StatefulWidget {
   @override
@@ -14,20 +18,9 @@ class _NewIdeaState extends State<NewIdea> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          shadowColor: Colors.transparent,
-          backgroundColor: Colors.transparent,
-          toolbarHeight: kToolbarHeight*1.2,
-          leading: Padding(
-            padding: EdgeInsets.all(30.w),
-            child: Icon(Icons.arrow_back_ios,size: 35.r,),
-          ),
-          title: Padding(
-            padding: EdgeInsets.only(top: 30.w),
-            child: Text('ADD IDEA'),
-          ),
-          titleTextStyle: TextStyle(fontSize: 30),
-        ),
+        appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight*1.2),
+              child: CustomAppBar(title: 'ADD IDEA')),
         body: SingleChildScrollView(
           child: Form(
             child: Column(
@@ -102,7 +95,19 @@ class _NewIdeaState extends State<NewIdea> {
             color: Colors.green,
             child: Center(
               child: ElevatedButton(
-                onPressed: ()=>Navigator.pushNamed(context, 'AddSchedule'),
+                onPressed: () async {
+                  await AndroidAlarmManager.initialize();
+                  await AndroidAlarmManager.oneShotAt(
+                  DateTime.now(),2, (){
+                    print('i have been runned');
+                  },
+                  rescheduleOnReboot: true,
+                  wakeup: true,
+                  alarmClock: true,
+                  allowWhileIdle: true,
+                  exact: true);
+                  //Navigator.pushNamed(context, 'AddSchedule');
+                },
                 child: Text('Save')),
             ),),
       ),

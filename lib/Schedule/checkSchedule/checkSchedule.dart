@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/customAppBar/appBar.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -17,19 +18,9 @@ class _CheckScheduleState extends State<CheckSchedule> {
     7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'};
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          leading: Padding(
-            padding: EdgeInsets.all(30.w),
-            child: Icon(Icons.arrow_back_ios,size: 35.r,),
-          ),
-          title: Padding(
-            padding: EdgeInsets.only(top: 30.w),
-            child: Text('Check Schedule'),
-          ),
-          shadowColor: Colors.transparent,
-          backgroundColor: Colors.transparent,
-          toolbarHeight: kToolbarHeight*1.2,
-        ),
+        appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight*1.2),
+              child: CustomAppBar(title: 'Check Schedule')),
         body: Container(
           child: SfDateRangePicker(
             // minDate: DateTime.now(),

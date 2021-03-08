@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:idealog/customAppBar/appBar.dart';
 
 enum repeatSchedule{DAILY,WEEKLY,MONTHLY,YEARLY}
 
@@ -13,19 +14,9 @@ class _AddScheduleState extends State<AddSchedule> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          leading: Padding(
-            padding: EdgeInsets.all(30.w),
-            child: Icon(Icons.arrow_back_ios,size: 35.r,),
-          ),
-          title: Padding(
-            padding: EdgeInsets.only(top: 30.w),
-            child: Text('ADD SCHEDULE'),
-          ),
-          shadowColor: Colors.transparent,
-          backgroundColor: Colors.transparent,
-          toolbarHeight: kToolbarHeight*1.2,
-        ),
+        appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight*1.2),
+              child: CustomAppBar(title: 'ADD SCHEDULE')),
         body: Form(
           child: Column(
             children: [
