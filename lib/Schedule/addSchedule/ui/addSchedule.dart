@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
+import 'package:flutter/services.dart';
 
 enum repeatSchedule{DAILY,WEEKLY,MONTHLY,YEARLY}
 
@@ -10,6 +11,29 @@ class AddSchedule extends StatefulWidget {
 }
 
 class _AddScheduleState extends State<AddSchedule> {
+  static const platform = const MethodChannel('com.idealog.alarmServiceCaller');
+  createNewAlarm() async{
+    Map<String,dynamic> alarmConfiguration = {
+      'id': 9000
+    };
+
+    try{
+      String result = await platform.invokeMethod("setAlarm",alarmConfiguration);
+      print(result);
+    }catch(e){
+      print(e);
+    }
+  }
+
+  cancelAlarm({int id = 9000}) async {
+    try{
+      String result = await platform.invokeMethod("cancelAlarm");
+      print(result);
+    }catch(e){
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

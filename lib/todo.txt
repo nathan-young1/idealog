@@ -3,3 +3,7 @@
 ...To set alarm for schedule user should be pro
 ...add select multiple date for schedule
 ...add a dropdown button to navigate through the years
+
+        For alarm
+            ..set deadline (day and optionally time)
+            ..set Date & Time and repeat daily,weekly,montly
