@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:idealog/customAppBar/appBar.dart';
+import 'package:flutter/services.dart';
 
 enum repeatSchedule{DAILY,WEEKLY,MONTHLY,YEARLY}
 
@@ -9,23 +11,37 @@ class AddSchedule extends StatefulWidget {
 }
 
 class _AddScheduleState extends State<AddSchedule> {
+  static const platform = const MethodChannel('com.idealog.alarmServiceCaller');
+
+  createNewAlarm() async{
+    Map<String,dynamic> alarmConfiguration = {
+      'id': 9000
+    };
+
+    try{
+      String result = await platform.invokeMethod("setAlarm",alarmConfiguration);
+      print(result);
+    }catch(e){
+      print(e);
+    }
+  }
+
+  cancelAlarm({int id = 9000}) async {
+    try{
+      String result = await platform.invokeMethod("cancelAlarm");
+      print(result);
+    }catch(e){
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          leading: Padding(
-            padding: EdgeInsets.all(30.w),
-            child: Icon(Icons.arrow_back_ios,size: 35.r,),
-          ),
-          title: Padding(
-            padding: EdgeInsets.only(top: 30.w),
-            child: Text('ADD SCHEDULE'),
-          ),
-          shadowColor: Colors.transparent,
-          backgroundColor: Colors.transparent,
-          toolbarHeight: kToolbarHeight*1.2,
-        ),
+        appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight*1.2),
+              child: CustomAppBar(title: 'ADD SCHEDULE')),
         body: Form(
           child: Column(
             children: [
@@ -109,7 +125,10 @@ class _AddScheduleState extends State<AddSchedule> {
             color: Colors.green,
             child: Center(
               child: ElevatedButton(
-                onPressed: ()=> Navigator.pushNamed(context, 'CheckSchedule'),
+                onPressed: () async { 
+                  await createNewAlarm();
+                  //await cancelAlarm();
+                  Navigator.pushNamed(context, 'CheckSchedule');},
                 child: Text('Save')),
             ),),
       ),
