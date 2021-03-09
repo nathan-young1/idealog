@@ -57,7 +57,9 @@ public class MainActivity extends FlutterActivity {
         Intent toCallTheBroadcastReciever = new Intent();
         toCallTheBroadcastReciever.setAction("com.alarm.broadcastNotification");
         toCallTheBroadcastReciever.addCategory("android.intent.category.DEFAULT");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,toCallTheBroadcastReciever,0);
+        //put intent id
+        toCallTheBroadcastReciever.putExtra("intent-id",20);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,20,toCallTheBroadcastReciever,0);
 
         //check for type of alarm either normal or repeating
         //guide is at 12.58 of the video
@@ -69,7 +71,12 @@ public class MainActivity extends FlutterActivity {
         Intent toCallTheBroadcastReciever = new Intent();
         toCallTheBroadcastReciever.setAction("com.alarm.broadcastNotification");
         toCallTheBroadcastReciever.addCategory("android.intent.category.DEFAULT");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,toCallTheBroadcastReciever,0);
+        //put intent id
+        toCallTheBroadcastReciever.putExtra("intent-id",20);
+        //first code
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,20,toCallTheBroadcastReciever,0);
+        //either this PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_CANCEL_CURRENT 
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,20,toCallTheBroadcastReciever,PendingIntent.FLAG_UPDATE_CURRENT);
         //TO CANCEL THE ALARM
         //find out how to cancel the alarm by the id
         System.out.println("The alarm has been canceled");

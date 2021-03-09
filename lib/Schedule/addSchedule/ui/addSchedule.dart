@@ -12,6 +12,7 @@ class AddSchedule extends StatefulWidget {
 
 class _AddScheduleState extends State<AddSchedule> {
   static const platform = const MethodChannel('com.idealog.alarmServiceCaller');
+
   createNewAlarm() async{
     Map<String,dynamic> alarmConfiguration = {
       'id': 9000
@@ -124,7 +125,10 @@ class _AddScheduleState extends State<AddSchedule> {
             color: Colors.green,
             child: Center(
               child: ElevatedButton(
-                onPressed: ()=> Navigator.pushNamed(context, 'CheckSchedule'),
+                onPressed: () async { 
+                  await createNewAlarm();
+                  //await cancelAlarm();
+                  Navigator.pushNamed(context, 'CheckSchedule');},
                 child: Text('Save')),
             ),),
       ),
