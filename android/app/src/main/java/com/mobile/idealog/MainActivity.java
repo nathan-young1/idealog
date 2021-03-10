@@ -24,12 +24,6 @@ public class MainActivity extends FlutterActivity {
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-        System.out.println("activity has been created");
-    }
-
-    @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CHANNEL).setMethodCallHandler(new MethodChannel.MethodCallHandler() {
@@ -55,29 +49,36 @@ public class MainActivity extends FlutterActivity {
         alarmContentText = "new alarm just texting";
         //remeber to set a different id for each notification
         alarmNotificationId = 9000;
-        Intent toCallTheBroadcastReciever = new Intent();
-        toCallTheBroadcastReciever.setAction("com.alarm.broadcastNotification");
-        toCallTheBroadcastReciever.addCategory("android.intent.category.DEFAULT");
+        Intent toCallTheBroadcastReciever = new Intent(this,ListenForAlarm.class);
+        toCallTheBroadcastReciever.setAction("com.alarm.broadcast_notification");
         //put intent id
         toCallTheBroadcastReciever.putExtra("intent-id",20);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,20,toCallTheBroadcastReciever,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,toCallTheBroadcastReciever,0);
 
         //check for type of alarm either normal or repeating
         //guide is at 12.58 of the video
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),1000,pendingIntent);
-        System.out.println("The alarm has been scheduled");
+        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),1000,pendingIntent);
+        //set time
+        Date date = new Date();
+        Calendar time = Calendar.getInstance();
+        time.setTime(date);
+        time.set(Calendar.HOUR_OF_DAY,3);
+        time.set(Calendar.MINUTE,7);
+        time.set(Calendar.SECOND,0);
+        time.set(Calendar.AM_PM,Calendar.PM);
+        alarmManager.set(AlarmManager.RTC_WAKEUP,time.getTimeInMillis(),pendingIntent);
+        System.out.println("The alarm has been scheduled at "+time.getTime());
     }
 
     public void cancelAlarm(){
         Intent toCallTheBroadcastReciever = new Intent();
-        toCallTheBroadcastReciever.setAction("com.alarm.broadcastNotification");
-        toCallTheBroadcastReciever.addCategory("android.intent.category.DEFAULT");
+        toCallTheBroadcastReciever.setAction("com.alarm.broadcast_notification");
         //put intent id
         toCallTheBroadcastReciever.putExtra("intent-id",20);
         //first code
 //        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,20,toCallTheBroadcastReciever,0);
         //either this PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_CANCEL_CURRENT 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,20,toCallTheBroadcastReciever,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,toCallTheBroadcastReciever,PendingIntent.FLAG_UPDATE_CURRENT);
         //TO CANCEL THE ALARM
         //find out how to cancel the alarm by the id
         System.out.println("The alarm has been canceled");

@@ -125,13 +125,22 @@ class _AddScheduleState extends State<AddSchedule> {
             height: 50,
             color: Colors.green,
             child: Center(
-              child: ElevatedButton(
-                onPressed: () async { 
-                  await createNewAlarm();
-                  //await cancelAlarm();
-                  //Navigator.pushNamed(context, 'CheckSchedule');
-                  },
-                child: Text('Save')),
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () async { 
+                      await createNewAlarm();
+                      //await cancelAlarm();
+                      //Navigator.pushNamed(context, 'CheckSchedule');
+                      },
+                    child: Text('Save')),
+                    ElevatedButton(
+                    onPressed: () async { 
+                      await cancelAlarm();
+                      },
+                    child: Text('Cancel')),
+                ],
+              ),
             ),),
       ),
     );
