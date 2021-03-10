@@ -26,8 +26,7 @@ public class MainActivity extends FlutterActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-
+        System.out.println("activity has been created");
     }
 
     @Override
@@ -36,9 +35,11 @@ public class MainActivity extends FlutterActivity {
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CHANNEL).setMethodCallHandler(new MethodChannel.MethodCallHandler() {
             @Override
             public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+                //intialize alarm manager
+                alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 final Map<String,Object> configuration = call.arguments();
                 if(call.method.equals("setAlarm")){
-                    System.out.println("Your configuration id is: " + (String)configuration.get("id"));
+                    System.out.println("Your configuration id is: " + (int)configuration.get("id"));
                     setAlarm();
                     result.success("Finished successfully");
                 }else if(call.method.equals("cancelAlarm")){
@@ -63,7 +64,7 @@ public class MainActivity extends FlutterActivity {
 
         //check for type of alarm either normal or repeating
         //guide is at 12.58 of the video
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),1000*30,pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),1000,pendingIntent);
         System.out.println("The alarm has been scheduled");
     }
 

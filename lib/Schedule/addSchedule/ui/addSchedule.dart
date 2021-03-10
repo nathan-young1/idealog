@@ -14,6 +14,7 @@ class _AddScheduleState extends State<AddSchedule> {
   static const platform = const MethodChannel('com.idealog.alarmServiceCaller');
 
   createNewAlarm() async{
+    //remember to change configuaration to int in native java code
     Map<String,dynamic> alarmConfiguration = {
       'id': 9000
     };
@@ -128,7 +129,8 @@ class _AddScheduleState extends State<AddSchedule> {
                 onPressed: () async { 
                   await createNewAlarm();
                   //await cancelAlarm();
-                  Navigator.pushNamed(context, 'CheckSchedule');},
+                  //Navigator.pushNamed(context, 'CheckSchedule');
+                  },
                 child: Text('Save')),
             ),),
       ),

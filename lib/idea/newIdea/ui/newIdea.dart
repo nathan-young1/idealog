@@ -1,6 +1,4 @@
 import 'dart:isolate';
-
-import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
@@ -95,18 +93,8 @@ class _NewIdeaState extends State<NewIdea> {
             color: Colors.green,
             child: Center(
               child: ElevatedButton(
-                onPressed: () async {
-                  await AndroidAlarmManager.initialize();
-                  await AndroidAlarmManager.oneShotAt(
-                  DateTime.now(),2, (){
-                    print('i have been runned');
-                  },
-                  rescheduleOnReboot: true,
-                  wakeup: true,
-                  alarmClock: true,
-                  allowWhileIdle: true,
-                  exact: true);
-                  //Navigator.pushNamed(context, 'AddSchedule');
+                onPressed: (){
+                  Navigator.pushNamed(context, 'AddSchedule');
                 },
                 child: Text('Save')),
             ),),
