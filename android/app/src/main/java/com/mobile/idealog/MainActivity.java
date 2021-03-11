@@ -33,8 +33,10 @@ public class MainActivity extends FlutterActivity {
                 alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 final Map<String,Object> configuration = call.arguments();
                 if(call.method.equals("setAlarm")){
-                    System.out.println("Your configuration id is: " + (int)configuration.get("id"));
-                    setAlarm();
+                    int notificationId = (int)configuration.get("id");
+                    String alarmText = (String)configuration.get("alarmText");
+                    System.out.println("Your configuration id is: " + notificationId);
+                    setAlarm(notificationId,alarmText);
                     result.success("Finished successfully");
                 }else if(call.method.equals("cancelAlarm")){
                     cancelAlarm();
@@ -44,11 +46,11 @@ public class MainActivity extends FlutterActivity {
         });
     }
 
-    public void setAlarm(){
+    public void setAlarm(int notificationId,String alarmText){
         //remeber to set the contentText
-        alarmContentText = "new alarm just texting";
+        alarmContentText = alarmText;
         //remeber to set a different id for each notification
-        alarmNotificationId = 90;
+        alarmNotificationId = notificationId;
         Intent toCallTheBroadcastReciever = new Intent(this,ListenForAlarm.class);
         toCallTheBroadcastReciever.setAction("com.alarm.broadcast_notification");
         //put intent id
