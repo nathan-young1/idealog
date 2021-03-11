@@ -4,6 +4,7 @@ import 'package:idealog/customAppBar/appBar.dart';
 import 'package:flutter/services.dart';
 
 enum repeatSchedule{DAILY,WEEKLY,MONTHLY,YEARLY}
+enum NotificationType{IDEAS,SCHEDULE}
 
 class AddSchedule extends StatefulWidget {
   @override
@@ -13,9 +14,12 @@ class AddSchedule extends StatefulWidget {
 class _AddScheduleState extends State<AddSchedule> {
   static const platform = const MethodChannel('com.idealog.alarmServiceCaller');
 
-  createNewAlarm() async{
+  createNewAlarm({required int? id,required String? alarmText,required NotificationType typeOfNotification}) async{
+    //remember to change configuaration to int in native java code
     Map<String,dynamic> alarmConfiguration = {
-      'id': 9000
+      'id': id!,
+      'alarmText': alarmText!,
+      'typeOfNotification': (typeOfNotification == NotificationType.IDEAS)?1:2
     };
 
     try{
@@ -124,12 +128,22 @@ class _AddScheduleState extends State<AddSchedule> {
             height: 50,
             color: Colors.green,
             child: Center(
-              child: ElevatedButton(
-                onPressed: () async { 
-                  await createNewAlarm();
-                  //await cancelAlarm();
-                  Navigator.pushNamed(context, 'CheckSchedule');},
-                child: Text('Save')),
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () async { 
+                      await createNewAlarm(id: 197,alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE);
+                      //await cancelAlarm();
+                      //Navigator.pushNamed(context, 'CheckSchedule');
+                      },
+                    child: Text('Save')),
+                    ElevatedButton(
+                    onPressed: () async { 
+                      await cancelAlarm();
+                      },
+                    child: Text('Cancel')),
+                ],
+              ),
             ),),
       ),
     );
