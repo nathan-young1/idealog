@@ -4,6 +4,7 @@ import 'package:idealog/customAppBar/appBar.dart';
 import 'package:flutter/services.dart';
 
 enum repeatSchedule{DAILY,WEEKLY,MONTHLY,YEARLY}
+enum NotificationType{IDEAS,SCHEDULE}
 
 class AddSchedule extends StatefulWidget {
   @override
@@ -13,11 +14,12 @@ class AddSchedule extends StatefulWidget {
 class _AddScheduleState extends State<AddSchedule> {
   static const platform = const MethodChannel('com.idealog.alarmServiceCaller');
 
-  createNewAlarm({required int? id,required String? alarmText}) async{
+  createNewAlarm({required int? id,required String? alarmText,required NotificationType typeOfNotification}) async{
     //remember to change configuaration to int in native java code
     Map<String,dynamic> alarmConfiguration = {
       'id': id!,
-      'alarmText': alarmText!
+      'alarmText': alarmText!,
+      'typeOfNotification': (typeOfNotification == NotificationType.IDEAS)?1:2
     };
 
     try{
@@ -130,7 +132,7 @@ class _AddScheduleState extends State<AddSchedule> {
                 children: [
                   ElevatedButton(
                     onPressed: () async { 
-                      await createNewAlarm(id: 400,alarmText: 'thh');
+                      await createNewAlarm(id: 197,alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE);
                       //await cancelAlarm();
                       //Navigator.pushNamed(context, 'CheckSchedule');
                       },

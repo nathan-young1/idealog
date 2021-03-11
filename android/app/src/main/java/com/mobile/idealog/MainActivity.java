@@ -20,6 +20,7 @@ public class MainActivity extends FlutterActivity {
 //    set the alarm contentText and clear the value on set alarm finish.
     public static String alarmContentText;
     public static int alarmNotificationId;
+    public static NotificationType typeOfNotification;
     AlarmManager alarmManager;
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
@@ -35,8 +36,8 @@ public class MainActivity extends FlutterActivity {
                 if(call.method.equals("setAlarm")){
                     int notificationId = (int)configuration.get("id");
                     String alarmText = (String)configuration.get("alarmText");
-                    System.out.println("Your configuration id is: " + notificationId);
-                    setAlarm(notificationId,alarmText);
+                    typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
+                    setAlarm(notificationId,alarmText,typeOfNotification);
                     result.success("Finished successfully");
                 }else if(call.method.equals("cancelAlarm")){
                     cancelAlarm();
@@ -46,9 +47,10 @@ public class MainActivity extends FlutterActivity {
         });
     }
 
-    public void setAlarm(int notificationId,String alarmText){
+    public void setAlarm(int notificationId,String alarmText,NotificationType notificationType){
         //remeber to set the contentText
         alarmContentText = alarmText;
+        typeOfNotification = notificationType;
         //remeber to set a different id for each notification
         alarmNotificationId = notificationId;
         Intent toCallTheBroadcastReciever = new Intent(this,ListenForAlarm.class);
