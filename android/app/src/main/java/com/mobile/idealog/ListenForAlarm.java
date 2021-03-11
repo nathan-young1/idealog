@@ -13,7 +13,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
+enum NotificationType{IDEAS,SCHEDULE}
 public class ListenForAlarm extends BroadcastReceiver {
     NotificationManager notificationManager;
     NotificationCompat.Builder notificationBuilder;
@@ -83,12 +83,12 @@ public class ListenForAlarm extends BroadcastReceiver {
         return notificationManager;
     }
 
-    public NotificationCompat.Builder getIdeasNotification(String title,String message,Context context,boolean userCanClearNotification){
+    public NotificationCompat.Builder getIdeasNotification(String title,String message,Context context,boolean userCanClearNotification,NotificationType typeOfNotification){
         return new NotificationCompat.Builder(context,"IdForIdeas")
                 .setContentTitle("Idealog")
                 .setContentText(MainActivity.alarmContentText)
 //        remeber to add set small icon of light bulb
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon((typeOfNotification == NotificationType.IDEAS)?R.drawable.ic_ideas_notification:R.drawable.ic_schedule_notification)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setOngoing(!userCanClearNotification)
                 .setAutoCancel(true)
