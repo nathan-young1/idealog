@@ -48,7 +48,7 @@ public class MainActivity extends FlutterActivity {
         //remeber to set the contentText
         alarmContentText = "new alarm just texting";
         //remeber to set a different id for each notification
-        alarmNotificationId = 9000;
+        alarmNotificationId = 90;
         Intent toCallTheBroadcastReciever = new Intent(this,ListenForAlarm.class);
         toCallTheBroadcastReciever.setAction("com.alarm.broadcast_notification");
         //put intent id
@@ -62,10 +62,9 @@ public class MainActivity extends FlutterActivity {
         Date date = new Date();
         Calendar time = Calendar.getInstance();
         time.setTime(date);
-        time.set(Calendar.HOUR_OF_DAY,3);
-        time.set(Calendar.MINUTE,7);
+        time.set(Calendar.HOUR_OF_DAY,13);
+        time.set(Calendar.MINUTE,1);
         time.set(Calendar.SECOND,0);
-        time.set(Calendar.AM_PM,Calendar.PM);
         alarmManager.set(AlarmManager.RTC_WAKEUP,time.getTimeInMillis(),pendingIntent);
         System.out.println("The alarm has been scheduled at "+time.getTime());
     }
