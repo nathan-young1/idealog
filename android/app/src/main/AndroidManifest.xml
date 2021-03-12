@@ -5,6 +5,7 @@
     <!-- added from here -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,13 +13,22 @@
         android:icon="@mipmap/ic_launcher"
         android:label="Idealog">
         <receiver
+            android:name=".OnPhoneReboot"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name=".ListenForAlarm"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.alarm.broadcast_notification"></action>
+                <action android:name="com.alarm.broadcast_notification" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

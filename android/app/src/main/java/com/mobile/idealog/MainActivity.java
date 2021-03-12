@@ -49,25 +49,25 @@ public class MainActivity extends FlutterActivity {
     }
 
     public void setAlarm(String alarmText,NotificationType notificationType,int uniqueAlarmId,long alarmTime){
-        //remeber to set the contentText
+        //remember to set the contentText
         alarmContentText = alarmText;
         typeOfNotification = notificationType;
         //give each notification id a different value with the help of current time in milliseconds
         alarmNotificationId = (int) System.currentTimeMillis();
-        Intent toCallTheBroadcastReciever = new Intent(this,ListenForAlarm.class);
-        toCallTheBroadcastReciever.setAction("com.alarm.broadcast_notification");
+        Intent toCallTheBroadcastReceiver = new Intent(this,ListenForAlarm.class);
+        toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
         //put a unique pendingIntent id
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReciever,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
         alarmManager.set(AlarmManager.RTC_WAKEUP,alarmTime,pendingIntent);
         System.out.println("The alarm has been scheduled at "+alarmTime);
     }
 
     public void cancelAlarm(int uniqueAlarmId){
-        Intent toCallTheBroadcastReciever = new Intent(this,ListenForAlarm.class);
-        toCallTheBroadcastReciever.setAction("com.alarm.broadcast_notification");
+        Intent toCallTheBroadcastReceiver = new Intent(this,ListenForAlarm.class);
+        toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
         //put unique id for alarm id
         //either this PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_CANCEL_CURRENT 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReciever,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
         //TO CANCEL THE ALARM
         //find out how to cancel the alarm by the id
         System.out.println("The alarm has been canceled");

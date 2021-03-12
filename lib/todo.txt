@@ -8,3 +8,4 @@
             ..set deadline (day and optionally time)
             ..set Date & Time and repeat daily,weekly,montly
             ..reset the alarms on phone reboot
+            ..get the data from mysql database
