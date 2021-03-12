@@ -33,21 +33,22 @@ public class MainActivity extends FlutterActivity {
                 //intialize alarm manager
                 alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 final Map<String,Object> configuration = call.arguments();
+                int uniqueIdForAlarm = (int) configuration.get("uniqueAlarmId");
                 if(call.method.equals("setAlarm")){
-                    int notificationId = (int)configuration.get("id");
+                    int notificationId = (int)configuration.get("uniqueNotificationId");
                     String alarmText = (String)configuration.get("alarmText");
                     typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
-                    setAlarm(notificationId,alarmText,typeOfNotification);
+                    setAlarm(notificationId,alarmText,typeOfNotification,uniqueIdForAlarm);
                     result.success("Finished successfully");
                 }else if(call.method.equals("cancelAlarm")){
-                    cancelAlarm();
+                    cancelAlarm(uniqueIdForAlarm);
                     result.success("Canceled successfully");
                 }
             }
         });
     }
 
-    public void setAlarm(int notificationId,String alarmText,NotificationType notificationType){
+    public void setAlarm(int notificationId,String alarmText,NotificationType notificationType,int uniqueAlarmId){
         //remeber to set the contentText
         alarmContentText = alarmText;
         typeOfNotification = notificationType;
@@ -55,9 +56,8 @@ public class MainActivity extends FlutterActivity {
         alarmNotificationId = notificationId;
         Intent toCallTheBroadcastReciever = new Intent(this,ListenForAlarm.class);
         toCallTheBroadcastReciever.setAction("com.alarm.broadcast_notification");
-        //put intent id
-        toCallTheBroadcastReciever.putExtra("intent-id",20);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,toCallTheBroadcastReciever,0);
+        //put a unique pendingIntent id
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReciever,0);
 
         //check for type of alarm either normal or repeating
         //guide is at 12.58 of the video
@@ -73,15 +73,12 @@ public class MainActivity extends FlutterActivity {
         System.out.println("The alarm has been scheduled at "+time.getTime());
     }
 
-    public void cancelAlarm(){
-        Intent toCallTheBroadcastReciever = new Intent();
+    public void cancelAlarm(int uniqueAlarmId){
+        Intent toCallTheBroadcastReciever = new Intent(this,ListenForAlarm.class);
         toCallTheBroadcastReciever.setAction("com.alarm.broadcast_notification");
-        //put intent id
-        toCallTheBroadcastReciever.putExtra("intent-id",20);
-        //first code
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,20,toCallTheBroadcastReciever,0);
+        //put unique id for alarm id
         //either this PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_CANCEL_CURRENT 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,toCallTheBroadcastReciever,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReciever,0);
         //TO CANCEL THE ALARM
         //find out how to cancel the alarm by the id
         System.out.println("The alarm has been canceled");
