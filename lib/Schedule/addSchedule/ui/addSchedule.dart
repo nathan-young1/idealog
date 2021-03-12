@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:flutter/services.dart';
+import 'package:sqflite/sqflite.dart';
 
-enum repeatSchedule{DAILY,WEEKLY,MONTHLY,YEARLY}
+enum RepeatSchedule{NONE,DAILY,WEEKLY,MONTHLY,YEARLY}
 enum NotificationType{IDEAS,SCHEDULE}
 
 class AddSchedule extends StatefulWidget {
@@ -106,16 +107,16 @@ class _AddScheduleState extends State<AddSchedule> {
                       },
                       items: [
                         DropdownMenuItem(
-                          value: repeatSchedule.DAILY,
+                          value: RepeatSchedule.DAILY,
                           child: Text('Daily')),
                         DropdownMenuItem(
-                          value: repeatSchedule.WEEKLY,
+                          value: RepeatSchedule.WEEKLY,
                           child: Text('Weekly')),
                         DropdownMenuItem(
-                          value: repeatSchedule.MONTHLY,
+                          value: RepeatSchedule.MONTHLY,
                           child: Text('Monthly')),
                         DropdownMenuItem(
-                          value: repeatSchedule.YEARLY,
+                          value: RepeatSchedule.YEARLY,
                           child: Text('Yearly'))
                         ]),
                   )
@@ -139,6 +140,11 @@ class _AddScheduleState extends State<AddSchedule> {
                       int setTime = DateTime.now().millisecondsSinceEpoch;
                       await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
                       print(setTime);
+                      var db = await openDatabase('idealog');
+                      await db.execute("CREATE TABLE Test(id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)");
+                      await db.transaction((txn) async => await txn.rawInsert('INSERT INTO Test(name, value, num) VALUES("some name", 1234, 456.789)'));
+                      await db.close();
+
                       //Navigator.pushNamed(context, 'CheckSchedule');
                       },
                     child: Text('Save')),

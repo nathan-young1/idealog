@@ -3,6 +3,8 @@ package com.mobile.idealog;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 
@@ -41,6 +43,9 @@ public class MainActivity extends FlutterActivity {
                     setAlarm(alarmText,typeOfNotification,uniqueIdForAlarm,timeForAlarm);
                     result.success("Finished successfully");
                 }else if(call.method.equals("cancelAlarm")){
+                    SQLiteDatabase idealogDatabase = openOrCreateDatabase("idealog",MODE_PRIVATE,null);
+                    Cursor results = idealogDatabase.rawQuery("SELECT * FROM Test",null);
+                    System.out.println(results.getString(0));
                     cancelAlarm(uniqueIdForAlarm);
                     result.success("Canceled successfully");
                 }
