@@ -32,6 +32,7 @@ dependencies:
   google_nav_bar: ^4.0.2
   google_sign_in: ^5.0.0
   syncfusion_flutter_datepicker: ^18.4.46-beta
+  sqflite: ^2.0.0+2
 
 
   # The following adds the Cupertino Icons font to your application.

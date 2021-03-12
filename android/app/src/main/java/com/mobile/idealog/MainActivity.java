@@ -3,6 +3,8 @@ package com.mobile.idealog;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 
@@ -33,55 +35,44 @@ public class MainActivity extends FlutterActivity {
                 //intialize alarm manager
                 alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 final Map<String,Object> configuration = call.arguments();
+                int uniqueIdForAlarm = (int) configuration.get("uniqueAlarmId");
                 if(call.method.equals("setAlarm")){
-                    int notificationId = (int)configuration.get("id");
+                    long timeForAlarm = (long) configuration.get("timeForAlarm");
                     String alarmText = (String)configuration.get("alarmText");
                     typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
-                    setAlarm(notificationId,alarmText,typeOfNotification);
+                    setAlarm(alarmText,typeOfNotification,uniqueIdForAlarm,timeForAlarm);
                     result.success("Finished successfully");
                 }else if(call.method.equals("cancelAlarm")){
-                    cancelAlarm();
+                    SQLiteDatabase idealogDatabase = openOrCreateDatabase("idealog",MODE_PRIVATE,null);
+                    Cursor results = idealogDatabase.rawQuery("SELECT * FROM Test",null);
+                    System.out.println(results.getString(0));
+                    cancelAlarm(uniqueIdForAlarm);
                     result.success("Canceled successfully");
                 }
             }
         });
     }
 
-    public void setAlarm(int notificationId,String alarmText,NotificationType notificationType){
-        //remeber to set the contentText
+    public void setAlarm(String alarmText,NotificationType notificationType,int uniqueAlarmId,long alarmTime){
+        //remember to set the contentText
         alarmContentText = alarmText;
         typeOfNotification = notificationType;
-        //remeber to set a different id for each notification
-        alarmNotificationId = notificationId;
-        Intent toCallTheBroadcastReciever = new Intent(this,ListenForAlarm.class);
-        toCallTheBroadcastReciever.setAction("com.alarm.broadcast_notification");
-        //put intent id
-        toCallTheBroadcastReciever.putExtra("intent-id",20);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,toCallTheBroadcastReciever,0);
-
-        //check for type of alarm either normal or repeating
-        //guide is at 12.58 of the video
-        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),1000,pendingIntent);
-        //set time
-        Date date = new Date();
-        Calendar time = Calendar.getInstance();
-        time.setTime(date);
-        time.set(Calendar.HOUR_OF_DAY,13);
-        time.set(Calendar.MINUTE,1);
-        time.set(Calendar.SECOND,0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP,time.getTimeInMillis(),pendingIntent);
-        System.out.println("The alarm has been scheduled at "+time.getTime());
+        //give each notification id a different value with the help of current time in milliseconds
+        alarmNotificationId = (int) System.currentTimeMillis();
+        Intent toCallTheBroadcastReceiver = new Intent(this,ListenForAlarm.class);
+        toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
+        //put a unique pendingIntent id
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP,alarmTime,pendingIntent);
+        System.out.println("The alarm has been scheduled at "+alarmTime);
     }
 
-    public void cancelAlarm(){
-        Intent toCallTheBroadcastReciever = new Intent();
-        toCallTheBroadcastReciever.setAction("com.alarm.broadcast_notification");
-        //put intent id
-        toCallTheBroadcastReciever.putExtra("intent-id",20);
-        //first code
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,20,toCallTheBroadcastReciever,0);
+    public void cancelAlarm(int uniqueAlarmId){
+        Intent toCallTheBroadcastReceiver = new Intent(this,ListenForAlarm.class);
+        toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
+        //put unique id for alarm id
         //either this PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_CANCEL_CURRENT 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,toCallTheBroadcastReciever,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
         //TO CANCEL THE ALARM
         //find out how to cancel the alarm by the id
         System.out.println("The alarm has been canceled");

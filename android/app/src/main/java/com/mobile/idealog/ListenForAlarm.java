@@ -19,27 +19,28 @@ public class ListenForAlarm extends BroadcastReceiver {
     NotificationCompat.Builder notificationBuilder;
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.println("I the broadcast has been called with text "+ MainActivity.alarmContentText);
+        if (intent.getAction().equals("com.alarm.broadcast_notification")) {
+            // Set the alarm here
+        System.out.println("I the broadcast has been called with text " + MainActivity.alarmContentText);
 //        NotificationCompat.Builder(Context context) has been deprecated. And we have to use the constructor which has the channelId parameter:
-        notificationBuilder = buildNotification(context,MainActivity.typeOfNotification);
+        notificationBuilder = buildNotification(context, MainActivity.typeOfNotification);
 //        now create intent to open app on notification tap
-        Intent onNotificationTap = new Intent(context,MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,onNotificationTap,PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent onNotificationTap = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, onNotificationTap, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(pendingIntent);
         //for andriod 8 and above , you need to set notification channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannels(context);
         }
 
         //give each notification a different id so they can stand apart
         final int notificationId = MainActivity.alarmNotificationId;
-        notificationManager.notify(notificationId,notificationBuilder.build());
+        notificationManager.notify(notificationId, notificationBuilder.build());
+    }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void createChannels(Context context){
-        System.out.print(MainActivity.typeOfNotification);
         if(MainActivity.typeOfNotification == NotificationType.IDEAS) {
             //channel for all notification from ideas
             String ideaschannelId = "Channel for ideas";
