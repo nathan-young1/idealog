@@ -14,10 +14,10 @@ class AddSchedule extends StatefulWidget {
 class _AddScheduleState extends State<AddSchedule> {
   static const platform = const MethodChannel('com.idealog.alarmServiceCaller');
 
-  createNewAlarm({required int? uniqueNotificationId,required String? alarmText,required NotificationType typeOfNotification,required int? uniqueAlarmId}) async{
+  createNewAlarm({required String? alarmText,required NotificationType typeOfNotification,required int? uniqueAlarmId,required int? alarmTime}) async{
     //remember to change configuaration to int in native java code
     Map<String,dynamic> alarmConfiguration = {
-      'uniqueNotificationId': uniqueNotificationId!,
+      'timeForAlarm': alarmTime!,
       'alarmText': alarmText!,
       'typeOfNotification': (typeOfNotification == NotificationType.IDEAS)?1:2,
       'uniqueAlarmId': uniqueAlarmId!
@@ -136,13 +136,15 @@ class _AddScheduleState extends State<AddSchedule> {
                 children: [
                   ElevatedButton(
                     onPressed: () async { 
-                      await createNewAlarm(uniqueNotificationId: 101,alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 100);
+                      int setTime = DateTime.now().millisecondsSinceEpoch;
+                      await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
+                      print(setTime);
                       //Navigator.pushNamed(context, 'CheckSchedule');
                       },
                     child: Text('Save')),
                     ElevatedButton(
                     onPressed: () async { 
-                      await cancelAlarm(uniqueAlarmId: 100);
+                      await cancelAlarm(uniqueAlarmId: 200);
                       },
                     child: Text('Cancel')),
                 ],

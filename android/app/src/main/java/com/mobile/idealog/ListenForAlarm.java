@@ -39,7 +39,6 @@ public class ListenForAlarm extends BroadcastReceiver {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void createChannels(Context context){
-        System.out.print(MainActivity.typeOfNotification);
         if(MainActivity.typeOfNotification == NotificationType.IDEAS) {
             //channel for all notification from ideas
             String ideaschannelId = "Channel for ideas";
