@@ -42,8 +42,8 @@ public class MainActivity extends FlutterActivity {
                     typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
                     setAlarm(alarmText,typeOfNotification,uniqueIdForAlarm,timeForAlarm);
                     idealogDatabase db = new idealogDatabase(MainActivity.this,null,null,1);
-                    boolean b = db.addOne(uniqueIdForAlarm);
-                    result.success(b);
+//                    boolean b = db.addOne(uniqueIdForAlarm);
+                    result.success(db.addOne(uniqueIdForAlarm));
                 }else if(call.method.equals("cancelAlarm")){
                     cancelAlarm(uniqueIdForAlarm);
                     result.success("Canceled successfully");

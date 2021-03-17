@@ -39,25 +39,26 @@ public class idealogDatabase extends SQLiteOpenHelper {
 
     }
 
-    public boolean addOne(int uniqueId){
-        List<String> strings = new LinkedList<>();
-        strings.add("joe");
-        strings.add("me");
+    public String addOne(int uniqueId){
+        List<Integer> strings = new LinkedList<>();
+        System.out.println("joe,isv,jk.op".codePoints());
+        strings.add("joe,isv,jk.op".hashCode());
+        strings.add("me,you".hashCode());
         String test = String.valueOf(strings);
-        System.out.println(test);
-        System.out.println(test.substring(1,test.length()).split(","));
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_IDEA_TITLE, String.valueOf(strings));
-        contentValues.put(COLUMN_IDEA_TITLE,"title");
-        contentValues.put(COLUMN_DEADLINE,"789");
-        contentValues.put(COLUMN_UNIQUE_ID,uniqueId);
-        final long insert = db.insert(IDEAS, null, contentValues);
-        if(insert == -1){
-            return false;
-        }else {
-            return true;
-        }
+        return test;
+//        System.out.println(test.split(","));
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put(COLUMN_IDEA_TITLE, String.valueOf(strings));
+//        contentValues.put(COLUMN_IDEA_TITLE,"title");
+//        contentValues.put(COLUMN_DEADLINE,"789");
+//        contentValues.put(COLUMN_UNIQUE_ID,uniqueId);
+        //final long insert = db.insert(IDEAS, null, contentValues);
+//        if(insert == -1){
+//            return false;
+//        }else {
+//            return true;
+//        }
 
     }
 }

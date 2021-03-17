@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:flutter/services.dart';
+import 'package:idealog/global/strings.dart';
 import 'package:sqflite/sqflite.dart';
 
 enum RepeatSchedule{NONE,DAILY,WEEKLY,MONTHLY,YEARLY}
@@ -26,6 +29,9 @@ class _AddScheduleState extends State<AddSchedule> {
 
     try{
       String result = await platform.invokeMethod("setAlarm",alarmConfiguration);
+      print("kd".hashCode.toString());
+      print('dart ${result.split(',').toString()}');
+      print('dart substring ${String.fromCharCodes(List<int>.from(result.substring(2,result.length-2).split(',')))}');
       print(result);
     }catch(e){
       print(e);
@@ -137,14 +143,16 @@ class _AddScheduleState extends State<AddSchedule> {
                 children: [
                   ElevatedButton(
                     onPressed: () async { 
-                      int setTime = DateTime.now().millisecondsSinceEpoch;
-                      await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
-                      print(setTime);
-                      var db = await openDatabase('idealog');
-                      await db.execute("CREATE TABLE Test(id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)");
-                      await db.transaction((txn) async => await txn.rawInsert('INSERT INTO Test(name, value, num) VALUES("some name", 1234, 456.789)'));
+                      // int setTime = DateTime.now().millisecondsSinceEpoch;
+                      // await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
+                      // print(setTime);
+                      var db = await openDatabase(sqliteDbName);
+                      List<List<int>> tasks = ['firest'.codeUnits,'wash'.codeUnits,'eating'.codeUnits,'running'.codeUnits];
+                      await db.execute('DELETE FROM IDEAS WHERE uniqueId < 230');
+                      await db.transaction((txn) => txn.insert('IDEAS', {'uniqueId' : 260,
+                      'ideaTitle': 400,'moreDetails': tasks.toString(),'deadline': 678}));
+                      print(await db.rawQuery('SELECT * FROM IDEAS WHERE moreDetails != null'));
                       await db.close();
-
                       //Navigator.pushNamed(context, 'CheckSchedule');
                       },
                     child: Text('Save')),
