@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:idealog/global/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
@@ -7,16 +7,13 @@ import 'package:flutter/services.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:sqflite/sqflite.dart';
 
-enum RepeatSchedule{NONE,DAILY,WEEKLY,MONTHLY,YEARLY}
-enum NotificationType{IDEAS,SCHEDULE}
-
 class AddSchedule extends StatefulWidget {
   @override
   _AddScheduleState createState() => _AddScheduleState();
 }
 
 class _AddScheduleState extends State<AddSchedule> {
-  static const platform = const MethodChannel('com.idealog.alarmServiceCaller');
+  static const platform = const MethodChannel(javaToFlutterMethodChannelName);
 
   createNewAlarm({required String? alarmText,required NotificationType typeOfNotification,required int? uniqueAlarmId,required int? alarmTime}) async{
     //remember to change configuaration to int in native java code
@@ -147,11 +144,21 @@ class _AddScheduleState extends State<AddSchedule> {
                       // await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
                       // print(setTime);
                       var db = await openDatabase(sqliteDbName);
-                      List<List<int>> tasks = ['firest'.codeUnits,'wash'.codeUnits,'eating'.codeUnits,'running'.codeUnits];
-                      await db.execute('DELETE FROM IDEAS WHERE uniqueId < 230');
-                      await db.transaction((txn) => txn.insert('IDEAS', {'uniqueId' : 260,
-                      'ideaTitle': 400,'moreDetails': tasks.toString(),'deadline': 678}));
-                      print(await db.rawQuery('SELECT * FROM IDEAS WHERE moreDetails != null'));
+                      
+                      List<List<int>> tasks = ['firest'.codeUnits,'wash'.codeUnits,'eating'.codeUnits,'running'.codeUnits,
+                      '''ajlfkdjajijflkajdfjijasjfoiejlkjifajioejlkjajfklajlkfjlkajkjfjakdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddjkaj
+                      afajkslllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'''.codeUnits];
+                      // await db.execute('DELETE FROM IDEAS WHERE uniqueId < 230');
+                      //await db.execute('create table if not exists $ideasTableName (uniqueId INTEGER PRIMARY_KEY,ideaTitle TEXT,moreDetails TEXT,deadline TEXT)');
+                      // await db.insert(ideasTableName, {'uniqueId' : 260,
+                      // 'ideaTitle': 400,'moreDetails': tasks.toString(),'deadline': 678});
+                      var query = await db.rawQuery('SELECT * FROM IDEAS WHERE uniqueId = 260');
+                      var uniqueIdReturn = query.first['moreDetails'].toString();
+                      var result = uniqueIdReturn.substring(1,uniqueIdReturn.length);
+                      var together = result.split('],').first;
+                      var isFinal = together.substring(1).split(',');
+                      List<int> char = isFinal.map((e)=> int.parse(e)).toList();
+                      print(String.fromCharCodes(char));
                       await db.close();
                       //Navigator.pushNamed(context, 'CheckSchedule');
                       },
