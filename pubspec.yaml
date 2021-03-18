@@ -39,6 +39,11 @@ dependencies:
   syncfusion_flutter_calendar: ^18.4.48
   syncfusion_flutter_charts: ^18.4.48
   animations: ^2.0.0
+  font_awesome_flutter: ^8.12.0
+  google_fonts: ^2.0.0
+  flutter_slidable: ^0.5.7
+  shared_preferences: ^2.0.5
+  package_info: ^2.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -46,7 +51,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
-  flutter_launcher_icons: "^0.8.1"
+  flutter_launcher_icons: "^0.9.0"
   flutter_test:
     sdk: flutter
 
