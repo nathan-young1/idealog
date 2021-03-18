@@ -155,11 +155,26 @@ class _AddScheduleState extends State<AddSchedule> {
                       var query = await db.rawQuery('SELECT * FROM IDEAS WHERE uniqueId = 260');
                       var uniqueIdReturn = query.first['moreDetails'].toString();
                       var result = uniqueIdReturn.substring(1,uniqueIdReturn.length);
-                      var together = result.split('],').first;
-                      var isFinal = together.substring(1).split(',');
-                      List<int> char = isFinal.map((e)=> int.parse(e)).toList();
-                      print(String.fromCharCodes(char));
+                      List<String> together = result.split('],');
+                      var isFinal = together.map((e) => e.toString().substring(1).split(',')).toList();
+                      // List<int> char = isFinal.map((e)=> int.parse(e)).toList();
+                      print(isFinal);
                       await db.close();
+//                       List<List<int>> tasks = ['firest'.codeUnits,'wash'.codeUnits,'eating'.codeUnits,'running'.codeUnits,
+//                       '''ajlfkdjajijflkajdfjijasjfoiejlkjifajioejlkjajfklajlkfjlkajkjfjakdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddjkaj
+//                       afajkslllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkm'''.codeUnits];
+// var resultFromDb = tasks.toString();
+// var removeListBracket = resultFromDb.substring(1,resultFromDb.length-1).replaceAll('],', ']_').split('_');
+// void main(){
+  
+//   var res = removeListBracket.map((e) => 
+//   e.trim().substring(1,e.trim().length-1)
+//   .split(',')
+//   .map((n) => int.parse(n)).toList()).toList();
+//   List<List<int>> result = [...res];
+//   List<String> stringV = result.map((e) => String.fromCharCodes(e)).toList();
+//   stringV.forEach((element) {print(element);});
+// }
                       //Navigator.pushNamed(context, 'CheckSchedule');
                       },
                     child: Text('Save')),
