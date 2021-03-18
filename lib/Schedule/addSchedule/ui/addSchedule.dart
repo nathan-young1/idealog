@@ -149,7 +149,6 @@ class _AddScheduleState extends State<AddSchedule> {
                       '''ajlfkdjajijflkajdfjijasjfoiejlkjifajioejlkjajfklajlkfjlkajkjfjakdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddjkaj
                       afajkslllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'''.codeUnits];
                       // await db.execute('DELETE FROM IDEAS WHERE uniqueId < 230');
-                      //await db.execute('create table if not exists $ideasTableName (uniqueId INTEGER PRIMARY_KEY,ideaTitle TEXT,moreDetails TEXT,deadline TEXT)');
                       // await db.insert(ideasTableName, {'uniqueId' : 260,
                       // 'ideaTitle': 400,'moreDetails': tasks.toString(),'deadline': 678});
                       var query = await db.rawQuery('SELECT * FROM IDEAS WHERE uniqueId = 260');

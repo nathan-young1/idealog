@@ -6,11 +6,29 @@ class Schedule{
   final int uniqueId;
   String scheduleTitle;
   String? moreDetails;
-  DateTime scheduleDate;
+  int scheduleDate;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
-  RepeatSchedule repeatSchedule;
-  bool setAlarmForSchedule;
+  RepeatSchedule? repeatSchedule;
 
-  Schedule({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required this.repeatSchedule,this.endTime,required this.setAlarmForSchedule,required this.uniqueId});
+  Schedule({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required this.repeatSchedule,this.endTime,required this.uniqueId});
+  Schedule.fromDb({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required String repeatSchedule,this.endTime,required this.uniqueId}){
+    switch (repeatSchedule){
+      case 'RepeatSchedule.NONE':
+      this.repeatSchedule = RepeatSchedule.NONE;
+      break;
+      case 'RepeatSchedule.DAILY':
+      this.repeatSchedule = RepeatSchedule.DAILY;
+      break;
+      case 'RepeatSchedule.WEEKLY':
+      this.repeatSchedule = RepeatSchedule.WEEKLY;
+      break;
+      case 'RepeatSchedule.MONTHLY':
+      this.repeatSchedule = RepeatSchedule.MONTHLY;
+      break;
+      case 'RepeatSchedule.YEARLY':
+      this.repeatSchedule = RepeatSchedule.YEARLY;
+      break;
+    }
+  }
 }
