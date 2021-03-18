@@ -1,7 +1,7 @@
 extension DataFromSqliteDb on String{
   
   //Extension to convert tasks from db to string.
-  List<String> fromDbStringToStringList(){
+  List<String> get fromDbStringToStringList{
   return this.substring(1,this.length-1)
   .replaceAll('],', ']_')
   .split('_')

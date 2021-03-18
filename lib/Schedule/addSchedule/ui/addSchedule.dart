@@ -154,7 +154,7 @@ class _AddScheduleState extends State<AddSchedule> {
                       // 'ideaTitle': 400,'moreDetails': tasks.toString(),'deadline': 678});
                       var query = await db.rawQuery('SELECT * FROM IDEAS WHERE uniqueId = 260');
                       var uniqueIdReturn = query.first['moreDetails'].toString();
-                      List<String> together = uniqueIdReturn.fromDbStringToStringList();
+                      List<String> together = uniqueIdReturn.fromDbStringToStringList;
                       print(together);
                       await db.close();
                       },
