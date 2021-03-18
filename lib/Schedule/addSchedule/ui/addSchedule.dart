@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:flutter/services.dart';
 import 'package:idealog/global/strings.dart';
+import 'package:idealog/global/extension.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AddSchedule extends StatefulWidget {
@@ -144,8 +145,7 @@ class _AddScheduleState extends State<AddSchedule> {
                       // await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
                       // print(setTime);
                       var db = await openDatabase(sqliteDbName);
-                      
-                      List<List<int>> tasks = ['firest'.codeUnits,'wash'.codeUnits,'eating'.codeUnits,'running'.codeUnits,
+                      List<List<int>> tasks = ['ajkjf'.codeUnits,'jekhij8a'.codeUnits,'eating'.codeUnits,'running'.codeUnits,
                       '''ajlfkdjajijflkajdfjijasjfoiejlkjifajioejlkjajfklajlkfjlkajkjfjakdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddjkaj
                       afajkslllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'''.codeUnits];
                       // await db.execute('DELETE FROM IDEAS WHERE uniqueId < 230');
@@ -154,28 +154,9 @@ class _AddScheduleState extends State<AddSchedule> {
                       // 'ideaTitle': 400,'moreDetails': tasks.toString(),'deadline': 678});
                       var query = await db.rawQuery('SELECT * FROM IDEAS WHERE uniqueId = 260');
                       var uniqueIdReturn = query.first['moreDetails'].toString();
-                      var result = uniqueIdReturn.substring(1,uniqueIdReturn.length);
-                      List<String> together = result.split('],');
-                      var isFinal = together.map((e) => e.toString().substring(1).split(',')).toList();
-                      // List<int> char = isFinal.map((e)=> int.parse(e)).toList();
-                      print(isFinal);
+                      List<String> together = uniqueIdReturn.fromDbStringToStringList();
+                      print(together);
                       await db.close();
-//                       List<List<int>> tasks = ['firest'.codeUnits,'wash'.codeUnits,'eating'.codeUnits,'running'.codeUnits,
-//                       '''ajlfkdjajijflkajdfjijasjfoiejlkjifajioejlkjajfklajlkfjlkajkjfjakdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddjkaj
-//                       afajkslllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkm'''.codeUnits];
-// var resultFromDb = tasks.toString();
-// var removeListBracket = resultFromDb.substring(1,resultFromDb.length-1).replaceAll('],', ']_').split('_');
-// void main(){
-  
-//   var res = removeListBracket.map((e) => 
-//   e.trim().substring(1,e.trim().length-1)
-//   .split(',')
-//   .map((n) => int.parse(n)).toList()).toList();
-//   List<List<int>> result = [...res];
-//   List<String> stringV = result.map((e) => String.fromCharCodes(e)).toList();
-//   stringV.forEach((element) {print(element);});
-// }
-                      //Navigator.pushNamed(context, 'CheckSchedule');
                       },
                     child: Text('Save')),
                     ElevatedButton(
