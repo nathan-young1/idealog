@@ -41,11 +41,10 @@ public class MainActivity extends FlutterActivity {
                     String alarmText = (String)configuration.get("alarmText");
                     typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
                     setAlarm(alarmText,typeOfNotification,uniqueIdForAlarm,timeForAlarm);
-                    result.success("Finished successfully");
+                    idealogDatabase db = new idealogDatabase(MainActivity.this,null,null,1);
+//                    boolean b = db.addOne(uniqueIdForAlarm);
+                    result.success(db.addOne(uniqueIdForAlarm));
                 }else if(call.method.equals("cancelAlarm")){
-                    SQLiteDatabase idealogDatabase = openOrCreateDatabase("idealog",MODE_PRIVATE,null);
-                    Cursor results = idealogDatabase.rawQuery("SELECT * FROM Test",null);
-                    System.out.println(results.getString(0));
                     cancelAlarm(uniqueIdForAlarm);
                     result.success("Canceled successfully");
                 }

@@ -91,6 +91,6 @@ public class ListenForAlarm extends BroadcastReceiver {
                 .setAutoCancel(true)
                 //setting the lights for blinking led
                 .setLights(0xFFb71c1c, 1000, 2000)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_foreground));
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
     }
 }

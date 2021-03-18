@@ -1,11 +1,12 @@
+import 'dart:typed_data';
+import 'package:idealog/global/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:flutter/services.dart';
+import 'package:idealog/global/strings.dart';
+import 'package:idealog/global/extension.dart';
 import 'package:sqflite/sqflite.dart';
-
-enum RepeatSchedule{NONE,DAILY,WEEKLY,MONTHLY,YEARLY}
-enum NotificationType{IDEAS,SCHEDULE}
 
 class AddSchedule extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class AddSchedule extends StatefulWidget {
 }
 
 class _AddScheduleState extends State<AddSchedule> {
-  static const platform = const MethodChannel('com.idealog.alarmServiceCaller');
+  static const platform = const MethodChannel(javaToFlutterMethodChannelName);
 
   createNewAlarm({required String? alarmText,required NotificationType typeOfNotification,required int? uniqueAlarmId,required int? alarmTime}) async{
     //remember to change configuaration to int in native java code
@@ -26,6 +27,9 @@ class _AddScheduleState extends State<AddSchedule> {
 
     try{
       String result = await platform.invokeMethod("setAlarm",alarmConfiguration);
+      print("kd".hashCode.toString());
+      print('dart ${result.split(',').toString()}');
+      print('dart substring ${String.fromCharCodes(List<int>.from(result.substring(2,result.length-2).split(',')))}');
       print(result);
     }catch(e){
       print(e);
@@ -137,15 +141,22 @@ class _AddScheduleState extends State<AddSchedule> {
                 children: [
                   ElevatedButton(
                     onPressed: () async { 
-                      int setTime = DateTime.now().millisecondsSinceEpoch;
-                      await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
-                      print(setTime);
-                      var db = await openDatabase('idealog');
-                      await db.execute("CREATE TABLE Test(id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)");
-                      await db.transaction((txn) async => await txn.rawInsert('INSERT INTO Test(name, value, num) VALUES("some name", 1234, 456.789)'));
+                      // int setTime = DateTime.now().millisecondsSinceEpoch;
+                      // await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
+                      // print(setTime);
+                      var db = await openDatabase(sqliteDbName);
+                      List<List<int>> tasks = ['ajkjf'.codeUnits,'jekhij8a'.codeUnits,'eating'.codeUnits,'running'.codeUnits,
+                      '''ajlfkdjajijflkajdfjijasjfoiejlkjifajioejlkjajfklajlkfjlkajkjfjakdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddjkaj
+                      afajkslllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'''.codeUnits];
+                      // await db.execute('DELETE FROM IDEAS WHERE uniqueId < 230');
+                      //await db.execute('create table if not exists $ideasTableName (uniqueId INTEGER PRIMARY_KEY,ideaTitle TEXT,moreDetails TEXT,deadline TEXT)');
+                      // await db.insert(ideasTableName, {'uniqueId' : 260,
+                      // 'ideaTitle': 400,'moreDetails': tasks.toString(),'deadline': 678});
+                      var query = await db.rawQuery('SELECT * FROM IDEAS WHERE uniqueId = 260');
+                      var uniqueIdReturn = query.first['moreDetails'].toString();
+                      List<String> together = uniqueIdReturn.fromDbStringToStringList();
+                      print(together);
                       await db.close();
-
-                      //Navigator.pushNamed(context, 'CheckSchedule');
                       },
                     child: Text('Save')),
                     ElevatedButton(

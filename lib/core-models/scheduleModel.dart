@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Schedule/addSchedule/ui/addSchedule.dart';
+import 'package:idealog/global/enums.dart';
 
 class Schedule{
   final int uniqueId;
@@ -10,6 +11,9 @@ class Schedule{
   TimeOfDay? endTime;
   RepeatSchedule repeatSchedule;
   bool setAlarmForTask;
+  String? alarmText;
 
-  Schedule({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required this.repeatSchedule,this.endTime,required this.setAlarmForTask,required this.uniqueId});
+  Schedule({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required this.repeatSchedule,this.endTime,required this.setAlarmForTask,required this.uniqueId}){
+    alarmText = scheduleTitle;
+  }
 }

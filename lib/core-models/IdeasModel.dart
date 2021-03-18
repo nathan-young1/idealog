@@ -1,11 +1,14 @@
-class Ideas{
+class Idea{
   final int uniqueId;
   String ideaTitle;
   String? moreDetails;
   DateTime? deadline;
   _Tasks? tasks;
-  Ideas({required this.ideaTitle,this.moreDetails,this.deadline,List<String> tasksToCreate = const[],required this.uniqueId}){
+  String? alarmText;
+  
+  Idea({required this.ideaTitle,this.moreDetails,this.deadline,List<String> tasksToCreate = const[],required this.uniqueId}){
     tasks = _Tasks(listOfTasksToCreate: tasksToCreate);
+    alarmText = 'Today is the deadline for $ideaTitle';
   }
 }
 
