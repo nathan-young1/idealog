@@ -10,10 +10,7 @@ class Schedule{
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   RepeatSchedule repeatSchedule;
-  bool setAlarmForTask;
-  String? alarmText;
+  bool setAlarmForSchedule;
 
-  Schedule({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required this.repeatSchedule,this.endTime,required this.setAlarmForTask,required this.uniqueId}){
-    alarmText = scheduleTitle;
-  }
+  Schedule({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required this.repeatSchedule,this.endTime,required this.setAlarmForSchedule,required this.uniqueId});
 }
