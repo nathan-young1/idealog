@@ -1,4 +1,7 @@
 import 'dart:typed_data';
+import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/core-models/scheduleModel.dart';
 import 'package:idealog/global/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +9,7 @@ import 'package:idealog/customAppBar/appBar.dart';
 import 'package:flutter/services.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:idealog/global/extension.dart';
+import 'package:idealog/sqlite-db/sqlite.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AddSchedule extends StatefulWidget {
@@ -141,21 +145,18 @@ class _AddScheduleState extends State<AddSchedule> {
                 children: [
                   ElevatedButton(
                     onPressed: () async { 
-                      // int setTime = DateTime.now().millisecondsSinceEpoch;
+                      DateTime newer = new DateTime(2021,3,20);
+                      print(newer);
+                      print(newer.millisecondsSinceEpoch);
                       // await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
-                      // print(setTime);
-                      var db = await openDatabase(sqliteDbName);
-                      List<List<int>> tasks = ['ajkjf'.codeUnits,'jekhij8a'.codeUnits,'eating'.codeUnits,'running'.codeUnits,
-                      '''ajlfkdjajijflkajdfjijasjfoiejlkjifajioejlkjajfklajlkfjlkajkjfjakdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddjkaj
-                      afajkslllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'''.codeUnits];
-                      // await db.execute('DELETE FROM IDEAS WHERE uniqueId < 230');
-                      // await db.insert(ideasTableName, {'uniqueId' : 260,
-                      // 'ideaTitle': 400,'moreDetails': tasks.toString(),'deadline': 678});
-                      var query = await db.rawQuery('SELECT * FROM IDEAS WHERE uniqueId = 260');
-                      var uniqueIdReturn = query.first['moreDetails'].toString();
-                      List<String> together = uniqueIdReturn.fromDbStringToStringList;
-                      print(together);
-                      await db.close();
+                      // Schedule? schedule = Schedule(scheduleTitle: 'jdklf', scheduleDate: newer.millisecondsSinceEpoch,
+                      //  repeatSchedule: RepeatSchedule.DAILY, uniqueId: DateTime.now().millisecondsSinceEpoch,
+                      //  startTime: TimeOfDay(hour: 4,minute: 10),endTime: TimeOfDay(hour: 2,minute: 1),moreDetails: 'djkd');
+                      // await Sqlite.writeToDb(notificationType: NotificationType.SCHEDULE,schedule: schedule);
+                      List<Schedule> schedule = await Sqlite.readFromDb(type: NotificationType.SCHEDULE);
+                      print(schedule.first.scheduleTitle);
+                      print(schedule.first.uniqueId);
+                      print(schedule.first.startTime);
                       },
                     child: Text('Save')),
                     ElevatedButton(

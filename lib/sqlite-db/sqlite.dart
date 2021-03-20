@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:sqflite/sqflite.dart';
@@ -10,30 +9,36 @@ import 'ideasDbColumn.dart';
 import 'scheduleDbColumn.dart';
 
 class Sqlite{
+
   static writeToDb({required NotificationType notificationType,Idea? idea,Schedule? schedule}) async {
 
-    Database _database = await openDatabase(sqliteDbName,onCreate: (_,__)=>print('${_.path} has been created'));
+    Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
     if(notificationType == NotificationType.IDEAS){
-      await _database.execute('create table if not exists $ideasTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_ideaTitle TEXT,$Column_moreDetails TEXT,$Column_deadline INTEGER,$Column_completedTasks TEXT,$Column_uncompletedTasks TEXT)');
+
+      await _database.execute('create table if not exists $ideasTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_ideaTitle TEXT,$Column_moreDetails TEXT,$Column_deadline INTEGER,$Column_uncompletedTasks TEXT,$Column_completedTasks TEXT)');
+      List<List<int>> completedTasks = idea!.tasks!.completedTasks;
+      List<List<int>> uncompletedTasks = idea.tasks!.uncompletedTasks;
+
       _database.insert(ideasTableName, {
-        Column_uniqueId:idea!.uniqueId.toString(),
-        Column_ideaTitle:idea.ideaTitle,
-        Column_moreDetails:idea.moreDetails,
-        Column_deadline:idea.deadline,
-        Column_completedTasks:idea.tasks!.completedTasks.toString(),
-        Column_uncompletedTasks:idea.tasks!.uncompletedTasks.toString()
+        Column_uniqueId:  '${idea.uniqueId}',
+        Column_ideaTitle  :idea.ideaTitle,
+        Column_moreDetails: idea.moreDetails,
+        Column_deadline:  idea.deadline,
+        Column_completedTasks:  (completedTasks.isEmpty)?null:'$completedTasks',
+        Column_uncompletedTasks: (uncompletedTasks.isEmpty)?null:'$uncompletedTasks'
         });
 
     }else if(notificationType == NotificationType.SCHEDULE){
-      await _database.execute('create table if not exists $scheduleTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_scheduleTitle TEXT,$Column_moreDetails TEXT,$Column_scheduleDate INTEGER,$Column_startTime INTEGER,$Column_endTime INTEGER,$Column_repeatSchedule TEXT)');
+      //await _database.execute('Drop Table $scheduleTableName');
+      await _database.execute('create table if not exists $scheduleTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_scheduleTitle TEXT,$Column_moreDetails TEXT,$Column_scheduleDate INTEGER,$Column_startTime TEXT,$Column_endTime TEXT,$Column_repeatSchedule TEXT)');
       _database.insert(scheduleTableName, {
         Column_uniqueId:schedule!.uniqueId,
         Column_scheduleTitle:schedule.scheduleTitle,
         Column_moreDetails:schedule.moreDetails,
         Column_scheduleDate:schedule.scheduleDate,
-        Column_startTime:schedule.startTime,
-        Column_endTime:schedule.endTime,
-        Column_repeatSchedule:schedule.repeatSchedule.toString()
+        Column_startTime:'${schedule.startTime!.hour}:${schedule.startTime!.minute}',
+        Column_endTime:'${schedule.endTime!.hour}:${schedule.endTime!.minute}',
+        Column_repeatSchedule:'${schedule.repeatSchedule}'
       });
     }
     await _database.close();
@@ -50,18 +55,24 @@ class Sqlite{
   static readFromDb({required NotificationType type}) async {
       List<Idea>? allIdeasFromDb = [];
       List<Schedule>? allScheduleFromDb = [];
-        Database _database = await openDatabase(sqliteDbName,onCreate: (_,__)=>print('${_.path} has been created'));
+        
+        Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
         if(type == NotificationType.IDEAS){
         var result = await _database.query(ideasTableName);
-        result.forEach((idea) { allIdeasFromDb.add(
+        result.forEach((idea) { 
+        Object? completedTasks = idea[Column_completedTasks];
+        Object? uncompletedTasks = idea[Column_uncompletedTasks];
+        print(idea[Column_completedTasks]);
+        allIdeasFromDb.add(
         Idea.readFromDb(
         ideaTitle: idea[Column_ideaTitle].toString(),
         uniqueId: int.parse(idea[Column_uniqueId].toString()),
         moreDetails: idea[Column_moreDetails].toString(),
         deadline: int.parse(idea[Column_deadline].toString()),
-        completedTasks: idea[Column_completedTasks].toString().fromDbStringToStringList,
-        uncompletedTasks: idea[Column_uncompletedTasks].toString().fromDbStringToStringList
+        completedTasks: (completedTasks != null)?completedTasks.fromDbStringToListInt:[],
+        uncompletedTasks: (uncompletedTasks != null)?uncompletedTasks.fromDbStringToListInt:[]
         ));});
+        
         }else if(type == NotificationType.SCHEDULE){
         var result = await _database.query(scheduleTableName);
         result.forEach((schedule) { 
@@ -69,10 +80,13 @@ class Sqlite{
           int startTimeMinute = int.parse(schedule[Column_startTime].toString().split(':').last);
           int endTimeHour = int.parse(schedule[Column_endTime].toString().split(':').first);
           int endTimeMinute = int.parse(schedule[Column_endTime].toString().split(':').last);
+          print('$startTimeHour $startTimeMinute\n $endTimeHour $endTimeMinute');
+          print(schedule[Column_repeatSchedule]);
+          print(schedule[Column_scheduleDate]);
           allScheduleFromDb.add(
             Schedule.fromDb(
               scheduleTitle: schedule[Column_scheduleTitle].toString(),
-              scheduleDate: int.parse(Column_scheduleDate.toString()),
+              scheduleDate: int.parse(schedule[Column_scheduleDate].toString()),
               repeatSchedule: schedule[Column_repeatSchedule].toString(),
               uniqueId: int.parse(schedule[Column_uniqueId].toString()),
               startTime: TimeOfDay(hour: startTimeHour,minute: startTimeMinute),
