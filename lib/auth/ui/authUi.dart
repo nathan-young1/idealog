@@ -36,7 +36,7 @@ class _LoginState extends State<Login> {
                     height: 50.h,
                     child: ElevatedButton.icon(
                     onPressed: () async {
-                      await signInWithGoogle();
+                      //await signInWithGoogle();
                       Navigator.pushNamed(context, 'AddNewIdea');
                     },
                     icon: Image.asset(pathToGoogleLogo,height: 40.h,width: 40.w,),

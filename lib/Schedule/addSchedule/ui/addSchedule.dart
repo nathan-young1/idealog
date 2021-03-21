@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/core-models/scheduleModel.dart';
+import 'package:idealog/customInputDecoration/inputDecoration.dart';
 import 'package:idealog/global/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,81 +61,92 @@ class _AddScheduleState extends State<AddSchedule> {
               preferredSize: const Size.fromHeight(kToolbarHeight*1.2),
               child: CustomAppBar(title: 'ADD SCHEDULE')),
         body: Form(
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.text_fields),
-                  labelText: 'Title'
-                ),
-              ),
-              Row(
-                children: [
-                Icon(Icons.watch),
-                Container(
-                  width: 50.w,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Start time'
-                    ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 15,right: 15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextFormField(
+                  decoration: underlineAndFilled.copyWith(
+                    prefixIcon: Icon(Icons.text_fields),
+                    labelText: 'Title'
                   ),
                 ),
-                Text('To'),
-                Container(
-                  width: 50.w,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'End time'
+                Row(
+                  children: [
+                  Expanded(
+                    flex: 2,
+                    child: TextFormField(
+                      decoration: underlineAndFilled.copyWith(
+                        labelText: 'Start time',
+                        prefixIcon: Icon(Icons.access_time_sharp)
+                      ),
                     ),
                   ),
+                  Expanded(
+                    flex: 1,
+                    child: Text('To',textAlign: TextAlign.center,)),
+                  Expanded(
+                    flex: 2,
+                    child: TextFormField(
+                      decoration: underlineAndFilled.copyWith(
+                        labelText: 'End time',
+                        prefixIcon: Icon(Icons.access_time_sharp)
+                      ),
+                    ),
+                  ),
+                ],),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Date:'),
+                    Container(
+                      width: 200,
+                      child: TextFormField(
+                        decoration: underlineAndFilled.copyWith(
+                          suffixIcon: Icon(Icons.date_range),
+                          labelText: 'dd/mm/year',
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],),
-              TextFormField(
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.date_range),
-                  labelText: 'Date',
+                TextFormField(
+                  maxLines: null,
+                  minLines: 5,
+                  decoration: underlineAndFilled.copyWith(
+                    labelText: 'More details on schedule...'
+                  ),
                 ),
-              ),
-              TextFormField(
-                maxLines: null,
-                minLines: 5,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.text_fields),
-                  labelText: 'More details on schedule...'
+                Row(
+                  children: [
+                    Text('Repeat: '),
+                    Container(
+                      width: 150.w,
+                      child: DropdownButtonFormField(
+                        hint: Text('NONE'),
+                        onChanged: (value){
+                          print(value);
+                        },
+                        items: [
+                          DropdownMenuItem(
+                            value: RepeatSchedule.DAILY,
+                            child: Text('Daily')),
+                          DropdownMenuItem(
+                            value: RepeatSchedule.WEEKLY,
+                            child: Text('Weekly')),
+                          DropdownMenuItem(
+                            value: RepeatSchedule.MONTHLY,
+                            child: Text('Monthly')),
+                          DropdownMenuItem(
+                            value: RepeatSchedule.YEARLY,
+                            child: Text('Yearly'))
+                          ]),
+                    )
+                  ],
                 ),
-              ),
-              Row(
-                children: [
-                  Text('Repeat: '),
-                  Container(
-                    width: 150.w,
-                    child: DropdownButtonFormField(
-                      hint: Text('NONE'),
-                      onChanged: (value){
-                        print(value);
-                      },
-                      items: [
-                        DropdownMenuItem(
-                          value: RepeatSchedule.DAILY,
-                          child: Text('Daily')),
-                        DropdownMenuItem(
-                          value: RepeatSchedule.WEEKLY,
-                          child: Text('Weekly')),
-                        DropdownMenuItem(
-                          value: RepeatSchedule.MONTHLY,
-                          child: Text('Monthly')),
-                        DropdownMenuItem(
-                          value: RepeatSchedule.YEARLY,
-                          child: Text('Yearly'))
-                        ]),
-                  )
-                ],
-              ),
-              CheckboxListTile(
-               value: true,
-               onChanged: (value){},
-               title: Text('Set alarm for task'),),
-            ],
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: Container(

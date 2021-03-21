@@ -2,6 +2,7 @@ import 'dart:isolate';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
+import 'package:idealog/customInputDecoration/inputDecoration.dart';
 
 class NewIdea extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _NewIdeaState extends State<NewIdea> {
   List<String> tasks = [];
   TextEditingController taskField = TextEditingController();
   FocusNode taskFieldFocus = FocusNode();
+  bool setDeadline = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -21,71 +23,77 @@ class _NewIdeaState extends State<NewIdea> {
               child: CustomAppBar(title: 'ADD IDEA')),
         body: SingleChildScrollView(
           child: Form(
-            child: Column(
-              children: [
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Idea title',
-                    prefixIcon: Icon(Icons.text_fields)
-                  ),
-                ),
-                TextFormField(
-                  maxLines: null,
-                  minLines: 5,
-                  keyboardType: TextInputType.multiline,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15)
-                    ),
-                    labelText: 'More details on idea...'
-                  ),
-                ),
-                CheckboxListTile(
-                  title: Text('Set Deadline'),
-                  value: true,
-                  onChanged: (bool? value){}),
-                Row(
-                  children: [
-                    Text('Deadline: '),
-                    Container(
-                      width: 200,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.date_range),
-                          labelText: 'dd/mm/year'
-                        ),
-                      ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15,right: 15),
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration: underlineAndFilled.copyWith(
+                      labelText: 'Idea title',
+                      prefixIcon: Icon(Icons.text_fields)
                     )
-                  ],
-                ),
-                Text('Add Tasks required for idea'),
-                Row(children: [
-                  Icon(Icons.info),
-                  Text('Press '),
-                  Container(
-                    color: Colors.grey,
-                    child: Text('Enter'),
                   ),
-                  Text('to add task.')
-                ],),
-                _allTasks(),
-                TextFormField(
-                  controller: taskField,
-                  focusNode: taskFieldFocus,
-                  onFieldSubmitted: (newTask){
-                    taskFieldFocus.requestFocus();
-                    if(newTask != ''){
-                    setState(() => tasks.add(newTask));
-                    taskField.text = '';
-                    }
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Task',
-                    suffixIcon: IconButton(icon: Icon(Icons.cancel),
-                    onPressed: () => taskField.text = '')
+                  SizedBox(height: 15),
+                  TextFormField(
+                    maxLines: null,
+                    minLines: 5,
+                    keyboardType: TextInputType.multiline,
+                    decoration: underlineAndFilled.copyWith(
+                      labelText: 'More details on idea...'
+                    ),
                   ),
-                )
-              ],
+                  CheckboxListTile(
+                    title: Text('Set Deadline'),
+                    value: setDeadline,
+                    onChanged: (bool? value)=>setState(()=>setDeadline=value!)),
+                  Visibility(
+                    visible: setDeadline,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('Deadline:'),
+                        Container(
+                          width: 200,
+                          child: TextField(
+                            enabled: false,
+                            decoration: underlineAndFilled.copyWith(
+                              suffixIcon: Icon(Icons.date_range),
+                              labelText: 'dd/mm/year'
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Text('Add Tasks required for idea'),
+                  Row(children: [
+                    Icon(Icons.info),
+                    Text('Press '),
+                    Container(
+                      color: Colors.grey,
+                      child: Text('Enter'),
+                    ),
+                    Text('to add task.')
+                  ],),
+                  _allTasks(),
+                  TextFormField(
+                    controller: taskField,
+                    focusNode: taskFieldFocus,
+                    onFieldSubmitted: (newTask){
+                      taskFieldFocus.requestFocus();
+                      if(newTask != ''){
+                      setState(() => tasks.add(newTask));
+                      taskField.text = '';
+                      }
+                    },
+                    decoration: addTasks.copyWith(
+                      labelText: 'Task',
+                      suffixIcon: IconButton(icon: Icon(Icons.cancel),
+                      onPressed: () => taskField.text = '')
+                    ),
+                  )
+                ],
+              ),
             ),),
         ),
           bottomNavigationBar: Container(
