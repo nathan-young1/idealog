@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/core-models/scheduleModel.dart';
@@ -76,10 +77,12 @@ class _AddScheduleState extends State<AddSchedule> {
                   children: [
                   Expanded(
                     flex: 2,
-                    child: TextFormField(
+                    child: DateTimePicker(
+                      type: DateTimePickerType.time,
+                      use24HourFormat: false,
                       decoration: underlineAndFilled.copyWith(
-                        labelText: 'Start time',
-                        prefixIcon: Icon(Icons.access_time_sharp)
+                            labelText: 'Start time',
+                            prefixIcon: Icon(Icons.access_time_sharp)
                       ),
                     ),
                   ),
@@ -88,10 +91,12 @@ class _AddScheduleState extends State<AddSchedule> {
                     child: Text('To',textAlign: TextAlign.center,)),
                   Expanded(
                     flex: 2,
-                    child: TextFormField(
+                    child: DateTimePicker(
+                      type: DateTimePickerType.time,
+                      use24HourFormat: false,
                       decoration: underlineAndFilled.copyWith(
-                        labelText: 'End time',
-                        prefixIcon: Icon(Icons.access_time_sharp)
+                            labelText: 'End time',
+                            prefixIcon: Icon(Icons.access_time_sharp)
                       ),
                     ),
                   ),
@@ -102,12 +107,16 @@ class _AddScheduleState extends State<AddSchedule> {
                     Text('Date:'),
                     Container(
                       width: 200,
-                      child: TextFormField(
-                        decoration: underlineAndFilled.copyWith(
-                          suffixIcon: Icon(Icons.date_range),
-                          labelText: 'dd/mm/year',
-                        ),
-                      ),
+                      child: DateTimePicker(
+                            dateMask: 'd MMM, yyyy',
+                            decoration: underlineAndFilled.copyWith(
+                                suffixIcon: Icon(Icons.date_range),
+                                labelText: 'dd-mm-year'
+                              ),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                                initialDate: DateTime.now(),
+                              ),
                     ),
                   ],
                 ),

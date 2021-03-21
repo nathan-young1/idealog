@@ -1,8 +1,10 @@
 import 'dart:isolate';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:idealog/customInputDecoration/inputDecoration.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class NewIdea extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class NewIdea extends StatefulWidget {
 class _NewIdeaState extends State<NewIdea> {
   List<String> tasks = [];
   TextEditingController taskField = TextEditingController();
+  TextEditingController deadline = TextEditingController();
   FocusNode taskFieldFocus = FocusNode();
   bool setDeadline = false;
   @override
@@ -54,14 +57,17 @@ class _NewIdeaState extends State<NewIdea> {
                         Text('Deadline:'),
                         Container(
                           width: 200,
-                          child: TextField(
-                            enabled: false,
+                          child: DateTimePicker(
+                            dateMask: 'd MMM, yyyy',
                             decoration: underlineAndFilled.copyWith(
-                              suffixIcon: Icon(Icons.date_range),
-                              labelText: 'dd/mm/year'
-                            ),
-                          ),
-                        )
+                                suffixIcon: Icon(Icons.date_range),
+                                labelText: 'dd-mm-year'
+                              ),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                                initialDate: DateTime.now(),
+                              ),
+                        ),
                       ],
                     ),
                   ),
