@@ -1,12 +1,13 @@
 class Idea{
-  final int uniqueId;
+  late final int uniqueId;
   String ideaTitle;
   String? moreDetails;
   int? deadline;
   _Tasks? tasks;
   
-  Idea({required this.ideaTitle,this.moreDetails,this.deadline,List<List<int>> tasksToCreate = const[],required this.uniqueId}){
+  Idea({required this.ideaTitle,this.moreDetails,this.deadline,List<List<int>> tasksToCreate = const[]}){
     tasks = _Tasks(listOfTasksToCreate: tasksToCreate);
+    this.uniqueId = DateTime.now().millisecondsSinceEpoch;
     // // alarmText = 'Today is the deadline for $ideaTitle';
   }
 

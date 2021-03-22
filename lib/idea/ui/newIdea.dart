@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:idealog/customInputDecoration/inputDecoration.dart';
+import 'package:idealog/global/strings.dart';
+import 'package:idealog/idea/code/ideaManager.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class NewIdea extends StatefulWidget {
@@ -15,6 +17,8 @@ class _NewIdeaState extends State<NewIdea> {
   List<String> tasks = [];
   TextEditingController taskField = TextEditingController();
   TextEditingController deadline = TextEditingController();
+  TextEditingController ideaTitle = TextEditingController();
+  TextEditingController moreDetails = TextEditingController();
   FocusNode taskFieldFocus = FocusNode();
   bool setDeadline = false;
   @override
@@ -31,6 +35,7 @@ class _NewIdeaState extends State<NewIdea> {
               child: Column(
                 children: [
                   TextFormField(
+                    controller: ideaTitle,
                     decoration: underlineAndFilled.copyWith(
                       labelText: 'Idea title',
                       prefixIcon: Icon(Icons.text_fields)
@@ -38,6 +43,7 @@ class _NewIdeaState extends State<NewIdea> {
                   ),
                   SizedBox(height: 15),
                   TextFormField(
+                    controller: moreDetails,
                     maxLines: null,
                     minLines: 5,
                     keyboardType: TextInputType.multiline,
@@ -100,7 +106,8 @@ class _NewIdeaState extends State<NewIdea> {
                       suffixIcon: IconButton(icon: Icon(Icons.cancel),
                       onPressed: () => taskField.text = '')
                     ),
-                  )
+                  ),
+                  ElevatedButton(onPressed: ()=>Navigator.pushReplacementNamed(context, addNewSchedulePage), child: Text('Next Page'))
                 ],
               ),
             ),),
@@ -110,14 +117,11 @@ class _NewIdeaState extends State<NewIdea> {
             color: Colors.green,
             child: Center(
               child: ElevatedButton(
-                onPressed: (){
-                  List<String> deadlineDateTime = deadline.text.split('-');
-                  int year = int.parse(deadlineDateTime[0]);
-                  int month = int.parse(deadlineDateTime[1]);
-                  int day = int.parse(deadlineDateTime[2]);
-                  print(year+month+day);
-                  //Navigator.pushNamed(context, 'AddSchedule');
-                },
+                onPressed: () async => await addToDbAndSetAlarmIdea(
+                ideaTitle: ideaTitle.text,
+                deadlineInString: deadline.text,
+                moreDetails: moreDetails.text,
+                tasks: tasks),
                 child: Text('Save')),
             ),),
       ),

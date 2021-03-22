@@ -11,6 +11,7 @@ import 'package:idealog/customAppBar/appBar.dart';
 import 'package:flutter/services.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:idealog/global/extension.dart';
+import 'package:idealog/nativeCode/bridge.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -20,39 +21,7 @@ class AddSchedule extends StatefulWidget {
 }
 
 class _AddScheduleState extends State<AddSchedule> {
-  static const platform = const MethodChannel(javaToFlutterMethodChannelName);
 
-  createNewAlarm({required String? alarmText,required NotificationType typeOfNotification,required int? uniqueAlarmId,required int? alarmTime}) async{
-    //remember to change configuaration to int in native java code
-    Map<String,dynamic> alarmConfiguration = {
-      'timeForAlarm': alarmTime!,
-      'alarmText': alarmText!,
-      'typeOfNotification': (typeOfNotification == NotificationType.IDEAS)?1:2,
-      'uniqueAlarmId': uniqueAlarmId!
-    };
-
-    try{
-      String result = await platform.invokeMethod("setAlarm",alarmConfiguration);
-      print("kd".hashCode.toString());
-      print('dart ${result.split(',').toString()}');
-      print('dart substring ${String.fromCharCodes(List<int>.from(result.substring(2,result.length-2).split(',')))}');
-      print(result);
-    }catch(e){
-      print(e);
-    }
-  }
-
-  cancelAlarm({required int? uniqueAlarmId}) async {
-    Map<String,dynamic> alarmConfiguration = {
-      'uniqueAlarmId': uniqueAlarmId!
-    };
-    try{
-      String result = await platform.invokeMethod("cancelAlarm",alarmConfiguration);
-      print(result);
-    }catch(e){
-      print(e);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

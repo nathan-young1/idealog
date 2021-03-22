@@ -48,3 +48,14 @@ extension DataFromSqliteDb on Object{
   }
 
 }
+
+extension stringToDateTime on String{
+  int get deadlineStringToMillisecondsSinceEponch{
+  List<String> deadlineDateTime = this.split('-');
+  int year = int.parse(deadlineDateTime[0]);
+  int month = int.parse(deadlineDateTime[1]);
+  int day = int.parse(deadlineDateTime[2]);
+  print('$year $month $day');
+  return DateTime(year,month,day).millisecondsSinceEpoch;
+  }
+}
