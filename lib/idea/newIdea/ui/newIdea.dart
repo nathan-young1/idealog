@@ -58,6 +58,9 @@ class _NewIdeaState extends State<NewIdea> {
                         Container(
                           width: 200,
                           child: DateTimePicker(
+                            dateHintText: 'Deadline',
+                            dateLabelText: 'Deadline',
+                            controller: deadline,
                             dateMask: 'd MMM, yyyy',
                             decoration: underlineAndFilled.copyWith(
                                 suffixIcon: Icon(Icons.date_range),
@@ -108,7 +111,12 @@ class _NewIdeaState extends State<NewIdea> {
             child: Center(
               child: ElevatedButton(
                 onPressed: (){
-                  Navigator.pushNamed(context, 'AddSchedule');
+                  List<String> deadlineDateTime = deadline.text.split('-');
+                  int year = int.parse(deadlineDateTime[0]);
+                  int month = int.parse(deadlineDateTime[1]);
+                  int day = int.parse(deadlineDateTime[2]);
+                  print(year+month+day);
+                  //Navigator.pushNamed(context, 'AddSchedule');
                 },
                 child: Text('Save')),
             ),),

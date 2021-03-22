@@ -78,6 +78,7 @@ class _AddScheduleState extends State<AddSchedule> {
                   Expanded(
                     flex: 2,
                     child: DateTimePicker(
+                      timeLabelText: 'Start Time',
                       type: DateTimePickerType.time,
                       use24HourFormat: false,
                       decoration: underlineAndFilled.copyWith(
@@ -92,6 +93,7 @@ class _AddScheduleState extends State<AddSchedule> {
                   Expanded(
                     flex: 2,
                     child: DateTimePicker(
+                      timeLabelText: 'End Time',
                       type: DateTimePickerType.time,
                       use24HourFormat: false,
                       decoration: underlineAndFilled.copyWith(
@@ -108,6 +110,7 @@ class _AddScheduleState extends State<AddSchedule> {
                     Container(
                       width: 200,
                       child: DateTimePicker(
+                            dateLabelText: 'Schedule Date',
                             dateMask: 'd MMM, yyyy',
                             decoration: underlineAndFilled.copyWith(
                                 suffixIcon: Icon(Icons.date_range),
