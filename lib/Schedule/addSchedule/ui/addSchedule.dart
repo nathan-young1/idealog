@@ -21,7 +21,10 @@ class AddSchedule extends StatefulWidget {
 }
 
 class _AddScheduleState extends State<AddSchedule> {
-
+  TextEditingController scheduleDetails = TextEditingController();
+  TextEditingController startTime = TextEditingController();
+  TextEditingController endTime = TextEditingController();
+  TextEditingController date = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +39,33 @@ class _AddScheduleState extends State<AddSchedule> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                TextFormField(
-                  decoration: underlineAndFilled.copyWith(
-                    prefixIcon: Icon(Icons.text_fields),
-                    labelText: 'Title'
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Date:'),
+                    Container(
+                      width: 200,
+                      child: DateTimePicker(
+                        controller: date,
+                            dateLabelText: 'Schedule Date',
+                            dateMask: 'd MMM, yyyy',
+                            decoration: underlineAndFilled.copyWith(
+                                suffixIcon: Icon(Icons.date_range),
+                                labelText: 'dd-mm-year'
+                              ),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                                initialDate: DateTime.now(),
+                              ),
+                    ),
+                  ],
                 ),
                 Row(
                   children: [
                   Expanded(
                     flex: 2,
                     child: DateTimePicker(
+                      controller: startTime,
                       timeLabelText: 'Start Time',
                       type: DateTimePickerType.time,
                       use24HourFormat: false,
@@ -62,6 +81,7 @@ class _AddScheduleState extends State<AddSchedule> {
                   Expanded(
                     flex: 2,
                     child: DateTimePicker(
+                      controller: endTime,
                       timeLabelText: 'End Time',
                       type: DateTimePickerType.time,
                       use24HourFormat: false,
@@ -72,31 +92,12 @@ class _AddScheduleState extends State<AddSchedule> {
                     ),
                   ),
                 ],),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text('Date:'),
-                    Container(
-                      width: 200,
-                      child: DateTimePicker(
-                            dateLabelText: 'Schedule Date',
-                            dateMask: 'd MMM, yyyy',
-                            decoration: underlineAndFilled.copyWith(
-                                suffixIcon: Icon(Icons.date_range),
-                                labelText: 'dd-mm-year'
-                              ),
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2100),
-                                initialDate: DateTime.now(),
-                              ),
-                    ),
-                  ],
-                ),
                 TextFormField(
+                  controller: scheduleDetails,
                   maxLines: null,
                   minLines: 5,
                   decoration: underlineAndFilled.copyWith(
-                    labelText: 'More details on schedule...'
+                    labelText: 'Schedule Details...'
                   ),
                 ),
                 Row(
@@ -138,18 +139,17 @@ class _AddScheduleState extends State<AddSchedule> {
                 children: [
                   ElevatedButton(
                     onPressed: () async { 
-                      DateTime newer = new DateTime(2021,3,20);
-                      print(newer);
-                      print(newer.millisecondsSinceEpoch);
+                      List<String> res = '${date.text} ${startTime.text}'.split(' ');
+                      print(res.last.split(':'));
                       // await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
                       // Schedule? schedule = Schedule(scheduleTitle: 'jdklf', scheduleDate: newer.millisecondsSinceEpoch,
                       //  repeatSchedule: RepeatSchedule.DAILY, uniqueId: DateTime.now().millisecondsSinceEpoch,
                       //  startTime: TimeOfDay(hour: 4,minute: 10),endTime: TimeOfDay(hour: 2,minute: 1),moreDetails: 'djkd');
                       // await Sqlite.writeToDb(notificationType: NotificationType.SCHEDULE,schedule: schedule);
-                      List<Schedule> schedule = await Sqlite.readFromDb(type: NotificationType.SCHEDULE);
-                      print(schedule.first.scheduleTitle);
-                      print(schedule.first.uniqueId);
-                      print(schedule.first.startTime);
+                      // List<Schedule> schedule = await Sqlite.readFromDb(type: NotificationType.SCHEDULE);
+                      // print(schedule.first.scheduleTitle);
+                      // print(schedule.first.uniqueId);
+                      // print(schedule.first.startTime);
                       },
                     child: Text('Save')),
                     ElevatedButton(

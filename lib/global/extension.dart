@@ -55,7 +55,18 @@ extension stringToDateTime on String{
   int year = int.parse(deadlineDateTime[0]);
   int month = int.parse(deadlineDateTime[1]);
   int day = int.parse(deadlineDateTime[2]);
-  print('$year $month $day');
   return DateTime(year,month,day).millisecondsSinceEpoch;
+  }
+
+  int get scheduleStartTimeToMillisecondsSinceEponch{
+    List<String> dateAndTime = this.split(' ');
+    List<String> dateInString = dateAndTime.first.split('-');
+    List<String> timeInString = dateAndTime.last.split(':');
+    int year = int.parse(dateInString[0]);
+    int month = int.parse(dateInString[1]);
+    int day = int.parse(dateInString[2]);
+    int hour = int.parse(timeInString.first);
+    int minute = int.parse(timeInString.last);
+    return DateTime(year,month,day,hour,minute).millisecondsSinceEpoch;
   }
 }

@@ -63,6 +63,8 @@ public class MainActivity extends FlutterActivity {
         //put a unique pendingIntent id
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
         alarmManager.set(AlarmManager.RTC_WAKEUP,alarmTime,pendingIntent);
+        //alarmManager.setAlarmClock();
+        alarmManager.setRepeating();
         System.out.println("The alarm has been scheduled at "+alarmTime);
     }
 

@@ -3,7 +3,7 @@ import 'package:idealog/Schedule/addSchedule/ui/addSchedule.dart';
 import 'package:idealog/global/enums.dart';
 
 class Schedule{
-  final int uniqueId;
+  late final int uniqueId;
   String scheduleTitle;
   String? moreDetails;
   int scheduleDate;
@@ -11,7 +11,9 @@ class Schedule{
   TimeOfDay? endTime;
   RepeatSchedule? repeatSchedule;
 
-  Schedule({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required this.repeatSchedule,this.endTime,required this.uniqueId});
+  Schedule({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required this.repeatSchedule,this.endTime}){
+      this.uniqueId = DateTime.now().millisecondsSinceEpoch;
+  }
   Schedule.fromDb({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required String repeatSchedule,this.endTime,required this.uniqueId}){
     switch (repeatSchedule){
       case 'RepeatSchedule.NONE':
