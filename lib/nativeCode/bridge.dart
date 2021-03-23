@@ -20,9 +20,7 @@ const platform = const MethodChannel(javaToFlutterMethodChannelName);
   }
 
   cancelAlarm({required int? uniqueAlarmId}) async {
-    Map<String,dynamic> alarmConfiguration = {
-      'uniqueAlarmId': uniqueAlarmId!
-    };
+    Map<String,dynamic> alarmConfiguration = {'uniqueAlarmId': uniqueAlarmId!};
     try{
       String result = await platform.invokeMethod("cancelAlarm",alarmConfiguration);
       print(result);
