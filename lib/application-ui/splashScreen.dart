@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/global/strings.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
   changeRoute() =>Navigator.pushReplacementNamed(context, 'AuthPage');
   @override
     void initState() {
-      // TODO: implement initState
       super.initState();
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
         timer = Timer(Duration(seconds: 2),()=>changeRoute());
@@ -26,9 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     @override
       void dispose() {
-        // TODO: implement dispose
-        super.dispose();
         timer!.cancel();
+        super.dispose();
       }
       
   @override

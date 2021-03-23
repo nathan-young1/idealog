@@ -5,9 +5,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.AudioAttributes;
+import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -17,31 +20,42 @@ enum NotificationType{IDEAS,SCHEDULE}
 public class ListenForAlarm extends BroadcastReceiver {
     NotificationManager notificationManager;
     NotificationCompat.Builder notificationBuilder;
+    String alarmContentText;
+    NotificationType notificationType;
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("com.alarm.broadcast_notification")) {
+            alarmContentText = intent.getStringExtra("AlarmText");
+            notificationType = (NotificationType) intent.getSerializableExtra("NotificationType");
+            //uri to sound file
+            Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/" + R.raw.idealogAlarm);
             // Set the alarm here
-        System.out.println("I the broadcast has been called with text " + MainActivity.alarmContentText);
+        System.out.println("I the broadcast has been called with text " + alarmContentText);
 //        NotificationCompat.Builder(Context context) has been deprecated. And we have to use the constructor which has the channelId parameter:
-        notificationBuilder = buildNotification(context, MainActivity.typeOfNotification);
+        notificationBuilder = buildNotification(context, notificationType);
 //        now create intent to open app on notification tap
         Intent onNotificationTap = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, onNotificationTap, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.setSound(sound);
+
         //for andriod 8 and above , you need to set notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannels(context);
+            createChannels(context,sound);
         }
 
         //give each notification a different id so they can stand apart
-        final int notificationId = MainActivity.alarmNotificationId;
+        final int notificationId = (int) System.currentTimeMillis();
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void createChannels(Context context){
-        if(MainActivity.typeOfNotification == NotificationType.IDEAS) {
+    public void createChannels(Context context,Uri sound){
+        AudioAttributes attributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .build();
+        if(notificationType == NotificationType.IDEAS) {
             //channel for all notification from ideas
             String ideaschannelId = "Channel for ideas";
             NotificationChannel ideasChannel = new NotificationChannel(
@@ -51,11 +65,12 @@ public class ListenForAlarm extends BroadcastReceiver {
             ideasChannel.enableVibration(true);
             ideasChannel.setLightColor(0xFFb71c1c);
             ideasChannel.enableLights(true);
+            ideasChannel.setSound(sound,attributes);
             ideasChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             getNotificationManager(context).createNotificationChannel(ideasChannel);
             notificationBuilder.setChannelId(ideaschannelId);
-            System.out.print("ideas created"+MainActivity.typeOfNotification);
-        }else if(MainActivity.typeOfNotification == NotificationType.SCHEDULE) {
+            System.out.print("ideas created"+notificationType);
+        }else if(notificationType == NotificationType.SCHEDULE) {
             //channel for all notification from schedule
             String schedulechannelId = "Channel for schedules";
             NotificationChannel scheduleChannel = new NotificationChannel(
@@ -65,10 +80,11 @@ public class ListenForAlarm extends BroadcastReceiver {
             scheduleChannel.enableVibration(true);
             scheduleChannel.setLightColor(0xFFb71c1c);
             scheduleChannel.enableLights(true);
+            scheduleChannel.setSound(sound,attributes);
             scheduleChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             getNotificationManager(context).createNotificationChannel(scheduleChannel);
             notificationBuilder.setChannelId(schedulechannelId);
-            System.out.print("Schedule created"+MainActivity.typeOfNotification);
+            System.out.print(notificationType);
         }
     }
 
@@ -83,7 +99,7 @@ public class ListenForAlarm extends BroadcastReceiver {
     public NotificationCompat.Builder buildNotification(Context context,NotificationType typeOfNotification){
         return new NotificationCompat.Builder(context,"channelId")
                 .setContentTitle("Idealog")
-                .setContentText(MainActivity.alarmContentText)
+                .setContentText(alarmContentText)
 //        remeber to add set small icon of light bulb
                 .setSmallIcon((typeOfNotification == NotificationType.IDEAS)?R.drawable.ic_ideas_notification:R.drawable.ic_schedule_notification)
                 .setPriority(NotificationCompat.PRIORITY_MAX)

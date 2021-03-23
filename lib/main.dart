@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/screen_util.dart';
 import 'package:idealog/Schedule/addSchedule/ui/addSchedule.dart';
 import 'package:idealog/Schedule/checkSchedule/checkSchedule.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
-import 'package:idealog/idea/newIdea/ui/newIdea.dart';
 
 import 'auth/ui/authUi.dart';
+import 'idea/ui/newIdea.dart';
 
 void main() => runApp(Idealog());
 
