@@ -98,7 +98,7 @@ public class MainActivity extends FlutterActivity {
         Intent toCallTheBroadcastReceiver = new Intent(MainActivity.this,ListenForAlarm.class);
         toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
         toCallTheBroadcastReceiver.putExtra("alarmText",alarmTitle);
-        toCallTheBroadcastReceiver.putExtra("notificationType",notificationType);
+        toCallTheBroadcastReceiver.putExtra("notificationTypeIsIdea",notificationType == NotificationType.IDEAS);
         toCallTheBroadcastReceiver.putExtra("id",uniqueAlarmId);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
@@ -106,13 +106,13 @@ public class MainActivity extends FlutterActivity {
             switch (repeatSchedule){
                 case "RepeatSchedule.DAILY":
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),86400000,pendingIntent);
-                    break;
+                break;
                 case "RepeatSchedule.WEEKLY":
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),604800000,pendingIntent);
-                    break;
+                break;
                 default:
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                    break;
+                break;
             }
         }
     }

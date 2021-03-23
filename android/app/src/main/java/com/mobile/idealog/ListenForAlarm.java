@@ -33,12 +33,12 @@ public class ListenForAlarm extends BroadcastReceiver {
         if (intent.getAction().equals("com.alarm.broadcast_notification")) {
             Bundle extras = intent.getExtras();
             alarmContentText = extras.getString("alarmText");
-            notificationType = (NotificationType) extras.getSerializable("notificationType");
+            notificationType = (extras.getBoolean("notificationTypeIsIdea"))?NotificationType.IDEAS:NotificationType.SCHEDULE;
             id = extras.getInt("id");
             //uri to sound file
             Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/" + R.raw.alarm);
             // Set the alarm here
-        System.out.println("I the broadcast has been called with text " + alarmContentText);
+        System.out.println("I the broadcast has been called with " + alarmContentText+notificationType+id);
 //        NotificationCompat.Builder(Context context) has been deprecated. And we have to use the constructor which has the channelId parameter:
         notificationBuilder = buildNotification(context, notificationType);
 //        now create intent to open app on notification tap
@@ -106,9 +106,8 @@ public class ListenForAlarm extends BroadcastReceiver {
 
     public NotificationCompat.Builder buildNotification(Context context,NotificationType typeOfNotification){
         return new NotificationCompat.Builder(context,"channelId")
-                .setContentTitle("Idealog")
+                .setContentTitle((typeOfNotification == NotificationType.IDEAS)?"Idea":"Schedule")
                 .setContentText(alarmContentText)
-//        remeber to add set small icon of light bulb
                 .setSmallIcon((typeOfNotification == NotificationType.IDEAS)?R.drawable.ic_ideas_notification:R.drawable.ic_schedule_notification)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setOngoing(typeOfNotification == NotificationType.IDEAS)

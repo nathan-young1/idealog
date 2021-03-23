@@ -104,7 +104,7 @@ public class OnPhoneReboot extends BroadcastReceiver {
         Intent toCallTheBroadcastReceiver = new Intent(context,ListenForAlarm.class);
         toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
         toCallTheBroadcastReceiver.putExtra("alarmText",alarmText);
-        toCallTheBroadcastReceiver.putExtra("notificationType",notificationType);
+        toCallTheBroadcastReceiver.putExtra("notificationTypeIsIdea",notificationType == NotificationType.IDEAS);
         toCallTheBroadcastReceiver.putExtra("id",uniqueAlarmId);
         //put a unique pendingIntent id
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,uniqueAlarmId,toCallTheBroadcastReceiver,0);
