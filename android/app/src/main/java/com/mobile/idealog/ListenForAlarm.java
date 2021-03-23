@@ -54,7 +54,7 @@ public class ListenForAlarm extends BroadcastReceiver {
 
         //give each notification a different id so they can stand apart
         final int notificationId = (int) SystemClock.uptimeMillis();
-//        notificationManager.notify(notificationId, notificationBuilder.build());
+        notificationManager.notify(notificationId, notificationBuilder.build());
     }
     }
 

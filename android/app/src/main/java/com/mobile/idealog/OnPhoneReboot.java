@@ -56,9 +56,14 @@ public class OnPhoneReboot extends BroadcastReceiver {
 
         Calendar alarmTime = Calendar.getInstance();
         alarmTime.set(year,month,day,hour,minute);
+        // i am adding this boolean condition so that alarm will not ring if it has a repeat schedule of none and it is before now
+        boolean resetAlarm = true;
 
         if(alarmTime.before(Calendar.getInstance())){
             switch (repeatSchedule){
+                case NONE:
+                    resetAlarm = false;
+                break;
                 case DAILY:
                     alarmTime.set(year,month,day+1,hour,minute);
                 break;
@@ -103,6 +108,9 @@ public class OnPhoneReboot extends BroadcastReceiver {
         toCallTheBroadcastReceiver.putExtra("id",uniqueAlarmId);
         //put a unique pendingIntent id
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,uniqueAlarmId,toCallTheBroadcastReceiver,0);
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,alarmTime.getTimeInMillis(),pendingIntent);
+        if(resetAlarm) {
+            //only ring if reset alarm is true
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
+        }
     }
 }
