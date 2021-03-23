@@ -12,23 +12,31 @@ import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.SystemClock;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import java.util.UUID;
+
 enum NotificationType{IDEAS,SCHEDULE}
 public class ListenForAlarm extends BroadcastReceiver {
     NotificationManager notificationManager;
     NotificationCompat.Builder notificationBuilder;
     String alarmContentText;
+    int id;
     NotificationType notificationType;
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("com.alarm.broadcast_notification")) {
-            alarmContentText = intent.getStringExtra("AlarmText");
-            notificationType = (NotificationType) intent.getSerializableExtra("NotificationType");
+            Bundle extras = intent.getExtras();
+            alarmContentText = extras.getString("alarmText");
+            notificationType = (NotificationType) extras.getSerializable("notificationType");
+            id = extras.getInt("id");
             //uri to sound file
-            Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/" + R.raw.idealogAlarm);
+            Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/" + R.raw.alarm);
             // Set the alarm here
         System.out.println("I the broadcast has been called with text " + alarmContentText);
 //        NotificationCompat.Builder(Context context) has been deprecated. And we have to use the constructor which has the channelId parameter:
@@ -45,8 +53,8 @@ public class ListenForAlarm extends BroadcastReceiver {
         }
 
         //give each notification a different id so they can stand apart
-        final int notificationId = (int) System.currentTimeMillis();
-        notificationManager.notify(notificationId, notificationBuilder.build());
+        final int notificationId = (int) SystemClock.uptimeMillis();
+//        notificationManager.notify(notificationId, notificationBuilder.build());
     }
     }
 

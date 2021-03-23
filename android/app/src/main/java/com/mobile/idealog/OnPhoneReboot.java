@@ -62,22 +62,23 @@ public class OnPhoneReboot extends BroadcastReceiver {
                     alarmTime.add(Calendar.DATE,1);
                 break;
                 case WEEKLY:
-                    alarmTime.add(Calendar.WEEK_OF_MONTH,1);
+                    alarmTime.add(Calendar.DAY_OF_MONTH,7);
                 break;
                 case MONTHLY:
                     alarmTime.add(Calendar.MONTH,1);
                 break;
                 case YEARLY:
-                    alarmTime.add(Calendar.YEAR,1);
+                    alarmTime.set(year+1,month,day,hour,minute);
                 break;
-            }
-            db.updateTime(Integer.toString(alarmTime.get(Calendar.DAY_OF_MONTH)),uniqueAlarmId);
+            };
+            db.updateTime(Integer.toString(year),uniqueAlarmId);
         }
 
         Intent toCallTheBroadcastReceiver = new Intent(context,ListenForAlarm.class);
         toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
-        toCallTheBroadcastReceiver.putExtra("AlarmText",alarmText);
-        toCallTheBroadcastReceiver.putExtra("NotificationType",notificationType);
+        toCallTheBroadcastReceiver.putExtra("alarmText",alarmText);
+        toCallTheBroadcastReceiver.putExtra("notificationType",notificationType);
+        toCallTheBroadcastReceiver.putExtra("id",uniqueAlarmId);
         //put a unique pendingIntent id
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,uniqueAlarmId,toCallTheBroadcastReceiver,0);
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,alarmTime.getTimeInMillis(),pendingIntent);

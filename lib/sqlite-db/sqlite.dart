@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:idealog/global/int.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:idealog/global/enums.dart';
@@ -14,8 +17,7 @@ class Sqlite{
 
     Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
     if(notificationType == NotificationType.IDEAS){
-      
-      // await _database.execute('Drop Table $scheduleTableName');
+
       await _database.execute('create table if not exists $ideasTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_ideaTitle TEXT,$Column_moreDetails TEXT,$Column_uncompletedTasks TEXT,$Column_completedTasks TEXT)');
       List<List<int>> completedTasks = idea!.tasks!.completedTasks;
       List<List<int>> uncompletedTasks = idea.tasks!.uncompletedTasks;
@@ -29,7 +31,8 @@ class Sqlite{
         });
 
     }else if(notificationType == NotificationType.SCHEDULE){
-      
+            
+      await _database.execute('Drop Table $scheduleTableName');
       await _database.execute('create table if not exists $scheduleTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_scheduleDetails TEXT,$Column_scheduleDate TEXT,$Column_startTime TEXT,$Column_endTime TEXT,$Column_repeatSchedule TEXT)');
       _database.insert(scheduleTableName, {
         Column_uniqueId:schedule!.uniqueId,
@@ -98,5 +101,16 @@ class Sqlite{
 
         return (type == NotificationType.IDEAS)?allIdeasFromDb:allScheduleFromDb;
   }
-  
+
+  static Future<int> getUniqueId({NotificationType? type}) async {
+            int uniqueId = Random().nextInt(maxRandomNumber);
+            Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
+            var idsFromDb = await _database.query((type == NotificationType.IDEAS)?ideasTableName:scheduleTableName,columns: [Column_uniqueId]);
+            List<int> unavailableIds = idsFromDb.map((map) => int.parse('${map[Column_uniqueId]}')).toList();
+            //if it does not contain the id do not loop
+            while(unavailableIds.contains(uniqueId)){
+              uniqueId = Random().nextInt(maxRandomNumber);
+            }
+            return uniqueId;
+  }
 }
