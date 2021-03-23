@@ -67,7 +67,7 @@ public class IdealogDatabase extends SQLiteOpenHelper {
         return schedule;
     }
 
-    public void updateTime(String newDate,int uniqueId){
+    public void updateDate(String newDate,int uniqueId){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_DATE,newDate);

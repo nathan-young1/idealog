@@ -115,42 +115,6 @@ public class MainActivity extends FlutterActivity {
                     break;
             }
         }
-        List<Integer> monthsWith31days = new ArrayList<Integer>(Arrays.asList(0,2,4,6,7,9,11));
-        List<Integer> monthsWith30days = new ArrayList<Integer>(Arrays.asList(3,5,8,10));
-        Calendar testingY = Calendar.getInstance();
-        Calendar testingM = Calendar.getInstance();
-        Calendar testingW = Calendar.getInstance();
-        Calendar testingD = Calendar.getInstance();
-        testingD.set(year,month,day+1,hour,minute);
-        testingW.set(year,month,day+7,hour,minute);
-        testingY.set(year+1,month,day,hour,minute);
-
-        if(year%4==0 && month == 0){
-            //if it is a leap year and the month is january
-            List<Integer> dateToLoopBackTo29 = new ArrayList<Integer>(Arrays.asList(30,31));
-            if(dateToLoopBackTo29.contains(day)){
-                //since it is a leap year move to the next month (febuary) but set the date to 29
-               day=29;
-            }
-        }else if(year%4 != 0 && month == 0){
-            //if it is no a leap year and the month is january
-            List<Integer> dateToLoopBackTo28 = new ArrayList<Integer>(Arrays.asList(29,30,31));
-            if(dateToLoopBackTo28.contains(day)){
-                //move to the next month (febuary) but set the day to 28
-               day=28;
-            }
-        }
-        if(monthsWith30days.contains(month+1) && day == 31){
-            //if current month has 31days and next month has 30 days go to the ending of next month
-            month+=1;day = 30;
-        }else {month+=1;}
-
-        testingM.set(year, month, day, hour, minute);
-        System.out.println("year \n"+testingY.getTime()+"\n\n");
-        System.out.println("month \n"+testingM.getTime()+"\n\n");
-        System.out.println("week \n"+testingW.getTime()+"\n\n");
-        System.out.println("daily \n"+testingD.getTime()+"\n\n");
-        System.out.println("\nThe alarm has been scheduled at "+ calendar.getTime());
     }
 
     public void cancelAlarm(int uniqueAlarmId){
