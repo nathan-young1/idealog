@@ -91,6 +91,7 @@ public class MainActivity extends FlutterActivity {
 
                     alarmTitle = cursor.getString(columnAlarmTitle);
                     repeatSchedule = cursor.getString(columnRepeatSchedule);
+                    System.out.println(repeatSchedule+cursor);
                 }while (cursor.moveToNext());
             }
         }
