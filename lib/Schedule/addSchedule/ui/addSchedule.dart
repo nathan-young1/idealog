@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:idealog/Schedule/addSchedule/code/scheduleManager.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/core-models/scheduleModel.dart';
@@ -25,6 +26,7 @@ class _AddScheduleState extends State<AddSchedule> {
   TextEditingController startTime = TextEditingController();
   TextEditingController endTime = TextEditingController();
   TextEditingController date = TextEditingController();
+  RepeatSchedule repeatSchedule = RepeatSchedule.NONE;
 
   @override
   Widget build(BuildContext context) {
@@ -106,11 +108,15 @@ class _AddScheduleState extends State<AddSchedule> {
                     Container(
                       width: 150.w,
                       child: DropdownButtonFormField(
-                        hint: Text('NONE'),
-                        onChanged: (value){
-                          print(value);
+                        value: repeatSchedule,
+                        onChanged: (RepeatSchedule? value){
+                          repeatSchedule = value!;
+                          print(repeatSchedule);
                         },
                         items: [
+                          DropdownMenuItem(
+                            value: RepeatSchedule.NONE,
+                            child: Text('None')),
                           DropdownMenuItem(
                             value: RepeatSchedule.DAILY,
                             child: Text('Daily')),
@@ -138,19 +144,12 @@ class _AddScheduleState extends State<AddSchedule> {
               child: Row(
                 children: [
                   ElevatedButton(
-                    onPressed: () async { 
-                      List<String> res = '${date.text} ${startTime.text}'.split(' ');
-                      print(res.last.split(':'));
-                      // await createNewAlarm(alarmText: 'scehdule',typeOfNotification: NotificationType.SCHEDULE,uniqueAlarmId: 200,alarmTime: setTime);
-                      // Schedule? schedule = Schedule(scheduleTitle: 'jdklf', scheduleDate: newer.millisecondsSinceEpoch,
-                      //  repeatSchedule: RepeatSchedule.DAILY, uniqueId: DateTime.now().millisecondsSinceEpoch,
-                      //  startTime: TimeOfDay(hour: 4,minute: 10),endTime: TimeOfDay(hour: 2,minute: 1),moreDetails: 'djkd');
-                      // await Sqlite.writeToDb(notificationType: NotificationType.SCHEDULE,schedule: schedule);
-                      // List<Schedule> schedule = await Sqlite.readFromDb(type: NotificationType.SCHEDULE);
-                      // print(schedule.first.scheduleTitle);
-                      // print(schedule.first.uniqueId);
-                      // print(schedule.first.startTime);
-                      },
+                    onPressed: () async => addToDbAndSetAlarmSchedule(
+                      scheduleDate: date.text,
+                      startTime: startTime.text,
+                      endTime: endTime.text,
+                      scheduleDetails: scheduleDetails.text,
+                      repeatSchedule: repeatSchedule),
                     child: Text('Save')),
                     ElevatedButton(
                     onPressed: () async { 

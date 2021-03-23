@@ -4,17 +4,16 @@ import 'package:idealog/global/enums.dart';
 
 class Schedule{
   late final int uniqueId;
-  String scheduleTitle;
-  String? moreDetails;
-  int scheduleDate;
-  TimeOfDay? startTime;
-  TimeOfDay? endTime;
+  String? scheduleDetails;
+  String? scheduleDate;
+  String? startTime;
+  String? endTime;
   RepeatSchedule? repeatSchedule;
 
-  Schedule({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required this.repeatSchedule,this.endTime}){
+  Schedule({this.scheduleDetails,required this.scheduleDate,required this.startTime,required this.repeatSchedule,this.endTime}){
       this.uniqueId = DateTime.now().millisecondsSinceEpoch;
   }
-  Schedule.fromDb({required this.scheduleTitle,this.moreDetails,required this.scheduleDate,this.startTime,required String repeatSchedule,this.endTime,required this.uniqueId}){
+  Schedule.fromDb({this.scheduleDetails,this.startTime,required String repeatSchedule,this.endTime,required this.uniqueId,required this.scheduleDate}){
     switch (repeatSchedule){
       case 'RepeatSchedule.NONE':
       this.repeatSchedule = RepeatSchedule.NONE;

@@ -30,14 +30,13 @@ class Sqlite{
 
     }else if(notificationType == NotificationType.SCHEDULE){
       //await _database.execute('Drop Table $scheduleTableName');
-      await _database.execute('create table if not exists $scheduleTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_scheduleTitle TEXT,$Column_moreDetails TEXT,$Column_scheduleDate INTEGER,$Column_startTime TEXT,$Column_endTime TEXT,$Column_repeatSchedule TEXT)');
+      await _database.execute('create table if not exists $scheduleTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_scheduleDetails TEXT,$Column_scheduleDate INTEGER,$Column_startTime TEXT,$Column_endTime TEXT,$Column_repeatSchedule TEXT)');
       _database.insert(scheduleTableName, {
         Column_uniqueId:schedule!.uniqueId,
-        Column_scheduleTitle:schedule.scheduleTitle,
-        Column_moreDetails:schedule.moreDetails,
-        Column_scheduleDate:schedule.scheduleDate,
-        Column_startTime:'${schedule.startTime!.hour}:${schedule.startTime!.minute}',
-        Column_endTime:'${schedule.endTime!.hour}:${schedule.endTime!.minute}',
+        Column_scheduleDetails:schedule.scheduleDetails,
+        Column_scheduleDate:schedule.scheduleDate.toString(),
+        Column_startTime:'${schedule.startTime}',
+        Column_endTime:'${schedule.endTime}',
         Column_repeatSchedule:'${schedule.repeatSchedule}'
       });
     }
@@ -85,13 +84,12 @@ class Sqlite{
           print(schedule[Column_scheduleDate]);
           allScheduleFromDb.add(
             Schedule.fromDb(
-              scheduleTitle: schedule[Column_scheduleTitle].toString(),
-              scheduleDate: int.parse(schedule[Column_scheduleDate].toString()),
+              scheduleDate: schedule[Column_scheduleDate].toString(),
               repeatSchedule: schedule[Column_repeatSchedule].toString(),
               uniqueId: int.parse(schedule[Column_uniqueId].toString()),
-              startTime: TimeOfDay(hour: startTimeHour,minute: startTimeMinute),
-              endTime: TimeOfDay(hour: endTimeHour,minute: endTimeMinute),
-              moreDetails: schedule[Column_moreDetails].toString(),
+              startTime: TimeOfDay(hour: startTimeHour,minute: startTimeMinute).toString(),
+              endTime: TimeOfDay(hour: endTimeHour,minute: endTimeMinute).toString(),
+              scheduleDetails: schedule[Column_moreDetails].toString(),
               )
           );
         });

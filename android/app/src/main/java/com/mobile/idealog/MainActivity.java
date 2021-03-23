@@ -19,10 +19,8 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 import java.util.*;
 
 public class MainActivity extends FlutterActivity {
-//    set the alarm contentText and clear the value on set alarm finish.
-    public static String alarmContentText;
+
     public static int alarmNotificationId;
-    public static NotificationType typeOfNotification;
     AlarmManager alarmManager;
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
@@ -39,11 +37,9 @@ public class MainActivity extends FlutterActivity {
                 if(call.method.equals("setAlarm")){
                     long timeForAlarm = (long) configuration.get("timeForAlarm");
                     String alarmText = (String)configuration.get("alarmText");
-                    typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
+                    NotificationType typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
                     setAlarm(alarmText,typeOfNotification,uniqueIdForAlarm,timeForAlarm);
-                    idealogDatabase db = new idealogDatabase(MainActivity.this,null,null,1);
-//                    boolean b = db.addOne(uniqueIdForAlarm);
-                    result.success(db.addOne(uniqueIdForAlarm));
+                    IdealogDatabase db = new IdealogDatabase(MainActivity.this,null,null,1);
                 }else if(call.method.equals("cancelAlarm")){
                     cancelAlarm(uniqueIdForAlarm);
                     result.success("Canceled successfully");
@@ -52,20 +48,22 @@ public class MainActivity extends FlutterActivity {
         });
     }
 
-    public void setAlarm(String alarmText,NotificationType notificationType,int uniqueAlarmId,long alarmTime){
+    public void setAlarm(String alarmText,NotificationType notificationType,int uniqueAlarmId,long deadline){
         //remember to set the contentText
-        alarmContentText = alarmText;
-        typeOfNotification = notificationType;
+        String alarmContentText = (notificationType == NotificationType.IDEAS)?"Today is the deadline for "+alarmText:alarmText;
+        NotificationType typeOfNotification = notificationType;
         //give each notification id a different value with the help of current time in milliseconds
         alarmNotificationId = (int) System.currentTimeMillis();
         Intent toCallTheBroadcastReceiver = new Intent(this,ListenForAlarm.class);
         toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
+        toCallTheBroadcastReceiver.putExtra("AlarmText",alarmContentText);
+        toCallTheBroadcastReceiver.putExtra("NotificationType",typeOfNotification);
         //put a unique pendingIntent id
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP,alarmTime,pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP,deadline,pendingIntent);
         //alarmManager.setAlarmClock();
-        alarmManager.setRepeating();
-        System.out.println("The alarm has been scheduled at "+alarmTime);
+        //alarmManager.setRepeating();
+        System.out.println("The alarm has been scheduled at "+deadline);
     }
 
     public void cancelAlarm(int uniqueAlarmId){

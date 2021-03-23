@@ -4,11 +4,9 @@ import 'package:idealog/global/strings.dart';
 
 const platform = const MethodChannel(javaToFlutterMethodChannelName);
 
-  createNewAlarm({required String? alarmText,required NotificationType typeOfNotification,required int? uniqueAlarmId,required int? alarmTime}) async{
+  createNewAlarm({required NotificationType typeOfNotification,required int? uniqueAlarmId}) async{
     //remember to change configuaration to int in native java code
     Map<String,dynamic> alarmConfiguration = {
-      'timeForAlarm': alarmTime!,
-      'alarmText': alarmText!,
       'typeOfNotification': (typeOfNotification == NotificationType.IDEAS)?1:2,
       'uniqueAlarmId': uniqueAlarmId!
     };

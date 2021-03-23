@@ -10,7 +10,7 @@ addToDbAndSetAlarmIdea({String? deadlineInString,required String ideaTitle,Strin
   Idea newIdea = Idea(ideaTitle: ideaTitle,moreDetails: moreDetails,deadline: deadline,tasksToCreate: tasksInCharCodes);
   try {
     await Sqlite.writeToDb(notificationType: NotificationType.IDEAS,idea: newIdea);
-    await createNewAlarm(alarmText: ideaTitle, typeOfNotification: NotificationType.IDEAS, uniqueAlarmId: newIdea.uniqueId, alarmTime: newIdea.deadline);
+    await createNewAlarm(typeOfNotification: NotificationType.IDEAS, uniqueAlarmId: newIdea.uniqueId);
   } on Exception catch (e) {
     print(e);
   }
