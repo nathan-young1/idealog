@@ -2,16 +2,15 @@ class Idea{
   late final int uniqueId;
   String ideaTitle;
   String? moreDetails;
-  int? deadline;
   _Tasks? tasks;
   
-  Idea({required this.ideaTitle,this.moreDetails,this.deadline,List<List<int>> tasksToCreate = const[]}){
+  Idea({required this.ideaTitle,this.moreDetails,List<List<int>> tasksToCreate = const[]}){
     tasks = _Tasks(listOfTasksToCreate: tasksToCreate);
     this.uniqueId = DateTime.now().millisecondsSinceEpoch;
     // // alarmText = 'Today is the deadline for $ideaTitle';
   }
 
-  Idea.readFromDb({required this.ideaTitle,this.moreDetails,this.deadline,List<List<int>> completedTasks = const[],required this.uniqueId,List<List<int>> uncompletedTasks = const[]}){
+  Idea.readFromDb({required this.ideaTitle,this.moreDetails,List<List<int>> completedTasks = const[],required this.uniqueId,List<List<int>> uncompletedTasks = const[]}){
     tasks = _Tasks.fromDb(completedTasks: completedTasks,uncompletedTasks: uncompletedTasks);
   }
 }

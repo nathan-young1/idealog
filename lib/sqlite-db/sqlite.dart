@@ -14,8 +14,9 @@ class Sqlite{
 
     Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
     if(notificationType == NotificationType.IDEAS){
-
-      await _database.execute('create table if not exists $ideasTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_ideaTitle TEXT,$Column_moreDetails TEXT,$Column_deadline INTEGER,$Column_uncompletedTasks TEXT,$Column_completedTasks TEXT)');
+      
+      // await _database.execute('Drop Table $scheduleTableName');
+      await _database.execute('create table if not exists $ideasTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_ideaTitle TEXT,$Column_moreDetails TEXT,$Column_uncompletedTasks TEXT,$Column_completedTasks TEXT)');
       List<List<int>> completedTasks = idea!.tasks!.completedTasks;
       List<List<int>> uncompletedTasks = idea.tasks!.uncompletedTasks;
 
@@ -23,14 +24,13 @@ class Sqlite{
         Column_uniqueId:  '${idea.uniqueId}',
         Column_ideaTitle  :idea.ideaTitle,
         Column_moreDetails: idea.moreDetails,
-        Column_deadline:  idea.deadline,
         Column_completedTasks:  (completedTasks.isEmpty)?null:'$completedTasks',
         Column_uncompletedTasks: (uncompletedTasks.isEmpty)?null:'$uncompletedTasks'
         });
 
     }else if(notificationType == NotificationType.SCHEDULE){
-      //await _database.execute('Drop Table $scheduleTableName');
-      await _database.execute('create table if not exists $scheduleTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_scheduleDetails TEXT,$Column_scheduleDate INTEGER,$Column_startTime TEXT,$Column_endTime TEXT,$Column_repeatSchedule TEXT)');
+      
+      await _database.execute('create table if not exists $scheduleTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_scheduleDetails TEXT,$Column_scheduleDate TEXT,$Column_startTime TEXT,$Column_endTime TEXT,$Column_repeatSchedule TEXT)');
       _database.insert(scheduleTableName, {
         Column_uniqueId:schedule!.uniqueId,
         Column_scheduleDetails:schedule.scheduleDetails,
@@ -67,7 +67,6 @@ class Sqlite{
         ideaTitle: idea[Column_ideaTitle].toString(),
         uniqueId: int.parse(idea[Column_uniqueId].toString()),
         moreDetails: idea[Column_moreDetails].toString(),
-        deadline: int.parse(idea[Column_deadline].toString()),
         completedTasks: (completedTasks != null)?completedTasks.fromDbStringToListInt:[],
         uncompletedTasks: (uncompletedTasks != null)?uncompletedTasks.fromDbStringToListInt:[]
         ));});

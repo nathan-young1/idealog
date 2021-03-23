@@ -23,9 +23,8 @@ public class IdealogDatabase extends SQLiteOpenHelper {
     public static final String COLUMN_UNIQUE_ID = "uniqueId";
     public static final String COLUMN_IDEA_TITLE = "ideaTitle";
     public static final String COLUMN_SCHEDULE_DETAILS = "scheduleDetails";
-    public static final String COLUMN_DEADLINE = "deadline";
     public static final String COLUMN_REPEATSCHEDULE = "repeatSchedule";
-    public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_DATE = "scheduleDate";
     public static final String COLUMN_STARTTIME = "startTime";
 
     public IdealogDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, @Nullable int version) {
@@ -41,28 +40,12 @@ public class IdealogDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
 
-    public Map<String, List> readFromDbAfterReboot() {
-        List<IdeaModel> ideas = new ArrayList<>();
+    public List<ScheduleModel> readFromDbAfterReboot() {
         List<ScheduleModel> schedule = new ArrayList<>();
-        Map<String,List> dbResult = new HashMap<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        String ideasQuery = "SELECT * FROM " + IDEAS;
-        String scheduleQuery = "SELECT * FROM " + SCHEDULE;
-        final Cursor ideasCursor = db.rawQuery(ideasQuery,null);
+        String scheduleQuery = "select * from " + SCHEDULE;
         final Cursor scheduleCursor = db.rawQuery(scheduleQuery,null);
-        if(ideasCursor.moveToFirst()){
-            do{
-               int columnUniqueId = ideasCursor.getColumnIndex(COLUMN_UNIQUE_ID);
-               int columnDeadline = ideasCursor.getColumnIndex(COLUMN_DEADLINE);
-               int columnAlarmTitle = ideasCursor.getColumnIndex(COLUMN_IDEA_TITLE);
-               int uniqueId = ideasCursor.getInt(columnUniqueId);
-               int deadline = ideasCursor.getInt(columnDeadline);
-               String alarmTitle = ideasCursor.getString(columnAlarmTitle);
-               IdeaModel idea = new IdeaModel(uniqueId,deadline,alarmTitle);
-               ideas.add(idea);
-            }while(ideasCursor.moveToNext());
-        }
 
         if(scheduleCursor.moveToFirst()){
             do{
@@ -80,11 +63,8 @@ public class IdealogDatabase extends SQLiteOpenHelper {
             schedule.add(newSchedule);
             }while (scheduleCursor.moveToNext());
         }
-        //add the list to map in other to return all result once
-        dbResult.put(IDEAS,ideas);
-        dbResult.put(SCHEDULE,schedule);
 
-        return dbResult;
+        return schedule;
     }
 
     public void updateTime(String newDate,int uniqueId){

@@ -29,16 +29,7 @@ public class OnPhoneReboot extends BroadcastReceiver {
         //implement the rescheduling of alarm after reading from sqlLite database here
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 
-            Map<String, List> dbResult = db.readFromDbAfterReboot();
-            List<IdeaModel> ideas = dbResult.get(IdealogDatabase.IDEAS);
-            List<ScheduleModel> schedule = dbResult.get(IdealogDatabase.SCHEDULE);
-            //loop through ideas
-            ideas.forEach(idea -> resetAlarmIdeas(
-                    idea.alarmTitle,
-                    NotificationType.IDEAS,
-                    idea.uniqueId,
-                    idea.deadline,
-                    context));
+            List<ScheduleModel> schedule = db.readFromDbAfterReboot();
             //loop through schedules
             schedule.forEach(singleSchedule -> resetAlarmSchedule(
                     singleSchedule.scheduleDetails,
@@ -51,25 +42,7 @@ public class OnPhoneReboot extends BroadcastReceiver {
         }
     }
 
-    private void resetAlarmIdeas(String alarmText, NotificationType notificationType, int uniqueAlarmId, @Nullable long deadline,Context context){
-        //remember to set the contentText
-        String alarmContentText = "Today is the deadline for " + alarmText;
-        NotificationType typeOfNotification = notificationType;
-
-        Intent toCallTheBroadcastReceiver = new Intent(context,ListenForAlarm.class);
-        toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
-        toCallTheBroadcastReceiver.putExtra("AlarmText",alarmContentText);
-        toCallTheBroadcastReceiver.putExtra("NotificationType",typeOfNotification);
-        //put a unique pendingIntent id
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,uniqueAlarmId,toCallTheBroadcastReceiver,0);
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,deadline,pendingIntent);
-    }
-
     private void resetAlarmSchedule(String alarmText, NotificationType notificationType, int uniqueAlarmId, @Nullable String date, @Nullable String startTime,RepeatSchedule repeatSchedule,Context context){
-        //remember to set the contentText
-        String alarmContentText = alarmText;
-        NotificationType typeOfNotification = notificationType;
-
 
         List<String> dateFormat = Arrays.asList(date.split("-"));
         int year = Integer.parseInt(dateFormat.get(0));
@@ -103,8 +76,8 @@ public class OnPhoneReboot extends BroadcastReceiver {
 
         Intent toCallTheBroadcastReceiver = new Intent(context,ListenForAlarm.class);
         toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
-        toCallTheBroadcastReceiver.putExtra("AlarmText",alarmContentText);
-        toCallTheBroadcastReceiver.putExtra("NotificationType",typeOfNotification);
+        toCallTheBroadcastReceiver.putExtra("AlarmText",alarmText);
+        toCallTheBroadcastReceiver.putExtra("NotificationType",notificationType);
         //put a unique pendingIntent id
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,uniqueAlarmId,toCallTheBroadcastReceiver,0);
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,alarmTime.getTimeInMillis(),pendingIntent);
