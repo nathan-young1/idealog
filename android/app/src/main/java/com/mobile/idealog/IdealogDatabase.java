@@ -45,7 +45,7 @@ public class IdealogDatabase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         String scheduleQuery = "select * from " + SCHEDULE;
-        final Cursor scheduleCursor = db.rawQuery(scheduleQuery,null);
+        Cursor scheduleCursor = db.rawQuery(scheduleQuery,null);
 
         if(scheduleCursor.moveToFirst()){
             do{

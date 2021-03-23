@@ -6,9 +6,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -29,21 +31,24 @@ public class OnPhoneReboot extends BroadcastReceiver {
         db = new IdealogDatabase(context,null,null,1);
         //implement the rescheduling of alarm after reading from sqlLite database here
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+            Toast.makeText(context, "Alarm Set", Toast.LENGTH_SHORT).show();
 
             List<ScheduleModel> schedule = db.readFromDbAfterReboot();
             //loop through schedules
-            schedule.forEach(singleSchedule -> resetAlarmSchedule(
-                    singleSchedule.scheduleDetails,
-                    NotificationType.SCHEDULE,
-                    singleSchedule.uniqueId,
-                    singleSchedule.date,
-                    singleSchedule.startTime,
-                    singleSchedule.repeatSchedule,
-                    context));
+            schedule.forEach(singleSchedule -> {
+                resetAlarmSchedule(
+                        singleSchedule.scheduleDetails,
+                        NotificationType.SCHEDULE,
+                        singleSchedule.uniqueId,
+                        singleSchedule.date,
+                        singleSchedule.startTime,
+                        singleSchedule.repeatSchedule,
+                        context);
+            });
         }
     }
 
-    private void resetAlarmSchedule(String alarmText, NotificationType notificationType, int uniqueAlarmId, @Nullable String date, @Nullable String startTime,RepeatSchedule repeatSchedule,Context context){
+    private void resetAlarmSchedule(String alarmText, NotificationType notificationType, int uniqueAlarmId,String date, String startTime,RepeatSchedule repeatSchedule,Context context){
 
         List<String> dateFormat = Arrays.asList(date.split("-"));
         int year = Integer.parseInt(dateFormat.get(0));

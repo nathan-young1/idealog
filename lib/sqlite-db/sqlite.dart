@@ -32,7 +32,7 @@ class Sqlite{
 
     }else if(notificationType == NotificationType.SCHEDULE){
             
-      await _database.execute('Drop Table $scheduleTableName');
+      // await _database.execute('Drop Table $scheduleTableName');
       await _database.execute('create table if not exists $scheduleTableName ($Column_uniqueId INTEGER PRIMARY_KEY,$Column_scheduleDetails TEXT,$Column_scheduleDate TEXT,$Column_startTime TEXT,$Column_endTime TEXT,$Column_repeatSchedule TEXT)');
       _database.insert(scheduleTableName, {
         Column_uniqueId:schedule!.uniqueId,

@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -38,6 +39,7 @@ public class ListenForAlarm extends BroadcastReceiver {
             //uri to sound file
             Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.getPackageName() + "/" + R.raw.alarm);
             // Set the alarm here
+            Toast.makeText(context, "I the broadcast has been called with " + alarmContentText+notificationType+id, Toast.LENGTH_SHORT).show();
         System.out.println("I the broadcast has been called with " + alarmContentText+notificationType+id);
 //        NotificationCompat.Builder(Context context) has been deprecated. And we have to use the constructor which has the channelId parameter:
         notificationBuilder = buildNotification(context, notificationType);
