@@ -52,7 +52,8 @@ public class OnPhoneReboot extends BroadcastReceiver {
 
         List<String> dateFormat = Arrays.asList(date.split("-"));
         int year = Integer.parseInt(dateFormat.get(0));
-        int month = Integer.parseInt(dateFormat.get(1));
+        //remember to minus one from month while selecting it in dart(flutter)
+        int month = Integer.parseInt(dateFormat.get(1))-1;
         int day = Integer.parseInt(dateFormat.get(2));
 
         List<String> timeFormat = Arrays.asList(startTime.split(":"));

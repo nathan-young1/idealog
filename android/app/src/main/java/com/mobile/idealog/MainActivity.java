@@ -80,6 +80,7 @@ public class MainActivity extends FlutterActivity {
 
                     List<String> dateFormat = Arrays.asList(date.split("-"));
                     year = Integer.parseInt(dateFormat.get(0));
+                    //i minus one here from month because the month in an array starts from 0
                     month = Integer.parseInt(dateFormat.get(1))-1;
                     day = Integer.parseInt(dateFormat.get(2));
 
