@@ -23,9 +23,9 @@ public class IdealogDatabase extends SQLiteOpenHelper {
     public static final String COLUMN_UNIQUE_ID = "uniqueId";
     public static final String COLUMN_IDEA_TITLE = "ideaTitle";
     public static final String COLUMN_SCHEDULE_DETAILS = "scheduleDetails";
-    public static final String COLUMN_REPEATSCHEDULE = "repeatSchedule";
+    public static final String COLUMN_REPEAT_SCHEDULE = "repeatSchedule";
     public static final String COLUMN_DATE = "scheduleDate";
-    public static final String COLUMN_STARTTIME = "startTime";
+    public static final String COLUMN_START_TIME = "startTime";
 
     public IdealogDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, @Nullable int version) {
         super(context, "idealog.db", null, 1);
@@ -45,15 +45,15 @@ public class IdealogDatabase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         String scheduleQuery = "select * from " + SCHEDULE;
-        final Cursor scheduleCursor = db.rawQuery(scheduleQuery,null);
+        Cursor scheduleCursor = db.rawQuery(scheduleQuery,null);
 
         if(scheduleCursor.moveToFirst()){
             do{
             int columnUniqueId = scheduleCursor.getColumnIndex(COLUMN_UNIQUE_ID);
-            int columnStartTime = scheduleCursor.getColumnIndex(COLUMN_STARTTIME);
+            int columnStartTime = scheduleCursor.getColumnIndex(COLUMN_START_TIME);
             int columnDate = scheduleCursor.getColumnIndex(COLUMN_DATE);
             int columnAlarmTitle = scheduleCursor.getColumnIndex(COLUMN_SCHEDULE_DETAILS);
-            int columnRepeatSchedule = scheduleCursor.getColumnIndex(COLUMN_REPEATSCHEDULE);
+            int columnRepeatSchedule = scheduleCursor.getColumnIndex(COLUMN_REPEAT_SCHEDULE);
             int uniqueId = scheduleCursor.getInt(columnUniqueId);
             String date = scheduleCursor.getString(columnDate);
             String startTime = scheduleCursor.getString(columnStartTime);
@@ -67,7 +67,7 @@ public class IdealogDatabase extends SQLiteOpenHelper {
         return schedule;
     }
 
-    public void updateTime(String newDate,int uniqueId){
+    public void updateDate(String newDate,int uniqueId){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_DATE,newDate);

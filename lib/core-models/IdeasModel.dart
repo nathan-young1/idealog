@@ -1,13 +1,13 @@
+import 'dart:math';
+
 class Idea{
-  late final int uniqueId;
+  int uniqueId;
   String ideaTitle;
   String? moreDetails;
   _Tasks? tasks;
   
-  Idea({required this.ideaTitle,this.moreDetails,List<List<int>> tasksToCreate = const[]}){
+  Idea({required this.ideaTitle,this.moreDetails,List<List<int>> tasksToCreate = const[],required this.uniqueId}){
     tasks = _Tasks(listOfTasksToCreate: tasksToCreate);
-    this.uniqueId = DateTime.now().millisecondsSinceEpoch;
-    // // alarmText = 'Today is the deadline for $ideaTitle';
   }
 
   Idea.readFromDb({required this.ideaTitle,this.moreDetails,List<List<int>> completedTasks = const[],required this.uniqueId,List<List<int>> uncompletedTasks = const[]}){

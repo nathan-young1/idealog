@@ -21,16 +21,15 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 import java.util.*;
 
 import static com.mobile.idealog.IdealogDatabase.COLUMN_DATE;
-import static com.mobile.idealog.IdealogDatabase.COLUMN_REPEATSCHEDULE;
+import static com.mobile.idealog.IdealogDatabase.COLUMN_REPEAT_SCHEDULE;
 import static com.mobile.idealog.IdealogDatabase.COLUMN_SCHEDULE_DETAILS;
-import static com.mobile.idealog.IdealogDatabase.COLUMN_STARTTIME;
+import static com.mobile.idealog.IdealogDatabase.COLUMN_START_TIME;
 import static com.mobile.idealog.IdealogDatabase.COLUMN_UNIQUE_ID;
 import static com.mobile.idealog.IdealogDatabase.IDEAS;
 import static com.mobile.idealog.IdealogDatabase.SCHEDULE;
 
 public class MainActivity extends FlutterActivity {
 
-    public static int alarmNotificationId;
     AlarmManager alarmManager;
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
@@ -61,62 +60,63 @@ public class MainActivity extends FlutterActivity {
         SQLiteDatabase database = db.getReadableDatabase();
         String table = (notificationType == NotificationType.IDEAS)?IDEAS:SCHEDULE;
         Cursor cursor = database.rawQuery("SELECT * FROM "+table+" WHERE "+COLUMN_UNIQUE_ID+" = "+uniqueAlarmId,null);
-        int deadline = 0;
         String alarmTitle = "";
         String repeatSchedule = "";
         Calendar calendar = Calendar.getInstance();
-
+        int year = 0;
+        int month = 0;
+        int day = 0;
+        int hour = 0;
+        int minute = 0;
         if(notificationType == NotificationType.SCHEDULE){
-            int columnStartTime = cursor.getColumnIndex(COLUMN_STARTTIME);
+            int columnStartTime = cursor.getColumnIndex(COLUMN_START_TIME);
             int columnDate = cursor.getColumnIndex(COLUMN_DATE);
             int columnAlarmTitle = cursor.getColumnIndex(COLUMN_SCHEDULE_DETAILS);
-            int columnRepeatSchedule = cursor.getColumnIndex(COLUMN_REPEATSCHEDULE);
+            int columnRepeatSchedule = cursor.getColumnIndex(COLUMN_REPEAT_SCHEDULE);
             if(cursor.moveToFirst()) {
                 do {
                     String date = cursor.getString(columnDate);
                     String startTime = cursor.getString(columnStartTime);
 
                     List<String> dateFormat = Arrays.asList(date.split("-"));
-                    int year = Integer.parseInt(dateFormat.get(0));
-                    int month = Integer.parseInt(dateFormat.get(1));
-                    int day = Integer.parseInt(dateFormat.get(2));
+                    year = Integer.parseInt(dateFormat.get(0));
+                    //i minus one here from month because the month in an array starts from 0
+                    month = Integer.parseInt(dateFormat.get(1))-1;
+                    day = Integer.parseInt(dateFormat.get(2));
 
                     List<String> timeFormat = Arrays.asList(startTime.split(":"));
-                    int hour = Integer.parseInt(timeFormat.get(0));
-                    int minute = Integer.parseInt(timeFormat.get(1));
+                    hour = Integer.parseInt(timeFormat.get(0));
+                    minute = Integer.parseInt(timeFormat.get(1));
 
                     calendar.set(year, month, day, hour, minute);
 
                     alarmTitle = cursor.getString(columnAlarmTitle);
                     repeatSchedule = cursor.getString(columnRepeatSchedule);
+                    System.out.println(repeatSchedule+cursor);
                 }while (cursor.moveToNext());
             }
         }
 
-        //give each notification id a different value with the help of current time in milliseconds
-        alarmNotificationId = (int) System.currentTimeMillis();
-        Intent toCallTheBroadcastReceiver = new Intent(this,ListenForAlarm.class);
+        Intent toCallTheBroadcastReceiver = new Intent(MainActivity.this,ListenForAlarm.class);
         toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
-        toCallTheBroadcastReceiver.putExtra("AlarmText",alarmTitle);
-        toCallTheBroadcastReceiver.putExtra("NotificationType",notificationType);
+        toCallTheBroadcastReceiver.putExtra("alarmText",alarmTitle);
+        toCallTheBroadcastReceiver.putExtra("notificationTypeIsIdea",notificationType == NotificationType.IDEAS);
+        toCallTheBroadcastReceiver.putExtra("id",uniqueAlarmId);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
-        if(notificationType == NotificationType.IDEAS) {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, deadline, pendingIntent);
-        }else if(notificationType == NotificationType.SCHEDULE){
+        if(notificationType == NotificationType.SCHEDULE){
             switch (repeatSchedule){
                 case "RepeatSchedule.DAILY":
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),86400000,pendingIntent);
-                    break;
+                break;
                 case "RepeatSchedule.WEEKLY":
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),604800000,pendingIntent);
-                    break;
+                break;
                 default:
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                    break;
+                break;
             }
         }
-        System.out.println("The alarm has been scheduled at "+deadline+ calendar.get(Calendar.DATE));
     }
 
     public void cancelAlarm(int uniqueAlarmId){

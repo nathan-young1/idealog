@@ -20,7 +20,6 @@ class _NewIdeaState extends State<NewIdea> {
   TextEditingController ideaTitle = TextEditingController();
   TextEditingController moreDetails = TextEditingController();
   FocusNode taskFieldFocus = FocusNode();
-  bool setDeadline = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -49,35 +48,6 @@ class _NewIdeaState extends State<NewIdea> {
                     keyboardType: TextInputType.multiline,
                     decoration: underlineAndFilled.copyWith(
                       labelText: 'More details on idea...'
-                    ),
-                  ),
-                  CheckboxListTile(
-                    title: Text('Set Deadline'),
-                    value: setDeadline,
-                    onChanged: (bool? value)=>setState(()=>setDeadline=value!)),
-                  Visibility(
-                    visible: setDeadline,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text('Deadline:'),
-                        Container(
-                          width: 200,
-                          child: DateTimePicker(
-                            dateHintText: 'Deadline',
-                            dateLabelText: 'Deadline',
-                            controller: deadline,
-                            dateMask: 'd MMM, yyyy',
-                            decoration: underlineAndFilled.copyWith(
-                                suffixIcon: Icon(Icons.date_range),
-                                labelText: 'dd-mm-year'
-                              ),
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2100),
-                                initialDate: DateTime.now(),
-                              ),
-                        ),
-                      ],
                     ),
                   ),
                   Text('Add Tasks required for idea'),
@@ -119,7 +89,6 @@ class _NewIdeaState extends State<NewIdea> {
               child: ElevatedButton(
                 onPressed: () async => await addToDbAndSetAlarmIdea(
                 ideaTitle: ideaTitle.text,
-                deadlineInString: deadline.text,
                 moreDetails: moreDetails.text,
                 tasks: tasks),
                 child: Text('Save')),

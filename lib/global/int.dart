@@ -1,0 +1,1 @@
+int maxRandomNumber = 999999;
