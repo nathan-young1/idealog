@@ -63,12 +63,10 @@ public class OnPhoneReboot extends BroadcastReceiver {
         Calendar alarmTime = Calendar.getInstance();
         alarmTime.set(year,month,day,hour,minute);
         // i am adding this boolean condition so that alarm will not ring if it has a repeat schedule of none and it is before now
-        boolean resetAlarm = true;
-//changed from if to while
+
         while(alarmTime.before(Calendar.getInstance())){
             //break out of the loop if repeat schedule is none
             if (repeatSchedule == RepeatSchedule.NONE) {
-                resetAlarm = false;
                 break;
             }
             switch (repeatSchedule){
@@ -109,14 +107,9 @@ public class OnPhoneReboot extends BroadcastReceiver {
             db.updateDate(newDate,uniqueAlarmId);
         }
 
-        Intent toCallTheBroadcastReceiver = new Intent(context,ListenForAlarm.class);
-        toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
-        toCallTheBroadcastReceiver.putExtra("alarmText",alarmText);
-        toCallTheBroadcastReceiver.putExtra("notificationTypeIsIdea",notificationType == NotificationType.IDEAS);
-        toCallTheBroadcastReceiver.putExtra("id",uniqueAlarmId);
         //put a unique pendingIntent id
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,uniqueAlarmId,toCallTheBroadcastReceiver,0);
-        if(resetAlarm) {
+        PendingIntent pendingIntent = alarmIntent.createPendingIntent(context,alarmText,notificationType,uniqueAlarmId);
+        if(repeatSchedule != RepeatSchedule.NONE) {
             //only ring if reset alarm is true
             switch(repeatSchedule){
                 //set repeating on phone reboot in case the user do not off and on the phone before the next alarm

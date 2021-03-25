@@ -99,13 +99,8 @@ public class MainActivity extends FlutterActivity {
         //close the database reference
         db.close();
 
-        Intent toCallTheBroadcastReceiver = new Intent(MainActivity.this,ListenForAlarm.class);
-        toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
-        toCallTheBroadcastReceiver.putExtra("alarmText",alarmTitle);
-        toCallTheBroadcastReceiver.putExtra("notificationTypeIsIdea",notificationType == NotificationType.IDEAS);
-        toCallTheBroadcastReceiver.putExtra("id",uniqueAlarmId);
+        PendingIntent pendingIntent = alarmIntent.createPendingIntent(MainActivity.this,alarmTitle,notificationType,uniqueAlarmId);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
         if(notificationType == NotificationType.SCHEDULE){
             switch (repeatSchedule){
                 case "RepeatSchedule.DAILY":
