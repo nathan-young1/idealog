@@ -63,7 +63,8 @@ public class IdealogDatabase extends SQLiteOpenHelper {
             schedule.add(newSchedule);
             }while (scheduleCursor.moveToNext());
         }
-
+        //close the database reference
+        db.close();
         return schedule;
     }
 
@@ -73,5 +74,7 @@ public class IdealogDatabase extends SQLiteOpenHelper {
         contentValues.put(COLUMN_DATE,newDate);
         String[] whereArgs = {Integer.toString(uniqueId)};
         db.update(SCHEDULE,contentValues,COLUMN_UNIQUE_ID+" = ?",whereArgs);
+        //close the database reference
+        db.close();
     }
 }

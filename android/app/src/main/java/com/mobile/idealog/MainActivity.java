@@ -96,6 +96,8 @@ public class MainActivity extends FlutterActivity {
                 }while (cursor.moveToNext());
             }
         }
+        //close the database reference
+        db.close();
 
         Intent toCallTheBroadcastReceiver = new Intent(MainActivity.this,ListenForAlarm.class);
         toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");

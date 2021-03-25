@@ -64,12 +64,14 @@ public class OnPhoneReboot extends BroadcastReceiver {
         alarmTime.set(year,month,day,hour,minute);
         // i am adding this boolean condition so that alarm will not ring if it has a repeat schedule of none and it is before now
         boolean resetAlarm = true;
-
-        if(alarmTime.before(Calendar.getInstance())){
-            switch (repeatSchedule){
-                case NONE:
-                    resetAlarm = false;
+//changed from if to while
+        while(alarmTime.before(Calendar.getInstance())){
+            //break out of the loop if repeat schedule is none
+            if (repeatSchedule == RepeatSchedule.NONE) {
+                resetAlarm = false;
                 break;
+            }
+            switch (repeatSchedule){
                 case DAILY:
                     alarmTime.set(year,month,day+1,hour,minute);
                 break;
@@ -116,7 +118,18 @@ public class OnPhoneReboot extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,uniqueAlarmId,toCallTheBroadcastReceiver,0);
         if(resetAlarm) {
             //only ring if reset alarm is true
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
+            switch(repeatSchedule){
+                //set repeating on phone reboot in case the user do not off and on the phone before the next alarm
+                case DAILY:
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,alarmTime.getTimeInMillis(),86400000,pendingIntent);
+                break;
+                case WEEKLY:
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,alarmTime.getTimeInMillis(),604800000,pendingIntent);
+                break;
+                default:
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
+                break;
+            }
         }
     }
 }
