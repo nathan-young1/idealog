@@ -63,11 +63,8 @@ public class MainActivity extends FlutterActivity {
         String alarmTitle = "";
         String repeatSchedule = "";
         Calendar calendar = Calendar.getInstance();
-        int year = 0;
-        int month = 0;
-        int day = 0;
-        int hour = 0;
-        int minute = 0;
+        int year,month,day,hour,minute;
+
         if(notificationType == NotificationType.SCHEDULE){
             int columnStartTime = cursor.getColumnIndex(COLUMN_START_TIME);
             int columnDate = cursor.getColumnIndex(COLUMN_DATE);
@@ -75,24 +72,17 @@ public class MainActivity extends FlutterActivity {
             int columnRepeatSchedule = cursor.getColumnIndex(COLUMN_REPEAT_SCHEDULE);
             if(cursor.moveToFirst()) {
                 do {
-                    String date = cursor.getString(columnDate);
-                    String startTime = cursor.getString(columnStartTime);
-
-                    List<String> dateFormat = Arrays.asList(date.split("-"));
-                    year = Integer.parseInt(dateFormat.get(0));
-                    //i minus one here from month because the month in an array starts from 0
-                    month = Integer.parseInt(dateFormat.get(1))-1;
-                    day = Integer.parseInt(dateFormat.get(2));
-
-                    List<String> timeFormat = Arrays.asList(startTime.split(":"));
-                    hour = Integer.parseInt(timeFormat.get(0));
-                    minute = Integer.parseInt(timeFormat.get(1));
+                    Map<String,Integer> dateAndTime = dateAndTimeFromDb.getDateTime(cursor.getString(columnDate),cursor.getString(columnStartTime));
+                    year = dateAndTime.get(dateAndTimeFromDb.Year);
+                    month = dateAndTime.get(dateAndTimeFromDb.Month);
+                    day = dateAndTime.get(dateAndTimeFromDb.Day);
+                    hour = dateAndTime.get(dateAndTimeFromDb.Hour);
+                    minute = dateAndTime.get(dateAndTimeFromDb.Minute);
 
                     calendar.set(year, month, day, hour, minute);
 
                     alarmTitle = cursor.getString(columnAlarmTitle);
                     repeatSchedule = cursor.getString(columnRepeatSchedule);
-                    System.out.println(repeatSchedule+cursor);
                 }while (cursor.moveToNext());
             }
         }

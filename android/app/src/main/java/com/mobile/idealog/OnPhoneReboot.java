@@ -31,11 +31,10 @@ public class OnPhoneReboot extends BroadcastReceiver {
         db = new IdealogDatabase(context,null,null,1);
         //implement the rescheduling of alarm after reading from sqlLite database here
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            Toast.makeText(context, "Alarm Set", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Alarm Set", Toast.LENGTH_LONG).show();
 
-            List<ScheduleModel> schedule = db.readFromDbAfterReboot();
             //loop through schedules
-            schedule.forEach(singleSchedule -> {
+            db.readFromDbAfterReboot().forEach(singleSchedule -> {
                 resetAlarmSchedule(
                         singleSchedule.scheduleDetails,
                         NotificationType.SCHEDULE,
@@ -45,30 +44,25 @@ public class OnPhoneReboot extends BroadcastReceiver {
                         singleSchedule.repeatSchedule,
                         context);
             });
+//            close db connection
+            db.close();
         }
     }
 
     private void resetAlarmSchedule(String alarmText, NotificationType notificationType, int uniqueAlarmId,String date, String startTime,RepeatSchedule repeatSchedule,Context context){
 
-        List<String> dateFormat = Arrays.asList(date.split("-"));
-        int year = Integer.parseInt(dateFormat.get(0));
-        //remember to minus one from month while selecting it in dart(flutter)
-        int month = Integer.parseInt(dateFormat.get(1))-1;
-        int day = Integer.parseInt(dateFormat.get(2));
-
-        List<String> timeFormat = Arrays.asList(startTime.split(":"));
-        int hour = Integer.parseInt(timeFormat.get(0));
-        int minute = Integer.parseInt(timeFormat.get(1));
+        Map<String,Integer> dateAndTime = dateAndTimeFromDb.getDateTime(date,startTime);
+        int year = dateAndTime.get(dateAndTimeFromDb.Year);
+        int month = dateAndTime.get(dateAndTimeFromDb.Month);
+        int day = dateAndTime.get(dateAndTimeFromDb.Day);
+        int hour = dateAndTime.get(dateAndTimeFromDb.Hour);
+        int minute = dateAndTime.get(dateAndTimeFromDb.Minute);
 
         Calendar alarmTime = Calendar.getInstance();
         alarmTime.set(year,month,day,hour,minute);
-        // i am adding this boolean condition so that alarm will not ring if it has a repeat schedule of none and it is before now
 
-        while(alarmTime.before(Calendar.getInstance())){
-            //break out of the loop if repeat schedule is none
-            if (repeatSchedule == RepeatSchedule.NONE) {
-                break;
-            }
+        while(alarmTime.before(Calendar.getInstance()) && repeatSchedule != RepeatSchedule.NONE){
+
             switch (repeatSchedule){
                 case DAILY:
                     alarmTime.set(year,month,day+1,hour,minute);
@@ -106,11 +100,11 @@ public class OnPhoneReboot extends BroadcastReceiver {
             String newDate = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(day);
             db.updateDate(newDate,uniqueAlarmId);
         }
-
+//        close db connection
+            db.close();
         //put a unique pendingIntent id
         PendingIntent pendingIntent = alarmIntent.createPendingIntent(context,alarmText,notificationType,uniqueAlarmId);
         if(repeatSchedule != RepeatSchedule.NONE) {
-            //only ring if reset alarm is true
             switch(repeatSchedule){
                 //set repeating on phone reboot in case the user do not off and on the phone before the next alarm
                 case DAILY:
