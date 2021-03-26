@@ -104,19 +104,6 @@ public class OnPhoneReboot extends BroadcastReceiver {
             db.close();
         //put a unique pendingIntent id
         PendingIntent pendingIntent = alarmIntent.createPendingIntent(context,alarmText,notificationType,uniqueAlarmId);
-        if(repeatSchedule != RepeatSchedule.NONE) {
-            switch(repeatSchedule){
-                //set repeating on phone reboot in case the user do not off and on the phone before the next alarm
-                case DAILY:
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,alarmTime.getTimeInMillis(),86400000,pendingIntent);
-                break;
-                case WEEKLY:
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,alarmTime.getTimeInMillis(),604800000,pendingIntent);
-                break;
-                default:
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmTime.getTimeInMillis(), pendingIntent);
-                break;
-            }
-        }
+        customSetAlarmManager.setAlarmManagerRepeatingOnCondition(alarmManager,repeatSchedule,alarmTime,pendingIntent);
     }
 }

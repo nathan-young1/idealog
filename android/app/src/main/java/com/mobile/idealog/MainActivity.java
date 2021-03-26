@@ -90,20 +90,7 @@ public class MainActivity extends FlutterActivity {
         db.close();
 
         PendingIntent pendingIntent = alarmIntent.createPendingIntent(MainActivity.this,alarmTitle,notificationType,uniqueAlarmId);
-
-        if(notificationType == NotificationType.SCHEDULE){
-            switch (repeatSchedule){
-                case "RepeatSchedule.DAILY":
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),86400000,pendingIntent);
-                break;
-                case "RepeatSchedule.WEEKLY":
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),604800000,pendingIntent);
-                break;
-                default:
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                break;
-            }
-        }
+        customSetAlarmManager.setAlarmManagerRepeatingOnCondition(alarmManager,customSetAlarmManager.changeRepeatScheduleFromStringToObject(repeatSchedule),calendar,pendingIntent);
     }
 
     public void cancelAlarm(int uniqueAlarmId){
