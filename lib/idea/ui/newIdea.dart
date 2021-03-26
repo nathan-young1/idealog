@@ -24,15 +24,13 @@ class _NewIdeaState extends State<NewIdea> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(kToolbarHeight*1.2),
-              child: CustomAppBar(title: 'ADD IDEA')),
         body: SingleChildScrollView(
           child: Form(
             child: Padding(
-              padding: const EdgeInsets.only(left: 15,right: 15),
+              padding: const EdgeInsets.only(left: 20,right: 15),
               child: Column(
                 children: [
+                  CustomAppBar(title: 'ADD IDEA'),
                   TextFormField(
                     controller: ideaTitle,
                     decoration: underlineAndFilled.copyWith(
@@ -50,17 +48,26 @@ class _NewIdeaState extends State<NewIdea> {
                       labelText: 'More details on idea...'
                     ),
                   ),
-                  Text('Add Tasks required for idea'),
+                  SizedBox(height: 25),
+                  Text('Add Tasks required for idea',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700)),
+                  SizedBox(height: 15),
                   Row(children: [
-                    Icon(Icons.info),
-                    Text('Press '),
+                    Icon(Icons.info,color: Colors.teal,size: 28),
+                    Text(' Press ',style: TextStyle(fontSize: 22)),
                     Container(
-                      color: Colors.grey,
-                      child: Text('Enter'),
+                      width: 85,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey,
+                      ),
+                      child: Center(child: Text('Enter',style: TextStyle(fontSize: 21,color: Colors.white))),
                     ),
-                    Text('to add task.')
+                    Text(' to add task.',style: TextStyle(fontSize: 22))
                   ],),
+                  SizedBox(height: 15),
                   _allTasks(),
+                  SizedBox(height: 10),
                   TextFormField(
                     controller: taskField,
                     focusNode: taskFieldFocus,
@@ -77,22 +84,23 @@ class _NewIdeaState extends State<NewIdea> {
                       onPressed: () => taskField.text = '')
                     ),
                   ),
-                  ElevatedButton(onPressed: ()=>Navigator.pushReplacementNamed(context, addNewSchedulePage), child: Text('Next Page'))
+                  ElevatedButton(onPressed: ()=>Navigator.pushNamed(context, addNewSchedulePage), child: Text('Next Page'))
                 ],
               ),
             ),),
         ),
-          bottomNavigationBar: Container(
-            height: 50,
-            color: Colors.green,
-            child: Center(
-              child: ElevatedButton(
-                onPressed: () async => await addToDbAndSetAlarmIdea(
-                ideaTitle: ideaTitle.text,
-                moreDetails: moreDetails.text,
-                tasks: tasks),
-                child: Text('Save')),
-            ),),
+          bottomNavigationBar: GestureDetector(
+            onTap: () async => await addToDbAndSetAlarmIdea(
+                  ideaTitle: ideaTitle.text,
+                  moreDetails: moreDetails.text,
+                  tasks: tasks),
+            child: Container(
+              height: 50,
+              color: Colors.teal,
+              child: Center(
+                child: Text('Save',style: TextStyle(fontSize: 24,color: Colors.white,fontWeight: FontWeight.w700)),
+              )),
+          ),
       ),
     );
   }

@@ -9,9 +9,9 @@ InputDecoration underlineAndFilled = InputDecoration(
 InputDecoration addTasks = InputDecoration(
   filled: true,
   enabledBorder: UnderlineInputBorder(
-    borderSide: BorderSide(color: Colors.amber,width: 2)
+    borderSide: BorderSide(color: Colors.teal,width: 2)
   ),
   focusedBorder: UnderlineInputBorder(
-    borderSide: BorderSide(color: Colors.amber,width: 2)
+    borderSide: BorderSide(color: Colors.teal,width: 2)
   )
 );
