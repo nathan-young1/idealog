@@ -42,32 +42,8 @@ class _AddScheduleState extends State<AddSchedule> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 15,right: 15),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text('Date:',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w600),)),
-                            Spacer(flex: 1),
-                            Expanded(
-                              flex: 3,
-                              child: DateTimePicker(
-                                controller: date,
-                                    dateLabelText: 'Schedule Date',
-                                    dateMask: 'd MMM, yyyy',
-                                    decoration: underlineAndFilled.copyWith(
-                                        suffixIcon: Icon(Icons.date_range),
-                                        labelText: 'dd-mm-year'
-                                      ),
-                                        firstDate: DateTime(2000),
-                                        lastDate: DateTime(2100),
-                                        initialDate: DateTime.now(),
-                                      ),
-                            ),
-                            Spacer(flex: 1)
-                          ],
-                        ),
-                        SizedBox(height: 15),
                         Row(
                           children: [
                           Expanded(
@@ -78,14 +54,14 @@ class _AddScheduleState extends State<AddSchedule> {
                               type: DateTimePickerType.time,
                               use24HourFormat: false,
                               decoration: underlineAndFilled.copyWith(
-                                    labelText: 'Start time',
+                                    labelText: 'Start',
                                     prefixIcon: Icon(Icons.access_time_sharp)
                               ),
                             ),
                           ),
                           Expanded(
                             flex: 1,
-                            child: Text('To',textAlign: TextAlign.center,)),
+                            child: Text('To',textAlign: TextAlign.center,style: TextStyle(fontSize: 23,fontWeight: FontWeight.w500),)),
                           Expanded(
                             flex: 2,
                             child: DateTimePicker(
@@ -94,13 +70,29 @@ class _AddScheduleState extends State<AddSchedule> {
                               type: DateTimePickerType.time,
                               use24HourFormat: false,
                               decoration: underlineAndFilled.copyWith(
-                                    labelText: 'End time',
+                                    labelText: 'End',
                                     prefixIcon: Icon(Icons.access_time_sharp)
                               ),
                             ),
                           ),
                         ],),
-                        SizedBox(height: 15),
+                          SizedBox(height: 25),
+                        Container(
+                          width: 180,
+                          child: DateTimePicker(
+                                controller: date,
+                                    dateLabelText: 'Schedule Date',
+                                    dateMask: 'd MMM, yyyy',
+                                    decoration: underlineAndFilled.copyWith(
+                                        suffixIcon: Icon(Icons.date_range),
+                                        labelText: 'Schedule Date'
+                                      ),
+                                        firstDate: DateTime(2000),
+                                        lastDate: DateTime(2100),
+                                        initialDate: DateTime.now(),
+                                      ),
+                        ),
+                        SizedBox(height: 25),
                         TextFormField(
                           controller: scheduleDetails,
                           maxLines: null,
@@ -109,10 +101,11 @@ class _AddScheduleState extends State<AddSchedule> {
                             labelText: 'Schedule Details...'
                           ),
                         ),
-                        SizedBox(height: 15),
+                        SizedBox(height: 35),
                         Row(
                           children: [
-                            Text('Repeat: '),
+                            Text('Repeat: ',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
+                            SizedBox(width: 10),
                             Container(
                               width: 150.w,
                               child: DropdownButtonFormField(

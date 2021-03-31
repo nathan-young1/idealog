@@ -49,7 +49,7 @@ class _NewIdeaState extends State<NewIdea> {
                     ),
                   ),
                   SizedBox(height: 25),
-                  Text('Add Tasks required for idea',style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700)),
+                  Text('Tasks required for idea',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w700)),
                   SizedBox(height: 15),
                   Row(children: [
                     Icon(Icons.info,color: Colors.teal,size: 28),
