@@ -55,7 +55,7 @@ class _AddScheduleState extends State<AddSchedule> {
                               use24HourFormat: false,
                               decoration: underlineAndFilled.copyWith(
                                     labelText: 'Start',
-                                    prefixIcon: Icon(Icons.access_time_sharp)
+                                    prefixIcon: Icon(Icons.timer)
                               ),
                             ),
                           ),
@@ -71,14 +71,14 @@ class _AddScheduleState extends State<AddSchedule> {
                               use24HourFormat: false,
                               decoration: underlineAndFilled.copyWith(
                                     labelText: 'End',
-                                    prefixIcon: Icon(Icons.access_time_sharp)
+                                    prefixIcon: Icon(Icons.flag)
                               ),
                             ),
                           ),
                         ],),
                           SizedBox(height: 25),
                         Container(
-                          width: 180,
+                          width: 200,
                           child: DateTimePicker(
                                 controller: date,
                                     dateLabelText: 'Schedule Date',
