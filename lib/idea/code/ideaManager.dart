@@ -14,3 +14,8 @@ addToDbAndSetAlarmIdea({required String ideaTitle,String? moreDetails,List<Strin
     print(e);
   }
 }
+
+Future<List<Idea>> getListOfIdeas() async {
+List<Idea> _ideasList = await Sqlite.readFromDb(type: NotificationType.IDEAS);
+return _ideasList;
+}

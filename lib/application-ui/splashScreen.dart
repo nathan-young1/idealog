@@ -14,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   Timer? timer;
-  changeRoute() =>Navigator.pushReplacementNamed(context, 'AuthPage');
+  changeRoute() =>Navigator.pushReplacementNamed(context,menuPageView);
   @override
     void initState() {
       super.initState();

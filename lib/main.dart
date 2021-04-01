@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_screenutil/screen_util.dart';
 import 'package:idealog/Schedule/addSchedule/ui/addSchedule.dart';
 import 'package:idealog/Schedule/checkSchedule/checkSchedule.dart';
+import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 
 import 'auth/ui/authUi.dart';
@@ -20,6 +21,7 @@ class Idealog extends StatelessWidget {
         return ScreenUtilInit(
           builder: () => MaterialApp(
             title: 'Idealog',
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               // This is the theme of your application.
               //
@@ -31,10 +33,12 @@ class Idealog extends StatelessWidget {
               // Notice that the counter didn't reset back to zero; the application
               // is not restarted.
               primarySwatch: Colors.grey,
+              brightness: Brightness.dark
             ),
             routes: {
               '/': (context) => SplashScreen(),
               'AuthPage': (context) => Login(),
+              'MenuPageView': (context) => MenuPageView(),
               'AddNewIdea': (context) => NewIdea(),
               'AddSchedule': (context) => AddSchedule(),
               'CheckSchedule': (context) => CheckSchedule()

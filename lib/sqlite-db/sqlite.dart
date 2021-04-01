@@ -61,6 +61,7 @@ class Sqlite{
         
         Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
         if(type == NotificationType.IDEAS){
+        await _database.execute(createIdeasTableSqlCommand);
         var result = await _database.query(ideasTableName);
         result.forEach((idea) { 
         Object? completedTasks = idea[Column_completedTasks];
@@ -76,6 +77,7 @@ class Sqlite{
         ));});
         
         }else if(type == NotificationType.SCHEDULE){
+        await _database.execute(createScheduleTableSqlCommand);
         var result = await _database.query(scheduleTableName);
         result.forEach((schedule) { 
           int startTimeHour = int.parse(schedule[Column_startTime].toString().split(':').first);
