@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:idealog/Schedule/addSchedule/code/scheduleManager.dart';
+import 'package:idealog/Schedule/code/scheduleManager.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/core-models/scheduleModel.dart';

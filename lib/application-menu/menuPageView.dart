@@ -77,14 +77,14 @@ class _MenuPageViewState extends State<MenuPageView> {
                     text: 'Ideas',
                   ),
                   GButton(
-                    icon: Icons.timeline,
-                    gap: 4.0,
-                    text: 'Productivity',
-                  ),
-                  GButton(
                     icon: Icons.ballot,
                     gap: 4.0,
                     text: 'Schedule',
+                  ),
+                  GButton(
+                    icon: Icons.timeline,
+                    gap: 4.0,
+                    text: 'Productivity',
                   ),
                   GButton(
                     icon: Icons.settings,

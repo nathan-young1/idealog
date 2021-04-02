@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:idealog/customInputDecoration/inputDecoration.dart';
+import 'package:idealog/global/routes.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:idealog/idea/code/ideaManager.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
