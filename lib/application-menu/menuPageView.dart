@@ -33,7 +33,6 @@ class _MenuPageViewState extends State<MenuPageView> {
               onPageChanged: (int pageIndex) => index.value = pageIndex,
               children: [
                 IdeaListPage(),
-                ScheduleListPage(),
                 Container(color: Colors.green),
                 Container(color: Colors.orange)
               ],
@@ -42,7 +41,7 @@ class _MenuPageViewState extends State<MenuPageView> {
               valueListenable: index,
               builder: (context, int _pageIndex,child) {
                 return Visibility(
-                  visible: (_pageIndex == 0 || _pageIndex == 1),
+                  visible: (_pageIndex == 0),
                   child: FloatingActionButton(
                     backgroundColor: Colors.blueGrey[300],
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -83,11 +82,6 @@ class _MenuPageViewState extends State<MenuPageView> {
                     icon: Icons.lightbulb,
                     gap: 4.0,
                     text: 'Ideas',
-                  ),
-                  GButton(
-                    icon: Icons.ballot,
-                    gap: 4.0,
-                    text: 'Schedule',
                   ),
                   GButton(
                     icon: Icons.timeline,

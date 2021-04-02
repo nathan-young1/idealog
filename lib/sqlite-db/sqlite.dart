@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:idealog/global/int.dart';
 import 'package:idealog/global/strings.dart';
@@ -10,7 +9,6 @@ import 'package:idealog/global/extension.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/core-models/scheduleModel.dart';
 import 'ideasDbColumn.dart';
-import 'scheduleDbColumn.dart';
 
 class Sqlite{
 
@@ -31,33 +29,18 @@ class Sqlite{
         Column_uncompletedTasks: (uncompletedTasks.isEmpty)?null:'$uncompletedTasks'
         });
 
-    }else if(notificationType == NotificationType.SCHEDULE){
-            
-      // await _database.execute('Drop Table $scheduleTableName');
-      await _database.execute(createScheduleTableSqlCommand);
-      _database.insert(scheduleTableName, {
-        Column_uniqueId:schedule!.uniqueId,
-        Column_scheduleDetails:schedule.scheduleDetails,
-        Column_scheduleDate:schedule.scheduleDate.toString(),
-        Column_startTime:'${schedule.startTime}',
-        Column_endTime:'${schedule.endTime}',
-        Column_repeatSchedule:'${schedule.repeatSchedule}'
-      });
     }
     await _database.close();
   }
 
   static deleteFromDB({required String uniqueId,required NotificationType type}) async {
     Database _database = await openDatabase(sqliteDbName,onCreate: (_,__)=>print('${_.path} has been created'));
-      (type == NotificationType.IDEAS)
-      ?await _database.execute('delete from $ideasTableName where $Column_uniqueId = $uniqueId')
-      :await _database.execute('delete from $scheduleTableName where $Column_uniqueId = $uniqueId');
+    await _database.execute('delete from $ideasTableName where $Column_uniqueId = $uniqueId');
     await _database.close();
   }
 
   static readFromDb({required NotificationType type}) async {
       List<Idea>? allIdeasFromDb = [];
-      List<Schedule>? allScheduleFromDb = [];
         
         Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
         if(type == NotificationType.IDEAS){
@@ -74,42 +57,19 @@ class Sqlite{
         completedTasks: (completedTasks != null)?completedTasks.fromDbStringToListInt:[],
         uncompletedTasks: (uncompletedTasks != null)?uncompletedTasks.fromDbStringToListInt:[]
         ));});
-        
-        }else if(type == NotificationType.SCHEDULE){
-        await _database.execute(createScheduleTableSqlCommand);
-        var result = await _database.query(scheduleTableName);
-        result.forEach((schedule) { 
-          int startTimeHour = int.parse(schedule[Column_startTime].toString().split(':').first);
-          int startTimeMinute = int.parse(schedule[Column_startTime].toString().split(':').last);
-          int endTimeHour = int.parse(schedule[Column_endTime].toString().split(':').first);
-          int endTimeMinute = int.parse(schedule[Column_endTime].toString().split(':').last);
-          print('$startTimeHour $startTimeMinute\n $endTimeHour $endTimeMinute');
-          print(schedule[Column_repeatSchedule]);
-          print(schedule[Column_scheduleDate]);
-          allScheduleFromDb.add(
-            Schedule.fromDb(
-              scheduleDate: schedule[Column_scheduleDate].toString(),
-              repeatSchedule: schedule[Column_repeatSchedule].toString(),
-              uniqueId: int.parse(schedule[Column_uniqueId].toString()),
-              startTime: TimeOfDay(hour: startTimeHour,minute: startTimeMinute).toString(),
-              endTime: TimeOfDay(hour: endTimeHour,minute: endTimeMinute).toString(),
-              scheduleDetails: schedule[Column_moreDetails].toString(),
-              )
-          );
-        });
         }
         
         await _database.close();
 
-        return (type == NotificationType.IDEAS)?allIdeasFromDb:allScheduleFromDb;
+        return allIdeasFromDb;
   }
 
   static Future<int> getUniqueId({NotificationType? type}) async {
             int uniqueId = Random().nextInt(maxRandomNumber);
             Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
-            await _database.execute(createScheduleTableSqlCommand);
+            await _database.execute(createIdeasTableSqlCommand);
             print('database has been initialized');
-            var idsFromDb = await _database.query((type == NotificationType.IDEAS)?ideasTableName:scheduleTableName,columns: [Column_uniqueId]);
+            var idsFromDb = await _database.query(ideasTableName,columns: [Column_uniqueId]);
             List<int> unavailableIds = idsFromDb.map((map) => int.parse('${map[Column_uniqueId]}')).toList();
             //if it does not contain the id do not loop
             while(unavailableIds.contains(uniqueId)){
