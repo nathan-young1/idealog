@@ -4,6 +4,7 @@ import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/global/routes.dart';
 import 'package:idealog/idea/ui/ideaListPage.dart';
+import 'package:idealog/productivity/ui/productivity.dart';
 
 class MenuPageView extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _MenuPageViewState extends State<MenuPageView> {
               onPageChanged: (int pageIndex) => index.value = pageIndex,
               children: [
                 IdeaListPage(),
-                Container(color: Colors.green),
+                Productivity(),
                 Container(color: Colors.orange)
               ],
             ),
