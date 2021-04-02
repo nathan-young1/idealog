@@ -27,16 +27,17 @@ dependencies:
   firebase_core: ^1.0.0
   firebase_auth: ^1.0.0
   cloud_firestore: ^1.0.0
-  flutter_screenutil: ^4.0.3+2
+  flutter_screenutil: ^5.0.0-nullsafety.11
   velocity_x:
   google_nav_bar: ^5.0.3
   google_sign_in: ^5.0.0
-  syncfusion_flutter_datepicker: ^18.4.46-beta
+  syncfusion_flutter_datepicker: ^19.1.54-beta.1
   sqflite: ^2.0.0+2
   another_flushbar: ^1.10.17
   provider: ^5.0.0
-  syncfusion_flutter_calendar: ^18.4.48
-  syncfusion_flutter_charts: ^18.4.48
+  syncfusion_flutter_calendar: ^19.1.54+1
+  sleek_circular_slider: ^2.0.0
+  syncfusion_flutter_charts: ^19.1.54+1
   animations: ^2.0.0
   font_awesome_flutter: ^9.0.0
   google_fonts: ^2.0.0

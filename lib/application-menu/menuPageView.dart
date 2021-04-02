@@ -44,7 +44,7 @@ class _MenuPageViewState extends State<MenuPageView> {
                 return Visibility(
                   visible: (_pageIndex == 0 || _pageIndex == 1),
                   child: FloatingActionButton(
-                    backgroundColor: Colors.blueGrey[300]!.withOpacity(0.6),
+                    backgroundColor: Colors.blueGrey[300],
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     splashColor: Colors.black54,
                     onPressed: ()=> (_pageIndex == 0)

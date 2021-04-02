@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customWidget/alertDialog.dart';
 import 'package:idealog/global/enums.dart';
-import 'package:idealog/global/extension.dart';
 import 'package:idealog/global/routes.dart';
-import 'package:idealog/nativeCode/bridge.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
 
 addToDbAndSetAlarmIdea({required String ideaTitle,String? moreDetails,List<String>? tasks,required BuildContext context}) async {

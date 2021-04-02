@@ -32,6 +32,7 @@ class Idealog extends StatelessWidget {
               // or simply save your changes to "hot reload" in a Flutter IDE).
               // Notice that the counter didn't reset back to zero; the application
               // is not restarted.
+              colorScheme: ColorScheme(primary: Colors.blueGrey, primaryVariant: Colors.blueGrey, secondary: Colors.blueGrey, secondaryVariant: Colors.blueGrey, surface: Colors.blueGrey, background: Colors.blueGrey, error: Colors.blueGrey, onPrimary: Colors.blueGrey, onSecondary: Colors.blueGrey, onSurface: Colors.blueGrey, onBackground: Colors.blueGrey, onError: Colors.blueGrey, brightness: Brightness.dark),
               primarySwatch: Colors.blueGrey,
               brightness: Brightness.dark
             ),

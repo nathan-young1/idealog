@@ -1,9 +1,5 @@
-import 'dart:typed_data';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:idealog/Schedule/code/scheduleManager.dart';
-import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/core-models/scheduleModel.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
@@ -11,12 +7,6 @@ import 'package:idealog/global/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
-import 'package:flutter/services.dart';
-import 'package:idealog/global/strings.dart';
-import 'package:idealog/global/extension.dart';
-import 'package:idealog/nativeCode/bridge.dart';
-import 'package:idealog/sqlite-db/sqlite.dart';
-import 'package:sqflite/sqflite.dart';
 
 class AddSchedule extends StatefulWidget {
   @override

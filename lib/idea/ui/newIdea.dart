@@ -1,12 +1,9 @@
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/idea/code/ideaManager.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class NewIdea extends StatefulWidget {
   @override

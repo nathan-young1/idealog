@@ -19,10 +19,9 @@ class _LoginState extends State<Login> {
           stream: auth.authStateChanges(),
           builder: (context, snapshot) {
             if(snapshot.data != null){
-              // print(snapshot.data);
-              print('auth is available');
+             // print('auth is available');
             }else{
-              print('i am empty');
+             // print('i am empty');
             }
             
             return Center(

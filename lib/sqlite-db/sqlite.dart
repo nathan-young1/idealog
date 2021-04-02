@@ -66,7 +66,6 @@ class Sqlite{
         result.forEach((idea) { 
         Object? completedTasks = idea[Column_completedTasks];
         Object? uncompletedTasks = idea[Column_uncompletedTasks];
-        print(idea[Column_completedTasks]);
         allIdeasFromDb.add(
         Idea.readFromDb(
         ideaTitle: idea[Column_ideaTitle].toString(),

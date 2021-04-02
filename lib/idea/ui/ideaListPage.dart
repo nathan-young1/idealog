@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/global/enums.dart';
+import 'package:idealog/customWidget/ideaCard.dart';
 import 'package:idealog/idea/code/ideaManager.dart';
-import 'package:idealog/sqlite-db/sqlite.dart';
 
 class IdeaListPage extends StatelessWidget {
 
@@ -27,13 +26,14 @@ class IdeaListPage extends StatelessWidget {
               ],
             ),
           ),
-          FutureBuilder<List<Idea>>(
-            future: getListOfIdeas(),
+          StreamBuilder<List<Idea>>(
+            stream: getListOfIdeas().asStream(),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.waiting) {
                 return Expanded(
                       child: ListView(
-                        children: snapshot.data!.map((e) => Text(e.ideaTitle)).toList(),
+                       shrinkWrap: true,
+                       children: (snapshot.data != null)?snapshot.data!.map((idea) => IdeaCard(info: idea)).toList():[],
                       ),
                     );
               }

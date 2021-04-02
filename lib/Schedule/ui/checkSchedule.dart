@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CheckSchedule extends StatefulWidget {
 
