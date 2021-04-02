@@ -63,11 +63,8 @@ public class MainActivity extends FlutterActivity {
         String alarmTitle = "";
         String repeatSchedule = "";
         Calendar calendar = Calendar.getInstance();
-        int year = 0;
-        int month = 0;
-        int day = 0;
-        int hour = 0;
-        int minute = 0;
+        int year,month,day,hour,minute;
+
         if(notificationType == NotificationType.SCHEDULE){
             int columnStartTime = cursor.getColumnIndex(COLUMN_START_TIME);
             int columnDate = cursor.getColumnIndex(COLUMN_DATE);
@@ -75,48 +72,25 @@ public class MainActivity extends FlutterActivity {
             int columnRepeatSchedule = cursor.getColumnIndex(COLUMN_REPEAT_SCHEDULE);
             if(cursor.moveToFirst()) {
                 do {
-                    String date = cursor.getString(columnDate);
-                    String startTime = cursor.getString(columnStartTime);
-
-                    List<String> dateFormat = Arrays.asList(date.split("-"));
-                    year = Integer.parseInt(dateFormat.get(0));
-                    //i minus one here from month because the month in an array starts from 0
-                    month = Integer.parseInt(dateFormat.get(1))-1;
-                    day = Integer.parseInt(dateFormat.get(2));
-
-                    List<String> timeFormat = Arrays.asList(startTime.split(":"));
-                    hour = Integer.parseInt(timeFormat.get(0));
-                    minute = Integer.parseInt(timeFormat.get(1));
+                    Map<String,Integer> dateAndTime = dateAndTimeFromDb.getDateTime(cursor.getString(columnDate),cursor.getString(columnStartTime));
+                    year = dateAndTime.get(dateAndTimeFromDb.Year);
+                    month = dateAndTime.get(dateAndTimeFromDb.Month);
+                    day = dateAndTime.get(dateAndTimeFromDb.Day);
+                    hour = dateAndTime.get(dateAndTimeFromDb.Hour);
+                    minute = dateAndTime.get(dateAndTimeFromDb.Minute);
 
                     calendar.set(year, month, day, hour, minute);
 
                     alarmTitle = cursor.getString(columnAlarmTitle);
                     repeatSchedule = cursor.getString(columnRepeatSchedule);
-                    System.out.println(repeatSchedule+cursor);
                 }while (cursor.moveToNext());
             }
         }
+        //close the database reference
+        db.close();
 
-        Intent toCallTheBroadcastReceiver = new Intent(MainActivity.this,ListenForAlarm.class);
-        toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
-        toCallTheBroadcastReceiver.putExtra("alarmText",alarmTitle);
-        toCallTheBroadcastReceiver.putExtra("notificationTypeIsIdea",notificationType == NotificationType.IDEAS);
-        toCallTheBroadcastReceiver.putExtra("id",uniqueAlarmId);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
-        if(notificationType == NotificationType.SCHEDULE){
-            switch (repeatSchedule){
-                case "RepeatSchedule.DAILY":
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),86400000,pendingIntent);
-                break;
-                case "RepeatSchedule.WEEKLY":
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),604800000,pendingIntent);
-                break;
-                default:
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                break;
-            }
-        }
+        PendingIntent pendingIntent = alarmIntent.createPendingIntent(MainActivity.this,alarmTitle,notificationType,uniqueAlarmId);
+        customSetAlarmManager.setAlarmManagerRepeatingOnCondition(alarmManager,customSetAlarmManager.changeRepeatScheduleFromStringToObject(repeatSchedule),calendar,pendingIntent);
     }
 
     public void cancelAlarm(int uniqueAlarmId){

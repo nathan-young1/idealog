@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:idealog/Schedule/addSchedule/ui/addSchedule.dart';
 import 'package:idealog/global/enums.dart';
 
 class Schedule{

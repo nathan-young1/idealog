@@ -6,17 +6,15 @@ class CustomAppBar extends StatelessWidget {
   CustomAppBar({required this.title});
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      leading: Padding(
-            padding: EdgeInsets.all(30.w),
-            child: Icon(Icons.arrow_back_ios,size: 35.r,),
-          ),
-          title: Padding(
-            padding: EdgeInsets.only(top: 30.w),
-            child: Text(title!),
-          ),
-          shadowColor: Colors.transparent,
-          backgroundColor: Colors.transparent,
-    );
+    return Padding(
+          padding: const EdgeInsets.only(top: 20,bottom: 20),
+          child: Row(children: [
+            IconButton(icon: Icon(Icons.arrow_back_ios),
+            iconSize: 32.r,
+            onPressed: ()=>Navigator.pop(context)),
+            SizedBox(width: 10),
+            Text(title!,style: TextStyle(fontSize: 24,fontWeight: FontWeight.w700),)
+          ],),
+        );
   }
 }

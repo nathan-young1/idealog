@@ -4,7 +4,3 @@ const sqliteDbName = 'idealog.db';
 const javaToFlutterMethodChannelName = 'com.idealog.alarmServiceCaller';
 const ideasTableName = 'IDEAS';
 const scheduleTableName = 'SCHEDULE';
-const authenticationPage = 'AuthPage';
-const addNewIdeaPage = 'AddNewIdea';
-const addNewSchedulePage = 'AddSchedule';
-const checkSchedulePage = 'CheckSchedule';

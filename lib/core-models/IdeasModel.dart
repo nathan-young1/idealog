@@ -1,4 +1,3 @@
-import 'dart:math';
 
 class Idea{
   int uniqueId;

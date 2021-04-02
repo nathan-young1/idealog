@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_screenutil/screen_util.dart';
-import 'package:idealog/Schedule/addSchedule/ui/addSchedule.dart';
-import 'package:idealog/Schedule/checkSchedule/checkSchedule.dart';
+import 'package:idealog/Schedule/ui/checkSchedule.dart';
+import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 
+import 'Schedule/ui/addSchedule.dart';
 import 'auth/ui/authUi.dart';
 import 'idea/ui/newIdea.dart';
 
@@ -20,6 +21,7 @@ class Idealog extends StatelessWidget {
         return ScreenUtilInit(
           builder: () => MaterialApp(
             title: 'Idealog',
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               // This is the theme of your application.
               //
@@ -30,11 +32,14 @@ class Idealog extends StatelessWidget {
               // or simply save your changes to "hot reload" in a Flutter IDE).
               // Notice that the counter didn't reset back to zero; the application
               // is not restarted.
-              primarySwatch: Colors.grey,
+              colorScheme: ColorScheme(primary: Colors.blueGrey, primaryVariant: Colors.blueGrey, secondary: Colors.blueGrey, secondaryVariant: Colors.blueGrey, surface: Colors.blueGrey, background: Colors.blueGrey, error: Colors.blueGrey, onPrimary: Colors.blueGrey, onSecondary: Colors.blueGrey, onSurface: Colors.blueGrey, onBackground: Colors.blueGrey, onError: Colors.blueGrey, brightness: Brightness.dark),
+              primarySwatch: Colors.blueGrey,
+              brightness: Brightness.dark
             ),
             routes: {
               '/': (context) => SplashScreen(),
               'AuthPage': (context) => Login(),
+              'MenuPageView': (context) => MenuPageView(),
               'AddNewIdea': (context) => NewIdea(),
               'AddSchedule': (context) => AddSchedule(),
               'CheckSchedule': (context) => CheckSchedule()
