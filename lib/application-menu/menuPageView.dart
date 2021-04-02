@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:idealog/Schedule/ui/scheduleListPage.dart';
+import 'package:idealog/customDecoration/boxDecoration.dart';
+import 'package:idealog/customDecoration/colors.dart';
+import 'package:idealog/global/routes.dart';
 import 'package:idealog/idea/ui/ideaListPage.dart';
 
 class MenuPageView extends StatefulWidget {
@@ -21,12 +25,7 @@ class _MenuPageViewState extends State<MenuPageView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color.fromRGBO(63, 73, 87, 1),Color.fromRGBO(117, 71, 74, 0.8)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight)
-        ),
+        decoration: lightModeBackgroundColor,
         child: Scaffold(
           backgroundColor: Colors.transparent,
             body: PageView(
@@ -34,7 +33,7 @@ class _MenuPageViewState extends State<MenuPageView> {
               onPageChanged: (int pageIndex) => index.value = pageIndex,
               children: [
                 IdeaListPage(),
-                Container(color: Colors.blue),
+                ScheduleListPage(),
                 Container(color: Colors.green),
                 Container(color: Colors.orange)
               ],
@@ -43,19 +42,22 @@ class _MenuPageViewState extends State<MenuPageView> {
               valueListenable: index,
               builder: (context, int _pageIndex,child) {
                 return Visibility(
-                  visible: (_pageIndex == 0 || _pageIndex == 2),
+                  visible: (_pageIndex == 0 || _pageIndex == 1),
                   child: FloatingActionButton(
+                    backgroundColor: Colors.blueGrey[300]!.withOpacity(0.6),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    splashColor: Colors.red,
-                    onPressed: (){},
-                    child: Icon(Icons.add,size: 35,color: Colors.black)
+                    splashColor: Colors.black54,
+                    onPressed: ()=> (_pageIndex == 0)
+                    ?Navigator.pushNamed(context, addNewIdeaPage)
+                    :Navigator.pushNamed(context, addNewSchedulePage),
+                    child: Icon(Icons.add,size: 35,color: Colors.white)
                   ),
                 );
               }
             ),
             bottomNavigationBar: Container(
               height: 70,
-              color: Color.fromRGBO(71, 71, 73, 0.7),
+              color: lightModeBottomNavColor,
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: ValueListenableBuilder(
               valueListenable: index,
@@ -64,7 +66,13 @@ class _MenuPageViewState extends State<MenuPageView> {
                 selectedIndex: _pageIndex,
                 backgroundColor: Colors.transparent,
                 tabBorderRadius: 50,
-                tabBackgroundColor: Color.fromRGBO(18, 7, 8, 0.6),
+                tabBackgroundGradient: LinearGradient(
+                colors: [
+                Color.fromRGBO(63, 73, 87, 0.4),
+                Color.fromRGBO(117, 71, 74, 0.4)
+                  ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight),
                 //padding for the tabs
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 onTabChange: (int index){
