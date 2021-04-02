@@ -16,7 +16,7 @@ class IdeaCard extends StatelessWidget {
     final int totalNumberOfTasks = uncompletedTasksSize + completedTasksSize;
     final double percent = (completedTasksSize/totalNumberOfTasks)*100;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 40),
+      padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 30),
       child: GestureDetector(
         onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>IdeaDetail(detail: info))),
         child: Column(
@@ -29,7 +29,7 @@ class IdeaCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                    Text(info.ideaTitle,style: TextStyle(fontSize: 30,fontWeight: FontWeight.w500)),
+                    Text(info.ideaTitle,style: TextStyle(fontSize: 30,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis),
                     SizedBox(height: 5),
                     Row(children: [
                       Tooltip(
@@ -58,7 +58,7 @@ class IdeaCard extends StatelessWidget {
                       ),
                       SizedBox(width: 15),
                       if(uncompletedTasksSize != 0)
-                      Text('Uncompleted Tasks: $uncompletedTasksSize',style: TextStyle(fontSize: 20)),
+                      Flexible(child: Text('Uncompleted Tasks: $uncompletedTasksSize',style: TextStyle(fontSize: 20),overflow: TextOverflow.ellipsis,)),
                       if(uncompletedTasksSize == 0 && completedTasksSize > 0)
                       Text('Tasks completed',style: TextStyle(fontSize: 20)),
                       if(uncompletedTasksSize == 0 && completedTasksSize == 0)
@@ -67,7 +67,7 @@ class IdeaCard extends StatelessWidget {
               ],),
             ),
             Container(
-              height: 40,
+              height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15)),
                 color: Colors.white,

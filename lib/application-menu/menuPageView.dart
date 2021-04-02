@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:idealog/Schedule/ui/scheduleListPage.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/global/routes.dart';
@@ -46,9 +45,7 @@ class _MenuPageViewState extends State<MenuPageView> {
                     backgroundColor: Colors.blueGrey[300],
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     splashColor: Colors.black54,
-                    onPressed: ()=> (_pageIndex == 0)
-                    ?Navigator.pushNamed(context, addNewIdeaPage)
-                    :Navigator.pushNamed(context, addNewSchedulePage),
+                    onPressed: ()=> Navigator.pushNamed(context, addNewIdeaPage),
                     child: Icon(Icons.add,size: 35,color: Colors.white)
                   ),
                 );

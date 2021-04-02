@@ -33,8 +33,8 @@ class Sqlite{
     await _database.close();
   }
 
-  static deleteFromDB({required String uniqueId,required NotificationType type}) async {
-    Database _database = await openDatabase(sqliteDbName,onCreate: (_,__)=>print('${_.path} has been created'));
+  static deleteFromDB({required String uniqueId}) async {
+    Database _database = await openDatabase(sqliteDbName,onCreate: (_,__)=>print('${_.path} has been created'),version: 1);
     await _database.execute('delete from $ideasTableName where $Column_uniqueId = $uniqueId');
     await _database.close();
   }

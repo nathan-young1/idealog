@@ -1,8 +1,4 @@
 ...Add the ablity to collarborate with other in the idea. give them like read and write permissions
-...Remeber to solve our logo problem
-...To set alarm for schedule user should be pro
-...add select multiple date for schedule
-...add a dropdown button to navigate through the years
 
         For alarm
             ..set deadline (day and optionally time)
@@ -10,4 +6,4 @@
             ..reset the alarms on phone reboot
             ..get the data from mysql database
             ..add text to speech 
-            ..add notification sound
+            ..add at least one task before submission

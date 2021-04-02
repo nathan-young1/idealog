@@ -33,6 +33,7 @@ class _NewIdeaState extends State<NewIdea> {
                     CustomAppBar(title: 'ADD IDEA'),
                     TextFormField(
                       controller: ideaTitle,
+                      maxLength: 50,
                       decoration: underlineAndFilled.copyWith(
                         labelText: 'Idea title',
                         prefixIcon: Icon(Icons.text_fields)
@@ -42,6 +43,7 @@ class _NewIdeaState extends State<NewIdea> {
                     TextFormField(
                       controller: moreDetails,
                       maxLines: null,
+                      maxLength: 200,
                       minLines: 5,
                       keyboardType: TextInputType.multiline,
                       decoration: underlineAndFilled.copyWith(
@@ -69,6 +71,7 @@ class _NewIdeaState extends State<NewIdea> {
                     _allTasks(),
                     SizedBox(height: 10),
                     TextFormField(
+                      maxLength: 150,
                       controller: taskField,
                       focusNode: taskFieldFocus,
                       onFieldSubmitted: (newTask){
