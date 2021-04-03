@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:idealog/global/int.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:idealog/sqlite-db/sqlExecString.dart';

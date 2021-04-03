@@ -28,7 +28,7 @@ dependencies:
   firebase_auth: ^1.0.0
   cloud_firestore: ^1.0.0
   flutter_screenutil: ^5.0.0-nullsafety.11
-  velocity_x:
+  velocity_x: ^2.6.1
   google_nav_bar: ^5.0.3
   google_sign_in: ^5.0.0
   sqflite: ^2.0.0+2
