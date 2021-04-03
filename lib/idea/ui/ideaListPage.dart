@@ -32,6 +32,7 @@ class IdeaListPage extends StatelessWidget {
               if (snapshot.connectionState != ConnectionState.waiting) {
                 return Expanded(
                       child: ListView(
+                       physics: ScrollPhysics(parent: BouncingScrollPhysics()),
                        shrinkWrap: true,
                        children: (snapshot.data != null)?snapshot.data!.map((idea) => IdeaCard(info: idea)).toList():[],
                       ),
