@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_screenutil/screen_util.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
+import 'package:idealog/idea/ui/addToExisting.dart';
 import 'auth/ui/authUi.dart';
 import 'idea/ui/newIdea.dart';
 

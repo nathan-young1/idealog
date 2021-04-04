@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
+import 'package:idealog/idea/ui/addToExisting.dart';
+import 'package:idealog/sqlite-db/sqlite.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class IdeaCard extends StatelessWidget {
@@ -29,7 +31,35 @@ class IdeaCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                    Text(info.ideaTitle,style: TextStyle(fontSize: 30,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Center(child: Text(info.ideaTitle,style: TextStyle(fontSize: 30,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis))),
+                        Expanded(
+                        flex: 1, 
+                        child: Center(
+                          child: PopupMenuButton<int>(
+                          iconSize: 35,
+                          padding: EdgeInsets.zero,
+                          onSelected: (_) async=> await Sqlite.deleteFromDB(uniqueId: '${info.uniqueId}'),
+                          itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+                          PopupMenuItem<int>( 
+                            value: 0,
+                            child:  Container(
+                              child: Row(
+                                children: [
+                                Icon(Icons.delete_sweep,size: 30),
+                                SizedBox(width: 10),
+                                Text('Delete',style: TextStyle(fontSize: 18))
+                              ],),
+                            ),
+                          )],
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      ),
+                        ))
+                      ],
+                    ),
                     SizedBox(height: 5),
                     Row(children: [
                       Tooltip(
@@ -66,19 +96,22 @@ class IdeaCard extends StatelessWidget {
                     ],)
               ],),
             ),
-            Container(
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15)),
-                color: Colors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text('Add A New Task',style: TextStyle(color: Colors.black,fontSize: 20)),
-                  SizedBox(width: 15),
-                  FaIcon(FontAwesomeIcons.plus,color: Colors.grey[800])
-                ],
+            GestureDetector(
+              onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AddToExistingIdea(idea: info))),
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15)),
+                  color: Colors.white,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Add A New Task',style: TextStyle(color: Colors.black,fontSize: 20)),
+                    SizedBox(width: 15),
+                    FaIcon(FontAwesomeIcons.plus,color: Colors.grey[800])
+                  ],
+                ),
               ),
             )
           ],

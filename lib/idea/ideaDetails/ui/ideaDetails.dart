@@ -1,14 +1,20 @@
 import 'dart:ui';
+import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/customDecoration/colors.dart';
+import 'package:idealog/idea/ui/addToExisting.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
 
 class IdeaDetail extends StatelessWidget {
   final Idea detail;
-  IdeaDetail({required this.detail});
+  TextEditingController? description;
+  IdeaDetail({required this.detail}){
+    description = TextEditingController(text: detail.moreDetails);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -25,7 +31,7 @@ class IdeaDetail extends StatelessWidget {
                    padding: EdgeInsets.only(top: 15,left: 20,right: 10),
                    child: Column(
                      children: [
-                       _IdeaDetailTab(uniqueId: detail.uniqueId),
+                       _IdeaDetailTab(detail: detail),
                        Expanded(child: Padding(
                          padding: EdgeInsets.only(left: 15,right: 15),
                          child: Center(
@@ -35,6 +41,15 @@ class IdeaDetail extends StatelessWidget {
                    ),
                  ),
                ),
+               Expanded(
+                 flex: 1,
+                 child: TextField(
+                   controller: description,
+                   enabled: false,
+                   decoration: underlineAndFilled.copyWith(
+                     labelText: 'Description'
+                   ),
+                 )),
                Expanded(
                  flex: 2,
                  child: ListView(
@@ -82,10 +97,10 @@ class _TasksList extends StatelessWidget {
 }
 
 class _IdeaDetailTab extends StatelessWidget {
-  final int uniqueId;
+  final Idea detail;
   const _IdeaDetailTab({
     Key? key,
-    required this.uniqueId
+    required this.detail
   }) : super(key: key);
 
   @override
@@ -98,29 +113,14 @@ class _IdeaDetailTab extends StatelessWidget {
      onPressed: ()=>Navigator.pop(context)),
      Row(
        children: [
-         IconButton(icon: Icon(Icons.add,size: 35), onPressed: (){}),
+         IconButton(icon: Icon(Icons.add,size: 35), onPressed: (){
+           Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AddToExistingIdea(idea: detail)));
+         }),
          SizedBox(width: 15),
-         PopupMenuButton<int>(
-           iconSize: 35,
-           padding: EdgeInsets.zero,
-           onSelected: (_) async{
-             await Sqlite.deleteFromDB(uniqueId: '$uniqueId');
+         IconButton(icon: Icon(Icons.delete_sweep_outlined),onPressed: ()async{
+             await Sqlite.deleteFromDB(uniqueId: '${detail.uniqueId}');
              Navigator.pop(context);
-             },
-           itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-           PopupMenuItem<int>( 
-             value: 0,
-             child:  Container(
-               child: Row(
-                 children: [
-                 Icon(Icons.delete_sweep,size: 30),
-                 SizedBox(width: 10),
-                 Text('Delete',style: TextStyle(fontSize: 18))
-               ],),
-             ),
-           )],
-           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-         )
+             })
       ],
     )
              ],
