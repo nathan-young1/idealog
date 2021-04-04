@@ -1,4 +1,7 @@
 
+import 'package:idealog/global/enums.dart';
+import 'package:idealog/sqlite-db/sqlite.dart';
+
 class Idea{
   int uniqueId;
   String ideaTitle;
@@ -27,6 +30,13 @@ class _Tasks{
     (uncompletedTasks.contains(task))
     ?uncompletedTasks.remove(task)
     :completedTasks.remove(task);
+    print(task);
+    print(uncompletedTasks);
+  }
+
+  uncheckCompletedTask(List<int> task){
+    completedTasks.remove(task);
+    uncompletedTasks.add(task);
   }
 
   completeTask(List<int> task){

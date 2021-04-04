@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:idealog/customDecoration/inputDecoration.dart';
+import 'package:idealog/global/enums.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
@@ -8,13 +9,18 @@ import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/idea/ui/addToExisting.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
 
-class IdeaDetail extends StatelessWidget {
+class IdeaDetail extends StatefulWidget {
   final Idea detail;
   TextEditingController? description;
   IdeaDetail({required this.detail}){
     description = TextEditingController(text: detail.moreDetails);
   }
 
+  @override
+  _IdeaDetailState createState() => _IdeaDetailState();
+}
+
+class _IdeaDetailState extends State<IdeaDetail> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -31,11 +37,11 @@ class IdeaDetail extends StatelessWidget {
                    padding: EdgeInsets.only(top: 15,left: 20,right: 10),
                    child: Column(
                      children: [
-                       _IdeaDetailTab(detail: detail),
+                       _IdeaDetailTab(detail: widget.detail),
                        Expanded(child: Padding(
                          padding: EdgeInsets.only(left: 15,right: 15),
                          child: Center(
-                           child: Text(detail.ideaTitle,style: TextStyle(fontSize: 40,fontWeight: FontWeight.w600))),
+                           child: Text(widget.detail.ideaTitle,style: TextStyle(fontSize: 40,fontWeight: FontWeight.w600))),
                        )),
                      ],
                    ),
@@ -44,7 +50,7 @@ class IdeaDetail extends StatelessWidget {
                Expanded(
                  flex: 1,
                  child: TextField(
-                   controller: description,
+                   controller: widget.description,
                    enabled: false,
                    decoration: underlineAndFilled.copyWith(
                      labelText: 'Description'
@@ -55,9 +61,9 @@ class IdeaDetail extends StatelessWidget {
                  child: ListView(
                    padding: EdgeInsets.only(top: 30,left: 20,right: 10),
                    children: [
-                  _TasksList(detail: detail,tasks: Tasks.UNCOMPLETED),
-                   if(detail.tasks!.completedTasks.length == 0)
-                  _TasksList(detail: detail, tasks: Tasks.COMPLETED)
+                  _TasksList(detail: widget.detail,tasks: Tasks.UNCOMPLETED),
+                   //if(detail.tasks!.completedTasks.length == 0)
+                  _TasksList(detail: widget.detail, tasks: Tasks.COMPLETED)
                    
                    ],
                  ),
@@ -71,7 +77,7 @@ class IdeaDetail extends StatelessWidget {
 
 enum Tasks{COMPLETED,UNCOMPLETED}
 
-class _TasksList extends StatelessWidget {
+class _TasksList extends StatefulWidget {
   const _TasksList({
     Key? key,
     required this.detail,
@@ -82,17 +88,35 @@ class _TasksList extends StatelessWidget {
   final Tasks tasks;
 
   @override
+  __TasksListState createState() => __TasksListState();
+}
+
+class __TasksListState extends State<_TasksList> {
+  @override
   Widget build(BuildContext context) {
     return Column(
-    children: [
-    Text((tasks == Tasks.UNCOMPLETED)?'Uncompleted Tasks':'Completed Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w600)),
-    Column(
-       children:  (tasks == Tasks.UNCOMPLETED)
-       ?detail.tasks!.uncompletedTasks.map((uncompleteTask) => Text(uncompleteTask.toAString)).toList()
-       :detail.tasks!.completedTasks.map((completedTasks) => Text(completedTasks.toAString)).toList(),
-     ),
-       ],
-     );
+        children: [
+        Text((widget.tasks == Tasks.UNCOMPLETED)?'Uncompleted Tasks':'Completed Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w600)),
+        Column(
+           children:  (widget.tasks == Tasks.UNCOMPLETED)
+           ?widget.detail.tasks!.uncompletedTasks.map((uncompletedTask) => ListTile(
+             leading: Checkbox(value: false, onChanged: (bool? value){
+               widget.detail.tasks!.completeTask(uncompletedTask);
+               setState(() {  });
+               }),
+             title: Text(uncompletedTask.toAString),
+             trailing: IconButton(icon: Icon(Icons.close),onPressed: () async {
+               widget.detail.tasks!.deleteTask(uncompletedTask);
+                await Sqlite.updateDb(widget.detail.uniqueId, idea: widget.detail);}))).toList()
+           :widget.detail.tasks!.completedTasks.map((completedTask) => ListTile(
+             leading: Checkbox(value: true, onChanged: (bool? value){
+            widget.detail.tasks!.uncheckCompletedTask(completedTask);
+             setState(() {  });}),
+             title: Text(completedTask.toAString),
+             trailing: IconButton(icon: Icon(Icons.close),onPressed: ()=>widget.detail.tasks!.deleteTask(completedTask)))).toList(),
+         ),
+           ],
+         );
   }
 }
 

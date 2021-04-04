@@ -6,15 +6,13 @@ import 'package:sqflite/sqflite.dart';
 import 'package:idealog/global/enums.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/core-models/scheduleModel.dart';
 import 'ideasDbColumn.dart';
 
 class Sqlite{
 
-  static writeToDb({required NotificationType notificationType,Idea? idea,Schedule? schedule}) async {
+  static writeToDb({Idea? idea}) async {
 
     Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
-    if(notificationType == NotificationType.IDEAS){
 
       await _database.execute(createIdeasTableSqlCommand);
       List<List<int>> completedTasks = idea!.tasks!.completedTasks;
@@ -28,7 +26,6 @@ class Sqlite{
         Column_uncompletedTasks: (uncompletedTasks.isEmpty)?null:'$uncompletedTasks'
         });
 
-    }
     await _database.close();
   }
 
@@ -38,11 +35,11 @@ class Sqlite{
     await _database.close();
   }
 
-  static readFromDb({required NotificationType type}) async {
+  static readFromDb() async {
       List<Idea>? allIdeasFromDb = [];
         
         Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
-        if(type == NotificationType.IDEAS){
+
         await _database.execute(createIdeasTableSqlCommand);
         var result = await _database.query(ideasTableName);
         result.forEach((idea) { 
@@ -56,14 +53,13 @@ class Sqlite{
         completedTasks: (completedTasks != null)?completedTasks.fromDbStringToListInt:[],
         uncompletedTasks: (uncompletedTasks != null)?uncompletedTasks.fromDbStringToListInt:[]
         ));});
-        }
         
         await _database.close();
 
         return allIdeasFromDb;
   }
 
-  static Future<int> getUniqueId({NotificationType? type}) async {
+  static Future<int> getUniqueId() async {
             int uniqueId = Random().nextInt(maxRandomNumber);
             Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
             await _database.execute(createIdeasTableSqlCommand);
@@ -75,5 +71,18 @@ class Sqlite{
               uniqueId = Random().nextInt(maxRandomNumber);
             }
             return uniqueId;
+  }
+
+  static updateDb(int uniqueId,{required Idea idea}) async {
+    Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
+    await _database.execute(createIdeasTableSqlCommand);
+    List<List<int>> completedTasks = idea.tasks!.completedTasks;
+    List<List<int>> uncompletedTasks = idea.tasks!.uncompletedTasks;
+    Map<String,Object?> updatedData = Map<String,Object?>();
+    updatedData[Column_completedTasks] = (completedTasks.isEmpty)?null:'$completedTasks';
+    updatedData[Column_uncompletedTasks] = (uncompletedTasks.isEmpty)?null:'$uncompletedTasks';
+    updatedData[Column_moreDetails] = idea.moreDetails;
+    await _database.update(ideasTableName, updatedData,where: '$Column_uniqueId = $uniqueId');
+    await _database.close();
   }
 }

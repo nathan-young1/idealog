@@ -35,7 +35,8 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:orientation="portait">
 
             <!--
                  Specifies an Android theme to apply to this Activity as soon as
