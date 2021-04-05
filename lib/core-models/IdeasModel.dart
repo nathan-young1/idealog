@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:idealog/global/enums.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
 
@@ -15,9 +16,11 @@ class Idea{
   Idea.readFromDb({required this.ideaTitle,this.moreDetails,List<List<int>> completedTasks = const[],required this.uniqueId,List<List<int>> uncompletedTasks = const[]}){
     tasks = _Tasks.fromDb(completedTasks: completedTasks,uncompletedTasks: uncompletedTasks);
   }
+
+  changeMoreDetail(String? newDetails)=> this.moreDetails= newDetails;
 }
 
-class _Tasks{
+class _Tasks with ChangeNotifier{
   
   List<List<int>> completedTasks = [];
   List<List<int>> uncompletedTasks = [];
@@ -30,19 +33,22 @@ class _Tasks{
     (uncompletedTasks.contains(task))
     ?uncompletedTasks.remove(task)
     :completedTasks.remove(task);
-    print(task);
-    print(uncompletedTasks);
+    notifyListeners();
   }
 
   uncheckCompletedTask(List<int> task){
     completedTasks.remove(task);
     uncompletedTasks.add(task);
+    notifyListeners();
   }
 
   completeTask(List<int> task){
     uncompletedTasks.remove(task);
     completedTasks.add(task);
+    notifyListeners();
     }
 
-  addNewTask(List<int> task)=>uncompletedTasks.add(task);
+  addNewTask(List<int> task){
+  uncompletedTasks.add(task);
+  notifyListeners();}
 }

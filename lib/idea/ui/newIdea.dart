@@ -43,7 +43,7 @@ class _NewIdeaState extends State<NewIdea> {
                     TextFormField(
                       controller: moreDetails,
                       maxLines: null,
-                      maxLength: 200,
+                      maxLength: 300,
                       minLines: 5,
                       keyboardType: TextInputType.multiline,
                       decoration: underlineAndFilled.copyWith(

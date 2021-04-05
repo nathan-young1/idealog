@@ -15,28 +15,31 @@ class Productivity extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Text('Productivity'),
-          Expanded(
-            child: ListView(
-              children: [
-                TaskCompletionRate(),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: LinearProgressIndicator(minHeight: 25,value: 0.6)),
-                ),
-                FavoriteTask(),
-                SizedBox(height: 25),
-                ActiveDaysChart(thisWeek: thisWeek)
-              ],
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 15,left: 20,right: 10),
+          child: Text('Productivity',style: TextStyle(fontSize: 27,fontWeight: FontWeight.w600)),
+        ),
+        Expanded(
+          child: ListView(
+            children: [
+              TaskCompletionRate(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(minHeight: 25,value: 0.6)),
+              ),
+              FavoriteTask(),
+              SizedBox(height: 25),
+              ActiveDaysChart(thisWeek: thisWeek)
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -52,7 +55,7 @@ class FavoriteTask extends StatelessWidget {
       children: [
         Text('Favorite Tasks'),
         ...List.generate(4, (index) => Row(
-          children: [
+          children: [ 
             if(index == 0)FaIcon(FontAwesomeIcons.solidHeart,color: Colors.red[700])
             else if(index == 1)FaIcon(FontAwesomeIcons.solidHeart,color: Colors.blue)
             else FaIcon(FontAwesomeIcons.solidHeart,color: Colors.amber),

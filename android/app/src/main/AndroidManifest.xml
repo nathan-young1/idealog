@@ -36,7 +36,7 @@
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:windowSoftInputMode="adjustResize"
-            android:orientation="portait">
+            android:screenOrientation="portrait">
 
             <!--
                  Specifies an Android theme to apply to this Activity as soon as
