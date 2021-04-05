@@ -4,3 +4,4 @@
             ..add text to speech for adding tasking
             ..add at least one task before submission
             ..handle description focus
+            ..make tasks a set so as not to repeat

@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:idealog/analytics/analyticsSql.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class Productivity extends StatelessWidget {
+class Productivity extends StatefulWidget {
+  @override
+  _ProductivityState createState() => _ProductivityState();
+}
+
+class _ProductivityState extends State<Productivity> {
+  @override
+    void initState() {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async{await AnalyticsSql.readAnalytics(); });
+      super.initState();
+    }
   final List<_ActiveDays> thisWeek = [
     _ActiveDays(date: DateTime(2021,3,21), numberOfTasksCompleted: 5),
     _ActiveDays(date: DateTime(2021,3,8), numberOfTasksCompleted: 8),
@@ -12,6 +23,7 @@ class Productivity extends StatelessWidget {
     _ActiveDays(date: DateTime(2021,2,25), numberOfTasksCompleted: 3),
     _ActiveDays(date: DateTime.now(), numberOfTasksCompleted: 0),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Column(

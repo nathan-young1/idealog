@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/analytics/analyticsSql.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
 import 'package:idealog/global/extension.dart';
@@ -42,6 +43,7 @@ class _UncompletedTasks extends StatelessWidget {
             leading: Checkbox(value: false, onChanged: (bool? value) async {
             idea.tasks!.completeTask(uncompletedTask);
             await Sqlite.updateDb(idea.uniqueId, idea: idea);
+            await AnalyticsSql.writeOrUpdate(uncompletedTask);
                 }),
             title: Text(uncompletedTask.toAString),
             trailing: IconButton(icon: Icon(Icons.close),onPressed: () async {
@@ -68,11 +70,13 @@ class _CompletedTasks extends StatelessWidget {
              onChanged: (bool? value) async {
                 idea.tasks!.uncheckCompletedTask(completedTask);
                 await Sqlite.updateDb(idea.uniqueId, idea: idea);
+                await AnalyticsSql.removeTaskFromAnalytics(completedTask);
                 }),
             title: Text(completedTask.toAString),
             trailing: IconButton(icon: Icon(Icons.close),onPressed: () async {
             idea.tasks!.deleteTask(completedTask);
-            await Sqlite.updateDb(idea.uniqueId, idea: idea);}))).toList()],
+            await Sqlite.updateDb(idea.uniqueId, idea: idea);
+            await AnalyticsSql.removeTaskFromAnalytics(completedTask);}))).toList()],
         );
   }
 }
