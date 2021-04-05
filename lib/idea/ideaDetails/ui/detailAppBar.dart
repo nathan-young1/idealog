@@ -21,7 +21,7 @@ class DetailAppBar extends StatelessWidget {
           Expanded(child: Padding(
             padding: EdgeInsets.only(left: 15,right: 15),
             child: Center(
-              child: Text(idea.ideaTitle,style: TextStyle(fontSize: 40,fontWeight: FontWeight.w600))),
+              child: Text(idea.ideaTitle,style: TextStyle(fontSize: 40,fontWeight: FontWeight.w600),overflow: TextOverflow.ellipsis)),
           )),
         ],
       ),

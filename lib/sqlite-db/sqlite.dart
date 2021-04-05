@@ -3,7 +3,6 @@ import 'package:idealog/global/int.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:idealog/sqlite-db/sqlExecString.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:idealog/global/enums.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'ideasDbColumn.dart';

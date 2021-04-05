@@ -1,9 +1,6 @@
 ...Add the ablity to collarborate with other in the idea. give them like read and write permissions
 
         For alarm
-            ..set deadline (day and optionally time)
-            ..set Date & Time and repeat daily,weekly,montly
-            ..reset the alarms on phone reboot
-            ..get the data from mysql database
-            ..add text to speech 
+            ..add text to speech for adding tasking
             ..add at least one task before submission
+            ..handle description focus
