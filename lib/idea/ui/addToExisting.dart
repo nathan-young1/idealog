@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/global/extension.dart';
+import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
+import 'package:idealog/sqlite-db/sqlite.dart';
 
-class AddToExistingIdea extends StatelessWidget {
+class AddToExistingIdea extends StatefulWidget {
   final Idea idea;
-  final TextEditingController newTask = TextEditingController();
-  List<String> newTasks = [];
+
   AddToExistingIdea({Key? key, required this.idea}) : super(key: key);
+
+  @override
+  _AddToExistingIdeaState createState() => _AddToExistingIdeaState();
+}
+
+class _AddToExistingIdeaState extends State<AddToExistingIdea> {
+  final TextEditingController newTask = TextEditingController();
+
+  FocusNode newTaskFocus = FocusNode();
+
+  List<String> newTasks = [];
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
+        decoration: lightModeBackgroundColor,
          child: Scaffold(
+           backgroundColor: Colors.transparent,
            body: Column(
              children: [
             Container(
@@ -30,42 +45,80 @@ class AddToExistingIdea extends StatelessWidget {
                    Expanded(
                      child: Center(
                        child: Container(
-                         child: Text(idea.ideaTitle,style: TextStyle(fontSize: 40,fontWeight: FontWeight.w600),overflow: TextOverflow.ellipsis),
+                         child: Text(widget.idea.ideaTitle,style: TextStyle(fontSize: 40,fontWeight: FontWeight.w600),overflow: TextOverflow.ellipsis),
                        ),
                      ),
                    ),
                 ],
               ),
             ),
-             Text('Existing Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500)),
              Expanded(
-               child: ListView(
-                 children: [
-                   ...idea.tasks!.uncompletedTasks.map((task) => Text(task.toAString)).toList(),
-                   ...idea.tasks!.completedTasks.map((task) => Text(task.toAString)).toList()
-                 ],
-               ),
-             ),
-             Text('New Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500)),
-             Expanded(
-               child: ListView(
-                 children: newTasks.map((newTask) => Text(newTask)).toList(),
-               ),
-             ),
-             TextField(
-               controller: newTask,
-               decoration: underlineAndFilled.copyWith(
-                 labelText: 'New Task',
-               ),
-             ),
-             Container(
-               height: 50,
-               color: lightModeBottomNavColor,
-               child: Center(
-                 child: Text('Save')
+               child: SingleChildScrollView(
+                 child: Column(
+                   children: [
+                     Text('Existing Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500)),
+                     Column(
+                       children: [
+                         ...widget.idea.tasks!.uncompletedTasks.map((task) => Text(task.toAString)).toList(),
+                         ...widget.idea.tasks!.completedTasks.map((task) => Text(task.toAString)).toList()
+                       ],
+                     ),
+                     Text('New Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500)),
+            Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                      Icon(Icons.info,color: Colors.grey,size: 28),
+                      Text(' Press ',style: TextStyle(fontSize: 22)),
+                      Container(
+                        width: 85,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.grey,
+                        ),
+                        child: Center(child: Text('Enter',style: TextStyle(fontSize: 21,color: Colors.white))),
+                      ),
+                      Text(' to add task.',style: TextStyle(fontSize: 22))
+            ],),
+                     Column(
+                       children: newTasks.map((newTask) => ListTile(title: Text(newTask))).toList(),
+                     ),
+                     Padding(
+                       padding: const EdgeInsets.all(12.0),
+                       child: TextField(
+                         controller: newTask,
+                         focusNode: newTaskFocus,
+                         maxLength: 150,
+                        onSubmitted: (task){
+                          newTaskFocus.requestFocus();
+                          if(task != ''){
+                          setState(() => newTasks.add(task));
+                          newTask.text = '';
+                          }
+                        },
+                         decoration: underlineAndFilled.copyWith(
+                           labelText: 'New Task',
+                         ),
+                       ),
+                     ),
+                   ],
                  ),
-             )
-           ])
+               ),
+             ),
+           ]),
+           bottomNavigationBar: GestureDetector(
+               onTap: () async {
+                 newTasks.forEach((task) => widget.idea.tasks!.addNewTask(task.codeUnits));
+                 await Sqlite.updateDb(widget.idea.uniqueId, idea: widget.idea);
+                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=>IdeaDetail(idea: widget.idea)));},
+               child: Container(
+                 height: 50,
+                 color: lightModeBottomNavColor,
+                 child: Center(
+                   child: Text('Save')
+                   ),
+               ),
+             ),
          )
       ),
     );
