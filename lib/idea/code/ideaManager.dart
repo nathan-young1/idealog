@@ -5,7 +5,7 @@ import 'package:idealog/customWidget/alertDialog.dart';
 import 'package:idealog/global/routes.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
 
-addToDbAndSetAlarmIdea({required String ideaTitle,String? moreDetails,List<String>? tasks,required BuildContext context}) async {
+addToDbAndSetAlarmIdea({required String ideaTitle,String? moreDetails,Set<String>? tasks,required BuildContext context}) async {
   showDialog(context: context, builder: (context) => progressAlertDialot);
   List<List<int>> tasksInCharCodes = tasks!.map((task) => task.codeUnits).toList();
   int uniqueId = await Sqlite.getUniqueId();
@@ -18,7 +18,7 @@ addToDbAndSetAlarmIdea({required String ideaTitle,String? moreDetails,List<Strin
   Navigator.popAndPushNamed(context, menuPageView);
 }
 
-Future<List<Idea>> getListOfIdeas() async {
-List<Idea> _ideasList = await Sqlite.readFromDb();
-return _ideasList;
-}
+// Stream<Stream<List<Idea>>> getListOfIdeas(){
+//   Stream<Future<List<Idea>>> stream = Stream.periodic(Duration(seconds: 1),(_) async =>await Sqlite.readFromDb());
+//   return stream;
+// }

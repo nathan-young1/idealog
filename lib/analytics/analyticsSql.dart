@@ -35,28 +35,36 @@ class AnalyticsSql {
     await _analyticsDb.close();
   }
 
-  static readAnalytics() async {
-    int currentMonth = DateTime.now().month;
+  static Future<List<AnalyticsData>> readAnalytics() async {
+    DateTime now = DateTime.now();
+    int currentMonth = now.month;
+    int currentYear = now.year;
     Database _analyticsDb = await openDatabase(Analytics_Table_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'),readOnly: true);
     await _analyticsDb.execute(createAnalyticsTable);
-    List<Map<String,Object?>> result = await _analyticsDb.query(Analytics_Table_Name,where: '$Column_Month = $currentMonth');
+    List<Map<String,Object?>> dbResult = await _analyticsDb.query(Analytics_Table_Name,where: '$Column_Month = $currentMonth');
     await _analyticsDb.close();
-    List<int> allDays = [];
-    result.forEach((row) { allDays.add(int.parse(row[Column_day].toString()));});
-    Set<int> activeDays = Set.from(allDays);
-    print(result.length);
-    print(result);
-    activeDays.forEach((day) { 
-      int numberOfTasks = 0;
-      allDays.forEach((element) {if(element == day){++numberOfTasks;}});
-      Data newD = Data(date: DateTime(2021,4,day), numberOfTasksCompleted: numberOfTasks);
-      print('${newD.date} ${newD.numberOfTasksCompleted}');});
-    print('$allDays   $activeDays');
+    List<int> recordedDaysInDb = [];
+    //create a list of all the days recorded in the database
+    dbResult.forEach((row) => recordedDaysInDb.add(row[Column_day] as int));
+    //create a set to know the active days (so it does not repeat days in list)
+    Set<int> activeDays = Set.from(recordedDaysInDb);
+    // to store the result of the analytics
+    List<AnalyticsData> analyticsResult = [];
+    //the number of times that active day repeat in the list is equilavent to the number of task completed on that day
+    activeDays.forEach((activeDay) { 
+      int numberOfTasksCompleted = 0;
+      recordedDaysInDb.forEach((day) {if(day == activeDay){++numberOfTasksCompleted;}});
+
+      AnalyticsData newData = AnalyticsData(date: DateTime(currentYear,currentMonth,activeDay), numberOfTasksCompleted: numberOfTasksCompleted);
+      analyticsResult.add(newData);
+      // print('${newData.date} ${newData.numberOfTasksCompleted}');
+      });
+      return analyticsResult;
   }
 }
 
-class Data{
+class AnalyticsData{
   DateTime date;
   int numberOfTasksCompleted;
-  Data({required this.date,required this.numberOfTasksCompleted});
+  AnalyticsData({required this.date,required this.numberOfTasksCompleted});
 }

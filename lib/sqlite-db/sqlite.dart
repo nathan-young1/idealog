@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:idealog/global/int.dart';
 import 'package:idealog/global/strings.dart';
@@ -34,13 +35,14 @@ class Sqlite{
     await _database.close();
   }
 
-  static readFromDb() async {
-      List<Idea>? allIdeasFromDb = [];
+  static Future<List<Idea>> readFromDb() async {
+      List<Idea> allIdeasFromDb = [];
         
         Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
 
         await _database.execute(createIdeasTableSqlCommand);
         var result = await _database.query(ideasTableName);
+        await _database.close();
         result.forEach((idea) { 
         Object? completedTasks = idea[Column_completedTasks];
         Object? uncompletedTasks = idea[Column_uncompletedTasks];
@@ -53,10 +55,9 @@ class Sqlite{
         uncompletedTasks: (uncompletedTasks != null)?uncompletedTasks.fromDbStringToListInt:[]
         ));});
         
-        await _database.close();
-
         return allIdeasFromDb;
   }
+
 
   static Future<int> getUniqueId() async {
             int uniqueId = Random().nextInt(maxRandomNumber);
@@ -84,4 +85,23 @@ class Sqlite{
     await _database.update(ideasTableName, updatedData,where: '$Column_uniqueId = $uniqueId');
     await _database.close();
   }
+
+  static Timer? periodicTimer;
+  static initialize(){
+    periodicTimer = Timer.periodic(Duration(seconds: 1), (_) async {
+        _dbStreamController.sink.add(await Sqlite.readFromDb());
+    });
+  }
+
+  static close() async {
+      periodicTimer!.cancel();
+      await _dbStreamController.close();
+  }
+
+  //The controller like a pipe for the stream through which i add the latest db check results
+  static final StreamController<List<Idea>> _dbStreamController = StreamController<List<Idea>>();
+
+  //The end of the pipe so we can listen to the stream updates
+  static Stream<List<Idea>> get dbStream => _dbStreamController.stream;
+
 }

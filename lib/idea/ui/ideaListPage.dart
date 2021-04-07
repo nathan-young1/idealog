@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customWidget/ideaCard.dart';
-import 'package:idealog/idea/code/ideaManager.dart';
+import 'package:provider/provider.dart';
 
 class IdeaListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Idea> listOfIdeas = Provider.of<List<Idea>>(context);
+    print(listOfIdeas);
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -25,21 +27,14 @@ class IdeaListPage extends StatelessWidget {
             ],
           ),
         ),
-        StreamBuilder<List<Idea>>(
-          stream: getListOfIdeas().asStream(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.waiting) {
-              return Expanded(
+        Expanded(
                     child: ListView(
                      physics: ScrollPhysics(parent: BouncingScrollPhysics()),
                      shrinkWrap: true,
-                     children: (snapshot.data != null)?snapshot.data!.map((idea) => IdeaCard(idea: idea)).toList():[],
+                     children: listOfIdeas.map((idea) => IdeaCard(idea: idea)).toList(),
                     ),
-                  );
-            }
-            return Expanded(child: Center(child: CircularProgressIndicator()));
-          }
-        )
+                  )
+         
       ],
     );
   }

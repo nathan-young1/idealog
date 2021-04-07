@@ -17,7 +17,7 @@ class IdeaCard extends StatelessWidget {
     final int completedTasksSize = idea.tasks!.completedTasks.length;
     final int totalNumberOfTasks = uncompletedTasksSize + completedTasksSize;
     final double percent = (completedTasksSize/totalNumberOfTasks)*100;
-    
+    print('$percent');
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 30),
       child: GestureDetector(
