@@ -51,8 +51,8 @@ class Sqlite{
         ideaTitle: idea[Column_ideaTitle].toString(),
         uniqueId: int.parse(idea[Column_uniqueId].toString()),
         moreDetails: idea[Column_moreDetails].toString(),
-        completedTasks: (completedTasks != null)?completedTasks.fromDbStringToListInt:const[],
-        uncompletedTasks: (uncompletedTasks != null)?uncompletedTasks.fromDbStringToListInt:const[]
+        completedTasks: (completedTasks != null)?completedTasks.fromDbStringToListInt:[],
+        uncompletedTasks: (uncompletedTasks != null)?uncompletedTasks.fromDbStringToListInt:[]
         ));});
         
         return allIdeasFromDb;
@@ -89,7 +89,7 @@ class Sqlite{
   static Timer? periodicTimer;
   static initialize(){
     periodicTimer = Timer.periodic(Duration(seconds: 1), (_) async {
-        _dbStreamController.sink.add(await Sqlite.readFromDb());
+        _dbStreamController.add(await Sqlite.readFromDb());
     });
   }
 

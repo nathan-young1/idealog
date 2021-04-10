@@ -7,4 +7,5 @@
             ..make tasks a set so as not to repeat
             ..remeber to handle the percent
             ..delete idea from homepage is not removing analytics data
-            ..make list idea distinct
+            ..make list idea stream distinct
+            ..add percent to task completion rate progress bar

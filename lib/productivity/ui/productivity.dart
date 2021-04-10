@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/analytics/analyticsSql.dart';
+import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/productivity/code/productivityManager.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -32,7 +34,7 @@ class _ProductivityState extends State<Productivity> {
                   padding: const EdgeInsets.all(8.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: LinearProgressIndicator(minHeight: 25,value: 0.6)),
+                    child: LinearProgressIndicator(minHeight: 25,value: getCompletionRate(context))),
                 ),
                 FavoriteTask(),
                 SizedBox(height: 25),
@@ -53,17 +55,19 @@ class FavoriteTask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Idea> favorites = getFavoriteTasks(context);
     return Column(
       children: [
         Text('Favorite Tasks'),
-        ...List.generate(4, (index) => Row(
+        for(int index = 0; index <= favorites.length-1; index++)
+        Row(
           children: [ 
             if(index == 0)FaIcon(FontAwesomeIcons.solidHeart,color: Colors.red[700])
             else if(index == 1)FaIcon(FontAwesomeIcons.solidHeart,color: Colors.blue)
             else FaIcon(FontAwesomeIcons.solidHeart,color: Colors.amber),
-            Text('    $index my list'),
+            Text(favorites[index].ideaTitle),
           ],
-        )).toList()],
+        )],
     );
   }
 }
@@ -113,7 +117,6 @@ class ActiveDaysChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<AnalyticsData> analytics = Provider.of<List<AnalyticsData>>(context);
-    print(analytics);
     
     return Container(
       height: 350,

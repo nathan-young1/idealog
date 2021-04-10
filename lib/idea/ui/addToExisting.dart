@@ -21,7 +21,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
 
   FocusNode newTaskFocus = FocusNode();
 
-  List<String> newTasks = [];
+  Set<String> newTasks = Set<String>();
 
   @override
   Widget build(BuildContext context) {

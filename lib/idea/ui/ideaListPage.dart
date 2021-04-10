@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/customWidget/ideaCard.dart';
+import 'package:idealog/idea/ui/ideaCard.dart';
 import 'package:provider/provider.dart';
 
 class IdeaListPage extends StatelessWidget {
@@ -8,7 +8,6 @@ class IdeaListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Idea> listOfIdeas = Provider.of<List<Idea>>(context);
-    print(listOfIdeas);
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -28,12 +27,12 @@ class IdeaListPage extends StatelessWidget {
           ),
         ),
         Expanded(
-                    child: ListView(
-                     physics: ScrollPhysics(parent: BouncingScrollPhysics()),
-                     shrinkWrap: true,
-                     children: listOfIdeas.map((idea) => IdeaCard(idea: idea)).toList(),
-                    ),
-                  )
+            child: ListView(
+              physics: ScrollPhysics(parent: BouncingScrollPhysics()),
+              shrinkWrap: true,
+              children: listOfIdeas.map((idea) => IdeaCard(idea: idea)).toList(),
+            ),
+          )
          
       ],
     );

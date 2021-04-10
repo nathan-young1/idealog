@@ -18,6 +18,11 @@ class _MenuPageViewState extends State<MenuPageView> {
   ValueNotifier<int> index = ValueNotifier(0);
 
   @override
+    void initState() {
+      super.initState();
+    }
+
+  @override
     void dispose() {
       print('me dispose');
       Sqlite.close();
@@ -28,7 +33,6 @@ class _MenuPageViewState extends State<MenuPageView> {
 
   @override
   Widget build(BuildContext context) {
-    
     return SafeArea(
         child: Container(
           decoration: lightModeBackgroundColor,

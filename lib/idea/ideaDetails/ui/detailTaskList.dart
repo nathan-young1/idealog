@@ -16,10 +16,10 @@ class DetailTasksList extends StatelessWidget {
         builder: (BuildContext context) =>
           Column(
           children: [
-            if(Provider.of<Tasks>(context).uncompletedTasks.isNotEmpty)
+            if(Provider.of<Idea>(context).uncompletedTasks.isNotEmpty)
             _UncompletedTasks(idea: idea),
             SizedBox(height: 30),
-            if(Provider.of<Tasks>(context).completedTasks.isNotEmpty)
+            if(Provider.of<Idea>(context).completedTasks.isNotEmpty)
             _CompletedTasks(idea: idea)
           ],
         ),
@@ -38,7 +38,7 @@ class _UncompletedTasks extends StatelessWidget {
     return Column(
             children: [
             Center(child: Text('Uncompleted Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500)),),
-            ...Provider.of<Tasks>(context).uncompletedTasks.map((uncompletedTask) => 
+            ...Provider.of<Idea>(context).uncompletedTasks.map((uncompletedTask) => 
             ListTile(
             leading: Checkbox(value: false, onChanged: (bool? value) async {
             idea.completeTask(uncompletedTask);
@@ -63,7 +63,7 @@ class _CompletedTasks extends StatelessWidget {
     return Column(
             children: [
             Center(child: Text('Completed Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500))),
-            ...Provider.of<Tasks>(context).completedTasks.map((completedTask) => 
+            ...Provider.of<Idea>(context).completedTasks.map((completedTask) => 
             ListTile(
             leading: Checkbox(
             value: true,
