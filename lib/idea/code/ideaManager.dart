@@ -17,8 +17,3 @@ addToDbAndSetAlarmIdea({required String ideaTitle,String? moreDetails,Set<String
   }
   Navigator.popAndPushNamed(context, menuPageView);
 }
-
-// Stream<Stream<List<Idea>>> getListOfIdeas(){
-//   Stream<Future<List<Idea>>> stream = Stream.periodic(Duration(seconds: 1),(_) async =>await Sqlite.readFromDb());
-//   return stream;
-// }

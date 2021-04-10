@@ -7,7 +7,7 @@ import 'detailAppBar.dart';
 
 class IdeaDetail extends StatefulWidget {
   final Idea idea;
-  TextEditingController? description;
+  late final TextEditingController? description;
   IdeaDetail({required this.idea}){
     description = TextEditingController(text: idea.moreDetails);
   }

@@ -11,7 +11,7 @@ class DetailTasksList extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Tasks>.value(value: idea.tasks!,
+    return ChangeNotifierProvider<Idea>.value(value: idea,
       child: Builder(
         builder: (BuildContext context) =>
           Column(
@@ -41,13 +41,13 @@ class _UncompletedTasks extends StatelessWidget {
             ...Provider.of<Tasks>(context).uncompletedTasks.map((uncompletedTask) => 
             ListTile(
             leading: Checkbox(value: false, onChanged: (bool? value) async {
-            idea.tasks!.completeTask(uncompletedTask);
+            idea.completeTask(uncompletedTask);
             await Sqlite.updateDb(idea.uniqueId, idea: idea);
             await AnalyticsSql.writeOrUpdate(uncompletedTask);
                 }),
             title: Text(uncompletedTask.toAString),
             trailing: IconButton(icon: Icon(Icons.close),onPressed: () async {
-            idea.tasks!.deleteTask(uncompletedTask);
+            idea.deleteTask(uncompletedTask);
             await Sqlite.updateDb(idea.uniqueId, idea: idea);}))).toList()],
         );
   }
@@ -68,13 +68,13 @@ class _CompletedTasks extends StatelessWidget {
             leading: Checkbox(
             value: true,
              onChanged: (bool? value) async {
-                idea.tasks!.uncheckCompletedTask(completedTask);
+                idea.uncheckCompletedTask(completedTask);
                 await Sqlite.updateDb(idea.uniqueId, idea: idea);
                 await AnalyticsSql.removeTaskFromAnalytics(completedTask);
                 }),
             title: Text(completedTask.toAString),
             trailing: IconButton(icon: Icon(Icons.close),onPressed: () async {
-            idea.tasks!.deleteTask(completedTask);
+            idea.deleteTask(completedTask);
             await Sqlite.updateDb(idea.uniqueId, idea: idea);
             await AnalyticsSql.removeTaskFromAnalytics(completedTask);}))).toList()],
         );

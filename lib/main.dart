@@ -1,5 +1,4 @@
-import 'dart:async';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_screenutil/screen_util.dart';
@@ -24,7 +23,9 @@ class Idealog extends StatelessWidget {
         return ScreenUtilInit(
           builder: () => MultiProvider(
             providers: [
-              StreamProvider<List<Idea>>(create: (context) => Sqlite.dbStream,initialData: [])
+              StreamProvider<List<Idea>>(create: (context) => Sqlite.dbStream.distinct((oldList,newList){
+                return (!listEquals(oldList, newList));
+              }),initialData: [])
             ],
             child: MaterialApp(
               title: 'Idealog',

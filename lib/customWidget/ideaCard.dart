@@ -13,8 +13,8 @@ class IdeaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int uncompletedTasksSize = idea.tasks!.uncompletedTasks.length;
-    final int completedTasksSize = idea.tasks!.completedTasks.length;
+    final int uncompletedTasksSize = idea.uncompletedTasks.length;
+    final int completedTasksSize = idea.completedTasks.length;
     final int totalNumberOfTasks = uncompletedTasksSize + completedTasksSize;
     final double percent = (completedTasksSize/totalNumberOfTasks)*100;
     print('$percent');

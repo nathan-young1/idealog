@@ -59,8 +59,8 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                      Text('Existing Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500)),
                      Column(
                        children: [
-                         ...widget.idea.tasks!.uncompletedTasks.map((task) => Text(task.toAString)).toList(),
-                         ...widget.idea.tasks!.completedTasks.map((task) => Text(task.toAString)).toList()
+                         ...widget.idea.uncompletedTasks.map((task) => Text(task.toAString)).toList(),
+                         ...widget.idea.completedTasks.map((task) => Text(task.toAString)).toList()
                        ],
                      ),
                      Text('New Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500)),
@@ -108,7 +108,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
            ]),
            bottomNavigationBar: GestureDetector(
                onTap: () async {
-                 newTasks.forEach((task) => widget.idea.tasks!.addNewTask(task.codeUnits));
+                 newTasks.forEach((task) => widget.idea.addNewTask(task.codeUnits));
                  await Sqlite.updateDb(widget.idea.uniqueId, idea: widget.idea);
                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>IdeaDetail(idea: widget.idea)));},
                child: Container(

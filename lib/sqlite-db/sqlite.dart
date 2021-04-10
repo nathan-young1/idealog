@@ -15,8 +15,8 @@ class Sqlite{
     Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
 
       await _database.execute(createIdeasTableSqlCommand);
-      List<List<int>> completedTasks = idea!.tasks!.completedTasks;
-      List<List<int>> uncompletedTasks = idea.tasks!.uncompletedTasks;
+      List<List<int>> completedTasks = idea!.completedTasks;
+      List<List<int>> uncompletedTasks = idea.uncompletedTasks;
 
       _database.insert(ideasTableName, {
         Column_uniqueId:  '${idea.uniqueId}',
@@ -51,8 +51,8 @@ class Sqlite{
         ideaTitle: idea[Column_ideaTitle].toString(),
         uniqueId: int.parse(idea[Column_uniqueId].toString()),
         moreDetails: idea[Column_moreDetails].toString(),
-        completedTasks: (completedTasks != null)?completedTasks.fromDbStringToListInt:[],
-        uncompletedTasks: (uncompletedTasks != null)?uncompletedTasks.fromDbStringToListInt:[]
+        completedTasks: (completedTasks != null)?completedTasks.fromDbStringToListInt:const[],
+        uncompletedTasks: (uncompletedTasks != null)?uncompletedTasks.fromDbStringToListInt:const[]
         ));});
         
         return allIdeasFromDb;
@@ -76,8 +76,8 @@ class Sqlite{
   static updateDb(int uniqueId,{required Idea idea}) async {
     Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
     await _database.execute(createIdeasTableSqlCommand);
-    List<List<int>> completedTasks = idea.tasks!.completedTasks;
-    List<List<int>> uncompletedTasks = idea.tasks!.uncompletedTasks;
+    List<List<int>> completedTasks = idea.completedTasks;
+    List<List<int>> uncompletedTasks = idea.uncompletedTasks;
     Map<String,Object?> updatedData = Map<String,Object?>();
     updatedData[Column_completedTasks] = (completedTasks.isEmpty)?null:'$completedTasks';
     updatedData[Column_uncompletedTasks] = (uncompletedTasks.isEmpty)?null:'$uncompletedTasks';

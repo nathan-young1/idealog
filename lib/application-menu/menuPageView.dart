@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/global/routes.dart';
@@ -8,8 +7,6 @@ import 'package:idealog/idea/ui/ideaListPage.dart';
 import 'package:idealog/productivity/ui/productivity.dart';
 import 'package:idealog/settings/ui/settings.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
-import 'package:provider/provider.dart';
-import 'package:idealog/analytics/analyticsSql.dart';
 
 class MenuPageView extends StatefulWidget {
   @override
