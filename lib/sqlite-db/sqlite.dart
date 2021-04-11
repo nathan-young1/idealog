@@ -41,8 +41,17 @@ class Sqlite{
         Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
 
         await _database.execute(createIdeasTableSqlCommand);
-        var result = await _database.query(ideasTableName);
+        //I used to query the database directly before but now i want to use the transcation object
+        //to see whether Timer.perodic will not crash it.
+
+        /* var result = await _database.query(ideasTableName);
+         await _database.close();*/
+
+        //Using the transcation object method
+        var result = await _database.transaction((txn) => txn.query(ideasTableName));
         await _database.close();
+
+
         result.forEach((idea) { 
         Object? completedTasks = idea[Column_completedTasks];
         Object? uncompletedTasks = idea[Column_uncompletedTasks];

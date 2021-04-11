@@ -8,7 +8,7 @@ class Settings extends StatelessWidget {
         children: [
           CircleAvatar(backgroundColor: Colors.amber),
           ListTile(title: Text('Manage Accout')),
-          ListTile(title: Text('Sync Across Devices')),
+          ListTile(title: Text('Data Syncronization')),
           ListTile(title: Text('Upgrade to premium')),
           ListTile(title: Text('About Idealog')),
           ListTile(title: Text('Log out'))
