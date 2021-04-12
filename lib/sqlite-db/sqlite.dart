@@ -31,8 +31,11 @@ class Sqlite{
 
   static deleteFromDB({required String uniqueId}) async {
     Database _database = await openDatabase(sqliteDbName,onCreate: (_,__)=>print('${_.path} has been created'),version: 1);
-    await _database.execute('delete from $ideasTableName where $Column_uniqueId = $uniqueId');
-    await _database.close();
+
+    //Using the transcation object method
+    await _database.transaction((txn) async => await txn.execute('delete from $ideasTableName where $Column_uniqueId = $uniqueId'));
+    //Not closing the database because of continous access to data using timer.perodic
+    //await _database.close();
   }
 
   static Future<List<Idea>> readFromDb() async {
