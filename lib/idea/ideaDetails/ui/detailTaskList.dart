@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:idealog/analytics/analyticsSql.dart';
 import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/sqlite-db/sqlite.dart';
+import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:provider/provider.dart';
 
@@ -40,15 +39,11 @@ class _UncompletedTasks extends StatelessWidget {
             Center(child: Text('Uncompleted Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500)),),
             ...Provider.of<Idea>(context).uncompletedTasks.map((uncompletedTask) => 
             ListTile(
-            leading: Checkbox(value: false, onChanged: (bool? value) async {
-            idea.completeTask(uncompletedTask);
-            await Sqlite.updateDb(idea.uniqueId, idea: idea);
-            await AnalyticsSql.writeOrUpdate(uncompletedTask);
-                }),
+            leading: Checkbox(value: false, onChanged: (bool? value) async =>
+             await IdeaManager.completeTask(idea, uncompletedTask)),
             title: Text(uncompletedTask.toAString),
-            trailing: IconButton(icon: Icon(Icons.close),onPressed: () async {
-            idea.deleteTask(uncompletedTask);
-            await Sqlite.updateDb(idea.uniqueId, idea: idea);}))).toList()],
+            trailing: IconButton(icon: Icon(Icons.close),onPressed: () async =>
+             await IdeaManager.deleteUncompletedTask(idea, uncompletedTask)))).toList()],
         );
   }
 }
@@ -67,16 +62,11 @@ class _CompletedTasks extends StatelessWidget {
             ListTile(
             leading: Checkbox(
             value: true,
-             onChanged: (bool? value) async {
-                idea.uncheckCompletedTask(completedTask);
-                await Sqlite.updateDb(idea.uniqueId, idea: idea);
-                await AnalyticsSql.removeTaskFromAnalytics(completedTask);
-                }),
+             onChanged: (bool? value) async =>
+              await IdeaManager.uncheckCompletedTask(idea, completedTask)),
             title: Text(completedTask.toAString),
-            trailing: IconButton(icon: Icon(Icons.close),onPressed: () async {
-            idea.deleteTask(completedTask);
-            await Sqlite.updateDb(idea.uniqueId, idea: idea);
-            await AnalyticsSql.removeTaskFromAnalytics(completedTask);}))).toList()],
+            trailing: IconButton(icon: Icon(Icons.close),onPressed: () async =>
+             await IdeaManager.deleteCompletedTask(idea, completedTask)))).toList()],
         );
   }
 }

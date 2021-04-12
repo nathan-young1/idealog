@@ -4,8 +4,6 @@
             ..add text to speech for adding tasking
             ..add at least one task before submission
             ..handle description focus
-            ..make tasks a set so as not to repeat
-            ..remeber to handle the percent
             ..delete idea from homepage is not removing analytics data
             ..make list idea stream distinct
             ..add percent to task completion rate progress bar

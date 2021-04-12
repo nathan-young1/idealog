@@ -63,6 +63,7 @@ class AnalyticsSql {
   }
 }
 
+
 class AnalyticsData{
   DateTime date;
   int numberOfTasksCompleted;

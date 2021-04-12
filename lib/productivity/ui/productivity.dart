@@ -15,35 +15,31 @@ class _ProductivityState extends State<Productivity> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureProvider<List<AnalyticsData>>.value(
-      initialData: [],
-      value: AnalyticsSql.readAnalytics(),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 15,left: 20,right: 10),
-            child: Text('Productivity',style: TextStyle(fontSize: 27,fontWeight: FontWeight.w600)),
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 15,left: 20,right: 10),
+          child: Text('Productivity',style: TextStyle(fontSize: 27,fontWeight: FontWeight.w600)),
+        ),
+        Expanded(
+          child: ListView(
+            children: [
+              TaskCompletionRate(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(minHeight: 25,value: Provider.of<ProductivityManager>(context).getCompletionRate())),
+              ),
+              FavoriteTask(),
+              SizedBox(height: 25),
+              ActiveDaysChart()
+            ],
           ),
-          Expanded(
-            child: ListView(
-              children: [
-                TaskCompletionRate(),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: LinearProgressIndicator(minHeight: 25,value: getCompletionRate(context))),
-                ),
-                FavoriteTask(),
-                SizedBox(height: 25),
-                ActiveDaysChart()
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -55,7 +51,7 @@ class FavoriteTask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Idea> favorites = getFavoriteTasks(context);
+    List<Idea> favorites = Provider.of<ProductivityManager>(context).getFavoriteTasks();
     return Column(
       children: [
         Text('Favorite Tasks'),

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
+import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
-import 'package:idealog/idea/ui/addToExisting.dart';
-import 'package:idealog/sqlite-db/sqlite.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import 'addToExisting.dart';
 
 class IdeaCard extends StatelessWidget {
   final Idea idea;
@@ -41,7 +41,7 @@ class IdeaCard extends StatelessWidget {
                         PopupMenuButton<int>(
                         iconSize: 35,
                         padding: EdgeInsets.zero,
-                        onSelected: (_) async=> await Sqlite.deleteFromDB(uniqueId: '${idea.uniqueId}'),
+                        onSelected: (_) async=> await IdeaManager.deleteIdeaFromDb(idea),
                         itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
                         PopupMenuItem<int>( 
                           value: 0,

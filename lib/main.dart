@@ -7,7 +7,7 @@ import 'package:idealog/sqlite-db/sqlite.dart';
 import 'package:provider/provider.dart';
 import 'auth/ui/authUi.dart';
 import 'core-models/ideasModel.dart';
-import 'idea/ui/newIdea.dart';
+import 'idea/listPage/ui/newIdea.dart';
 
 void main() => runApp(Idealog());
 

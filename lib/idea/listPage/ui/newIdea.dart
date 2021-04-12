@@ -3,7 +3,7 @@ import 'package:idealog/customAppBar/appBar.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
-import 'package:idealog/idea/code/ideaManager.dart';
+import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 
 class NewIdea extends StatefulWidget {
   @override
@@ -92,7 +92,7 @@ class _NewIdeaState extends State<NewIdea> {
               ),),
           ),
             bottomNavigationBar: GestureDetector(
-              onTap: () async => await addToDbAndSetAlarmIdea(
+              onTap: () async => await IdeaManager.addToDbAndSetAlarmIdea(
                     context: context,
                     ideaTitle: ideaTitle.text,
                     moreDetails: moreDetails.text,
