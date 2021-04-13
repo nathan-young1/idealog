@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/analytics/analyticsSql.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/productivity/code/productivityManager.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -15,6 +16,7 @@ class _ProductivityState extends State<Productivity> {
 
   @override
   Widget build(BuildContext context) {
+    double completionRate = Provider.of<ProductivityManager>(context).getCompletionRate();
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +33,8 @@ class _ProductivityState extends State<Productivity> {
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: LinearProgressIndicator(minHeight: 25,value: Provider.of<ProductivityManager>(context).getCompletionRate())),
+                  child: LinearPercentIndicator(percent: completionRate,lineHeight: 20,width: 350,widgetIndicator: Text('${completionRate.toInt()}'),)),
+                  // child: LinearProgressIndicator(minHeight: 25,value: Provider.of<ProductivityManager>(context).getCompletionRate())),
               ),
               FavoriteTask(),
               SizedBox(height: 25),
