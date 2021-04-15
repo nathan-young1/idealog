@@ -1,10 +1,19 @@
 package databaseModels;
 
+
 public class IdeaModel {
-    public int uniqueId;
-    public String alarmTitle;
-    public IdeaModel(int uniqueId, int deadline,String alarmTitle){
+    public final int uniqueId;
+    public final String ideaTitle;
+    public final String moreDetails;
+
+    public final String completedTasks;
+    public final String uncompletedTasks;
+
+    public IdeaModel(int uniqueId,String ideaTitle, String moreDetails, String uncompletedTasks, String completedTasks){
         this.uniqueId = uniqueId;
-        this.alarmTitle = alarmTitle;
+        this.ideaTitle = ideaTitle;
+        this.moreDetails = moreDetails;
+        this.completedTasks = completedTasks;
+        this.uncompletedTasks = uncompletedTasks;
     }
 }

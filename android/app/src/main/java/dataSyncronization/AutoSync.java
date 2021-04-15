@@ -16,6 +16,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.mobile.idealog.IdealogDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,40 +42,24 @@ public class AutoSync extends Worker {
 //        Get the user UID from firebase auth
             final String authUserUid = Authentication.googleAuth(applicationContext);
 
-            Map<String, String> testData = new HashMap<String, String>();
-            testData.put("first", "one");
-            testData.put("second", "sec");
-            testData.put("third", "thr");
+            IdealogDatabase sqlDb = new IdealogDatabase(applicationContext,null,null,1);
 
-//        for add test data;
-            db.collection(authUserUid).add(testData)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Toast.makeText(applicationContext, documentReference.getId(), Toast.LENGTH_LONG);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(applicationContext, "There was a failure writing to database", Toast.LENGTH_LONG);
-                        }
-                    });
-
-//        for reading test data from firebase
-            db.collection(authUserUid).get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot snapshot : task.getResult()) {
-                                    Toast.makeText(applicationContext, snapshot.getData().toString(), Toast.LENGTH_LONG);
-                                }
-                            } else {
-                                Toast.makeText(applicationContext, "error getting documents", Toast.LENGTH_LONG);
+            sqlDb.readFromDbForAutoSync().forEach((idea)->{
+                db.collection(authUserUid).document("Database").collection("Ideas").document(String.valueOf(idea.uniqueId)).set(idea)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(applicationContext, "Success", Toast.LENGTH_SHORT);
                             }
-                        }
-                    });
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(applicationContext, "There was a failure writing to database", Toast.LENGTH_SHORT);
+                            }
+                        });
+            });
+
             return Result.success();
         }catch (Exception e){
 //            either returning retry or failure in case of constant exception

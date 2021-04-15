@@ -34,16 +34,16 @@ public class OnPhoneReboot extends BroadcastReceiver {
             Toast.makeText(context, "Alarm Set", Toast.LENGTH_LONG).show();
 
             //loop through schedules
-            db.readFromDbAfterReboot().forEach(singleSchedule -> {
-                resetAlarmSchedule(
-                        singleSchedule.scheduleDetails,
-                        NotificationType.SCHEDULE,
-                        singleSchedule.uniqueId,
-                        singleSchedule.date,
-                        singleSchedule.startTime,
-                        singleSchedule.repeatSchedule,
-                        context);
-            });
+//            db.readFromDbAfterReboot().forEach(singleSchedule -> {
+//                resetAlarmSchedule(
+//                        singleSchedule.scheduleDetails,
+//                        NotificationType.SCHEDULE,
+//                        singleSchedule.uniqueId,
+//                        singleSchedule.date,
+//                        singleSchedule.startTime,
+//                        singleSchedule.repeatSchedule,
+//                        context);
+//            });
 //            close db connection
             db.close();
         }
@@ -98,7 +98,7 @@ public class OnPhoneReboot extends BroadcastReceiver {
                 break;
             };
             String newDate = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(day);
-            db.updateDate(newDate,uniqueAlarmId);
+//            db.updateDate(newDate,uniqueAlarmId);
         }
 //        close db connection
             db.close();

@@ -136,7 +136,8 @@ public class MainActivity extends FlutterActivity {
 //        and on the optimizations performed by the system.
 
 //        incase of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
-        PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(AutoSync.class,2, TimeUnit.HOURS)
+//        I am changing time unit to minutes for testing purposes
+        PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(AutoSync.class,2, TimeUnit.MINUTES)
                 .setConstraints(workRequestConstraints)
                 .setBackoffCriteria(BackoffPolicy.LINEAR,10,TimeUnit.MINUTES)
                 .addTag(AutoSyncWorkRequestTag)
