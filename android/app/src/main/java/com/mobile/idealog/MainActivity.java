@@ -10,7 +10,15 @@ import android.os.PersistableBundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
+import dataSyncronization.AutoSync;
 import databaseModels.RepeatSchedule;
 import databaseModels.ScheduleModel;
 import io.flutter.embedding.android.FlutterActivity;
@@ -19,6 +27,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.mobile.idealog.IdealogDatabase.COLUMN_DATE;
 import static com.mobile.idealog.IdealogDatabase.COLUMN_REPEAT_SCHEDULE;
@@ -101,5 +110,30 @@ public class MainActivity extends FlutterActivity {
         //TO CANCEL THE ALARM
         alarmManager.cancel(pendingIntent);
         System.out.println("The alarm has been canceled");
+    }
+
+//    work manager code added below
+    public void addTaskToWorkManager(){
+        Constraints workRequestConstraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiresBatteryNotLow(true)
+                .build();
+
+//        do the periodic work every 2 hours if there is internet connection and battery is not low
+//        reduce the time later, though The interval period is defined as the minimum time between repetitions.
+//        The exact time that the worker is going to be executed depends on the constraints that you are using in your WorkRequest object
+//        and on the optimizations performed by the system.
+
+//        incase of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
+        PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(AutoSync.class,2, TimeUnit.HOURS)
+                .setConstraints(workRequestConstraints)
+                .setBackoffCriteria(BackoffPolicy.LINEAR,10,TimeUnit.MINUTES)
+                .build();
+
+//        Add work request to work manager
+        WorkManager
+                .getInstance(this)
+                .enqueue(autoSyncWorkRequest);
+
     }
 }
