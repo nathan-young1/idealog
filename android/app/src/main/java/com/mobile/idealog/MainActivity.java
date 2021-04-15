@@ -5,22 +5,15 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import dataSyncronization.AutoSync;
-import databaseModels.RepeatSchedule;
-import databaseModels.ScheduleModel;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodCall;
@@ -28,11 +21,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-
-import static com.mobile.idealog.IdealogDatabase.COLUMN_DATE;
-import static com.mobile.idealog.IdealogDatabase.COLUMN_REPEAT_SCHEDULE;
-import static com.mobile.idealog.IdealogDatabase.COLUMN_SCHEDULE_DETAILS;
-import static com.mobile.idealog.IdealogDatabase.COLUMN_START_TIME;
 import static com.mobile.idealog.IdealogDatabase.COLUMN_UNIQUE_ID;
 import static com.mobile.idealog.IdealogDatabase.IDEAS;
 import static com.mobile.idealog.IdealogDatabase.SCHEDULE;
@@ -85,10 +73,10 @@ public class MainActivity extends FlutterActivity {
         int year,month,day,hour,minute;
 
         if(notificationType == NotificationType.SCHEDULE){
-            int columnStartTime = cursor.getColumnIndex(COLUMN_START_TIME);
-            int columnDate = cursor.getColumnIndex(COLUMN_DATE);
-            int columnAlarmTitle = cursor.getColumnIndex(COLUMN_SCHEDULE_DETAILS);
-            int columnRepeatSchedule = cursor.getColumnIndex(COLUMN_REPEAT_SCHEDULE);
+            int columnStartTime = cursor.getColumnIndex("");
+            int columnDate = cursor.getColumnIndex("");
+            int columnAlarmTitle = cursor.getColumnIndex("");
+            int columnRepeatSchedule = cursor.getColumnIndex("");
             if(cursor.moveToFirst()) {
                 do {
                     Map<String,Integer> dateAndTime = dateAndTimeFromDb.getDateTime(cursor.getString(columnDate),cursor.getString(columnStartTime));
