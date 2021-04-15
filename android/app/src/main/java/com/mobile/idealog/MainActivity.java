@@ -38,7 +38,11 @@ import static com.mobile.idealog.IdealogDatabase.IDEAS;
 import static com.mobile.idealog.IdealogDatabase.SCHEDULE;
 
 public class MainActivity extends FlutterActivity {
-    final String AutoSyncWorkRequestTag = "AutoSync";
+    final private String AutoSyncWorkRequestTag = "AutoSync";
+    final private String setAlarmMethod = "setAlarm";
+    final private String cancelAlarmMethod = "cancelAlarm";
+    final private String startAutoSyncMethod = "startAutoSync";
+    final private String cancelAutoSyncMethod = "cancelAutoSync";
     AlarmManager alarmManager;
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
@@ -48,17 +52,23 @@ public class MainActivity extends FlutterActivity {
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CHANNEL).setMethodCallHandler(new MethodChannel.MethodCallHandler() {
             @Override
             public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-                //intialize alarm manager
+
                 alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 final Map<String,Object> configuration = call.arguments();
                 int uniqueIdForAlarm = (int) configuration.get("uniqueAlarmId");
-                if(call.method.equals("setAlarm")){
+                if(call.method.equals(setAlarmMethod)){
                     NotificationType typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
                     setAlarm(typeOfNotification,uniqueIdForAlarm);
                     result.success("Set Alarm Successfully");
-                }else if(call.method.equals("cancelAlarm")){
+                }else if(call.method.equals(cancelAlarmMethod)){
                     cancelAlarm(uniqueIdForAlarm);
                     result.success("Canceled successfully");
+                }else if(call.method.equals(startAutoSyncMethod)){
+                    startAutoSync();
+                    result.success("Auto Sync Started");
+                }else if(call.method.equals(cancelAutoSyncMethod)){
+                    cancelAutoSync();
+                    result.success("Auto Sync has been canceled");
                 }
             }
         });
@@ -112,8 +122,9 @@ public class MainActivity extends FlutterActivity {
         System.out.println("The alarm has been canceled");
     }
 
+
 //    work manager code added below
-    public void addTaskToWorkManager(){
+    public void startAutoSync(){
         Constraints workRequestConstraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .setRequiresBatteryNotLow(true)
