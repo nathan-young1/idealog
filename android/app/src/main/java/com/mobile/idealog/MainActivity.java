@@ -38,7 +38,7 @@ import static com.mobile.idealog.IdealogDatabase.IDEAS;
 import static com.mobile.idealog.IdealogDatabase.SCHEDULE;
 
 public class MainActivity extends FlutterActivity {
-
+    final String AutoSyncWorkRequestTag = "AutoSync";
     AlarmManager alarmManager;
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
@@ -128,6 +128,7 @@ public class MainActivity extends FlutterActivity {
         PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(AutoSync.class,2, TimeUnit.HOURS)
                 .setConstraints(workRequestConstraints)
                 .setBackoffCriteria(BackoffPolicy.LINEAR,10,TimeUnit.MINUTES)
+                .addTag(AutoSyncWorkRequestTag)
                 .build();
 
 //        Add work request to work manager
@@ -135,5 +136,10 @@ public class MainActivity extends FlutterActivity {
                 .getInstance(this)
                 .enqueue(autoSyncWorkRequest);
 
+    }
+
+    public void cancelAutoSync(){
+//        cancel the autoSync work request
+        WorkManager.getInstance(this).cancelAllWorkByTag(AutoSyncWorkRequestTag);
     }
 }
