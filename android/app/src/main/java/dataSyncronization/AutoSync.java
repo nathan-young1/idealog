@@ -34,12 +34,11 @@ public class AutoSync extends Worker {
     @Override
     public Result doWork() {
         try {
-//        initialize the firebase app first
+
             FirebaseApp.initializeApp(this.applicationContext);
-//        initialize connection with firestore default db
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-//        Get the authUserUid for differentiate documents by uid
+//        Get the user UID from firebase auth
             final String authUserUid = Authentication.googleAuth(applicationContext);
 
             Map<String, String> testData = new HashMap<String, String>();
