@@ -41,17 +41,19 @@ public class MainActivity extends FlutterActivity {
             @Override
             public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
 
-                alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-                final Map<String,Object> configuration = call.arguments();
-                int uniqueIdForAlarm = (int) configuration.get("uniqueAlarmId");
-                if(call.method.equals(setAlarmMethod)){
-                    NotificationType typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
-                    setAlarm(typeOfNotification,uniqueIdForAlarm);
-                    result.success("Set Alarm Successfully");
-                }else if(call.method.equals(cancelAlarmMethod)){
-                    cancelAlarm(uniqueIdForAlarm);
-                    result.success("Canceled successfully");
-                }else if(call.method.equals(startAutoSyncMethod)){
+//              all this will be initialize when i add alarm to tasks
+//                alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+//                final Map<String,Object> configuration = call.arguments();
+//                int uniqueIdForAlarm = (int) configuration.get("uniqueAlarmId");
+//                if(call.method.equals(setAlarmMethod)){
+//                    NotificationType typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
+//                    setAlarm(typeOfNotification,uniqueIdForAlarm);
+//                    result.success("Set Alarm Successfully");
+//                }else if(call.method.equals(cancelAlarmMethod)){
+//                    cancelAlarm(uniqueIdForAlarm);
+//                    result.success("Canceled successfully");
+//                }
+                if(call.method.equals(startAutoSyncMethod)){
                     startAutoSync();
                     result.success("Auto Sync Started");
                 }else if(call.method.equals(cancelAutoSyncMethod)){
