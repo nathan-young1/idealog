@@ -9,3 +9,4 @@
             ..add percent to task completion rate progress bar
             ..use the transcation object to in dealing with operation on analytics data
             ..delete does not remove it from firestore
+            ..only show analytics after three active days in that month

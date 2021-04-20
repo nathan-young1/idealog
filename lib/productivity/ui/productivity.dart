@@ -33,7 +33,7 @@ class _ProductivityState extends State<Productivity> {
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: LinearPercentIndicator(percent: completionRate,lineHeight: 20,width: 350,widgetIndicator: Text('${completionRate.toInt()}'),)),
+                  child: LinearPercentIndicator(percent: completionRate,lineHeight: 20,width: 350)),
                   // child: LinearProgressIndicator(minHeight: 25,value: Provider.of<ProductivityManager>(context).getCompletionRate())),
               ),
               FavoriteTask(),

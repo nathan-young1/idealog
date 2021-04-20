@@ -7,9 +7,10 @@ class AnalyticsSql {
   static writeOrUpdate(List<int> task)async{
     DateTime now = DateTime.now();
     final int year = now.year;
-    final int month = now.month;
+    // i minused one from month because dart months starts from 1-12 while java months starts from 0-11
+    final int month = now.month-1;
     final int day = now.day;
-    Database _analyticsDb = await openDatabase(Analytics_Table_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
+    Database _analyticsDb = await openDatabase(Analytics_Db_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
     await _analyticsDb.execute(createAnalyticsTable);
     await _analyticsDb.insert(Analytics_Table_Name,{
       Column_Completed_Analytics_Task: '$task',
@@ -21,15 +22,17 @@ class AnalyticsSql {
   }
 
   static removeTaskFromAnalytics(List<int> task) async {
-    Database _analyticsDb = await openDatabase(Analytics_Table_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
+    Database _analyticsDb = await openDatabase(Analytics_Db_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
     await _analyticsDb.execute(createAnalyticsTable);
     await _analyticsDb.delete(Analytics_Table_Name,where: '$Column_Completed_Analytics_Task = ?',whereArgs: [task.toString()]);
     await _analyticsDb.close();
   }
 
   static clearLastMonthsRecord() async {
-    int lastMonth = DateTime.now().month-1;
-    Database _analyticsDb = await openDatabase(Analytics_Table_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
+    // i minused two from month because dart months starts from 1-12 while java months starts from 0-11 
+    // and since this month is (month -1) last month will be (month -2)
+    int lastMonth = DateTime.now().month-2;
+    Database _analyticsDb = await openDatabase(Analytics_Db_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
     await _analyticsDb.execute(createAnalyticsTable);
     await _analyticsDb.delete(Analytics_Table_Name,where: '$Column_Month = $lastMonth');
     await _analyticsDb.close();
@@ -37,9 +40,10 @@ class AnalyticsSql {
 
   static Future<List<AnalyticsData>> readAnalytics() async {
     DateTime now = DateTime.now();
-    int currentMonth = now.month;
+    // i minused one from month because dart months starts from 1-12 while java months starts from 0-11
+    int currentMonth = now.month-1;
     int currentYear = now.year;
-    Database _analyticsDb = await openDatabase(Analytics_Table_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'),readOnly: true);
+    Database _analyticsDb = await openDatabase(Analytics_Db_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
     await _analyticsDb.execute(createAnalyticsTable);
     List<Map<String,Object?>> dbResult = await _analyticsDb.query(Analytics_Table_Name,where: '$Column_Month = $currentMonth');
     await _analyticsDb.close();

@@ -45,28 +45,32 @@ public class AutoSync extends Worker {
             final String authUserUid = Authentication.googleAuth(applicationContext);
 
             IdealogDatabase sqlDbForIdealogDb = new IdealogDatabase(applicationContext,null,null,1);
-
-            sqlDbForIdealogDb.readFromDbForAutoSync().forEach((idea)->{
-                db.collection(authUserUid).document("Database").collection("Ideas").document(String.valueOf(idea.uniqueId)).set(idea)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(applicationContext, "Success", Toast.LENGTH_SHORT);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(applicationContext, "There was a failure writing to database", Toast.LENGTH_SHORT);
-                            }
-                        });
-            });
+            
+            System.out.println("Has been deleted");
+//            sqlDbForIdealogDb.readFromDbForAutoSync().forEach((idea)->{
+//                db.collection(authUserUid).document("Database").collection("Ideas").document(String.valueOf(idea.uniqueId)).set(idea)
+//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                Toast.makeText(applicationContext, "Success", Toast.LENGTH_SHORT);
+//                            }
+//                        })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Toast.makeText(applicationContext, "There was a failure writing to database", Toast.LENGTH_SHORT);
+//                            }
+//                        });
+//            });
 
 //            open the database with the analytics table name
             AnalyticsDatabase sqlDbForAnalytics = new AnalyticsDatabase(applicationContext,null,null,1);
             sqlDbForAnalytics.readAnalyticsForAutoSync().forEach((analyticData)->{
                 int month = analyticData.date.get(Calendar.MONTH);
                 int activeDay = analyticData.date.get(Calendar.DAY_OF_MONTH);
+
+                //          delete the former data in firebase
+                db.collection(authUserUid).document("Analytics").delete();
                 db.collection(authUserUid).document("Analytics").collection(String.valueOf(month)).document(String.valueOf(activeDay)).set(analyticData)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
