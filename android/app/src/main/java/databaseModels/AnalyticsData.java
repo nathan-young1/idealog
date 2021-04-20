@@ -2,11 +2,13 @@ package databaseModels;
 
 import com.google.type.DateTime;
 
-public class AnalyticsData {
-        long date;
-        int numberOfTasksCompleted;
+import java.util.Calendar;
 
-        public AnalyticsData(long date, int numberOfTasksCompleted){
+public class AnalyticsData {
+        public Calendar date;
+        public int numberOfTasksCompleted;
+
+        public AnalyticsData(Calendar date, int numberOfTasksCompleted){
             this.date = date;
             this.numberOfTasksCompleted = numberOfTasksCompleted;
         };

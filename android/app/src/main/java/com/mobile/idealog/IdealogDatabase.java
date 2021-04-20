@@ -12,6 +12,7 @@ import com.google.type.DateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,10 +27,10 @@ public class IdealogDatabase extends SQLiteOpenHelper {
     public static final String Column_MoreDetails = "moreDetails";
     public static final String Column_CompletedTasks = "completedTasks";
     public static final String Column_UncompletedTasks = "uncompletedTasks";
-    public static final String Analytics_Table_Name = "Analytics";
+    public static final String IdealogDbName = "idealog.db";
 
     public IdealogDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, @Nullable int version) {
-        super(context, "idealog.db", null, 1);
+        super(context, IdealogDbName, null, 1);
     }
 
     //called the first time a database is accessed,there should be code in here to create a new database;
@@ -106,42 +107,5 @@ public class IdealogDatabase extends SQLiteOpenHelper {
         return ideas;
     }
 
-    public List<AnalyticsData> readAnalyticsForAutoSync(){
-        DateTime now = DateTime.getDefaultInstance();
-        int currentMonth = now.getMonth();
-        int currentYear = now.getYear();
-        SQLiteDatabase _analyticsDb = this.getReadableDatabase();
 
-        final String getCurrentMonthAnalyticsSql = "select * from "+Analytics_Table_Name+" where month = "+currentMonth;
-        System.out.println(currentMonth+" "+currentYear+" "+getCurrentMonthAnalyticsSql);
-        Cursor analyticsData = _analyticsDb.rawQuery(getCurrentMonthAnalyticsSql,null);
-
-        List<Integer> recordedDaysInDb = new ArrayList<Integer>();
-        if(analyticsData.moveToFirst()) {
-            do {
-                int columnDay = analyticsData.getColumnIndex("day");
-                int day = analyticsData.getInt(columnDay);
-                //create a list of all the days recorded in the database
-                recordedDaysInDb.add(day);
-
-            }while (analyticsData.moveToNext());
-        }
-        //create a set to know the active days (so it does not repeat days in list)
-        Set<Integer> activeDays = new HashSet<>(recordedDaysInDb);
-
-    // to store the result of the analytics
-    List<AnalyticsData> analyticsResult = new ArrayList<AnalyticsData>();
-    //the number of times that active day repeat in the list is equilavent to the number of task completed on that day
-    activeDays.forEach((activeDay) -> {
-                int numberOfTasksCompleted = (int) recordedDaysInDb.stream().filter(day -> day == activeDay).count();
-
-        Calendar time = Calendar.getInstance();
-                time.set(currentYear, currentMonth, activeDay);
-                AnalyticsData newData =  new AnalyticsData(time.getTimeInMillis(), numberOfTasksCompleted);
-                analyticsResult.add(newData);
-            });
-
-        _analyticsDb.close();
-        return analyticsResult;
-    }
 }

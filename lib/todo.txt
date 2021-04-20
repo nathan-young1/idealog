@@ -8,3 +8,4 @@
             ..make list idea stream distinct
             ..add percent to task completion rate progress bar
             ..use the transcation object to in dealing with operation on analytics data
+            ..delete does not remove it from firestore

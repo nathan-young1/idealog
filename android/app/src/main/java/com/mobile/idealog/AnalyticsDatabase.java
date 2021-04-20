@@ -1,0 +1,82 @@
+package com.mobile.idealog;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import databaseModels.AnalyticsData;
+
+public class AnalyticsDatabase extends SQLiteOpenHelper {
+
+
+    public static final String Analytics_Table_Name = "Analytics";
+
+    public AnalyticsDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, Analytics_Table_Name, null, 1);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {}
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
+
+    public List<AnalyticsData> readAnalyticsForAutoSync(){
+        Calendar now = Calendar.getInstance();
+        int currentMonth = now.get(Calendar.MONTH);
+        int currentYear = now.get(Calendar.YEAR);
+        SQLiteDatabase _analyticsDb = this.getReadableDatabase();
+
+        final String getCurrentMonthAnalyticsSql = "select * from "+Analytics_Table_Name+" WHERE month = "+String.valueOf(currentMonth);
+        Cursor analyticsData = _analyticsDb.rawQuery("select * from "+Analytics_Table_Name,null);
+
+        ArrayList<Integer> recordedDaysInDb = new ArrayList<Integer>();
+        if(analyticsData.moveToFirst()) {
+            do {
+                System.out.println("first");
+                int columnMonth = analyticsData.getColumnIndex("month");
+                int columnDay = analyticsData.getColumnIndex("day");
+                int month = analyticsData.getInt(columnMonth);
+                int day = analyticsData.getInt(columnDay);
+//                I am using if condition to only get data of current month since Where is misbehaving
+//                if(month == currentMonth) {
+//                find out what is wrong with month
+                    if(month != currentMonth) {
+                        System.out.println("month in db: "+month);
+                    //create a list of all the days recorded in the database
+                    recordedDaysInDb.add(day);
+                }
+            }while (analyticsData.moveToNext());
+        }
+        System.out.println("days in db: "+recordedDaysInDb);
+        //create a set to know the active days (so it does not repeat days in list)
+        Set<Integer> activeDays = new HashSet<>(recordedDaysInDb);
+
+        // to store the result of the analytics
+        List<AnalyticsData> analyticsResult = new ArrayList<AnalyticsData>();
+        //the number of times that active day repeat in the list is equilavent to the number of task completed on that day
+
+        activeDays.forEach((activeDay) -> {
+            int numberOfTasksCompleted = (int) recordedDaysInDb.stream().filter(day -> day == activeDay).count();
+            System.out.println(activeDay + " "+numberOfTasksCompleted);
+            Calendar time = Calendar.getInstance();
+            time.set(currentYear, currentMonth, activeDay);
+            AnalyticsData newData =  new AnalyticsData(time, numberOfTasksCompleted);
+            analyticsResult.add(newData);
+        });
+
+        _analyticsDb.close();
+        return analyticsResult;
+    }
+
+}
