@@ -35,7 +35,9 @@ public class AnalyticsDatabase extends SQLiteOpenHelper {
 
     public List<AnalyticsData> readAnalyticsForAutoSync(){
         Calendar now = Calendar.getInstance();
-        int currentMonth = now.get(Calendar.MONTH);
+//      i am adding one because dart months starts from 1-12 while java starts from 0-11, so one its added to be able to get the
+//      current month from the database
+        int currentMonth = now.get(Calendar.MONTH)+1;
         int currentYear = now.get(Calendar.YEAR);
         SQLiteDatabase _analyticsDb = this.getReadableDatabase();
 
