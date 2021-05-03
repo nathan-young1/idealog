@@ -27,11 +27,8 @@ import static com.mobile.idealog.IdealogDatabase.SCHEDULE;
 
 public class MainActivity extends FlutterActivity {
     final private String AutoSyncWorkRequestTag = "AutoSync";
-    final private String setAlarmMethod = "setAlarm";
-    final private String cancelAlarmMethod = "cancelAlarm";
     final private String startAutoSyncMethod = "startAutoSync";
     final private String cancelAutoSyncMethod = "cancelAutoSync";
-    AlarmManager alarmManager;
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
     @Override
@@ -40,19 +37,6 @@ public class MainActivity extends FlutterActivity {
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CHANNEL).setMethodCallHandler(new MethodChannel.MethodCallHandler() {
             @Override
             public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-
-//              all this will be initialize when i add alarm to tasks
-//                alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-//                final Map<String,Object> configuration = call.arguments();
-//                int uniqueIdForAlarm = (int) configuration.get("uniqueAlarmId");
-//                if(call.method.equals(setAlarmMethod)){
-//                    NotificationType typeOfNotification = ((int)configuration.get("typeOfNotification") == 1)?NotificationType.IDEAS:NotificationType.SCHEDULE;
-//                    setAlarm(typeOfNotification,uniqueIdForAlarm);
-//                    result.success("Set Alarm Successfully");
-//                }else if(call.method.equals(cancelAlarmMethod)){
-//                    cancelAlarm(uniqueIdForAlarm);
-//                    result.success("Canceled successfully");
-//                }
                 if(call.method.equals(startAutoSyncMethod)){
                     startAutoSync();
                     result.success("Auto Sync Started");
@@ -62,54 +46,6 @@ public class MainActivity extends FlutterActivity {
                 }
             }
         });
-    }
-
-    public void setAlarm(NotificationType notificationType,int uniqueAlarmId){
-        IdealogDatabase db = new IdealogDatabase(MainActivity.this,null,null,1);
-        SQLiteDatabase database = db.getReadableDatabase();
-        String table = (notificationType == NotificationType.IDEAS)?IDEAS:SCHEDULE;
-        Cursor cursor = database.rawQuery("SELECT * FROM "+table+" WHERE "+COLUMN_UNIQUE_ID+" = "+uniqueAlarmId,null);
-        String alarmTitle = "";
-        String repeatSchedule = "";
-        Calendar calendar = Calendar.getInstance();
-        int year,month,day,hour,minute;
-
-        if(notificationType == NotificationType.SCHEDULE){
-            int columnStartTime = cursor.getColumnIndex("");
-            int columnDate = cursor.getColumnIndex("");
-            int columnAlarmTitle = cursor.getColumnIndex("");
-            int columnRepeatSchedule = cursor.getColumnIndex("");
-            if(cursor.moveToFirst()) {
-                do {
-                    Map<String,Integer> dateAndTime = dateAndTimeFromDb.getDateTime(cursor.getString(columnDate),cursor.getString(columnStartTime));
-                    year = dateAndTime.get(dateAndTimeFromDb.Year);
-                    month = dateAndTime.get(dateAndTimeFromDb.Month);
-                    day = dateAndTime.get(dateAndTimeFromDb.Day);
-                    hour = dateAndTime.get(dateAndTimeFromDb.Hour);
-                    minute = dateAndTime.get(dateAndTimeFromDb.Minute);
-
-                    calendar.set(year, month, day, hour, minute);
-
-                    alarmTitle = cursor.getString(columnAlarmTitle);
-                    repeatSchedule = cursor.getString(columnRepeatSchedule);
-                }while (cursor.moveToNext());
-            }
-        }
-        //close the database reference
-        db.close();
-
-        PendingIntent pendingIntent = alarmIntent.createPendingIntent(MainActivity.this,alarmTitle,notificationType,uniqueAlarmId);
-        customSetAlarmManager.setAlarmManagerRepeatingOnCondition(alarmManager,customSetAlarmManager.changeRepeatScheduleFromStringToObject(repeatSchedule),calendar,pendingIntent);
-    }
-
-    public void cancelAlarm(int uniqueAlarmId){
-        Intent toCallTheBroadcastReceiver = new Intent(this,ListenForAlarm.class);
-        toCallTheBroadcastReceiver.setAction("com.alarm.broadcast_notification");
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueAlarmId,toCallTheBroadcastReceiver,0);
-        //TO CANCEL THE ALARM
-        alarmManager.cancel(pendingIntent);
-        System.out.println("The alarm has been canceled");
     }
 
 

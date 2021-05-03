@@ -41,44 +41,6 @@ public class IdealogDatabase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
-//    public List<ScheduleModel> readFromDbAfterReboot() {
-//        List<ScheduleModel> schedule = new ArrayList<>();
-//
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        String scheduleQuery = "select * from " + SCHEDULE;
-//        Cursor scheduleCursor = db.rawQuery(scheduleQuery,null);
-//
-//        if(scheduleCursor.moveToFirst()){
-//            do{
-//            int columnUniqueId = scheduleCursor.getColumnIndex(COLUMN_UNIQUE_ID);
-//            int columnStartTime = scheduleCursor.getColumnIndex(COLUMN_START_TIME);
-//            int columnDate = scheduleCursor.getColumnIndex(COLUMN_DATE);
-//            int columnAlarmTitle = scheduleCursor.getColumnIndex(COLUMN_SCHEDULE_DETAILS);
-//            int columnRepeatSchedule = scheduleCursor.getColumnIndex(COLUMN_REPEAT_SCHEDULE);
-//            int uniqueId = scheduleCursor.getInt(columnUniqueId);
-//            String date = scheduleCursor.getString(columnDate);
-//            String startTime = scheduleCursor.getString(columnStartTime);
-//            String alarmTitle = scheduleCursor.getString(columnAlarmTitle);
-//            String repeatSchedule = scheduleCursor.getString(columnRepeatSchedule);
-//            ScheduleModel newSchedule = new ScheduleModel(uniqueId,date,startTime,alarmTitle,repeatSchedule);
-//            schedule.add(newSchedule);
-//            }while (scheduleCursor.moveToNext());
-//        }
-//        //close the database reference
-//        db.close();
-//        return schedule;
-//    }
-
-//    public void updateDate(String newDate,int uniqueId){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put(COLUMN_DATE,newDate);
-//        String[] whereArgs = {Integer.toString(uniqueId)};
-//        db.update(SCHEDULE,contentValues,COLUMN_UNIQUE_ID+" = ?",whereArgs);
-//        //close the database reference
-//        db.close();
-//    }
-
     public List<IdeaModel> readFromDbForAutoSync() {
         List<IdeaModel> ideas = new ArrayList<>();
 
