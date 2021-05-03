@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
+import 'package:idealog/design/colors.dart';
+import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
@@ -20,14 +22,15 @@ class IdeaCard extends StatelessWidget {
     final double percent = (totalNumberOfTasks != 0)?(completedTasksSize/totalNumberOfTasks)*100:0;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 30),
+      padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 35),
       child: GestureDetector(
         onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>IdeaDetail(idea: idea))),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.only(top: 10,bottom: 15,left: 10,right: 10),
-              decoration: lightModeBackgroundColor.copyWith(
+              padding: EdgeInsets.only(top: 10,bottom: 10,left: 20,right: 10),
+              decoration: BoxDecoration(
+                color: IdeaCardLight,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
               ),
               child: Column(
@@ -37,9 +40,11 @@ class IdeaCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: Center(child: Text(idea.ideaTitle,style: TextStyle(fontSize: 30,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis))),
+                          child: Center(child: Text(idea.ideaTitle,
+                          style: ReemKufi.copyWith(fontSize: 30),
+                          overflow: TextOverflow.ellipsis))),
                         PopupMenuButton<int>(
-                        iconSize: 35,
+                        iconSize: 33,
                         padding: EdgeInsets.zero,
                         onSelected: (_) async=> await IdeaManager.deleteIdeaFromDb(idea),
                         itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
@@ -48,27 +53,28 @@ class IdeaCard extends StatelessWidget {
                           child:  Container(
                             child: Row(
                               children: [
-                              Icon(Icons.delete_sweep,size: 30),
+                              Icon(Icons.delete_sweep,size: 30,color: Colors.black54),
                               SizedBox(width: 10),
                               Text('Delete',style: TextStyle(fontSize: 18))
                             ],),
                           ),
                         )],
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       )
                       ],
                     ),
-                    SizedBox(height: 5),
                     Row(children: [
                       Tooltip(
                         message: 'Completed tasks in percent',
                         child: IgnorePointer(
                           child: Container(
-                            height: 60,
-                            width: 60,
+                            height: 55,
+                            width: 55,
                             child: SleekCircularSlider(
                               initialValue: percent,
-                              innerWidget: (double percent)=> Center(child: Text('${percent.toInt()}%',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),)),
+                              innerWidget: (double percent)=> Center(
+                                child: Text('${percent.toInt()}%',
+                                style: TextStyle(fontSize: 16))),
                               appearance: CircularSliderAppearance(
                                 angleRange: 360,
                                 customWidths: CustomSliderWidths(
@@ -77,37 +83,43 @@ class IdeaCard extends StatelessWidget {
                                 ),
                                 customColors: CustomSliderColors(
                                   dotColor: Colors.transparent,
-                                  progressBarColor: Colors.blueGrey,
+                                  progressBarColor: AddToExistingLight,
                                   trackColor: Colors.white
                                 )
                               ),
                             )),
                         ),
                       ),
-                      SizedBox(width: 15),
+                      SizedBox(width: 18),
                       if(uncompletedTasksSize != 0)
-                      Flexible(child: Text('Uncompleted Tasks: $uncompletedTasksSize',style: TextStyle(fontSize: 20),overflow: TextOverflow.ellipsis,)),
+                      Flexible(child: Text('Uncompleted Tasks: $uncompletedTasksSize',
+                      style: ReemKufi.copyWith(fontSize: 22,fontWeight: FontWeight.w100),
+                      overflow: TextOverflow.ellipsis)),
                       if(uncompletedTasksSize == 0 && completedTasksSize > 0)
-                      Text('Tasks completed',style: TextStyle(fontSize: 20)),
+                      Text('Tasks completed',
+                      style: ReemKufi.copyWith(fontSize: 22,fontWeight: FontWeight.w100)),
                       if(uncompletedTasksSize == 0 && completedTasksSize == 0)
-                      Text('No tasks available',style: TextStyle(fontSize: 20))
+                      Text('No tasks available',
+                      style: ReemKufi.copyWith(fontSize: 22,fontWeight: FontWeight.w100))
                     ],)
               ],),
             ),
             GestureDetector(
               onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AddToExistingIdea(idea: idea))),
               child: Container(
-                height: 50,
+                height: 45,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15)),
-                  color: Colors.white,
+                  color: AddToExistingLight,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Add A New Task',style: TextStyle(color: Colors.black,fontSize: 20)),
+                    Text('Add A New Task',
+                    style: RhodiumLibre.copyWith(fontSize: 20,color: Colors.white)),
                     SizedBox(width: 15),
-                    FaIcon(FontAwesomeIcons.plus,color: Colors.grey[800])
+                    Icon(Icons.add,color: Colors.white,size: 35)
                   ],
                 ),
               ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/customDecoration/colors.dart';
+import 'package:idealog/design/colors.dart';
+import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/routes.dart';
 import 'package:idealog/analytics/analyticsSql.dart';
 import 'package:idealog/idea/listPage/ui/ideaListPage.dart';
@@ -27,7 +29,6 @@ class _MenuPageViewState extends State<MenuPageView> {
 
   @override
     void dispose() {
-      print('me dispose');
       Sqlite.close();
       _controller.dispose();
       index.dispose();
@@ -45,80 +46,77 @@ class _MenuPageViewState extends State<MenuPageView> {
       catchError: (_,__)=>[])
       ],
       child: SafeArea(
-          child: Container(
-            decoration: lightModeBackgroundColor,
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-                body: PageView(
-                  controller: _controller,
-                  onPageChanged: (int pageIndex) => index.value = pageIndex,
-                  children: [
-                    IdeaListPage(),
-                    Productivity(),
-                    Settings()
-                  ],
-                ),
-                floatingActionButton: ValueListenableBuilder(
-                  valueListenable: index,
-                  builder: (context, int _pageIndex,child) {
-                    return Visibility(
-                      visible: (_pageIndex == 0),
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.blueGrey[300],
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        splashColor: Colors.black54,
-                        onPressed: ()=> Navigator.pushNamed(context, addNewIdeaPage),
-                        child: Icon(Icons.add,size: 35,color: Colors.white)
-                      ),
-                    );
-                  }
-                ),
-                bottomNavigationBar: Container(
-                  height: 70,
-                  color: lightModeBottomNavColor,
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: ValueListenableBuilder(
-                  valueListenable: index,
-                  builder: (context, int _pageIndex,child) {
-                  return GNav(
-                    selectedIndex: _pageIndex,
-                    backgroundColor: Colors.transparent,
-                    tabBorderRadius: 50,
-                    tabBackgroundGradient: LinearGradient(
-                    colors: [
-                    Color.fromRGBO(63, 73, 87, 0.4),
-                    Color.fromRGBO(117, 71, 74, 0.4)
-                      ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight),
-                    //padding for the tabs
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    onTabChange: (int index){
-                      _controller.jumpToPage(index);
-                    },
-                    tabs: [
-                      GButton(
-                        icon: Icons.lightbulb,
-                        gap: 4.0,
-                        text: 'Ideas',
-                      ),
-                      GButton(
-                        icon: Icons.timeline,
-                        gap: 4.0,
-                        text: 'Productivity',
-                      ),
-                      GButton(
-                        icon: Icons.settings,
-                        gap: 4.0,
-                        text: 'Settings',
-                      ),
-                    ],
+          child: Scaffold(
+              body: PageView(
+                controller: _controller,
+                onPageChanged: (int pageIndex) => index.value = pageIndex,
+                children: [
+                  IdeaListPage(),
+                  Productivity(),
+                  Settings()
+                ],
+              ),
+              floatingActionButton: ValueListenableBuilder(
+                valueListenable: index,
+                builder: (context, int _pageIndex,child) {
+                  return Visibility(
+                    visible: (_pageIndex == 0),
+                    child: FloatingActionButton(
+                      elevation: 10,
+                      backgroundColor: LightPink,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      onPressed: ()=> Navigator.pushNamed(context, addNewIdeaPage),
+                      child: Icon(Icons.add,size: 40,color: Colors.white)
+                    ),
                   );
-                  }
+                }
+              ),
+              bottomNavigationBar: Container(
+                height: 75,
+                decoration: BoxDecoration( 
+                  color: LightGray,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))
                 ),
-            ),
-        ),
-          )),
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: ValueListenableBuilder(
+                valueListenable: index,
+                builder: (context, int _pageIndex,child) {
+                return GNav(
+                  gap: 6,
+                  iconSize: 35,
+                  activeColor: Colors.white,
+                  color: ActiveTabLight,
+                  selectedIndex: _pageIndex,
+                  backgroundColor: Colors.transparent,
+                  tabBorderRadius: 20,
+                  textStyle: Righteous.copyWith(fontSize: 18,color: Colors.white),
+                  tabBackgroundColor: ActiveTabLight,
+                  //padding for the tabs
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+                  onTabChange: (int index){
+                    _controller.jumpToPage(index);
+                  },
+                  tabs: [
+                    GButton(
+                      icon: Icons.lightbulb,
+                      text: 'Ideas',
+                      iconSize: 30,
+                    ),
+                    GButton(
+                      icon: Icons.timeline,
+                      text: 'Productivity',
+                    ),
+                    GButton(
+                      icon: Icons.settings,
+                      iconSize: 30,
+                      text: 'Settings',
+                    ),
+                  ],
+                );
+                }
+              ),
+          ),
+        )),
     );
   }
 }

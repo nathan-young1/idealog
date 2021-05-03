@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/design/colors.dart';
+import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
 import 'ideaCard.dart';
@@ -13,25 +15,26 @@ class IdeaListPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          padding: EdgeInsets.only(top: 15,left: 20,right: 10),
+          padding: EdgeInsets.only(top: 25,left: 20,right: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('IDEAS',style: TextStyle(fontSize: 27,fontWeight: FontWeight.w600)),
+              Text('IDEAS',style: Poppins.copyWith(fontSize: 30)),
               Row(
                 children: [
-                  IconButton(icon: Icon(Icons.search_sharp), onPressed: (){},iconSize: 30),
-                  IconButton(icon: Icon(Icons.filter_list), onPressed: (){},iconSize: 30)
+                  IconButton(icon: Icon(Icons.search_sharp), onPressed: (){},iconSize: 35),
+                  IconButton(icon: Icon(Icons.filter_list), onPressed: (){},iconSize: 35)
                 ],
               )
             ],
           ),
         ),
         Expanded(
-            child: ListView(
-              physics: ScrollPhysics(parent: BouncingScrollPhysics()),
-              shrinkWrap: true,
-              children: listOfIdeas.map((idea) => IdeaCard(idea: idea)).toList(),
+            child: Scrollbar(
+              child: ListView.builder(
+                itemCount: listOfIdeas.length,
+                itemBuilder: (_,index) =>IdeaCard(idea: listOfIdeas[index]),
+              ),
             ),
           )
          

@@ -1,8 +1,7 @@
 import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:idealog/customDecoration/boxDecoration.dart';
+import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/routes.dart';
 import 'package:idealog/global/strings.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -34,17 +33,21 @@ class _SplashScreenState extends State<SplashScreen> {
       
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        decoration: lightModeBackgroundColor,
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Center(
-          child: Hero(
-            tag: 'Logo',
-            child: Image.asset(pathToAppLogo,height: 180.h,width: 180.w,))
-        ),),
-      ),
-    );
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.only(bottom: 50.h),
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+              child: Image.asset(pathToAppLogo,height: 240.h,width: 230.w,)
+              ),
+            ),
+            Text('Idealog v1.2',
+              style: Overpass.copyWith(fontSize: 28,color: Color.fromRGBO(112, 112, 112, 1))
+              )
+          ],
+        ),
+      ),);
   }
 }

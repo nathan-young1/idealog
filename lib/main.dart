@@ -7,6 +7,7 @@ import 'package:idealog/sqlite-db/sqlite.dart';
 import 'package:provider/provider.dart';
 import 'auth/ui/authUi.dart';
 import 'core-models/ideasModel.dart';
+import 'design/colors.dart';
 import 'idea/listPage/ui/newIdea.dart';
 
 void main() => runApp(Idealog());
@@ -28,8 +29,13 @@ class Idealog extends StatelessWidget {
               title: 'Idealog',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
-                primarySwatch: Colors.blueGrey,
-                brightness: Brightness.dark
+                scrollbarTheme: ScrollbarThemeData(
+                radius: Radius.circular(10),
+                thickness: MaterialStateProperty.all(5),
+                thumbColor: MaterialStateProperty.all(AddToExistingLight),
+                crossAxisMargin: 10,
+                mainAxisMargin: 10,
+              ),
               ),
               routes: {
                 '/': (context) => SplashScreen(),
