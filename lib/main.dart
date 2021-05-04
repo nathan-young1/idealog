@@ -33,7 +33,6 @@ class Idealog extends StatelessWidget {
                 radius: Radius.circular(10),
                 thickness: MaterialStateProperty.all(5),
                 thumbColor: MaterialStateProperty.all(AddToExistingLight),
-                crossAxisMargin: 10,
                 mainAxisMargin: 10,
               ),
               ),
