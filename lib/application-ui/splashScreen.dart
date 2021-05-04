@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Expanded(
               child: Center(
-              child: Image.asset(pathToAppLogo,height: 240.h,width: 230.w,)
+              child: Image.asset(pathToAppLogo,height: 240.h,width: 230.w)
               ),
             ),
             Text('Idealog v1.2',
