@@ -13,7 +13,7 @@ class ProductivityManager{
       //sort the ideas by their completeTasks Length in descending order
       allIdeas.sort((a,b) => b.completedTasks.length.compareTo(a.completedTasks.length));
       // only take four of the ideas with the biggest task length
-      Iterable<Idea> favoriteIdeas = allIdeas.take(4);
+      Iterable<Idea> favoriteIdeas = allIdeas.take(3);
       return List<Idea>.from(favoriteIdeas);
     }
 

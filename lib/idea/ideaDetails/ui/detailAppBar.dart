@@ -3,7 +3,6 @@ import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 import 'package:idealog/idea/listPage/ui/addToExisting.dart';
-import 'package:idealog/sqlite-db/sqlite.dart';
 
 class DetailAppBar extends StatelessWidget {
   DetailAppBar({required this.idea});

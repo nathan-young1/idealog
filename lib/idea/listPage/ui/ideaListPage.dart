@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 

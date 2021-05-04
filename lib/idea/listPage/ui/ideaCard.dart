@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';

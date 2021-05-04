@@ -6,3 +6,4 @@ final TextStyle Poppins = GoogleFonts.poppins();
 final TextStyle Righteous = GoogleFonts.righteous();
 final TextStyle RhodiumLibre = GoogleFonts.rhodiumLibre();
 final TextStyle ReemKufi = GoogleFonts.reemKufi();
+final TextStyle Peddana = GoogleFonts.peddana();
