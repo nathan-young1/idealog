@@ -3,48 +3,57 @@ import 'package:idealog/analytics/analyticsSqlStatements.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AnalyticsSql {
+  // using one database object like i did in sql
+  static late Database _analyticsDb;
+
+  static void intialize() async {
+    _analyticsDb = await openDatabase(Analytics_Db_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
+  }
 
   static writeOrUpdate(List<int> task)async{
     DateTime now = DateTime.now();
     final int year = now.year;
     final int month = now.month;
     final int day = now.day;
-    Database _analyticsDb = await openDatabase(Analytics_Db_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
-    await _analyticsDb.execute(createAnalyticsTable);
-    await _analyticsDb.insert(Analytics_Table_Name,{
+    await _analyticsDb.transaction((txn) async {
+    await txn.execute(createAnalyticsTable);
+    await txn.insert(Analytics_Table_Name,{
       Column_Completed_Analytics_Task: '$task',
       Column_Year: year,
       Column_Month: month,
       Column_day: day
     });
-    await _analyticsDb.close();
+    });
   }
 
   static removeTaskFromAnalytics(List<int> task) async {
-    Database _analyticsDb = await openDatabase(Analytics_Db_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
-    await _analyticsDb.execute(createAnalyticsTable);
-    await _analyticsDb.delete(Analytics_Table_Name,where: '$Column_Completed_Analytics_Task = ?',whereArgs: [task.toString()]);
-    await _analyticsDb.close();
+    await _analyticsDb.transaction((txn) async {
+    await txn.execute(createAnalyticsTable);
+    await txn.delete(Analytics_Table_Name,where: '$Column_Completed_Analytics_Task = ?',whereArgs: [task.toString()]);
+    });
   }
 
   static clearLastMonthsRecord() async {
     DateTime currentDate = DateTime.now();
     // create a new dateTime object with one subtracted from month then get the int representing last month
     int lastMonth = new DateTime(currentDate.year,currentDate.month-1).month;
-    Database _analyticsDb = await openDatabase(Analytics_Db_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
-    await _analyticsDb.execute(createAnalyticsTable);
-    await _analyticsDb.delete(Analytics_Table_Name,where: '$Column_Month = $lastMonth');
-    await _analyticsDb.close();
+    await _analyticsDb.transaction((txn) async {
+    await txn.execute(createAnalyticsTable);
+    await txn.delete(Analytics_Table_Name,where: '$Column_Month = $lastMonth');
+    });
   }
 
   static Future<List<AnalyticsData>> readAnalytics() async {
     DateTime now = DateTime.now();
     int currentMonth = now.month;
     int currentYear = now.year;
-    Database _analyticsDb = await openDatabase(Analytics_Db_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
-    await _analyticsDb.execute(createAnalyticsTable);
-    List<Map<String,Object?>> dbResult = await _analyticsDb.query(Analytics_Table_Name,where: '$Column_Month = $currentMonth');
-    await _analyticsDb.close();
+    
+    List<Map<String,Object?>> dbResult = await _analyticsDb.transaction((txn) async {
+      await txn.execute(createAnalyticsTable);
+      // return the transcation query as the dbResult
+      return await txn.query(Analytics_Table_Name,where: '$Column_Month = $currentMonth');
+      });
+
     List<int> recordedDaysInDb = [];
     //create a list of all the days recorded in the database
     dbResult.forEach((row) => recordedDaysInDb.add(row[Column_day] as int));
@@ -63,6 +72,8 @@ class AnalyticsSql {
       });
       return analyticsResult;
   }
+
+  static Future<void> close() async => await _analyticsDb.close();
 }
 
 

@@ -9,48 +9,37 @@ import 'package:idealog/core-models/ideasModel.dart';
 import 'ideasDbColumn.dart';
 
 class Sqlite{
+  // making database object static so that all operations uses one db object
+  static late Database _database;
 
   static writeToDb({Idea? idea}) async {
-
-    Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
-
-      await _database.execute(createIdeasTableSqlCommand);
+    await _database.transaction((txn) async {
+      await txn.execute(createIdeasTableSqlCommand);
       List<List<int>> completedTasks = idea!.completedTasks;
       List<List<int>> uncompletedTasks = idea.uncompletedTasks;
 
-      _database.insert(ideasTableName, {
+      await txn.insert(ideasTableName, {
         Column_uniqueId:  '${idea.uniqueId}',
         Column_ideaTitle  :idea.ideaTitle,
         Column_moreDetails: idea.moreDetails,
         Column_completedTasks:  (completedTasks.isEmpty)?null:'$completedTasks',
         Column_uncompletedTasks: (uncompletedTasks.isEmpty)?null:'$uncompletedTasks'
         });
-
-    await _database.close();
+    });
   }
 
   static deleteFromDB({required String uniqueId}) async {
-    Database _database = await openDatabase(sqliteDbName,onCreate: (_,__)=>print('${_.path} has been created'),version: 1);
-
-    //Using the transcation object method
     await _database.transaction((txn) async => await txn.execute('delete from $ideasTableName where $Column_uniqueId = $uniqueId'));
-    //Not closing the database because of continous access to data using timer.perodic
-    //await _database.close();
   }
 
   static Future<List<Idea>> readFromDb() async {
       List<Idea> allIdeasFromDb = [];
+
+      var result = await _database.transaction((txn) async {
+        await txn.execute(createIdeasTableSqlCommand);
+        return await txn.query(ideasTableName);
+        });
         
-        Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
-
-        await _database.execute(createIdeasTableSqlCommand);
-
-        //Using the transcation object method
-        var result = await _database.transaction((txn) => txn.query(ideasTableName));
-        //Not closing the database because of continous access to data using timer.perodic
-        //await _database.close();
-
-
         result.forEach((idea) { 
         Object? completedTasks = idea[Column_completedTasks];
         Object? uncompletedTasks = idea[Column_uncompletedTasks];
@@ -69,9 +58,7 @@ class Sqlite{
 
   static Future<int> getUniqueId() async {
             int uniqueId = Random().nextInt(maxRandomNumber);
-            Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
             await _database.execute(createIdeasTableSqlCommand);
-            print('database has been initialized');
             var idsFromDb = await _database.query(ideasTableName,columns: [Column_uniqueId]);
             List<int> unavailableIds = idsFromDb.map((map) => int.parse('${map[Column_uniqueId]}')).toList();
             //if it does not contain the id do not loop
@@ -82,20 +69,21 @@ class Sqlite{
   }
 
   static updateDb(int uniqueId,{required Idea idea}) async {
-    Database _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
-    await _database.execute(createIdeasTableSqlCommand);
+    await _database.transaction((txn) async {
+    await txn.execute(createIdeasTableSqlCommand);
     List<List<int>> completedTasks = idea.completedTasks;
     List<List<int>> uncompletedTasks = idea.uncompletedTasks;
     Map<String,Object?> updatedData = Map<String,Object?>();
     updatedData[Column_completedTasks] = (completedTasks.isEmpty)?null:'$completedTasks';
     updatedData[Column_uncompletedTasks] = (uncompletedTasks.isEmpty)?null:'$uncompletedTasks';
     updatedData[Column_moreDetails] = idea.moreDetails;
-    await _database.update(ideasTableName, updatedData,where: '$Column_uniqueId = $uniqueId');
-    await _database.close();
+    await txn.update(ideasTableName, updatedData,where: '$Column_uniqueId = $uniqueId');
+    });
   }
 
   static Timer? periodicTimer;
-  static initialize(){
+  static initialize() async {
+    _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
     periodicTimer = Timer.periodic(Duration(seconds: 1), (_) async {
         _dbStreamController.add(await Sqlite.readFromDb());
     });
