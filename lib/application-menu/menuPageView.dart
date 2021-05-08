@@ -70,7 +70,7 @@ class _MenuPageViewState extends State<MenuPageView> {
                 }
               ),
               bottomNavigationBar: Container(
-                height: 75,
+                height: 70,
                 decoration: BoxDecoration( 
                   color: LightGray,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))

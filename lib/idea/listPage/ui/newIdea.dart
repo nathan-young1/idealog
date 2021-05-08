@@ -1,8 +1,12 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:idealog/customDecoration/boxDecoration.dart';
 import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
+import 'package:idealog/design/colors.dart';
+import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 
 class NewIdea extends StatefulWidget {
@@ -20,11 +24,10 @@ class _NewIdeaState extends State<NewIdea> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        decoration: lightModeBackgroundColor,
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
+      child: Scaffold(
+        body: Padding(
+          padding: EdgeInsets.only(bottom: 12),
+          child: SingleChildScrollView(
             child: Form(
               child: Padding(
                 padding: const EdgeInsets.only(left: 20,right: 15),
@@ -51,73 +54,89 @@ class _NewIdeaState extends State<NewIdea> {
                       ),
                     ),
                     SizedBox(height: 25),
-                    Text('Tasks required for idea',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w700)),
+                    Text('Tasks required for idea',style: TextStyle(fontSize: 25)),
                     SizedBox(height: 15),
                     Row(children: [
+                      SizedBox(width: 20),
                       Icon(Icons.info,color: Colors.grey,size: 28),
-                      Text(' Press ',style: TextStyle(fontSize: 22)),
+                      Text(' Press ',style: TextStyle(fontSize: 20)),
                       Container(
                         width: 85,
                         height: 40,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: Colors.grey,
+                          color: LightGray,
                         ),
-                        child: Center(child: Text('Enter',style: TextStyle(fontSize: 21,color: Colors.white))),
+                        child: Center(child: Text('Enter',style: TextStyle(fontSize: 20))),
                       ),
-                      Text(' to add task.',style: TextStyle(fontSize: 22))
+                      Text(' to add task.',style: TextStyle(fontSize: 20))
                     ],),
                     SizedBox(height: 15),
-                    _allTasks(),
+                    _AllTasks(),
                     SizedBox(height: 10),
-                    TextFormField(
-                      maxLength: 150,
-                      controller: taskField,
-                      focusNode: taskFieldFocus,
-                      onFieldSubmitted: (newTask){
-                        taskFieldFocus.requestFocus();
-                        if(newTask != ''){
-                        setState(() => tasks.add(newTask));
-                        taskField.text = '';
-                        }
-                      },
-                      decoration: underlineAndFilled.copyWith(
-                        labelText: 'Task',
-                        suffixIcon: IconButton(icon: Icon(Icons.cancel),
-                        onPressed: () => taskField.text = '')
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(offset: Offset(0, 0),blurRadius: 15,color: Colors.black45)
+                        ]
+                      ),
+                      child: TextFormField(
+                        controller: taskField,
+                        focusNode: taskFieldFocus,
+                        onFieldSubmitted: (newTask){
+                          taskFieldFocus.requestFocus();
+                          if(newTask != ''){
+                          setState(() => tasks.add(newTask));
+                          taskField.text = '';
+                          }
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'Task',
+                          contentPadding: EdgeInsets.only(right: 0,left: 15,top: 5),
+                          suffixIcon: Container(
+                            color: Colors.teal,
+                            child: IconButton(icon: Icon(Icons.check,color: Colors.white,size: 30),
+                            onPressed: () => taskFieldFocus.unfocus()),
+                          )
+                        ),
                       ),
                     ),
+                    SizedBox(height: 50)
                   ],
                 ),
               ),),
           ),
-            bottomNavigationBar: GestureDetector(
-              onTap: () async => await IdeaManager.addToDbAndSetAlarmIdea(
-                    context: context,
-                    ideaTitle: ideaTitle.text,
-                    moreDetails: moreDetails.text,
-                    tasks: tasks),
-              child: Container(
-                height: 50,
-                color: lightModeBottomNavColor.withOpacity(1),
-                child: Center(
-                  child: Text('Save',style: TextStyle(fontSize: 24,color: Colors.white,fontWeight: FontWeight.w700)),
-                )),
-            ),
         ),
+          bottomNavigationBar: GestureDetector(
+            onTap: () async => await IdeaManager.addToDbAndSetAlarmIdea(
+                  context: context,
+                  ideaTitle: ideaTitle.text,
+                  moreDetails: moreDetails.text,
+                  tasks: tasks),
+            child: Container(
+              height: 65,
+              color: DarkBlue,
+              child: Center(
+                child: Text('Save',style: Overpass.copyWith(fontSize: 32,color: Colors.white)),
+              )),
+          ),
       ),
     );
   }
 
-  Widget _allTasks() {
+  Widget _AllTasks() {
     return Column(
       children: [
         for(String task in tasks) 
-        Row(children: [
-          Icon(Icons.circle),
+        Row(
+          children: [
+          Icon(Icons.circle,color: Colors.grey),
+          SizedBox(width: 25),
           Expanded(child: Container(child: Text(task))),
           IconButton(
-          icon: Icon(Icons.cancel),
+          icon: Icon(CommunityMaterialIcons.close,color: Colors.grey),
           onPressed: (){
             setState(() =>tasks.remove(task));
             })

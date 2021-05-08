@@ -1,10 +1,11 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:idealog/auth/code/authHandler.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/strings.dart';
-import 'package:idealog/nativeCode/bridge.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -12,7 +13,7 @@ class Settings extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          SizedBox(height: 10),
+          SizedBox(height: 35),
           DottedBorder(
             color: LightGray,
             strokeWidth: 3,
@@ -27,17 +28,12 @@ class Settings extends StatelessWidget {
           Text('Idealog v1.2',
             style: Overpass.copyWith(fontSize: 28,color: Color.fromRGBO(112, 112, 112, 1))
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 40),
 
-          ListTile(title: Text('Manage Account')),
-          ListTile(title: Text('Data Syncronization'),onTap: () async {
-            await signInWithGoogle();
-            await NativeCodeCaller.startAutoSync();
-          },),
-          ListTile(title: Text('Stop Data Syncronization'),onTap: () async => await NativeCodeCaller.stopAutoSync()),
-          ListTile(title: Text('Upgrade to premium')),
-          ListTile(title: Text('About Idealog')),
-          ListTile(title: Text('Log out'))
+          ListTile(leading: Icon(FeatherIcons.user,size: 35,color: Colors.teal),title: Text('Manage Account')),
+          ListTile(leading: Icon(FeatherIcons.uploadCloud,size: 35,color: Colors.teal),title: Text('Data Syncronization')),
+          ListTile(leading: Icon(PhosphorIcons.caret_double_up,size: 35,color: Colors.teal),title: Text('Upgrade to premium')),
+          ListTile(leading: Icon(CommunityMaterialIcons.help,size: 35,color: Colors.teal),  title: Text('About Idealog'))
       ]),
     );
   }

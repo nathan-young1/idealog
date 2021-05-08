@@ -10,3 +10,21 @@
             ..use the transcation object to in dealing with operation on analytics data
             ..sometimes deleting ideas do not remove it from analytics data
             ..only show analytics after three active days in that month
+            ..add logout to cancal data syncronization
+
+            ..remeber to add this code 
+            ////---Start here ---
+          ListTile(title: Text('Data Syncronization'),onTap: () async {
+            await signInWithGoogle();
+            await NativeCodeCaller.startAutoSync();
+          },),
+          ListTile(title: Text('Stop Data Syncronization'),onTap: () async => await NativeCodeCaller.stopAutoSync()),
+          /////--End here --
+
+          ..finance icon
+          ..keyboard caps icon
+          help for question
+          account start
+          star settings
+          star shooting
+

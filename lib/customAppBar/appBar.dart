@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:idealog/design/textStyles.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String? title;
@@ -7,13 +7,15 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-          padding: const EdgeInsets.only(top: 20,bottom: 20),
-          child: Row(children: [
-            IconButton(icon: Icon(Icons.arrow_back_ios),
-            iconSize: 32.r,
+          padding: const EdgeInsets.only(top: 30,bottom: 20),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+            IconButton(icon: Icon(Icons.arrow_back),
+            iconSize: 35,
             onPressed: ()=>Navigator.pop(context)),
             SizedBox(width: 10),
-            Text(title!,style: TextStyle(fontSize: 24,fontWeight: FontWeight.w700),)
+            Text(title!,style: Overpass.copyWith(fontSize: 30,fontWeight: FontWeight.w500))
           ],),
         );
   }

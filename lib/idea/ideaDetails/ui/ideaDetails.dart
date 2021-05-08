@@ -22,65 +22,61 @@ class _IdeaDetailState extends State<IdeaDetail> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        decoration: lightModeBackgroundColor,
-         child: Scaffold(
-           backgroundColor: Colors.transparent,
-           body: Column(
-             children: [
-               DetailAppBar(idea: widget.idea),
-               Expanded(
-                 child: SingleChildScrollView(
-                   child: Column(
-                     children: [
-                       Padding(
-                         padding: EdgeInsets.only(top: 20,left: 15,right: 10),
-                         child: Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                           children: [
-                             Flexible(
-                               flex: 5,
-                               child: TextField(
-                                 focusNode: descriptionFocus,
-                                 maxLines: null,
-                                 maxLength: (descriptionEnabled)?300:null,
-                                 controller: widget.description,
-                                 enabled: (descriptionEnabled),
-                                 keyboardType: TextInputType.text,
-                                 textInputAction: TextInputAction.done,
-                                  onSubmitted: (_) async {setState((){
-                                    descriptionEnabled=false;
-                                    widget.idea.changeMoreDetail(widget.description!.text);
-                                    });
-                                    await Sqlite.updateDb(widget.idea.uniqueId, idea: widget.idea);},
-                                 decoration: InputDecoration(
-                                   disabledBorder: InputBorder.none,
-                                   filled: (descriptionEnabled),
-                                   enabledBorder: UnderlineInputBorder(),
-                                   labelText: 'Description',
-                                 ),
-                               ),
-                             ),
-                             Visibility(
-                               visible: (!descriptionEnabled),
-                               child: Flexible(
-                                 flex: 1,
-                                 child: IconButton(icon: Icon(Icons.edit),onPressed: ()=>setState((){
-                                   descriptionEnabled=true;
-                                   descriptionFocus.requestFocus();})),
-                               ),
-                             )
-                           ],
-                         ),
-                       ),
-                      SizedBox(height: 20),
-                      DetailTasksList(idea: widget.idea)
-                     ],
-                   ),
-                 ),
-               ),
-             ]),
-         )
+      child: Scaffold(
+        body: Column(
+          children: [
+            DetailAppBar(idea: widget.idea),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 20,left: 15,right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Flexible(
+                            flex: 5,
+                            child: TextField(
+                              focusNode: descriptionFocus,
+                              maxLines: null,
+                              maxLength: (descriptionEnabled)?300:null,
+                              controller: widget.description,
+                              enabled: (descriptionEnabled),
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.done,
+                               onSubmitted: (_) async {setState((){
+                                 descriptionEnabled=false;
+                                 widget.idea.changeMoreDetail(widget.description!.text);
+                                 });
+                                 await Sqlite.updateDb(widget.idea.uniqueId, idea: widget.idea);},
+                              decoration: InputDecoration(
+                                disabledBorder: InputBorder.none,
+                                filled: (descriptionEnabled),
+                                enabledBorder: UnderlineInputBorder(),
+                                labelText: 'Description',
+                              ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: (!descriptionEnabled),
+                            child: Flexible(
+                              flex: 1,
+                              child: IconButton(icon: Icon(Icons.edit),onPressed: ()=>setState((){
+                                descriptionEnabled=true;
+                                descriptionFocus.requestFocus();})),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                   SizedBox(height: 20),
+                   DetailTasksList(idea: widget.idea)
+                  ],
+                ),
+              ),
+            ),
+          ]),
       ),
     );
   }

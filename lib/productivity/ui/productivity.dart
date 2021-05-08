@@ -18,27 +18,30 @@ class _ProductivityState extends State<Productivity> {
   @override
   Widget build(BuildContext context) {
     double completionRate = Provider.of<ProductivityManager>(context).getCompletionRate();
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 25,left: 20,right: 10,bottom: 20),
-          child: Text('Productivity',
-          style: Poppins.copyWith(fontSize: 30)),
-        ),
-        Expanded(
-          child: ListView(
-            children: [
-              TaskCompletionRate(completionRate),
-              SizedBox(height: 25),
-              FavoriteTask(),
-              SizedBox(height: 25),
-              ActiveDaysChart()
-            ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: 10),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 25,left: 20,right: 10,bottom: 20),
+            child: Text('Productivity',
+            style: Poppins.copyWith(fontSize: 30)),
           ),
-        ),
-      ],
+          Expanded(
+            child: ListView(
+              children: [
+                TaskCompletionRate(completionRate),
+                SizedBox(height: 25),
+                FavoriteTask(),
+                SizedBox(height: 25),
+                ActiveDaysChart()
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -217,9 +220,6 @@ class ActiveDaysChart extends StatelessWidget {
                 labelStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w400),
                 majorGridLines: MajorGridLines(width: 0),
                 majorTickLines: MajorTickLines(width: 0),
-                title: AxisTitle(
-                text: 'Number of tasks completed',
-                textStyle: TextStyle(fontSize: 18,fontWeight: FontWeight.w500,color: Colors.deepOrange.withOpacity(0.7)))
               ),
               primaryXAxis: DateTimeCategoryAxis(
                 intervalType: DateTimeIntervalType.days,
@@ -228,16 +228,12 @@ class ActiveDaysChart extends StatelessWidget {
                 majorTickLines: MajorTickLines(size: 10,width: 0),
                 majorGridLines: MajorGridLines(width: 0),
                 labelStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w400),
-                title: AxisTitle(
-                  text: 'Date',
-                  textStyle: TextStyle(fontSize: 21,fontWeight: FontWeight.w500,color: Colors.deepOrange.withOpacity(0.7))
-                )
               ),
               series: <ChartSeries>[
                   SplineAreaSeries<AnalyticsData,DateTime>(
                   markerSettings: MarkerSettings(
                     isVisible: true,
-                    color: Colors.white,
+                    color: DarkBlue,
                     height: 12,
                     width: 12
                   ),

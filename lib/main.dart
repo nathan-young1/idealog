@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_screenutil/screen_util.dart';
+import 'package:idealog/analytics/analyticsSql.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
@@ -17,6 +18,7 @@ class Idealog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Sqlite.initialize();
+    AnalyticsSql.intialize();
     return LayoutBuilder(
        builder: (_, constraints) {
         ScreenUtil.init(constraints);
