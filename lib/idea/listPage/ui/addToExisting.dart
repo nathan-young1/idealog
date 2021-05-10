@@ -2,12 +2,8 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/customDecoration/boxDecoration.dart';
-import 'package:idealog/customDecoration/colors.dart';
-import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/global/extension.dart';
 import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
 
@@ -46,7 +42,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                 Expanded(
                   child: Center(
                     child: Container(
-                      child: Text(widget.idea.ideaTitle,style: TextStyle(fontSize: 40,fontWeight: FontWeight.w600),overflow: TextOverflow.ellipsis),
+                      child: Text(widget.idea.ideaTitle,style: Overpass.copyWith(fontSize: 35,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis),
                     ),
                   ),
                 ),
@@ -77,7 +73,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                       Text(' to add task.',style: TextStyle(fontSize: 20))
                     ],),
                   Column(
-                    children: newTasks.map((newTask) => ListTile(leading: Icon(Icons.circle,color: Colors.grey),
+                    children: newTasks.map((newTask) => ListTile(leading: Icon(Icons.circle,color: Colors.grey,size: 20),
                     title: Text(newTask),
                     trailing: IconButton(
                     icon: Icon(CommunityMaterialIcons.close,color: Colors.grey),
@@ -109,7 +105,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                           labelText: 'Task',
                           contentPadding: EdgeInsets.only(right: 0,left: 15,top: 5),
                           suffixIcon: Container(
-                            color: Colors.teal,
+                            color: LightPink,
                             child: IconButton(icon: Icon(Icons.check,color: Colors.white,size: 30),
                             onPressed: () => newTaskFocus.unfocus()),
                           )

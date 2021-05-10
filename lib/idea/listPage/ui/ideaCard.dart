@@ -88,7 +88,7 @@ class IdeaCard extends StatelessWidget {
                             )),
                         ),
                       ),
-                      SizedBox(width: 18),
+                      SizedBox(width: 8),
                       if(uncompletedTasksSize != 0)
                       Flexible(child: Text('Uncompleted Tasks: $uncompletedTasksSize',
                       style: ReemKufi.copyWith(fontSize: 22,fontWeight: FontWeight.w100),

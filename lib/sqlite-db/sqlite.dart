@@ -58,7 +58,7 @@ class Sqlite{
 
   static Future<int> getUniqueId() async {
             int uniqueId = Random().nextInt(maxRandomNumber);
-            await _database.execute(createIdeasTableSqlCommand);
+            await _database.transaction((txn) => txn.execute(createIdeasTableSqlCommand));
             var idsFromDb = await _database.query(ideasTableName,columns: [Column_uniqueId]);
             List<int> unavailableIds = idsFromDb.map((map) => int.parse('${map[Column_uniqueId]}')).toList();
             //if it does not contain the id do not loop

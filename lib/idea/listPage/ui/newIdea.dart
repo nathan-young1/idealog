@@ -1,9 +1,6 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/customAppBar/appBar.dart';
-import 'package:idealog/customDecoration/boxDecoration.dart';
-import 'package:idealog/customDecoration/colors.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
@@ -96,7 +93,7 @@ class _NewIdeaState extends State<NewIdea> {
                           labelText: 'Task',
                           contentPadding: EdgeInsets.only(right: 0,left: 15,top: 5),
                           suffixIcon: Container(
-                            color: Colors.teal,
+                            color: LightPink,
                             child: IconButton(icon: Icon(Icons.check,color: Colors.white,size: 30),
                             onPressed: () => taskFieldFocus.unfocus()),
                           )
@@ -132,7 +129,7 @@ class _NewIdeaState extends State<NewIdea> {
         for(String task in tasks) 
         Row(
           children: [
-          Icon(Icons.circle,color: Colors.grey),
+          Icon(Icons.circle,color: Colors.grey,size: 20),
           SizedBox(width: 25),
           Expanded(child: Container(child: Text(task))),
           IconButton(

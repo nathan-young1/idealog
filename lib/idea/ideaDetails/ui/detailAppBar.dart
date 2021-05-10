@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/colors.dart';
+import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 import 'package:idealog/idea/listPage/ui/addToExisting.dart';
 
@@ -22,7 +23,7 @@ class DetailAppBar extends StatelessWidget {
           Expanded(child: Padding(
             padding: EdgeInsets.only(left: 15,right: 15),
             child: Center(
-              child: Text(idea.ideaTitle,style: TextStyle(fontSize: 40,fontWeight: FontWeight.w600),overflow: TextOverflow.ellipsis)),
+              child: Text(idea.ideaTitle,style: Overpass.copyWith(fontSize: 35,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis)),
           )),
         ],
       ),

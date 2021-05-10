@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class _UncompletedTasks extends StatelessWidget {
     
     return Column(
             children: [
-            Center(child: Text('Uncompleted Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500)),),
+            Center(child: Text('Uncompleted Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300)),),
             ...Provider.of<Idea>(context).uncompletedTasks.map((uncompletedTask) => 
             ListTile(
             leading: Checkbox(value: false, onChanged: (bool? value) async =>
@@ -57,7 +58,7 @@ class _CompletedTasks extends StatelessWidget {
 
     return Column(
             children: [
-            Center(child: Text('Completed Tasks',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500))),
+            Center(child: Text('Completed Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300))),
             ...Provider.of<Idea>(context).completedTasks.map((completedTask) => 
             ListTile(
             leading: Checkbox(
@@ -65,7 +66,7 @@ class _CompletedTasks extends StatelessWidget {
              onChanged: (bool? value) async =>
               await IdeaManager.uncheckCompletedTask(idea, completedTask)),
             title: Text(completedTask.toAString),
-            trailing: IconButton(icon: Icon(Icons.close),onPressed: () async =>
+            trailing: IconButton(icon: Icon(Icons.more_vert),onPressed: () async =>
              await IdeaManager.deleteCompletedTask(idea, completedTask)))).toList()],
         );
   }

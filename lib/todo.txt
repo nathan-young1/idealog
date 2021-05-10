@@ -21,10 +21,5 @@
           ListTile(title: Text('Stop Data Syncronization'),onTap: () async => await NativeCodeCaller.stopAutoSync()),
           /////--End here --
 
-          ..finance icon
-          ..keyboard caps icon
-          help for question
-          account start
-          star settings
-          star shooting
+          ..add Completed tasks slider for deleting like in the figma mockup
 
