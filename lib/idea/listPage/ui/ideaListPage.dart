@@ -13,7 +13,7 @@ class IdeaListPage extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        Container(
+        Padding(
           padding: EdgeInsets.only(top: 25,left: 20,right: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

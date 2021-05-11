@@ -9,7 +9,7 @@ import 'package:idealog/sqlite-db/sqlite.dart';
 class IdeaManager{
 
     static addToDbAndSetAlarmIdea({required String ideaTitle,String? moreDetails,required Set<String> tasks,required BuildContext context}) async {
-      showDialog(context: context, builder: (context) => progressAlertDialot);
+      showDialog(context: context, builder: (context) => progressAlertDialog);
       
       List<List<int>> tasksInCharCodes = tasks.map((task) => task.codeUnits).toList();
       int uniqueId = await Sqlite.getUniqueId();

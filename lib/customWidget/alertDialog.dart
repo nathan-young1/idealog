@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-AlertDialog progressAlertDialot = AlertDialog(
+AlertDialog progressAlertDialog = AlertDialog(
   title: Row(children: [
     CircularProgressIndicator(),
     SizedBox(width: 25),

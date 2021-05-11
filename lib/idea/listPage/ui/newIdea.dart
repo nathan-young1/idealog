@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/customAppBar/appBar.dart';
@@ -18,12 +19,20 @@ class _NewIdeaState extends State<NewIdea> {
   TextEditingController ideaTitle = TextEditingController();
   TextEditingController moreDetails = TextEditingController();
   FocusNode taskFieldFocus = FocusNode();
+
+  void addNewTask(){
+    if(taskField.text != ''){
+      setState(() => tasks.add(taskField.text));
+      taskField.text = '';
+      }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: EdgeInsets.only(bottom: 12),
+          padding: EdgeInsets.only(bottom: 10),
           child: SingleChildScrollView(
             child: Form(
               child: Padding(
@@ -33,73 +42,49 @@ class _NewIdeaState extends State<NewIdea> {
                     CustomAppBar(title: 'ADD IDEA'),
                     TextFormField(
                       controller: ideaTitle,
+                      style: TextStyle(fontSize: 18),
                       maxLength: 50,
                       decoration: underlineAndFilled.copyWith(
                         labelText: 'Idea title',
                         prefixIcon: Icon(Icons.text_fields)
                       )
                     ),
-                    SizedBox(height: 15),
+
+                    SizedBox(height: 20),
                     TextFormField(
                       controller: moreDetails,
                       maxLines: null,
                       maxLength: 300,
                       minLines: 5,
+                      style: TextStyle(fontSize: 18),
                       keyboardType: TextInputType.multiline,
-                      decoration: underlineAndFilled.copyWith(
-                        labelText: 'More details on idea...'
-                      ),
+                      decoration: underlineAndFilled.copyWith(labelText: 'More details on idea...'),
                     ),
+
                     SizedBox(height: 25),
                     Text('Tasks required for idea',style: TextStyle(fontSize: 25)),
                     SizedBox(height: 15),
-                    Row(children: [
-                      SizedBox(width: 20),
-                      Icon(Icons.info,color: Colors.grey,size: 28),
-                      Text(' Press ',style: TextStyle(fontSize: 20)),
-                      Container(
-                        width: 85,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: LightGray,
-                        ),
-                        child: Center(child: Text('Enter',style: TextStyle(fontSize: 20))),
-                      ),
-                      Text(' to add task.',style: TextStyle(fontSize: 20))
-                    ],),
+                    Info(),
+
                     SizedBox(height: 15),
-                    _AllTasks(),
+                    RequiredTasks(),
+
                     SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(offset: Offset(0, 0),blurRadius: 15,color: Colors.black45)
-                        ]
-                      ),
-                      child: TextFormField(
-                        controller: taskField,
-                        focusNode: taskFieldFocus,
-                        onFieldSubmitted: (newTask){
-                          taskFieldFocus.requestFocus();
-                          if(newTask != ''){
-                          setState(() => tasks.add(newTask));
-                          taskField.text = '';
-                          }
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'Task',
-                          contentPadding: EdgeInsets.only(right: 0,left: 15,top: 5),
-                          suffixIcon: Container(
-                            color: LightPink,
-                            child: IconButton(icon: Icon(Icons.check,color: Colors.white,size: 30),
-                            onPressed: () => taskFieldFocus.unfocus()),
-                          )
-                        ),
+                    TextFormField(
+                      controller: taskField,
+                      focusNode: taskFieldFocus,
+                      onFieldSubmitted: (_){
+                        taskFieldFocus.requestFocus();
+                        addNewTask();
+                      },
+                      style: TextStyle(fontSize: 18),
+                      decoration: underlineAndFilled.copyWith(
+                        labelText: 'Task',
+                        suffixIcon: IconButton(icon: Icon(Icons.check,color: LightPink.withOpacity(0.7),size: 30),
+                        onPressed: () => addNewTask())
                       ),
                     ),
+
                     SizedBox(height: 50)
                   ],
                 ),
@@ -107,11 +92,12 @@ class _NewIdeaState extends State<NewIdea> {
           ),
         ),
           bottomNavigationBar: GestureDetector(
-            onTap: () async => await IdeaManager.addToDbAndSetAlarmIdea(
+            onTap: () async => (ideaTitle.text.isNotEmpty)?IdeaManager.addToDbAndSetAlarmIdea(
                   context: context,
                   ideaTitle: ideaTitle.text,
                   moreDetails: moreDetails.text,
-                  tasks: tasks),
+                  tasks: tasks)
+                  :TitleIsRequired(pageContext: context),
             child: Container(
               height: 65,
               color: DarkBlue,
@@ -123,7 +109,8 @@ class _NewIdeaState extends State<NewIdea> {
     );
   }
 
-  Widget _AllTasks() {
+  // ignore: non_constant_identifier_names
+  Widget RequiredTasks() {
     return Column(
       children: [
         for(String task in tasks) 
@@ -140,4 +127,39 @@ class _NewIdeaState extends State<NewIdea> {
           ])]
     );
 }
+}
+
+Widget TitleIsRequired ({required BuildContext pageContext}){
+
+    return Flushbar(icon: Icon(Icons.text_fields,color: LightPink),duration: Duration(seconds: 1),
+    backgroundColor: Colors.white,
+    messageText: Text('Idea Title is required',
+    style: Overpass.copyWith(color: Colors.black87,fontSize: 18),),
+    )..show(pageContext);
+
+}
+
+class Info extends StatelessWidget {
+  const Info({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+      Icon(Icons.info,color: LightPink.withOpacity(0.7),size: 28),
+      Text(' Press ',style: TextStyle(fontSize: 20)),
+      Container(
+        padding: EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: LightGray,
+        ),
+        child: Icon(Icons.check),
+      ),
+      Text(' to add task.',style: TextStyle(fontSize: 20))
+    ],);
+  }
 }

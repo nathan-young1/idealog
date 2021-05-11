@@ -37,6 +37,7 @@ class Idealog extends StatelessWidget {
                 thumbColor: MaterialStateProperty.all(AddToExistingLight),
                 mainAxisMargin: 10,
               ),
+              primaryColor: DarkBlue
               ),
               routes: {
                 '/': (context) => SplashScreen(),
