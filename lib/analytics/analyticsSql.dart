@@ -8,6 +8,7 @@ class AnalyticsSql {
 
   static void intialize() async {
     _analyticsDb = await openDatabase(Analytics_Db_Name,version: 1,onCreate: (_db,_version)=>print('Started Analytics'));
+    clearPreviousMonthsRecord();
   }
 
   static writeOrUpdate(List<int> task)async{
@@ -33,13 +34,13 @@ class AnalyticsSql {
     });
   }
 
-  static clearLastMonthsRecord() async {
+  static clearPreviousMonthsRecord() async {
     DateTime currentDate = DateTime.now();
     // create a new dateTime object with one subtracted from month then get the int representing last month
-    int lastMonth = new DateTime(currentDate.year,currentDate.month-1).month;
+    int currentMonth = currentDate.month;
     await _analyticsDb.transaction((txn) async {
     await txn.execute(createAnalyticsTable);
-    await txn.delete(Analytics_Table_Name,where: '$Column_Month = $lastMonth');
+    await txn.delete(Analytics_Table_Name,where: '$Column_Month != $currentMonth');
     });
   }
 

@@ -11,11 +11,11 @@ class CustomAppBar extends StatelessWidget {
           child: Row(
             children: [
             IconButton(icon: Icon(Icons.arrow_back,color: Colors.black87),
-            iconSize: 35,
+            iconSize: 32,
             onPressed: ()=>Navigator.pop(context)),
             SizedBox(width: 8),
             Text(title!,
-            style: Poppins.copyWith(fontSize: 30)),
+            style: Poppins.copyWith(fontSize: 28)),
           ],),
         );
   }

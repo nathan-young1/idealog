@@ -7,3 +7,5 @@ final TextStyle Righteous = GoogleFonts.righteous();
 final TextStyle RhodiumLibre = GoogleFonts.rhodiumLibre();
 final TextStyle ReemKufi = GoogleFonts.reemKufi();
 final TextStyle Peddana = GoogleFonts.peddana();
+final TextStyle Oswald = GoogleFonts.oswald();
+final TextStyle Lato = GoogleFonts.lato();

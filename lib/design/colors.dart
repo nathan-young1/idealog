@@ -10,3 +10,7 @@ final Color IdeaCardLight = Color.fromRGBO(239, 238, 238, 1);
 final Color AddToExistingLight = Color.fromRGBO(102, 133, 157, 1);
 
 final Color Black242424 = Color.fromRGBO(36, 36, 36, 1);
+
+// Task Completion rate colors
+final Color PieChartCompletedColor = Color.fromRGBO(102, 133, 157, 1);
+final Color PieChartUncompletedColor = Color.fromRGBO(156, 92, 92, 1);

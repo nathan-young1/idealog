@@ -39,7 +39,7 @@ class _MenuPageViewState extends State<MenuPageView> {
       providers: [
       Provider<ProductivityManager>.value(value: ProductivityManager(context: context)),
       FutureProvider<List<AnalyticsData>>.value(
-      initialData: [],
+      initialData: <AnalyticsData>[],
       value: AnalyticsSql.readAnalytics(),
       catchError: (_,__)=>[])
       ],

@@ -35,7 +35,7 @@ dependencies:
   another_flushbar: ^1.10.17
   provider: ^5.0.0
   sleek_circular_slider: ^2.0.0
-  syncfusion_flutter_charts: ^19.1.54+1
+  syncfusion_flutter_charts: ^19.1.59
   animations: ^2.0.0
   font_awesome_flutter: ^9.0.0
   google_fonts: ^2.0.0
