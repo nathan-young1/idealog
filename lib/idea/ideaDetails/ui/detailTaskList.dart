@@ -51,32 +51,9 @@ class _UncompletedTasks extends StatelessWidget {
   }
 }
 
-class _CompletedTasks extends StatefulWidget {
+class _CompletedTasks extends StatelessWidget {
   final Idea idea;
   _CompletedTasks({required this.idea});
-
-  @override
-  __CompletedTasksState createState() => __CompletedTasksState();
-}
-
-class __CompletedTasksState extends State<_CompletedTasks> {
-  late final SlidableController slidableController;
-
-  void slidableChanged(bool value) => setState(()=>slidableIsOpen = value);
-
-
-  bool slidableIsOpen = false;
-
-  @protected
-    void initState() {
-      
-    slidableController = SlidableController(
-    onSlideIsOpenChanged: slidableChanged,
-    onSlideAnimationChanged: (_){}
-    );
-    
-      super.initState();
-    }
 
   @override
   Widget build(BuildContext context) {
@@ -84,30 +61,40 @@ class __CompletedTasksState extends State<_CompletedTasks> {
     return Column(
             children: [
             Center(child: Text('Completed Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300))),
-            ...Provider.of<Idea>(context).completedTasks.map((completedTask) => 
-            GestureDetector(
-              child: Slidable(
-                actionPane: SlidableDrawerActionPane(),
-                actionExtentRatio: 0.2,
-                 controller: slidableController,
-                child: ListTile(
-                leading: Checkbox(
-                value: true,
-                 onChanged: (bool? value) async =>
-                  await IdeaManager.uncheckCompletedTask(widget.idea, completedTask)),
-                title: Text(completedTask.toAString),
-                trailing: SlidableControllerButton(slidableIsOpen)),
-                 secondaryActions: [
-                  IconSlideAction(
-                    icon: Icons.delete,
-                    color: LightPink,
-                    caption: 'Delete',
-                    onTap: () async =>
-                    await IdeaManager.deleteCompletedTask(widget.idea, completedTask)
-                  )
-                 ],
-              ),
-            )).toList()],
+            ...Provider.of<Idea>(context).completedTasks.map((completedTask) {
+
+            
+            ValueNotifier<bool> slidableIsOpen = ValueNotifier(false);
+            return Slidable(
+              key: Key(completedTask.toAString),
+              actionPane: SlidableDrawerActionPane(key: Key(completedTask.toAString)),
+              actionExtentRatio: 0.2,
+               controller: SlidableController(
+                onSlideIsOpenChanged: (bool value) =>slidableIsOpen.value = value,
+                onSlideAnimationChanged: (_){}
+                ),
+              child: ListTile(
+              leading: Checkbox(
+              value: true,
+               onChanged: (bool? value) async =>
+                await IdeaManager.uncheckCompletedTask(idea, completedTask)),
+              title: Text(completedTask.toAString),
+              trailing: ValueListenableBuilder(
+                valueListenable: slidableIsOpen,
+                builder: (context, bool _isOpen,child) =>
+                SlidableControllerButton(_isOpen,slidableIsOpen.value))),
+               secondaryActions: [
+                IconSlideAction(
+                  icon: Icons.delete,
+                  color: LightPink,
+                  caption: 'Delete',
+                  onTap: () async =>
+                  await IdeaManager.deleteCompletedTask(idea, completedTask)
+                )
+               ],
+            );
+            }
+            ).toList()],
         );
   }
 }
@@ -116,17 +103,33 @@ class SlidableControllerButton extends StatelessWidget {
 
   //To know if slidable is open
   final bool slidableIsOpen;
-  SlidableControllerButton(this.slidableIsOpen);
 
-  //I am checking for rendering mode so that the icon does not change for all the list tiles only the open one
-  bool thisTileIsOpen(context)=> (slidableIsOpen && Slidable.of(context).renderingMode == SlidableRenderingMode.slide);
+  // To hold the value of the value notifer
+  bool valueListenable;
+  SlidableControllerButton(this.slidableIsOpen,this.valueListenable);
 
+  // When an event occurs on the completed task list (like the add of a new item) the list is rebuit making the value
+  // notifer slidableIsOpen to reintialize to false, this causes the icon to change to default (more-vert) while the 
+  // slider is still open , so in other to close the slider whilst changing the icon in the occurence of any event ,
+  // i am checking to see if the valueListenable (SlidableIsOpen.value) is false (the intialization default) while the
+  // slidable is open. Note: i am using (!slidableIsOpen) to check if the slidable is open because on any event
+  // reintialization the value given to the slidableIsOpen will be false (just like the valuelistenable) even though
+  // it the slidable is actually open this is because the isOpenChanged of the slider is only called on button Tap
+  // && slider not on creation. so if there is an event intialization , (!slidableIsOpen) will give us true to show that
+  // the slidable is actually open just that the reintialization altered the value, WHILE valueListenable will be false
+  // so we will call the close method, so that both button and slider will match&close on event reintialization.
+  
+  void closeSlidableOnOutsideTap(context){
+    if (!slidableIsOpen && valueListenable == false)
+    Slidable.of(context).close();
+  }
+  
   @override
   Widget build(BuildContext context) {
-
+    closeSlidableOnOutsideTap(context);
     return AnimatedContainer(
       duration: Duration(milliseconds: 700),
-      child: thisTileIsOpen(context)
+      child: slidableIsOpen
       ? IconButton(icon:Icon(Icons.arrow_forward_ios,size: 24),
       onPressed: () async =>Slidable.of(context).close()
       )
