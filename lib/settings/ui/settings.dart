@@ -13,18 +13,21 @@ class Settings extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          SizedBox(height: 35),
+          SizedBox(height: 55),
           DottedBorder(
             color: LightGray,
             strokeWidth: 3,
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(bottom: 5),
             dashPattern: [40, 20], 
             borderType: BorderType.Oval,
             strokeCap: StrokeCap.square,
             child: Opacity(opacity: 0.65,
-            child: Image.asset(pathToAppLogo,height: 210,width: 200)),
+            child: Image.asset(pathToAppLogo,height: 170,width: 170,
+            excludeFromSemantics: true,
+            fit: BoxFit.contain)),
           ),
-        
+
+        SizedBox(height: 20),
           Text('Idealog v1.2',
             style: Overpass.copyWith(fontSize: 28,color: Color.fromRGBO(112, 112, 112, 1))
             ),
