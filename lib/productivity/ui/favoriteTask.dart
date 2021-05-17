@@ -26,7 +26,8 @@ class FavoriteTasks extends StatelessWidget {
         child: Column(
           children: [
             Text('Favorite Tasks',
-            style: RhodiumLibre.copyWith(fontSize: 27)),
+            style: RhodiumLibre.copyWith(fontSize: 25)),
+            if(favorites.length > 0)
             for(int index = 0; index < favorites.length; index++)
             GestureDetector(
               onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>IdeaDetail(idea: favorites[index]))),
@@ -39,6 +40,9 @@ class FavoriteTasks extends StatelessWidget {
               ),
               trailing: Icon(Icons.arrow_forward_ios)),
             )
+            else
+            Text('No tasks available',
+            style: Lato.copyWith(fontSize: 19))
             ],
         ),
       ),

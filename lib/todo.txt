@@ -2,14 +2,9 @@
 
         For alarm
             ..add text to speech for adding tasking
-            ..add at least one task before submission
-            ..handle description focus
             ..delete idea from homepage is not removing analytics data
             ..make list idea stream distinct
-            ..add percent to task completion rate progress bar
             ..use the transcation object to in dealing with operation on analytics data
-            ..sometimes deleting ideas do not remove it from analytics data
-            ..only show analytics after three active days in that month
             ..add logout to cancal data syncronization
 
             ..remeber to add this code 
@@ -20,9 +15,6 @@
           },),
           ListTile(title: Text('Stop Data Syncronization'),onTap: () async => await NativeCodeCaller.stopAutoSync()),
           /////--End here --
-
-          ..add Completed tasks slider for deleting like in the figma mockup
-          ..for active days not to show null error make sure there are five days of tasks at least, because it is because of cardinal tension not being able to curve because there is no enough days for data
 
 ///Active days test data
 [AnalyticsData(date: DateTime(2019,4,4), numberOfTasksCompleted: 2),AnalyticsData(date: DateTime(2019,4,5), numberOfTasksCompleted: 3),
@@ -43,4 +35,4 @@
                    AnalyticsData(date: DateTime(2019,4,1), numberOfTasksCompleted: 3),AnalyticsData(date: DateTime(2019,4,25), numberOfTasksCompleted: 3)
                    ]
 
-                   ..make sliable close on outside tap
+                   .. in favorite tasks add no tasks yet when there are no task
