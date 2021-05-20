@@ -31,16 +31,15 @@ class _LoginState extends State<Login> {
                 children: [
                   Hero(tag: 'Logo', child: Image.asset(pathToAppLogo,height: 150.h,width: 150.w,)),
                   SizedBox(height: 20.h),
-                  Container(
-                    height: 50.h,
-                    child: ElevatedButton.icon(
-                    onPressed: () async {
-                      //await signInWithGoogle();
-                      Navigator.pushNamed(context, 'AddNewIdea');
-                    },
-                    icon: Image.asset(pathToGoogleLogo,height: 40.h,width: 40.w,),
-                    label: Text('Proceed with Google')),
-                  ),
+                  // Container(
+                  //   height: 50.h,
+                  //   child: ElevatedButton.icon(
+                  //   onPressed: () async {
+                  //     //await signInWithGoogle();
+                  //     Navigator.pushNamed(context, 'AddNewIdea');
+                  //   },
+                  //   label: Text('Proceed with Google')),
+                  // ),
                   ElevatedButton(onPressed: ()=>signOutFromGoogle(), child: Text('Sign out')),
                 ],
       ),

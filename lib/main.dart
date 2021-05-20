@@ -4,12 +4,14 @@ import 'package:flutter_screenutil/screen_util.dart';
 import 'package:idealog/analytics/analyticsSql.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
+import 'package:idealog/settings/ui/manageAccount.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
 import 'package:provider/provider.dart';
 import 'auth/ui/authUi.dart';
 import 'core-models/ideasModel.dart';
 import 'design/colors.dart';
 import 'idea/listPage/ui/newIdea.dart';
+import 'settings/ui/syncronization.dart';
 
 void main() => runApp(Idealog());
 
@@ -44,6 +46,8 @@ class Idealog extends StatelessWidget {
                 'AuthPage': (context) => Login(),
                 'MenuPageView': (context) => MenuPageView(),
                 'AddNewIdea': (context) => NewIdea(),
+                'ManageAccount': (context) => ManageAccount(),
+                'Syncronization': (context) => Syncronization()
               },
             ),
           ),
