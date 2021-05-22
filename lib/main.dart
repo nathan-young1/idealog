@@ -5,6 +5,7 @@ import 'package:idealog/analytics/analyticsSql.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/settings/ui/manageAccount.dart';
+import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:idealog/sqlite-db/sqlite.dart';
 import 'package:provider/provider.dart';
 import 'auth/ui/authUi.dart';
@@ -47,7 +48,8 @@ class Idealog extends StatelessWidget {
                 'MenuPageView': (context) => MenuPageView(),
                 'AddNewIdea': (context) => NewIdea(),
                 'ManageAccount': (context) => ManageAccount(),
-                'Syncronization': (context) => Syncronization()
+                'Syncronization': (context) => Syncronization(),
+                'UpgradeToPremium': (context) => UpgradeToPremium()
               },
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/strings.dart';
@@ -63,6 +64,39 @@ class Syncronization extends StatelessWidget {
               Text('Your data will be synced every 24 hours.',
               style: Overpass.copyWith(fontSize: 15,fontWeight: FontWeight.w300))
             ],
+          ),
+          SizedBox(height: 40),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  Text('Sync Now',style: Overpass.copyWith(fontSize: 20)),
+                  Container(
+                    width: 60,
+                    child: Icon(FeatherIcons.uploadCloud,size: 30,color: Colors.teal))
+                ]),
+
+                SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  Text('Auto Sync',style: Overpass.copyWith(fontSize: 20)),
+                  Container(
+                    width: 60,
+                    child: Switch(value: false, onChanged: (_){}))
+                ]),
+
+                SizedBox(height: 10),
+                ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
+                title: Text('Google Account',style: Overpass.copyWith(fontSize: 20)),
+                subtitle: Text('okoriejonathan123@gmail.com',style: Overpass.copyWith(fontSize: 15)),
+                onTap: (){},)
+              ],
+            ),
           )
         ],),
       ),

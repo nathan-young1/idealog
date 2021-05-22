@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -53,7 +54,6 @@ public class MainActivity extends FlutterActivity {
     public void startAutoSync(){
         Constraints workRequestConstraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
-                .setRequiresBatteryNotLow(true)
                 .build();
 
 //        do the periodic work every 2 hours if there is internet connection and battery is not low
@@ -77,7 +77,24 @@ public class MainActivity extends FlutterActivity {
     }
 
     public void cancelAutoSync(){
-//        cancel the autoSync work request
+//        cancel the autoSync work request by the tag
         WorkManager.getInstance(this).cancelAllWorkByTag(AutoSyncWorkRequestTag);
+    }
+
+    public void syncNow(){
+        Constraints workRequestConstraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+//        Later i will check whether i have to set peroid start time
+
+        OneTimeWorkRequest syncNowWorkRequest = new OneTimeWorkRequest.Builder(AutoSync.class)
+                .setConstraints(workRequestConstraints)
+                .setBackoffCriteria(BackoffPolicy.LINEAR,30,TimeUnit.SECONDS)
+                .build();
+
+        WorkManager
+                .getInstance(this)
+                .enqueue(syncNowWorkRequest);
     }
 }

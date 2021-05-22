@@ -46,6 +46,7 @@ class _MenuPageViewState extends State<MenuPageView> {
       child: SafeArea(
           child: Scaffold(
               body: PageView(
+                physics: NeverScrollableScrollPhysics(),
                 controller: _controller,
                 onPageChanged: (int pageIndex) => index.value = pageIndex,
                 children: [
@@ -61,7 +62,7 @@ class _MenuPageViewState extends State<MenuPageView> {
                     visible: (_pageIndex == 0),
                     child: FloatingActionButton(
                       elevation: 10,
-                      backgroundColor: LightPink,
+                      backgroundColor: LightPink.withOpacity(1),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       onPressed: ()=> Navigator.pushNamed(context, addNewIdeaPage),
                       child: Icon(Icons.add,size: 40,color: Colors.white)

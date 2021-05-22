@@ -39,30 +39,18 @@ class Settings extends StatelessWidget {
               children: [
                 ListTile(leading: Icon(FeatherIcons.user,size: 30,color: LightPink),
                 title: Text('Manage Account',style: Poppins.copyWith(fontSize: 20,color: Colors.black)),
-                trailing: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(Icons.arrow_forward_ios,size: 22,color: Colors.black),
-                ),
                 onTap: ()=>Navigator.pushNamed(context, 'ManageAccount'),),
 
                 ListTile(leading: Icon(FeatherIcons.uploadCloud,size: 30,color: LightPink),
                 title: Text('Data Syncronization',style: Poppins.copyWith(fontSize: 20,color: Colors.black)),
-                trailing: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(Icons.arrow_forward_ios,size: 22,color: Colors.black)),
                 onTap: ()=> Navigator.pushNamed(context, 'Syncronization')),
 
                 ListTile(leading: Icon(PhosphorIcons.caret_double_up,size: 30,color: LightPink),
                 title: Text('Upgrade to premium',style: Poppins.copyWith(fontSize: 20,color: Colors.black)),
-                trailing: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(Icons.arrow_forward_ios,size: 22,color: Colors.black))),
+                onTap: ()=> Navigator.pushNamed(context,'UpgradeToPremium')),
 
                 ListTile(leading: Icon(CommunityMaterialIcons.help,size: 30,color: LightPink), 
-                title: Text('About Idealog',style: Poppins.copyWith(fontSize: 20,color: Colors.black)),
-                trailing: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(Icons.arrow_forward_ios,size: 22,color: Colors.black))),
+                title: Text('About Idealog',style: Poppins.copyWith(fontSize: 20,color: Colors.black))),
               ],
             ),
           )

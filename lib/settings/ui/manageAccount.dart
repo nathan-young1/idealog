@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 
 
@@ -39,14 +37,6 @@ class ManageAccount extends StatelessWidget {
               trailing: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Switch(value: true, onChanged: (_){}))
-            ),
-
-            SizedBox(height: 20),
-            ListTile(
-              title: Text('Log out',style: Poppins.copyWith(fontSize: 20)),
-              trailing: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(Icons.login,color: LightPink,size: 35))
             ),
           ],
         ),
