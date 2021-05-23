@@ -6,7 +6,7 @@ import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/settings/ui/manageAccount.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
-import 'package:idealog/sqlite-db/sqlite.dart';
+import 'package:idealog/sqlite-db/idealog_Db_Moor.dart';
 import 'package:provider/provider.dart';
 import 'auth/ui/authUi.dart';
 import 'core-models/ideasModel.dart';
@@ -20,7 +20,6 @@ class Idealog extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    Sqlite.initialize();
     AnalyticsSql.intialize();
     return LayoutBuilder(
        builder: (_, constraints) {
@@ -28,7 +27,7 @@ class Idealog extends StatelessWidget {
         return ScreenUtilInit(
           builder: () => MultiProvider(
             providers: [
-              StreamProvider<List<Idea>>.value(value:Sqlite.dbStream,initialData: [])
+              StreamProvider<List<IdeaModel>>.value(value: IdealogDb.instance.watchIdeasInDb,initialData: [],catchError: (_,__)=>[])
             ],
             child: MaterialApp(
               title: 'Idealog',

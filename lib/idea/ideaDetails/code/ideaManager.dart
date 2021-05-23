@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/analytics/analyticsSql.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customWidget/alertDialog.dart';
 import 'package:idealog/global/routes.dart';
-import 'package:idealog/sqlite-db/sqlite.dart';
+import 'package:idealog/sqlite-db/idealog_Db_Moor.dart';
 
 class IdeaManager{
 
@@ -12,44 +11,39 @@ class IdeaManager{
       showDialog(context: context, builder: (context) => progressAlertDialog);
       
       List<List<int>> tasksInCharCodes = tasks.map((task) => task.codeUnits).toList();
-      int uniqueId = await Sqlite.getUniqueId();
-      Idea newIdea = Idea(ideaTitle: ideaTitle,moreDetails: moreDetails,tasksToCreate: tasksInCharCodes,uniqueId: uniqueId);
-      try {
-        await Sqlite.writeToDb(idea: newIdea);
-      } on Exception catch (e) {
-        print(e);
-      }
+      IdeaModel newIdea = IdeaModel(ideaTitle: ideaTitle,moreDetails: moreDetails,tasksToCreate: tasksInCharCodes);
+      await IdealogDb.instance.insertToDb(newEntry: newIdea);
       Navigator.popAndPushNamed(context, menuPageView);
     }
 
-    static completeTask(Idea idea,List<int> uncompletedTask) async {
+    static completeTask(IdeaModel idea,List<int> uncompletedTask) async {
 
         idea.completeTask(uncompletedTask);
-        await Sqlite.updateDb(idea.uniqueId, idea: idea);
+        IdealogDb.instance.updateDb(updatedEntry: idea);
         await AnalyticsSql.writeOrUpdate(uncompletedTask);
     }
 
-  static uncheckCompletedTask(Idea idea,List<int> completedTask) async {
+  static uncheckCompletedTask(IdeaModel idea,List<int> completedTask) async {
     
       idea.uncheckCompletedTask(completedTask);
-      await Sqlite.updateDb(idea.uniqueId, idea: idea);
+      IdealogDb.instance.updateDb(updatedEntry: idea);
       await AnalyticsSql.removeTaskFromAnalytics(completedTask);
   }
 
-  static deleteUncompletedTask(Idea idea,List<int> uncompletedTask) async {
+  static deleteUncompletedTask(IdeaModel idea,List<int> uncompletedTask) async {
     // We are not removing it from analytics data because it is an uncompleted task so it has not been recorded in analytics sql
       idea.deleteTask(uncompletedTask);
-      await Sqlite.updateDb(idea.uniqueId, idea: idea);
+      IdealogDb.instance.updateDb(updatedEntry: idea);
   }
 
-  static deleteCompletedTask(Idea idea,List<int> completedTask) async {
+  static deleteCompletedTask(IdeaModel idea,List<int> completedTask) async {
       idea.deleteTask(completedTask);
-      await Sqlite.updateDb(idea.uniqueId, idea: idea);
+      IdealogDb.instance.updateDb(updatedEntry: idea);
       await AnalyticsSql.removeTaskFromAnalytics(completedTask);
   }
 
-  static deleteIdeaFromDb(Idea idea) async { 
-    await Sqlite.deleteFromDB(uniqueId: '${idea.uniqueId}');
+  static deleteIdeaFromDb(IdeaModel idea) async { 
+    IdealogDb.instance.deleteFromDb(uniqueId: idea.uniqueId!);
     // Delete all the completed tasks of this idea from analytics data
     idea.completedTasks.forEach((completedTask) async => await AnalyticsSql.removeTaskFromAnalytics(completedTask));
     }

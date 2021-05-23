@@ -8,7 +8,7 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'addToExisting.dart';
 
 class IdeaCard extends StatelessWidget {
-  final Idea idea;
+  final IdeaModel idea;
   IdeaCard({required this.idea});
 
   @override

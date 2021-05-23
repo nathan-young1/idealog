@@ -28,6 +28,7 @@ dependencies:
   firebase_auth: ^1.0.0
   cloud_firestore: ^1.0.0
   flutter_screenutil: ^5.0.0-nullsafety.11
+  local_auth: ^1.1.5
   velocity_x: ^2.6.1
   google_nav_bar: ^5.0.3
   google_sign_in: ^5.0.0
@@ -46,6 +47,10 @@ dependencies:
   dotted_border: ^2.0.0
   flutter_phosphor_icons:
   community_material_icon: ^5.9.55
+  moor: ^4.3.0
+  sqlite3_flutter_libs:
+  path_provider:
+  path:
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -56,6 +61,8 @@ dev_dependencies:
   flutter_launcher_icons: "^0.9.0"
   flutter_test:
     sdk: flutter
+  moor_generator: 
+  build_runner: 
 
 flutter_icons:
   android: true

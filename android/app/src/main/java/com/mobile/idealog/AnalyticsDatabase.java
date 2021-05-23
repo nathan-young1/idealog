@@ -68,9 +68,7 @@ public class AnalyticsDatabase extends SQLiteOpenHelper {
         activeDays.forEach((activeDay) -> {
             int numberOfTasksCompleted = (int) recordedDaysInDb.stream().filter(day -> day == activeDay).count();
             System.out.println(activeDay + " "+numberOfTasksCompleted);
-            Calendar time = Calendar.getInstance();
-            time.set(currentYear, currentMonth, activeDay);
-            AnalyticsData newData =  new AnalyticsData(time, numberOfTasksCompleted);
+            AnalyticsData newData =  new AnalyticsData(currentYear,currentMonth,activeDay, numberOfTasksCompleted);
             analyticsResult.add(newData);
         });
 

@@ -16,7 +16,7 @@ class SlidableListView extends StatelessWidget {
   }) : super(key: key);
 
   final ValueNotifier<bool> slidableIconState;
-  final Idea idea;
+  final IdeaModel idea;
   final List<int> completedTask;
 
   @override

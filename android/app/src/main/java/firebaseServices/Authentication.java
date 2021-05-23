@@ -20,8 +20,6 @@ import com.mobile.idealog.R;
 
 public class Authentication {
 
-    static String userUid = "";
-
     public static String googleAuth(Context context){
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(context);
 //        if the user has not previously signed in ,the account will be null. Meaning the user has not paid for the premium app.
@@ -30,28 +28,7 @@ public class Authentication {
 //      Checking if user is signed in already
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-        if(currentUser == null){
-//          The user is not signed in currently
-            AuthCredential googleCredential = GoogleAuthProvider.getCredential(account.getIdToken(),null);
-
-            firebaseAuth.signInWithCredential(googleCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(context, "signInWithCredential:success",Toast.LENGTH_LONG);
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        userUid = user.getUid();
-                    } else {
-                        Toast.makeText(context,"signInWithCredential:failure"+task.getException(), Toast.LENGTH_LONG);
-                    }
-                }
-            });
-
-        }else{
-//          When the user is currently signed in
-            userUid = currentUser.getUid();
-        }
-
-        return userUid;
+//      The user will have been signed in through dart already
+        return currentUser.getUid();
     }
 }

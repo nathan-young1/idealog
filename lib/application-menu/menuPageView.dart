@@ -8,7 +8,6 @@ import 'package:idealog/idea/listPage/ui/ideaListPage.dart';
 import 'package:idealog/productivity/code/productivityManager.dart';
 import 'package:idealog/productivity/ui/productivity.dart';
 import 'package:idealog/settings/ui/settings.dart';
-import 'package:idealog/sqlite-db/sqlite.dart';
 import 'package:provider/provider.dart';
 
 class MenuPageView extends StatefulWidget {
@@ -27,7 +26,7 @@ class _MenuPageViewState extends State<MenuPageView> {
 
   @override
     void dispose() {
-      Sqlite.close();
+      // Sqlite.close();
       _controller.dispose();
       index.dispose();
       super.dispose();

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/idea/ideaDetails/ui/detailTaskList.dart';
-import 'package:idealog/sqlite-db/sqlite.dart';
+import 'package:idealog/sqlite-db/idealog_Db_Moor.dart';
 import 'detailAppBar.dart';
 
 class IdeaDetail extends StatefulWidget {
-  final Idea idea;
+  final IdeaModel idea;
   late final TextEditingController? description;
   IdeaDetail({required this.idea}){
     description = TextEditingController(text: idea.moreDetails);
@@ -54,7 +54,7 @@ class _IdeaDetailState extends State<IdeaDetail> {
                                    descriptionEnabled=false;
                                    widget.idea.changeMoreDetail(widget.description!.text);
                                    });
-                                   await Sqlite.updateDb(widget.idea.uniqueId, idea: widget.idea);},
+                                   IdealogDb.instance.updateDb(updatedEntry: widget.idea);},
                                 decoration: InputDecoration(
                                   disabledBorder: InputBorder.none,
                                   filled: (descriptionEnabled),

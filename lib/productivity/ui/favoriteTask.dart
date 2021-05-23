@@ -14,7 +14,7 @@ class FavoriteTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Idea> favorites = Provider.of<ProductivityManager>(context).getFavoriteTasks();
+    List<IdeaModel> favorites = Provider.of<ProductivityManager>(context).getFavoriteTasks();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(

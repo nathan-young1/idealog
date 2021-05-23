@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
-
 import 'ideaCard.dart';
 
 class IdeaListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Idea> listOfIdeas = Provider.of<List<Idea>>(context);
+    List<IdeaModel> listOfIdeas = Provider.of<List<IdeaModel>>(context);
+    print('refreshed');
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/strings.dart';
+import 'package:idealog/nativeCode/bridge.dart';
 
 class Syncronization extends StatelessWidget {
   @override
@@ -70,14 +72,19 @@ class Syncronization extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                  Text('Sync Now',style: Overpass.copyWith(fontSize: 20)),
-                  Container(
-                    width: 60,
-                    child: Icon(FeatherIcons.uploadCloud,size: 30,color: Colors.teal))
-                ]),
+                GestureDetector(
+                  onTap: () async {
+                    await signInWithGoogle();
+                    await NativeCodeCaller.syncNow();},
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    Text('Sync Now',style: Overpass.copyWith(fontSize: 20)),
+                    Container(
+                      width: 60,
+                      child: Icon(FeatherIcons.uploadCloud,size: 30,color: Colors.teal))
+                  ]),
+                ),
 
                 SizedBox(height: 30),
                 Row(

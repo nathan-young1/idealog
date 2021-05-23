@@ -7,20 +7,20 @@ import 'package:idealog/idea/ideaDetails/ui/slidableListView.dart';
 import 'package:provider/provider.dart';
 
 class DetailTasksList extends StatelessWidget {
-  final Idea idea;
+  final IdeaModel idea;
   const DetailTasksList({required this.idea});
   
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Idea>.value(value: idea,
+    return ChangeNotifierProvider<IdeaModel>.value(value: idea,
       child: Builder(
         builder: (BuildContext context) =>
           Column(
           children: [
-            if(Provider.of<Idea>(context).uncompletedTasks.isNotEmpty)
+            if(Provider.of<IdeaModel>(context).uncompletedTasks.isNotEmpty)
             _UncompletedTasks(idea: idea),
             SizedBox(height: 30),
-            if(Provider.of<Idea>(context).completedTasks.isNotEmpty)
+            if(Provider.of<IdeaModel>(context).completedTasks.isNotEmpty)
             _CompletedTasks(idea: idea)
           ],
         ),
@@ -30,7 +30,7 @@ class DetailTasksList extends StatelessWidget {
 }
 
 class _UncompletedTasks extends StatelessWidget {
-  final Idea idea;
+  final IdeaModel idea;
   _UncompletedTasks({required this.idea});
 
   @override
@@ -39,7 +39,7 @@ class _UncompletedTasks extends StatelessWidget {
     return Column(
             children: [
             Center(child: Text('Uncompleted Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300)),),
-            ...Provider.of<Idea>(context).uncompletedTasks.map((uncompletedTask) => 
+            ...Provider.of<IdeaModel>(context).uncompletedTasks.map((uncompletedTask) => 
             ListTile(
             leading: Checkbox(value: false, onChanged: (bool? value) async =>
              await IdeaManager.completeTask(idea, uncompletedTask)),
@@ -51,12 +51,12 @@ class _UncompletedTasks extends StatelessWidget {
 }
 
 class _CompletedTasks extends StatelessWidget {
-  final Idea idea;
+  final IdeaModel idea;
   _CompletedTasks({required this.idea});
 
   @override
   Widget build(BuildContext context) {
-    List<List<int>> completedTasks = Provider.of<Idea>(context).completedTasks;
+    List<List<int>> completedTasks = Provider.of<IdeaModel>(context).completedTasks;
     return Column(
             children: [
             Center(child: Text('Completed Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300))),

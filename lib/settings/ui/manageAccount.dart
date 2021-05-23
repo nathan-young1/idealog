@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:local_auth/auth_strings.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ManageAccount extends StatelessWidget {
+  bool value = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,7 +41,38 @@ class ManageAccount extends StatelessWidget {
               title: Text('Fingerprint Lock',style: Poppins.copyWith(fontSize: 20)),
               trailing: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Switch(value: true, onChanged: (_){}))
+                  child: Switch(value: value, onChanged: (_) async {
+                    
+                    LocalAuthentication androidAuth = new LocalAuthentication();
+                    bool phoneCanCheckBiometric = await androidAuth.canCheckBiometrics;
+                    SharedPreferences pref = await SharedPreferences.getInstance();
+                    if(_ && phoneCanCheckBiometric){
+                      try{
+                      bool userIsAuthenticated = await androidAuth.authenticate(localizedReason: 'Authenicate yourself to proceed',
+                      stickyAuth: true,
+                      biometricOnly: true,
+                      androidAuthStrings: AndroidAuthMessages(
+                      signInTitle: 'Idealog Authentication',
+                      biometricHint: ''
+                    )
+                      );
+                      if(userIsAuthenticated){
+                      pref.setBool('BiometricIsEnabled', true);
+                      value = true;
+                      }
+                      else{
+                      _=false;
+                      }
+                      }on PlatformException catch (e){
+                        // alert error occured
+                        _=false;
+                      }
+                    }else{
+                      _=false;
+                      pref.setBool('BiometricIsEnabled', false);
+                    }
+
+                  }))
             ),
           ],
         ),

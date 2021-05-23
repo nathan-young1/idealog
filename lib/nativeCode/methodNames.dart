@@ -1,4 +1,3 @@
-const setAlarmMethod = "setAlarm";
-const cancelAlarmMethod = "cancelAlarm";
-const startAutoSyncMethod = "startAutoSync";
-const cancelAutoSyncMethod = "cancelAutoSync";
+const String startAutoSyncMethod = "startAutoSync";
+const String cancelAutoSyncMethod = "cancelAutoSync";
+const String syncNowMethod = "syncNow";

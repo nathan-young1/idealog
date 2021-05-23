@@ -6,11 +6,11 @@ import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
-import 'package:idealog/sqlite-db/sqlite.dart';
+import 'package:idealog/sqlite-db/idealog_Db_Moor.dart';
 import 'package:idealog/idea/listPage/ui/newIdea.dart' show Info;
 
 class AddToExistingIdea extends StatefulWidget {
-  final Idea idea;
+  final IdeaModel idea;
 
   AddToExistingIdea({Key? key, required this.idea}) : super(key: key);
 
@@ -100,7 +100,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
         bottomNavigationBar: GestureDetector(
             onTap: () async {
               newTasks.forEach((task) => widget.idea.addNewTask(task.codeUnits));
-              await Sqlite.updateDb(widget.idea.uniqueId, idea: widget.idea);
+              IdealogDb.instance.updateDb(updatedEntry: widget.idea);
               Navigator.of(context).push(MaterialPageRoute(builder: (context)=>IdeaDetail(idea: widget.idea)));},
             child: Container(
               height: 65,

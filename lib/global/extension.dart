@@ -8,14 +8,22 @@ extension DataFromSqliteDb on Object{
   //Extension to convert direct to List<List<int>> for easier use
   List<List<int>> get fromDbStringToListInt{
   String dataFromDb = this.toString();
+
+  // if the list is empty
+  if (dataFromDb == '[]')
+  return <List<int>>[];
+
+  // when the list has content
+  else
   return dataFromDb.substring(1,dataFromDb.length-1)
   .replaceAll('],', ']_')
   .split('_')
-  .map((listOfString) => listOfString.trim()
-  .substring(1,listOfString.trim().length-1)
-  .split(',')
-  .map((stringElements) => int.parse(stringElements))
-  .toList())
+  .map((listOfString) =>
+      listOfString.trim()
+      .substring(1,listOfString.trim().length-1)
+      .split(',')
+      .map((stringElements) => int.parse(stringElements))
+      .toList())
   .toList();
   }
 

@@ -8,17 +8,17 @@ class ProductivityManager{
 // Intialize the buildcontext for all methods of the class
     ProductivityManager({required this.context});
 
-    List<Idea> getFavoriteTasks(){
-      List<Idea> allIdeas = Provider.of<List<Idea>>(this.context);
+    List<IdeaModel> getFavoriteTasks(){
+      List<IdeaModel> allIdeas = Provider.of<List<IdeaModel>>(this.context);
       //sort the ideas by their completeTasks Length in descending order
       allIdeas.sort((a,b) => b.completedTasks.length.compareTo(a.completedTasks.length));
       // only take four of the ideas with the biggest task length
-      Iterable<Idea> favoriteIdeas = allIdeas.take(3);
-      return List<Idea>.from(favoriteIdeas);
+      Iterable<IdeaModel> favoriteIdeas = allIdeas.take(3);
+      return List<IdeaModel>.from(favoriteIdeas);
     }
 
     double getCompletionRate(){
-    List<Idea> allIdeas = Provider.of<List<Idea>>(this.context);
+    List<IdeaModel> allIdeas = Provider.of<List<IdeaModel>>(this.context);
     int uncompletedTasksLength = 0;
     int completedTasksLength = 0;
     allIdeas.forEach((idea) { 

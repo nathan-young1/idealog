@@ -9,7 +9,7 @@ import 'package:idealog/idea/listPage/ui/addToExisting.dart';
 class DetailAppBar extends StatelessWidget {
   DetailAppBar({required this.idea});
 
-  final Idea idea;
+  final IdeaModel idea;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class DetailAppBar extends StatelessWidget {
 }
 
 class _IdeaAppBarButtons extends StatelessWidget {
-  final Idea idea;
+  final IdeaModel idea;
   const _IdeaAppBarButtons({required this.idea});
 
   @override

@@ -15,7 +15,9 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import dataSyncronization.AutoSync;
+import dataSyncronization.SyncNow;
 import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.android.FlutterFragmentActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -26,10 +28,11 @@ import static com.mobile.idealog.IdealogDatabase.COLUMN_UNIQUE_ID;
 import static com.mobile.idealog.IdealogDatabase.IDEAS;
 import static com.mobile.idealog.IdealogDatabase.SCHEDULE;
 
-public class MainActivity extends FlutterActivity {
+public class MainActivity extends FlutterFragmentActivity {
     final private String AutoSyncWorkRequestTag = "AutoSync";
     final private String startAutoSyncMethod = "startAutoSync";
     final private String cancelAutoSyncMethod = "cancelAutoSync";
+    final private String syncNowMethod = "syncNow";
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
     @Override
@@ -44,6 +47,9 @@ public class MainActivity extends FlutterActivity {
                 }else if(call.method.equals(cancelAutoSyncMethod)){
                     cancelAutoSync();
                     result.success("Auto Sync has been canceled");
+                }else  if(call.method.equals(syncNowMethod)){
+                    syncNow();
+                    result.success("Data has been synced");
                 }
             }
         });
@@ -86,11 +92,10 @@ public class MainActivity extends FlutterActivity {
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-//        Later i will check whether i have to set peroid start time
+//        Later i will check whether i have to set period start time
 
-        OneTimeWorkRequest syncNowWorkRequest = new OneTimeWorkRequest.Builder(AutoSync.class)
+        OneTimeWorkRequest syncNowWorkRequest = new OneTimeWorkRequest.Builder(SyncNow.class)
                 .setConstraints(workRequestConstraints)
-                .setBackoffCriteria(BackoffPolicy.LINEAR,30,TimeUnit.SECONDS)
                 .build();
 
         WorkManager
