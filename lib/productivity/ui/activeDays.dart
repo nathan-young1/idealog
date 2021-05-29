@@ -9,7 +9,7 @@ class ActiveDaysChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<AnalyticsData> listOfAnalyticsData = Provider.of<List<AnalyticsData>>(context);
+    List<AnalyticChartData> listOfAnalyticsData = Provider.of<List<AnalyticChartData>>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 30),
       child: Container(
@@ -61,7 +61,7 @@ class ActiveDaysChart extends StatelessWidget {
                 labelStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w400),
               ),
               series: <ChartSeries>[
-                  SplineAreaSeries<AnalyticsData,DateTime>(
+                  SplineAreaSeries<AnalyticChartData,DateTime>(
                   
                   markerSettings: MarkerSettings(
                     isVisible: true,
@@ -73,8 +73,8 @@ class ActiveDaysChart extends StatelessWidget {
                   color: Color.fromRGBO(50, 101, 141, 1),
                    dataSource: listOfAnalyticsData,
                    splineType: SplineType.cardinal,
-                   xValueMapper: (AnalyticsData analytic,_)=>analytic.date,
-                   yValueMapper: (AnalyticsData analytic,_)=>analytic.numberOfTasksCompleted
+                   xValueMapper: (AnalyticChartData analytic,_)=>analytic.date,
+                   yValueMapper: (AnalyticChartData analytic,_)=>analytic.numberOfTasksCompleted
                   )
               ],
         )

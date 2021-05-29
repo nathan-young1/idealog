@@ -20,7 +20,7 @@ class Idealog extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    AnalyticsSql.intialize();
+    AnalyticDB.instance.clearObsoluteData();
     return LayoutBuilder(
        builder: (_, constraints) {
         ScreenUtil.init(constraints);

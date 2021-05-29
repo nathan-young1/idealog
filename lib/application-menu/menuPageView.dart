@@ -26,7 +26,6 @@ class _MenuPageViewState extends State<MenuPageView> {
 
   @override
     void dispose() {
-      // Sqlite.close();
       _controller.dispose();
       index.dispose();
       super.dispose();
@@ -37,9 +36,9 @@ class _MenuPageViewState extends State<MenuPageView> {
     return MultiProvider(
       providers: [
       Provider<ProductivityManager>.value(value: ProductivityManager(context: context)),
-      FutureProvider<List<AnalyticsData>>.value(
-      initialData: <AnalyticsData>[],
-      value: AnalyticsSql.readAnalytics(),
+      FutureProvider<List<AnalyticChartData>>.value(
+      initialData: <AnalyticChartData>[],
+      value: AnalyticDB.instance.readAnalytics(),
       catchError: (_,__)=>[])
       ],
       child: SafeArea(

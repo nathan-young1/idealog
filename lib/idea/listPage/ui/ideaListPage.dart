@@ -8,7 +8,7 @@ class IdeaListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<IdeaModel> listOfIdeas = Provider.of<List<IdeaModel>>(context);
+    List<IdeaModel> listOfIdeas = Provider.of<List<IdeaModel>>(context).reversed.toList();
     print('refreshed');
     return Column(
       mainAxisSize: MainAxisSize.max,

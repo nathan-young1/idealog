@@ -3,7 +3,6 @@ import 'package:idealog/core-models/ideasModel.dart';
 import 'package:path/path.dart' as p;
 import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 // assuming that your file is called filename.dart. This will give an error at first,

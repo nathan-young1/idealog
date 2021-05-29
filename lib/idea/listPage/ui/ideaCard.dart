@@ -74,6 +74,7 @@ class IdeaCard extends StatelessWidget {
                                 child: Text('${percent.toInt()}%',
                                 style: TextStyle(fontSize: 16))),
                               appearance: CircularSliderAppearance(
+                                animationEnabled: false,
                                 angleRange: 360,
                                 customWidths: CustomSliderWidths(
                                   progressBarWidth: 6,

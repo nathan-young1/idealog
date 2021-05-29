@@ -20,14 +20,14 @@ class IdeaManager{
 
         idea.completeTask(uncompletedTask);
         IdealogDb.instance.updateDb(updatedEntry: idea);
-        await AnalyticsSql.writeOrUpdate(uncompletedTask);
+        await AnalyticDB.instance.writeOrUpdate(uncompletedTask);
     }
 
   static uncheckCompletedTask(IdeaModel idea,List<int> completedTask) async {
     
       idea.uncheckCompletedTask(completedTask);
       IdealogDb.instance.updateDb(updatedEntry: idea);
-      await AnalyticsSql.removeTaskFromAnalytics(completedTask);
+      await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
   }
 
   static deleteUncompletedTask(IdeaModel idea,List<int> uncompletedTask) async {
@@ -39,12 +39,12 @@ class IdeaManager{
   static deleteCompletedTask(IdeaModel idea,List<int> completedTask) async {
       idea.deleteTask(completedTask);
       IdealogDb.instance.updateDb(updatedEntry: idea);
-      await AnalyticsSql.removeTaskFromAnalytics(completedTask);
+      await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
   }
 
   static deleteIdeaFromDb(IdeaModel idea) async { 
     IdealogDb.instance.deleteFromDb(uniqueId: idea.uniqueId!);
     // Delete all the completed tasks of this idea from analytics data
-    idea.completedTasks.forEach((completedTask) async => await AnalyticsSql.removeTaskFromAnalytics(completedTask));
+    idea.completedTasks.forEach((completedTask) async => await AnalyticDB.instance.removeTaskFromAnalytics(completedTask));
     }
 }
