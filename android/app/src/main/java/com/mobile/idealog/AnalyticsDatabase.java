@@ -20,8 +20,8 @@ import databaseModels.AnalyticsData;
 public class AnalyticsDatabase extends SQLiteOpenHelper {
 
 
-    public static final String Analytics_Table_Name = "Analytics";
-    public static final String Analytics_Db_Name = "analytics.db";
+    public static final String Analytics_Table_Name = "analytics_sql";
+    public static final String Analytics_Db_Name = "analytics_db.sqlite";
 
     public AnalyticsDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, Analytics_Db_Name, null, 1);
@@ -41,8 +41,7 @@ public class AnalyticsDatabase extends SQLiteOpenHelper {
         int currentYear = now.get(Calendar.YEAR);
         SQLiteDatabase _analyticsDb = this.getReadableDatabase();
 
-        System.out.println("the current month is "+currentMonth);
-        final String getCurrentMonthAnalyticsSql = "select * from "+Analytics_Table_Name+" WHERE month = "+currentMonth;
+        final String getCurrentMonthAnalyticsSql = "select * from "+Analytics_Table_Name+" WHERE month = "+currentMonth+" AND year = "+currentYear;
         Cursor analyticsData = _analyticsDb.rawQuery(getCurrentMonthAnalyticsSql,null);
 
         ArrayList<Integer> recordedDaysInDb = new ArrayList<Integer>();
@@ -52,7 +51,6 @@ public class AnalyticsDatabase extends SQLiteOpenHelper {
                 int columnDay = analyticsData.getColumnIndex("day");
                 int month = analyticsData.getInt(columnMonth);
                 int day = analyticsData.getInt(columnDay);
-                System.out.println("month in db: "+month);
                 //create a list of all the days recorded in the database
                 recordedDaysInDb.add(day);
             }while (analyticsData.moveToNext());

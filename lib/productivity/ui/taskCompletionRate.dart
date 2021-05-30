@@ -56,6 +56,7 @@ class TaskCompletionRate extends StatelessWidget {
                     
                     series: <CircularSeries>[
                       PieSeries<CompletionRateModel,String>(
+                        animationDuration: 0,
                         dataSource: this.rates,
                         pointColorMapper: (CompletionRateModel r,_)=> r.color,
                         xValueMapper: (CompletionRateModel r,_)=> r.completionRateType,

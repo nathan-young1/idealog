@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:isolate';
 import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
 import 'package:sqflite/sqflite.dart';
@@ -47,20 +46,20 @@ class AnalyticDB extends _$AnalyticDB{
   
 
   Future<void> writeOrUpdate(List<int> task) async {
-    DateTime NOW = DateTime.now();
+    DateTime now = DateTime.now();
     await into(analyticsSql).insert(AnalyticsSqlCompanion(
-    year: Value(NOW.year),
-    month: Value(NOW.month),
-    day: Value(NOW.day),
+    year: Value(now.year),
+    month: Value(now.month),
+    day: Value(now.day),
     completedTasks: Value(task.toString())
     ));
   }
 
   Future<List<AnalyticChartData>> readAnalytics() async {
 
-    DateTime Now = DateTime.now();
+    DateTime now = DateTime.now();
     
-    List<Analytic> dbResult = await (select(analyticsSql)..where((row) => row.month.equals(Now.month))).get();
+    List<Analytic> dbResult = await (select(analyticsSql)..where((row) => row.month.equals(now.month) & row.year.equals(now.year))).get();
 
     //create a list of all the days recorded in the database
     List<int> recordedDaysInDb = [];
@@ -79,19 +78,18 @@ class AnalyticDB extends _$AnalyticDB{
       int numberOfTasksCompleted = recordedDaysInDb.where((day) => day == ActiveDay).length;
 
       AnalyticChartData newData = AnalyticChartData(
-        date: DateTime(Now.year,Now.month,ActiveDay),
+        date: DateTime(now.year,now.month,ActiveDay),
         numberOfTasksCompleted: numberOfTasksCompleted);
 
       fullChartData.add(newData);
-      // print('${newData.date} ${newData.numberOfTasksCompleted}');
       });
       return fullChartData;
 
   }
 
     Future<void> clearObsoluteData() async {
-    DateTime Now = DateTime.now();
-    await (delete(analyticsSql)..where((row) => row.month.isNotIn([Now.month]))).go();
+    DateTime now = DateTime.now();
+    await (delete(analyticsSql)..where((row) => row.month.isNotIn([now.month]))).go();
     }
 
     Future<void> removeTaskFromAnalytics(List<int> task) async =>

@@ -1,4 +1,7 @@
 
+import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
+import 'package:idealog/core-models/ideasModel.dart';
+
 extension CharCodes on List<int>{
   String get toAString => String.fromCharCodes(this);
 }

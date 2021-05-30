@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idealog/sqlite-db/idealog_Db_Moor.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
 import 'package:idealog/global/extension.dart';
 
 class IdeaModel extends Tasks{

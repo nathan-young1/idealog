@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_screenutil/screen_util.dart';
-import 'package:idealog/analytics/analyticsSql.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/settings/ui/manageAccount.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
-import 'package:idealog/sqlite-db/idealog_Db_Moor.dart';
 import 'package:provider/provider.dart';
+import 'Databases/analytics-db/analyticsSql.dart';
+import 'Databases/idealog-db/idealog_Db_Moor.dart';
+import 'Prefs&Data/GoogleUserData.dart';
 import 'auth/ui/authUi.dart';
 import 'core-models/ideasModel.dart';
 import 'design/colors.dart';
@@ -20,14 +22,16 @@ class Idealog extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    AnalyticDB.instance.clearObsoluteData();
+
     return LayoutBuilder(
        builder: (_, constraints) {
         ScreenUtil.init(constraints);
         return ScreenUtilInit(
           builder: () => MultiProvider(
             providers: [
-              StreamProvider<List<IdeaModel>>.value(value: IdealogDb.instance.watchIdeasInDb,initialData: [],catchError: (_,__)=>[])
+              StreamProvider<List<IdeaModel>>.value(value: IdealogDb.instance.watchIdeasInDb,initialData: [],catchError: (_,__)=>[]),
+              ChangeNotifierProvider<GoogleUserData>.value(value: GoogleUserData.instance),
+              ChangeNotifierProvider<Prefrences>.value(value: Prefrences.instance)
             ],
             child: MaterialApp(
               title: 'Idealog',

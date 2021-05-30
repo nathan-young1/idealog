@@ -35,11 +35,11 @@ class _UncompletedTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+    List<List<int>> uncompletedTasks = Provider.of<IdeaModel>(context).uncompletedTasks;
     return Column(
             children: [
             Center(child: Text('Uncompleted Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300)),),
-            ...Provider.of<IdeaModel>(context).uncompletedTasks.map((uncompletedTask) => 
+            ...uncompletedTasks.map((uncompletedTask) => 
             ListTile(
             leading: Checkbox(value: false, onChanged: (bool? value) async =>
              await IdeaManager.completeTask(idea, uncompletedTask)),

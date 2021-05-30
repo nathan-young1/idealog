@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/routes.dart';
 import 'package:idealog/global/strings.dart';
@@ -25,10 +27,12 @@ class _SplashScreenState extends State<SplashScreen> {
     void initState() {
       super.initState();
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-        SharedPreferences pref = await SharedPreferences.getInstance();
-        useBiometric = pref.getBool('BiometricIsEnabled') ?? false;
-        timer = Timer(Duration(seconds: 2),()=>auth(useBiometric));
+        await AnalyticDB.instance.clearObsoluteData();
+        await Prefrences.instance.initialize();
         await Firebase.initializeApp();
+        timer = Timer(Duration(seconds: 2),()=>Prefrences.instance.fingerprintEnabled 
+        ?authenticateWithBiometrics(calledFromLogin: true)
+        :changeRoute());
       });
     }
 
@@ -36,36 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
       void dispose() {
         timer!.cancel();
         super.dispose();
-      }
-
-      void auth(bool useBiometric) async {
-        if (useBiometric){
-        bool authResult = await biometricAuth();
-        authResult
-        ?changeRoute()
-        :print('An authentication error occured');
-        }else{
-        changeRoute();
-        }
-      }
-      
-      Future<bool> biometricAuth() async {
-        LocalAuthentication androidAuth = new LocalAuthentication();
-        // when the user stops the authentication
-        // androidAuth.stopAuthentication();
-        try {
-          return await androidAuth.authenticate(localizedReason: 'Authenticate to access this app',
-          stickyAuth: true,
-          biometricOnly: true,
-          androidAuthStrings: AndroidAuthMessages(
-            signInTitle: 'Idealog Authentication',
-            biometricHint: ''
-          )
-          );
-        }on PlatformException{
-          return false;
-        }
-      }
+      }   
       
   @override
   Widget build(BuildContext context) {
@@ -77,7 +52,8 @@ class _SplashScreenState extends State<SplashScreen> {
             Expanded(
               child: Center(
               child: GestureDetector(
-              onTap: ()=> auth(useBiometric),
+                // create a login with fingerprint screen so that they can touch the center to authenticate again after 5 seconds
+              // onTap: ()=> auth(useBiometric),
               child: Image.asset(pathToAppLogo,height: 240.h,width: 230.w))
               ),
             ),

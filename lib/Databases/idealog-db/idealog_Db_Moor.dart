@@ -38,7 +38,7 @@ class IdealogDb extends _$IdealogDb{
   // we tell the database where to store the data with this constructor
   IdealogDb() : super(_openConnection());
 
-  // you should bump this number whenever you change or add a table definition.
+  // you should bump this number up whenever you change or add a table definition.
   @override
   int get schemaVersion => 1;
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idealog/analytics/analyticsSql.dart';
+import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';

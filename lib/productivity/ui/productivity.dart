@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:idealog/analytics/analyticsSql.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/productivity/code/productivityManager.dart';
 import 'package:idealog/productivity/ui/activeDays.dart';

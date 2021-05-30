@@ -8,8 +8,8 @@ class IdeaListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // All the ideas should be in reverse so that the latest will be on top
     List<IdeaModel> listOfIdeas = Provider.of<List<IdeaModel>>(context).reversed.toList();
-    print('refreshed');
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [

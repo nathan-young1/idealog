@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:idealog/Prefs&Data/GoogleUserData.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:idealog/nativeCode/bridge.dart';
+import 'package:provider/provider.dart';
 
 class Syncronization extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -75,7 +79,8 @@ class Syncronization extends StatelessWidget {
                 GestureDetector(
                   onTap: () async {
                     await signInWithGoogle();
-                    await NativeCodeCaller.syncNow();},
+                    await NativeCodeCaller.syncNow();
+                    },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -93,15 +98,21 @@ class Syncronization extends StatelessWidget {
                   Text('Auto Sync',style: Overpass.copyWith(fontSize: 20)),
                   Container(
                     width: 60,
-                    child: Switch(value: false, onChanged: (_){}))
+                    child: Switch(value: Provider.of<Prefrences>(context).autoSyncEnabled,
+                    onChanged: (bool enabledAutoSync) async =>
+                      await Prefrences.instance.setAutoSync(enabledAutoSync)
+                    ))
                 ]),
 
                 SizedBox(height: 10),
                 ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
                 title: Text('Google Account',style: Overpass.copyWith(fontSize: 20)),
-                subtitle: Text('okoriejonathan123@gmail.com',style: Overpass.copyWith(fontSize: 15)),
-                onTap: (){},)
+                subtitle: Text(Provider.of<GoogleUserData>(context).user_email ?? "None",style: Overpass.copyWith(fontSize: 15)),
+                onTap: () async {
+                  await signOutFromGoogle();
+                  await signInWithGoogle();
+                })
               ],
             ),
           )

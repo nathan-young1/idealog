@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:idealog/analytics/analyticsSql.dart';
+import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customWidget/alertDialog.dart';
 import 'package:idealog/global/routes.dart';
-import 'package:idealog/sqlite-db/idealog_Db_Moor.dart';
 
 class IdeaManager{
 

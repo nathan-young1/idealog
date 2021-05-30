@@ -1,9 +1,9 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/idea/ideaDetails/ui/detailTaskList.dart';
-import 'package:idealog/sqlite-db/idealog_Db_Moor.dart';
 import 'detailAppBar.dart';
 
 class IdeaDetail extends StatefulWidget {
