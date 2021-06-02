@@ -78,7 +78,8 @@ class Syncronization extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () async {
-                    await signInWithGoogle();
+                    if (GoogleUserData.instance.user_email == null)
+                      await signInWithGoogle();
                     await NativeCodeCaller.syncNow();
                     },
                   child: Row(

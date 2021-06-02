@@ -47,7 +47,7 @@ class _IdeaAppBarButtons extends StatelessWidget {
        crossAxisAlignment: CrossAxisAlignment.center,
        children: [
          IconButton(icon: Icon(Icons.add,size: 35,color: Black242424), onPressed: (){
-           Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AddToExistingIdea(idea: idea)));
+           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>AddToExistingIdea(idea: idea)));
          }),
          SizedBox(width: 15),
          PopupMenuButton<int>(

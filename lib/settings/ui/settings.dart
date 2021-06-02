@@ -3,9 +3,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/strings.dart';
+import 'package:provider/provider.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -48,6 +50,10 @@ class Settings extends StatelessWidget {
                 ListTile(leading: Icon(PhosphorIcons.caret_double_up,size: 30,color: LightPink),
                 title: Text('Upgrade to premium',style: Poppins.copyWith(fontSize: 20,color: Colors.black)),
                 onTap: ()=> Navigator.pushNamed(context,'UpgradeToPremium')),
+
+                ListTile(leading: Text('Dark Mode',style: Poppins.copyWith(fontSize: 20,color: Colors.black)),
+                trailing: Switch(value: Provider.of<Prefrences>(context).isDarkMode,
+                onChanged: (bool isDarkMode) async => await Prefrences.instance.setDarkMode(isDarkMode))),
 
                 ListTile(leading: Icon(CommunityMaterialIcons.help,size: 30,color: LightPink), 
                 title: Text('About Idealog',style: Poppins.copyWith(fontSize: 20,color: Colors.black))),

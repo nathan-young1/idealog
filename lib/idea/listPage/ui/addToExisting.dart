@@ -101,7 +101,8 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
             onTap: () async {
               newTasks.forEach((task) => widget.idea.addNewTask(task.codeUnits));
               IdealogDb.instance.updateDb(updatedEntry: widget.idea);
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>IdeaDetail(idea: widget.idea)));},
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>IdeaDetail(idea: widget.idea)));
+              },
             child: Container(
               height: 65,
               color: DarkBlue,

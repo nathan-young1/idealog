@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:idealog/global/enums.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:idealog/nativeCode/methodNames.dart';
 

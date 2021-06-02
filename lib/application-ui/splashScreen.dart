@@ -20,15 +20,15 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
-  bool useBiometric = false;
   Timer? timer;
   changeRoute() =>Navigator.pushReplacementNamed(context,menuPageView);
+
   @override
     void initState() {
       super.initState();
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
         await AnalyticDB.instance.clearObsoluteData();
-        await Prefrences.instance.initialize();
+        // await Prefrences.instance.initialize();
         await Firebase.initializeApp();
         timer = Timer(Duration(seconds: 2),()=>Prefrences.instance.fingerprintEnabled 
         ?authenticateWithBiometrics(calledFromLogin: true)
