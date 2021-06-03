@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:local_auth/auth_strings.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ManageAccount extends StatelessWidget {
-  bool value = false;
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -20,7 +16,7 @@ class ManageAccount extends StatelessWidget {
             Row(
               children: [
                 SizedBox(width: 12),
-                IconButton(icon: Icon(Icons.arrow_back,color: Colors.black87),
+                IconButton(icon: Icon(Icons.arrow_back),
                 iconSize: 35,
                 onPressed: ()=>Navigator.pop(context)),
                 SizedBox(width: 10),
@@ -48,6 +44,12 @@ class ManageAccount extends StatelessWidget {
                     await Prefrences.instance.setFingerPrintAuth(fingerprintEnabled)
                   ))
             ),
+
+            
+            SizedBox(height: 20),
+            ListTile(leading: Text('Dark Mode',style: Poppins.copyWith(fontSize: 20)),
+            trailing: Switch(value: Provider.of<Prefrences>(context).isDarkMode,
+            onChanged: (bool isDarkMode) async => await Prefrences.instance.setDarkMode(isDarkMode))),
           ],
         ),
       ),

@@ -24,7 +24,7 @@ class Settings extends StatelessWidget {
             borderType: BorderType.Oval,
             strokeCap: StrokeCap.square,
             child: Opacity(opacity: 0.65,
-            child: Image.asset(pathToAppLogo,height: 170,width: 170,
+            child: Image.asset(Provider.of<Prefrences>(context).appLogoPath,height: 170,width: 170,
             excludeFromSemantics: true,
             fit: BoxFit.contain)),
           ),
@@ -40,23 +40,19 @@ class Settings extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(leading: Icon(FeatherIcons.user,size: 30,color: LightPink),
-                title: Text('Manage Account',style: Poppins.copyWith(fontSize: 20,color: Colors.black)),
+                title: Text('Manage Account',style: Poppins.copyWith(fontSize: 20)),
                 onTap: ()=>Navigator.pushNamed(context, 'ManageAccount'),),
 
                 ListTile(leading: Icon(FeatherIcons.uploadCloud,size: 30,color: LightPink),
-                title: Text('Data Syncronization',style: Poppins.copyWith(fontSize: 20,color: Colors.black)),
+                title: Text('Data Syncronization',style: Poppins.copyWith(fontSize: 20)),
                 onTap: ()=> Navigator.pushNamed(context, 'Syncronization')),
 
                 ListTile(leading: Icon(PhosphorIcons.caret_double_up,size: 30,color: LightPink),
-                title: Text('Upgrade to premium',style: Poppins.copyWith(fontSize: 20,color: Colors.black)),
+                title: Text('Upgrade to premium',style: Poppins.copyWith(fontSize: 20)),
                 onTap: ()=> Navigator.pushNamed(context,'UpgradeToPremium')),
 
-                ListTile(leading: Text('Dark Mode',style: Poppins.copyWith(fontSize: 20,color: Colors.black)),
-                trailing: Switch(value: Provider.of<Prefrences>(context).isDarkMode,
-                onChanged: (bool isDarkMode) async => await Prefrences.instance.setDarkMode(isDarkMode))),
-
                 ListTile(leading: Icon(CommunityMaterialIcons.help,size: 30,color: LightPink), 
-                title: Text('About Idealog',style: Poppins.copyWith(fontSize: 20,color: Colors.black))),
+                title: Text('About Idealog',style: Poppins.copyWith(fontSize: 20))),
               ],
             ),
           )

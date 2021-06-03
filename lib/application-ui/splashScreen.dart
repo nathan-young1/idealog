@@ -11,6 +11,7 @@ import 'package:idealog/global/strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -27,9 +28,6 @@ class _SplashScreenState extends State<SplashScreen> {
     void initState() {
       super.initState();
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-        await AnalyticDB.instance.clearObsoluteData();
-        // await Prefrences.instance.initialize();
-        await Firebase.initializeApp();
         timer = Timer(Duration(seconds: 2),()=>Prefrences.instance.fingerprintEnabled 
         ?authenticateWithBiometrics(calledFromLogin: true)
         :changeRoute());
@@ -54,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: GestureDetector(
                 // create a login with fingerprint screen so that they can touch the center to authenticate again after 5 seconds
               // onTap: ()=> auth(useBiometric),
-              child: Image.asset(pathToAppLogo,height: 240.h,width: 230.w))
+              child: Image.asset(Provider.of<Prefrences>(context).appLogoPath,height: 240.h,width: 230.w))
               ),
             ),
             Text('Idealog v1.2',

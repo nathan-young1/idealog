@@ -29,16 +29,18 @@ class SlidableListView extends StatelessWidget {
         onSlideAnimationChanged: (_){}
         ),
       child: ListTile(
+
       leading: Checkbox(
       value: true,
-       onChanged: (bool? value) async =>
-        await IdeaManager.uncheckCompletedTask(idea, completedTask)),
+      onChanged: (bool? value) async =>
+      await IdeaManager.uncheckCompletedTask(idea, completedTask)
+      ),
+      
       title: Text(completedTask.toAString),
-      trailing: ValueListenableBuilder(
-        valueListenable: slidableIconState,
-        builder: (context, bool _slidableIconisOpen,child) =>
-          SlidableControllerButton(_slidableIconisOpen)
-        )),
+      trailing: SlidableControllerButton(slidableIconState),
+
+        ),
+
        secondaryActions: [
         IconSlideAction(
           icon: Icons.delete,
@@ -59,9 +61,9 @@ class SlidableListView extends StatelessWidget {
 
 class SlidableControllerButton extends StatelessWidget {
 
-  final bool slidableIconIsOpen;
+  final ValueNotifier<bool> slidableIconState;
   
-  SlidableControllerButton(this.slidableIconIsOpen);
+  SlidableControllerButton(this.slidableIconState);
 
   /* Events like add a list item causes the value notifier to reintialize to false, which results in controller icon
      to revert to default while the slidable is open.. In other to checkmate the problem _onListUpdate(context) checks
@@ -71,7 +73,7 @@ class SlidableControllerButton extends StatelessWidget {
   */
 
   void _onListUpdate(context){
-    if(!slidableIconIsOpen && Slidable.of(context).renderingMode == SlidableRenderingMode.slide)
+    if(!slidableIconState.value && Slidable.of(context).renderingMode == SlidableRenderingMode.slide)
     Slidable.of(context).close();
   }
   
@@ -80,14 +82,18 @@ class SlidableControllerButton extends StatelessWidget {
 
     _onListUpdate(context);
 
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 500),
-      child: slidableIconIsOpen
-      ? IconButton(icon:Icon(Icons.arrow_forward_ios,size: 24),
-      onPressed: () async =>Slidable.of(context).close()
-      )
-      : IconButton(icon:Icon(Icons.more_vert),
-      onPressed: () async => Slidable.of(context).open(actionType: SlideActionType.secondary)
+    return ValueListenableBuilder(
+      valueListenable: slidableIconState,
+      builder: (context, bool _slidableIconisOpen,child) =>
+      AnimatedContainer(
+        duration: Duration(milliseconds: 500),
+        child: _slidableIconisOpen
+        ? IconButton(icon:Icon(Icons.arrow_forward_ios,size: 24),
+        onPressed: () =>Slidable.of(context).close()
+        )
+        : IconButton(icon:Icon(Icons.more_vert),
+        onPressed: () => Slidable.of(context).open(actionType: SlideActionType.secondary)
+        ),
       ),
     );
   }

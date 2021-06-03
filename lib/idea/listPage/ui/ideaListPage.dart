@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
-import 'ideaCard.dart';
+import 'ideaCard/ideaCard.dart';
 
 class IdeaListPage extends StatelessWidget {
 
@@ -32,7 +33,8 @@ class IdeaListPage extends StatelessWidget {
             child: Scrollbar(
               child: ListView.builder(
                 itemCount: listOfIdeas.length,
-                itemBuilder: (_,index) =>IdeaCard(idea: listOfIdeas[index]),
+                itemBuilder: (_,index) => IdeaCard(idea: listOfIdeas[index],
+                slidableIconState: ValueNotifier(false)),
               ),
             ),
           )

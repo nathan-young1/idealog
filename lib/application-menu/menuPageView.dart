@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/routes.dart';
@@ -33,6 +34,8 @@ class _MenuPageViewState extends State<MenuPageView> {
 
   @override
   Widget build(BuildContext context) {
+    Prefrences userPref = Provider.of<Prefrences>(context);
+
     return MultiProvider(
       providers: [
       Provider<ProductivityManager>.value(value: ProductivityManager(context: context)),
@@ -60,7 +63,7 @@ class _MenuPageViewState extends State<MenuPageView> {
                     visible: (_pageIndex == 0),
                     child: FloatingActionButton(
                       elevation: 10,
-                      backgroundColor: LightPink.withOpacity(1),
+                      backgroundColor: !userPref.isDarkMode ?LightPink.withOpacity(1) :ActiveTabLight,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       onPressed: ()=> Navigator.pushNamed(context, addNewIdeaPage),
                       child: Icon(Icons.add,size: 40,color: Colors.white)
@@ -82,12 +85,12 @@ class _MenuPageViewState extends State<MenuPageView> {
                   gap: 6,
                   iconSize: 35,
                   activeColor: Colors.white,
-                  color: ActiveTabLight,
+                  color: !userPref.isDarkMode ?ActiveTabLight :DarkRed,
                   selectedIndex: _pageIndex,
                   backgroundColor: Colors.transparent,
                   tabBorderRadius: 20,
                   textStyle: Righteous.copyWith(fontSize: 18,color: Colors.white),
-                  tabBackgroundColor: ActiveTabLight,
+                  tabBackgroundColor: !userPref.isDarkMode ?ActiveTabLight :DarkRed,
                   //padding for the tabs
                   padding: EdgeInsets.symmetric(horizontal: 15, vertical: 7),
                   onTabChange: (int index){

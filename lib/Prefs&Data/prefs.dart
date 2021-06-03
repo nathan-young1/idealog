@@ -15,6 +15,8 @@ class Prefrences with ChangeNotifier{
   static bool? _AutoSync;
   static bool? _FingerprintAuth;
 
+  
+
   Prefrences._();
   static Prefrences instance = Prefrences._();
 
@@ -23,6 +25,8 @@ class Prefrences with ChangeNotifier{
     _DarkMode = pref.containsKey('DarkMode')? pref.getBool('DarkMode') : false;
     _AutoSync = pref.containsKey('AutoSync')? pref.getBool('AutoSync') : false;
     _FingerprintAuth = pref.containsKey('FingerprintAuth')? pref.getBool('FingerprintAuth') : false;
+    // notify listeners was called to update the providers after the data has been initialized
+    notifyListeners();
   }
 
   Future<void> setFingerPrintAuth(bool allowFingerAuth) async {
@@ -66,6 +70,7 @@ class Prefrences with ChangeNotifier{
   bool get isDarkMode => _DarkMode ?? false;
   bool get fingerprintEnabled => _FingerprintAuth ?? false;
   bool get autoSyncEnabled => _AutoSync ?? false;
+  String get appLogoPath => !isDarkMode ?'assets/images/logo.png' :'assets/images/logo_Dark.png';
 
 }
 

@@ -60,10 +60,8 @@ class _CompletedTasks extends StatelessWidget {
     return Column(
             children: [
             Center(child: Text('Completed Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300))),
-            ...completedTasks.map((completedTask) {
-            ValueNotifier<bool> slidableIconState = ValueNotifier(false);
-            return SlidableListView(slidableIconState: slidableIconState, idea: idea,completedTask: completedTask);
-            }
+            ...completedTasks.map((completedTask) =>
+            SlidableListView(slidableIconState: ValueNotifier(false), idea: idea,completedTask: completedTask)
             ).toList()
             ],
         );
