@@ -7,12 +7,12 @@ GoogleSignIn _googleSignIn = GoogleSignIn();
 
 Future<void> signInWithGoogle() async {
   // Trigger the authentication flow
-  final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+  final googleUser = await _googleSignIn.signIn();
   // Obtain the auth details from the request
-  final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+  final googleAuth = await googleUser!.authentication;
 
   // Create a new credential
-  final OAuthCredential credential = GoogleAuthProvider.credential(
+  final credential = GoogleAuthProvider.credential(
     accessToken: googleAuth.accessToken,
     idToken: googleAuth.idToken,
   );
@@ -26,7 +26,7 @@ Future<void> signInWithGoogle() async {
   GoogleUserData.instance.userIdentity = googleUser;
 }
 
-signOutFromGoogle() async {
+Future<void> signOutFromGoogle() async {
 GoogleUserData.instance.clearData();
 await _googleSignIn.signOut();
 await auth.signOut();

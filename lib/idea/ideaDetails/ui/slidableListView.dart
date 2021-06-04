@@ -25,20 +25,8 @@ class SlidableListView extends StatelessWidget {
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.2,
        controller: SlidableController(
-        onSlideIsOpenChanged: (bool value) =>slidableIconState.value = value,
+        onSlideIsOpenChanged: (bool? value) =>slidableIconState.value = value!,
         onSlideAnimationChanged: (_){}
-        ),
-      child: ListTile(
-
-      leading: Checkbox(
-      value: true,
-      onChanged: (bool? value) async =>
-      await IdeaManager.uncheckCompletedTask(idea, completedTask)
-      ),
-      
-      title: Text(completedTask.toAString),
-      trailing: SlidableControllerButton(slidableIconState),
-
         ),
 
        secondaryActions: [
@@ -50,6 +38,19 @@ class SlidableListView extends StatelessWidget {
           await IdeaManager.deleteCompletedTask(idea, completedTask)
         )
        ],
+      child: ListTile(
+
+      leading: Checkbox(
+      value: true,
+
+      onChanged: (bool? value) async =>
+      await IdeaManager.uncheckCompletedTask(idea, completedTask)
+      ),
+      
+      title: Text(completedTask.toAString),
+      trailing: SlidableControllerButton(slidableIconState),
+
+        ),
     );
   }
 }
@@ -73,8 +74,9 @@ class SlidableControllerButton extends StatelessWidget {
   */
 
   void _onListUpdate(context){
-    if(!slidableIconState.value && Slidable.of(context).renderingMode == SlidableRenderingMode.slide)
-    Slidable.of(context).close();
+    if(!slidableIconState.value && Slidable.of(context)!.renderingMode == SlidableRenderingMode.slide) {
+      Slidable.of(context)!.close();
+    }
   }
   
   @override
@@ -89,10 +91,10 @@ class SlidableControllerButton extends StatelessWidget {
         duration: Duration(milliseconds: 500),
         child: _slidableIconisOpen
         ? IconButton(icon:Icon(Icons.arrow_forward_ios,size: 24),
-        onPressed: () =>Slidable.of(context).close()
+        onPressed: () =>Slidable.of(context)!.close()
         )
         : IconButton(icon:Icon(Icons.more_vert),
-        onPressed: () => Slidable.of(context).open(actionType: SlideActionType.secondary)
+        onPressed: () => Slidable.of(context)!.open(actionType: SlideActionType.secondary)
         ),
       ),
     );

@@ -20,10 +20,10 @@ class ToggleSlidable extends StatelessWidget {
       child: _slidableIconisOpen
       
         ? IconButton( icon:Icon(Icons.arrow_forward_ios,size: 28),
-        onPressed: () =>Slidable.of(context).close()
+        onPressed: () =>Slidable.of(context)!.close()
         )
     
-        : IconButton(onPressed: () => Slidable.of(context).open(),
+        : IconButton(onPressed: () => Slidable.of(context)!.open(),
         icon: Icon(Icons.more_vert,size: 32))
        ),
     );

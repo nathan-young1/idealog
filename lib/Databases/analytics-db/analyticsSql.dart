@@ -27,7 +27,7 @@ LazyDatabase _openConnection() {
     // put the database file, called db.sqlite here, into the documents folder
     // for your app.
     final dbFolder = await getDatabasesPath();
-    final file = File(p.join(dbFolder!, 'analytics_db.sqlite'));
+    final file = File(p.join(dbFolder, 'analytics_db.sqlite'));
 
     return VmDatabase(file);
   });
@@ -46,7 +46,7 @@ class AnalyticDB extends _$AnalyticDB{
   
 
   Future<void> writeOrUpdate(List<int> task) async {
-    DateTime now = DateTime.now();
+    var now = DateTime.now();
     await into(analyticsSql).insert(AnalyticsSqlCompanion(
     year: Value(now.year),
     month: Value(now.month),
@@ -57,27 +57,27 @@ class AnalyticDB extends _$AnalyticDB{
 
   Future<List<AnalyticChartData>> readAnalytics() async {
 
-    DateTime now = DateTime.now();
+    var now = DateTime.now();
     
-    List<Analytic> dbResult = await (select(analyticsSql)..where((row) => row.month.equals(now.month) & row.year.equals(now.year))).get();
+    var dbResult = await (select(analyticsSql)..where((row) => row.month.equals(now.month) & row.year.equals(now.year))).get();
 
     //create a list of all the days recorded in the database
-    List<int> recordedDaysInDb = [];
+    var recordedDaysInDb = <int>[];
     
     dbResult.forEach((row) => recordedDaysInDb.add(row.day));
     //create a set to remove duplicate dates
 
-    Set<int> ActiveDays = Set.from(recordedDaysInDb);
+    var ActiveDays = Set<int>.from(recordedDaysInDb);
 
     // To store the AnalyticChartData
-    List<AnalyticChartData> fullChartData = [];
+    var fullChartData = <AnalyticChartData>[];
 
     // The number of times a day repeats is equilavent to the number of tasks completed that day
 
     ActiveDays.forEach((ActiveDay) { 
-      int numberOfTasksCompleted = recordedDaysInDb.where((day) => day == ActiveDay).length;
+      var numberOfTasksCompleted = recordedDaysInDb.where((day) => day == ActiveDay).length;
 
-      AnalyticChartData newData = AnalyticChartData(
+      var newData = AnalyticChartData(
         date: DateTime(now.year,now.month,ActiveDay),
         numberOfTasksCompleted: numberOfTasksCompleted);
 
@@ -88,7 +88,7 @@ class AnalyticDB extends _$AnalyticDB{
   }
 
     Future<void> clearObsoluteData() async {
-    DateTime now = DateTime.now();
+    var now = DateTime.now();
     await (delete(analyticsSql)..where((row) => row.month.isNotIn([now.month]))).go();
     }
 

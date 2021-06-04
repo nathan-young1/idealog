@@ -6,7 +6,7 @@ class SlidableIconContainerClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     var width = size.width;
     var height = size.height;
-    Path path = Path();
+    var path = Path();
     path.moveTo(0, 0);
     path.arcToPoint(Offset(width * 0.1, height * 0.1),radius: Radius.circular(10));
     path.lineTo(width * 0.1, height * 0.9);

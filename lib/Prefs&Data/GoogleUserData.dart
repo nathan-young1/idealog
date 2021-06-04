@@ -7,7 +7,7 @@ class GoogleUserData with ChangeNotifier{
   static String? _Photo_url = auth.currentUser?.photoURL;
   static GoogleIdentity? _User_Identity;
 
-  String? get user_email => _Email ?? null;
+  String? get user_email => _Email;
   String? get user_photo_url => _Photo_url;
   GoogleIdentity? get userIdentity => _User_Identity;
 

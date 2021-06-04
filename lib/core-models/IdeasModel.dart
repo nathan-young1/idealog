@@ -12,12 +12,12 @@ class IdeaModel extends Tasks{
   IdeaModel.readFromDb({required this.ideaTitle,this.moreDetails,required List<List<int>> completedTasks,required this.uniqueId,required List<List<int>> uncompletedTasks}):super.fromDb(completedTasks: completedTasks,uncompletedTasks: uncompletedTasks);
 
 IdeaModel.readDb({required Idea idea}):
-  this.uniqueId = idea.uniqueId,
-  this.ideaTitle = idea.ideaTitle,
-  this.moreDetails = idea.moreDetails,
+  uniqueId = idea.uniqueId,
+  ideaTitle = idea.ideaTitle,
+  moreDetails = idea.moreDetails,
   super.fromDb(completedTasks: idea.completedTasks!.fromDbStringToListInt,uncompletedTasks: idea.uncompletedTasks!.fromDbStringToListInt);
 
-  changeMoreDetail(String? newDetails)=> this.moreDetails= newDetails;
+  String? changeMoreDetail(String? newDetails)=> moreDetails= newDetails;
 }
 
 
@@ -30,26 +30,27 @@ abstract class Tasks with ChangeNotifier{
   Tasks({required List<List<int>> listOfTasksToCreate}):uncompletedTasks = listOfTasksToCreate;
   Tasks.fromDb({required this.completedTasks,required this.uncompletedTasks});
 
-  deleteTask(List<int> task){
+  void deleteTask(List<int> task){
     (uncompletedTasks.contains(task))
     ?uncompletedTasks.remove(task)
     :completedTasks.remove(task);
     notifyListeners();
   }
 
-  uncheckCompletedTask(List<int> task){
+  void uncheckCompletedTask(List<int> task){
     completedTasks.remove(task);
     uncompletedTasks.add(task);
     notifyListeners();
   }
 
-  completeTask(List<int> task){
+  void completeTask(List<int> task){
     uncompletedTasks.remove(task);
     completedTasks.add(task);
     notifyListeners();
     }
 
-  addNewTask(List<int> task){
+  void addNewTask(List<int> task){
   uncompletedTasks.add(task);
-  notifyListeners();}
+  notifyListeners();
+  }
 }

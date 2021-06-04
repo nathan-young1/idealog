@@ -23,7 +23,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
 
   FocusNode newTaskFocus = FocusNode();
 
-  Set<String> newTasks = Set<String>();
+  Set<String> newTasks = <String>{};
 
   void addNewTask(){
     if(newTask.text != ''){
@@ -100,8 +100,8 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
         bottomNavigationBar: GestureDetector(
             onTap: () async {
               newTasks.forEach((task) => widget.idea.addNewTask(task.codeUnits));
-              IdealogDb.instance.updateDb(updatedEntry: widget.idea);
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>IdeaDetail(idea: widget.idea)));
+              await IdealogDb.instance.updateDb(updatedEntry: widget.idea);
+              await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>IdeaDetail(idea: widget.idea)));
               },
             child: Container(
               height: 65,

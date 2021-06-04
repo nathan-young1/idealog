@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/auth/code/authHandler.dart';
-import 'package:idealog/global/strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 

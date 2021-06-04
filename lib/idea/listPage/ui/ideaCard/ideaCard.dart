@@ -15,10 +15,11 @@ class IdeaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int uncompletedTasksSize = idea.uncompletedTasks.length;
-    final int completedTasksSize = idea.completedTasks.length;
-    final int totalNumberOfTasks = uncompletedTasksSize + completedTasksSize;
+    final uncompletedTasksSize = idea.uncompletedTasks.length;
+    final completedTasksSize = idea.completedTasks.length;
+    final totalNumberOfTasks = uncompletedTasksSize + completedTasksSize;
     //first check that the total number of tasks is not zero, so as not to have division by zero error
+    // ignore: omit_local_variable_types
     final double percent = (totalNumberOfTasks != 0)?(completedTasksSize/totalNumberOfTasks)*100:0;
 
     return Padding(
@@ -27,9 +28,18 @@ class IdeaCard extends StatelessWidget {
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.25,
         controller: SlidableController(
-        onSlideIsOpenChanged: (bool value) => slidableIconState.value = value,
+        onSlideIsOpenChanged: (bool? value) => slidableIconState.value = value!,
         onSlideAnimationChanged: (_){}
         ),
+        secondaryActions: [
+                  Transform.translate(
+                    offset: Offset(-5,0),
+                    child: TaskAdderSlideAction(idea: idea)),
+
+                  Transform.translate(
+                    offset: Offset(-5,0),
+                    child: DeleteSlideAction(idea: idea))
+                  ],
         child: GestureDetector(
           onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>IdeaDetail(idea: idea))),
           child: Column(
@@ -40,16 +50,7 @@ class IdeaCard extends StatelessWidget {
                     slidableIconState: slidableIconState)
             ],
           ),
-        ),
-        secondaryActions: [
-                  Transform.translate(
-                    offset: Offset(-5,0),
-                    child: TaskAdderSlideAction(idea: idea)),
-
-                  Transform.translate(
-                    offset: Offset(-5,0),
-                    child: DeleteSlideAction(idea: idea))
-                  ]
+        )
       ),
     );
   }

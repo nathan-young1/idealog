@@ -8,15 +8,14 @@ import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/global/strings.dart';
 import 'package:provider/provider.dart';
 
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    GoogleUserData _googleUserData = Provider.of<GoogleUserData>(context);
-    bool isDarkMode = Provider.of<Prefrences>(context).isDarkMode;
-    Color _listTileIconColor = (isDarkMode) ?LightPink :DarkBlue;
+    var _googleUserData = Provider.of<GoogleUserData>(context);
+    var isDarkMode = Provider.of<Prefrences>(context).isDarkMode;
+    var _listTileIconColor = (isDarkMode) ?LightPink :DarkBlue;
     return Container(
       child: Column(
         children: [

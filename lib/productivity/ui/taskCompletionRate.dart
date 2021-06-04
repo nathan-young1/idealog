@@ -23,7 +23,7 @@ class TaskCompletionRate extends StatelessWidget {
 
   TaskCompletionRate(double completedTaskPercent){
     // 100% is 1 , so uncompleted tasks will be (1-completedTaskPercent)
-    double uncompletedTaskPercent = 1 - completedTaskPercent;
+    var uncompletedTaskPercent = 1 - completedTaskPercent;
     rates = [
     CompletionRateModel(percent: uncompletedTaskPercent, type: RateType.UNCOMPLETED),
     CompletionRateModel(percent: completedTaskPercent, type: RateType.COMPLETED)
@@ -57,7 +57,7 @@ class TaskCompletionRate extends StatelessWidget {
                     series: <CircularSeries>[
                       PieSeries<CompletionRateModel,String>(
                         animationDuration: 0,
-                        dataSource: this.rates,
+                        dataSource: rates,
                         pointColorMapper: (CompletionRateModel r,_)=> r.color,
                         xValueMapper: (CompletionRateModel r,_)=> r.completionRateType,
                         yValueMapper: (CompletionRateModel r,_)=> r.percent,

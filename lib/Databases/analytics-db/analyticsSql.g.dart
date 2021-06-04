@@ -318,8 +318,8 @@ class $AnalyticsSqlTable extends AnalyticsSql
   Set<GeneratedColumn> get $primaryKey => {key};
   @override
   Analytic map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return Analytic.fromData(data, _db, prefix: effectivePrefix);
+    return Analytic.fromData(data, _db,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override

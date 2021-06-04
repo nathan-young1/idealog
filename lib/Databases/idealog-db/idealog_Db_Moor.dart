@@ -26,7 +26,7 @@ LazyDatabase _openConnection() {
     // put the database file, called db.sqlite here, into the documents folder
     // for your app.
     final dbFolder = await getDatabasesPath();
-    final file = File(p.join(dbFolder!, 'idealog_db.sqlite'));
+    final file = File(p.join(dbFolder, 'idealog_db.sqlite'));
 
     return VmDatabase(file);
   });
@@ -49,7 +49,7 @@ class IdealogDb extends _$IdealogDb{
        await (delete(ideas)..where((row) => row.uniqueId.equals(uniqueId))).go();
 
   Future<void> insertToDb({required IdeaModel newEntry}) async { 
-    IdeasCompanion companionData = IdeasCompanion(
+    var companionData = IdeasCompanion(
     ideaTitle: Value(newEntry.ideaTitle),
     uncompletedTasks: Value(newEntry.uncompletedTasks.toString()),
     completedTasks: Value(newEntry.completedTasks.toString()),
@@ -58,7 +58,7 @@ class IdealogDb extends _$IdealogDb{
   }
 
   Future<void> updateDb({required IdeaModel updatedEntry}) async { 
-    IdeasCompanion companionData = IdeasCompanion(
+    var companionData = IdeasCompanion(
     ideaTitle: Value(updatedEntry.ideaTitle),
     uniqueId: Value(updatedEntry.uniqueId!),
     uncompletedTasks: Value(updatedEntry.uncompletedTasks.toString()),

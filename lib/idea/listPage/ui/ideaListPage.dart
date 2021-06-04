@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +9,7 @@ class IdeaListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // All the ideas should be in reverse so that the latest will be on top
-    List<IdeaModel> listOfIdeas = Provider.of<List<IdeaModel>>(context).reversed.toList();
+    var listOfIdeas = Provider.of<List<IdeaModel>>(context).reversed.toList();
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [

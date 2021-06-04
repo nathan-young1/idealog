@@ -18,7 +18,7 @@ class CustomTheme {
                                 );
 
   static final ThemeData darkTheme = ThemeData(
-                                scaffoldBackgroundColor: Color(0x202020),
+                                scaffoldBackgroundColor: Color(0x00202020),
                                 brightness: Brightness.dark,
                                 accentColor: LightPink,
                                 primaryColor: LightPink,

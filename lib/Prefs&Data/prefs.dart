@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/nativeCode/bridge.dart';
@@ -31,7 +30,7 @@ class Prefrences with ChangeNotifier{
 
   Future<void> setFingerPrintAuth(bool allowFingerAuth) async {
     // Is the user authenticated to either ON or OFF biometric authentication
-    bool userIsAuthenticated = await authenticateWithBiometrics();
+    var userIsAuthenticated = await authenticateWithBiometrics();
 
     if (userIsAuthenticated == true){
     // if user is authenticated make the change to his/her prefrences
@@ -53,8 +52,9 @@ class Prefrences with ChangeNotifier{
     if (onAutoSync){
       // if auto sync is set to true and the user is not signed in , then sign the user in before it start auto sync
       // if the user is already signed in , there will be no need to sign in again
-        if (GoogleUserData.instance.user_email == null)
-        await signInWithGoogle();
+        if (GoogleUserData.instance.user_email == null) {
+          await signInWithGoogle();
+        }
 
       await NativeCodeCaller.startAutoSync();
     }else{
@@ -74,13 +74,13 @@ class Prefrences with ChangeNotifier{
 
 }
 
-authenticateWithBiometrics({bool calledFromLogin = false}) async {
-  LocalAuthentication androidAuth = new LocalAuthentication();
-  bool phoneCanCheckBiometric = await androidAuth.canCheckBiometrics;
+Future<bool> authenticateWithBiometrics({bool calledFromLogin = false}) async {
+  var androidAuth = LocalAuthentication();
+  var phoneCanCheckBiometric = await androidAuth.canCheckBiometrics;
 
   if(phoneCanCheckBiometric){
     try{
-      bool userIsAuthenticated = await androidAuth.authenticate(
+      var userIsAuthenticated = await androidAuth.authenticate(
                     localizedReason: !calledFromLogin
                     ? 'Authenicate to perform this operation'
                     : 'Authenticate to access this app' ,

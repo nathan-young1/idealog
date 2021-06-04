@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
@@ -14,7 +13,7 @@ class FavoriteTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<IdeaModel> favorites = Provider.of<ProductivityManager>(context).getFavoriteTasks();
+    var favorites = Provider.of<ProductivityManager>(context).getFavoriteTasks();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
@@ -27,7 +26,7 @@ class FavoriteTasks extends StatelessWidget {
           children: [
             Text('Favorite Tasks',
             style: RhodiumLibre.copyWith(fontSize: 25)),
-            if(favorites.length > 0)
+            if(favorites.isNotEmpty)
             for(int index = 0; index < favorites.length; index++)
             GestureDetector(
               onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>IdeaDetail(idea: favorites[index]))),

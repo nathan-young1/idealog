@@ -9,26 +9,26 @@ class ProductivityManager{
     ProductivityManager({required this.context});
 
     List<IdeaModel> getFavoriteTasks(){
-      List<IdeaModel> allIdeas = Provider.of<List<IdeaModel>>(this.context);
+      var allIdeas = Provider.of<List<IdeaModel>>(context);
       //sort the ideas by their completeTasks Length in descending order
       allIdeas.sort((a,b) => b.completedTasks.length.compareTo(a.completedTasks.length));
       // only take four of the ideas with the biggest task length
-      Iterable<IdeaModel> favoriteIdeas = allIdeas.take(3);
+      var favoriteIdeas = allIdeas.take(3);
       return List<IdeaModel>.from(favoriteIdeas);
     }
 
     double getCompletionRate(){
-    List<IdeaModel> allIdeas = Provider.of<List<IdeaModel>>(this.context);
-    int uncompletedTasksLength = 0;
-    int completedTasksLength = 0;
+    var allIdeas = Provider.of<List<IdeaModel>>(context);
+    var uncompletedTasksLength = 0;
+    var completedTasksLength = 0;
     allIdeas.forEach((idea) { 
       uncompletedTasksLength += idea.uncompletedTasks.length;
       completedTasksLength += idea.completedTasks.length;
     });
 
-    int totalNumberOfTasks = uncompletedTasksLength + completedTasksLength;
+    var totalNumberOfTasks = uncompletedTasksLength + completedTasksLength;
     // first check that total number of tasks is not equal to zero to avoid division by zero error
-    double completionRate = (totalNumberOfTasks != 0)?(completedTasksLength / totalNumberOfTasks):0.0;
+    var completionRate = (totalNumberOfTasks != 0)?(completedTasksLength / totalNumberOfTasks):0.0;
 
     return completionRate;
   }

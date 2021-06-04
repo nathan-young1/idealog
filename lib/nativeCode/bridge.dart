@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:idealog/nativeCode/methodNames.dart';
 
-const platform = const MethodChannel(javaToFlutterMethodChannelName);
+const platform = MethodChannel(javaToFlutterMethodChannelName);
 
 class NativeCodeCaller{
 

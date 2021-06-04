@@ -35,7 +35,7 @@ class _UncompletedTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<List<int>> uncompletedTasks = Provider.of<IdeaModel>(context).uncompletedTasks;
+    var uncompletedTasks = Provider.of<IdeaModel>(context).uncompletedTasks;
     return Column(
             children: [
             Center(child: Text('Uncompleted Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300)),),
@@ -56,7 +56,7 @@ class _CompletedTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<List<int>> completedTasks = Provider.of<IdeaModel>(context).completedTasks;
+    var completedTasks = Provider.of<IdeaModel>(context).completedTasks;
     return Column(
             children: [
             Center(child: Text('Completed Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300))),

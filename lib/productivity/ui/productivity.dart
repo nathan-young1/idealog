@@ -15,7 +15,7 @@ class _ProductivityState extends State<Productivity> {
 
   @override
   Widget build(BuildContext context) {
-    double completionRate = Provider.of<ProductivityManager>(context).getCompletionRate();
+    var completionRate = Provider.of<ProductivityManager>(context).getCompletionRate();
     return Padding(
       padding: EdgeInsets.only(bottom: 10),
       child: Column(

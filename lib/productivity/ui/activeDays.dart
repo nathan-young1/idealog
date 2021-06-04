@@ -9,7 +9,7 @@ class ActiveDaysChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<AnalyticChartData> listOfAnalyticsData = Provider.of<List<AnalyticChartData>>(context);
+    var listOfAnalyticsData = Provider.of<List<AnalyticChartData>>(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 30),

@@ -78,8 +78,9 @@ class Syncronization extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () async {
-                    if (GoogleUserData.instance.user_email == null)
+                    if (GoogleUserData.instance.user_email == null) {
                       await signInWithGoogle();
+                    }
                     await NativeCodeCaller.syncNow();
                     },
                   child: Row(
@@ -109,7 +110,7 @@ class Syncronization extends StatelessWidget {
                 ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
                 title: Text('Google Account',style: Overpass.copyWith(fontSize: 20)),
-                subtitle: Text(Provider.of<GoogleUserData>(context).user_email ?? "None",style: Overpass.copyWith(fontSize: 15)),
+                subtitle: Text(Provider.of<GoogleUserData>(context).user_email ?? 'None',style: Overpass.copyWith(fontSize: 15)),
                 onTap: () async {
                   await signOutFromGoogle();
                   await signInWithGoogle();

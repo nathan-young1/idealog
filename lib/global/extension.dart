@@ -1,7 +1,4 @@
 
-import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
-import 'package:idealog/core-models/ideasModel.dart';
-
 extension CharCodes on List<int>{
   String get toAString => String.fromCharCodes(this);
 }
@@ -10,15 +7,13 @@ extension DataFromSqliteDb on Object{
 
   //Extension to convert direct to List<List<int>> for easier use
   List<List<int>> get fromDbStringToListInt{
-  String dataFromDb = this.toString();
+  var dataFromDb = toString();
 
   // if the list is empty
-  if (dataFromDb == '[]')
-  return <List<int>>[];
-
-  // when the list has content
-  else
-  return dataFromDb.substring(1,dataFromDb.length-1)
+  if (dataFromDb == '[]') {
+    return <List<int>>[];
+  } else {
+    return dataFromDb.substring(1,dataFromDb.length-1)
   .replaceAll('],', ']_')
   .split('_')
   .map((listOfString) =>
@@ -29,34 +24,35 @@ extension DataFromSqliteDb on Object{
       .toList())
   .toList();
   }
+  }
 
 }
 
-extension stringToDateTime on String{
+extension StringToDateTime on String{
   int get deadlineStringToMillisecondsSinceEponch{
-  List<String> deadlineDateTime = this.split('-');
-  int year = int.parse(deadlineDateTime[0]);
-  int month = int.parse(deadlineDateTime[1]);
-  int day = int.parse(deadlineDateTime[2]);
+  var deadlineDateTime = split('-');
+  var year = int.parse(deadlineDateTime[0]);
+  var month = int.parse(deadlineDateTime[1]);
+  var day = int.parse(deadlineDateTime[2]);
   return DateTime(year,month,day).millisecondsSinceEpoch;
   }
 
   int get scheduleStartTimeToMillisecondsSinceEponch{
-    List<String> dateAndTime = this.split(' ');
-    List<String> dateInString = dateAndTime.first.split('-');
-    List<String> timeInString = dateAndTime.last.split(':');
-    int year = int.parse(dateInString[0]);
-    int month = int.parse(dateInString[1]);
-    int day = int.parse(dateInString[2]);
-    int hour = int.parse(timeInString.first);
-    int minute = int.parse(timeInString.last);
+    var dateAndTime = split(' ');
+    var dateInString = dateAndTime.first.split('-');
+    var timeInString = dateAndTime.last.split(':');
+    var year = int.parse(dateInString[0]);
+    var month = int.parse(dateInString[1]);
+    var day = int.parse(dateInString[2]);
+    var hour = int.parse(timeInString.first);
+    var minute = int.parse(timeInString.last);
     return DateTime(year,month,day,hour,minute).millisecondsSinceEpoch;
   }
 }
 
 extension DateOnlyCompare on DateTime {
   bool isSameDate(DateTime other) {
-    return this.year == other.year && this.month == other.month
-           && this.day == other.day;
+    return year == other.year && month == other.month
+           && day == other.day;
   }
 }

@@ -17,7 +17,7 @@ class MenuPageView extends StatefulWidget {
 }
 
 class _MenuPageViewState extends State<MenuPageView> {
-  PageController _controller = PageController();
+  final PageController _controller = PageController();
   ValueNotifier<int> index = ValueNotifier(0);
 
   @override
@@ -34,7 +34,7 @@ class _MenuPageViewState extends State<MenuPageView> {
 
   @override
   Widget build(BuildContext context) {
-    Prefrences userPref = Provider.of<Prefrences>(context);
+    var userPref = Provider.of<Prefrences>(context);
 
     return MultiProvider(
       providers: [

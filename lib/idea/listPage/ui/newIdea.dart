@@ -13,7 +13,7 @@ class NewIdea extends StatefulWidget {
 }
 
 class _NewIdeaState extends State<NewIdea> {
-  Set<String> tasks = Set<String>();
+  Set<String> tasks = <String>{};
   TextEditingController taskField = TextEditingController();
   TextEditingController deadline = TextEditingController();
   TextEditingController ideaTitle = TextEditingController();

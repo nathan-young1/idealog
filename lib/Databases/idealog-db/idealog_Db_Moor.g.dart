@@ -328,8 +328,8 @@ class $IdeasTable extends Ideas with TableInfo<$IdeasTable, Idea> {
   Set<GeneratedColumn> get $primaryKey => {uniqueId};
   @override
   Idea map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return Idea.fromData(data, _db, prefix: effectivePrefix);
+    return Idea.fromData(data, _db,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
