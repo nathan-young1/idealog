@@ -10,6 +10,7 @@ class ActiveDaysChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<AnalyticChartData> listOfAnalyticsData = Provider.of<List<AnalyticChartData>>(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 30),
       child: Container(
@@ -19,7 +20,7 @@ class ActiveDaysChart extends StatelessWidget {
           ),
           padding: EdgeInsets.symmetric(vertical: 20),
 
-        child: (listOfAnalyticsData.length>3)?SfCartesianChart(
+        child: (listOfAnalyticsData.length >= 3)?SfCartesianChart(
           
           enableAxisAnimation: true,
               title: ChartTitle(
@@ -41,15 +42,10 @@ class ActiveDaysChart extends StatelessWidget {
                 ),
               plotAreaBorderColor: Colors.transparent,
               primaryYAxis: NumericAxis(
-                axisLine: AxisLine(width: 3),
-                decimalPlaces: 0,
-                labelStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w400),
-                majorGridLines: MajorGridLines(width: 0),
-                majorTickLines: MajorTickLines(width: 0),
-                interval: 1
+                isVisible: false
               ),
               primaryXAxis: DateTimeCategoryAxis(
-                axisLine: AxisLine(width: 3),
+                axisLine: AxisLine(width: 2,dashArray: [5,5]),
                 zoomFactor: (listOfAnalyticsData.length>5)?0.5:1,
                 // zoom position is 1 so that the date can show from current
                 zoomPosition: 1,
@@ -61,18 +57,16 @@ class ActiveDaysChart extends StatelessWidget {
                 labelStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w400),
               ),
               series: <ChartSeries>[
-                  SplineAreaSeries<AnalyticChartData,DateTime>(
-                  
+                  SplineSeries<AnalyticChartData,DateTime>(
+                  width: 4,
                   markerSettings: MarkerSettings(
                     isVisible: true,
                     color: LightPink,
                     height: 12,
                     width: 12
                   ),
-                  cardinalSplineTension: 0.7,
                   color: Color.fromRGBO(50, 101, 141, 1),
                    dataSource: listOfAnalyticsData,
-                   splineType: SplineType.cardinal,
                    xValueMapper: (AnalyticChartData analytic,_)=>analytic.date,
                    yValueMapper: (AnalyticChartData analytic,_)=>analytic.numberOfTasksCompleted
                   )

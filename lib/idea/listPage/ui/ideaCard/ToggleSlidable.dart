@@ -5,7 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class ToggleSlidable extends StatelessWidget {
   final ValueNotifier<bool> slidableIconState;
 
-  const ToggleSlidable({
+  ToggleSlidable({
     Key? key,
     required this.slidableIconState
   }) : super(key: key);
@@ -19,11 +19,11 @@ class ToggleSlidable extends StatelessWidget {
       AnimatedContainer(duration: Duration(milliseconds: 500),
       child: _slidableIconisOpen
       
-        ? IconButton( icon:Icon(Icons.arrow_forward_ios,size: 32),
+        ? IconButton( icon:Icon(Icons.arrow_forward_ios,size: 28),
         onPressed: () =>Slidable.of(context).close()
         )
     
-        : IconButton(onPressed: () => Slidable.of(context).open(actionType: SlideActionType.secondary),
+        : IconButton(onPressed: () => Slidable.of(context).open(),
         icon: Icon(Icons.more_vert,size: 32))
        ),
     );

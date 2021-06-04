@@ -23,6 +23,7 @@ Future<void> signInWithGoogle() async {
   // initialize the googleUserData class with the user credientials
   GoogleUserData.instance.user_email = googleUser.email;
   GoogleUserData.instance.user_photo_url = googleUser.photoUrl;
+  GoogleUserData.instance.userIdentity = googleUser;
 }
 
 signOutFromGoogle() async {

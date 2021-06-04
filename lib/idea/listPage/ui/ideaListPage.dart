@@ -22,8 +22,8 @@ class IdeaListPage extends StatelessWidget {
               Text('IDEAS',style: Poppins.copyWith(fontSize: 30)),
               Row(
                 children: [
-                  IconButton(icon: Icon(Icons.search_sharp), onPressed: (){},iconSize: 35),
-                  IconButton(icon: Icon(Icons.filter_list), onPressed: (){},iconSize: 35)
+                  IconButton(icon: Icon(Icons.search_sharp), onPressed: (){},iconSize: 32),
+                  IconButton(icon: Icon(Icons.filter_list), onPressed: (){},iconSize: 32)
                 ],
               )
             ],

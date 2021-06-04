@@ -1,18 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/design/colors.dart';
-import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
-import '../addToExisting.dart';
-import 'ToggleSlidable.dart';
+import 'package:idealog/idea/listPage/ui/ideaCard/slideActions.dart';
+import 'mainTile.dart';
 
 class IdeaCard extends StatelessWidget {
   final IdeaModel idea;
   final ValueNotifier<bool> slidableIconState;
   IdeaCard({required this.idea,required this.slidableIconState});
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,116 +23,34 @@ class IdeaCard extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 35),
-      child: Slidable(
+      child:  Slidable(
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.25,
         controller: SlidableController(
-        onSlideIsOpenChanged: (bool value) =>slidableIconState.value = value,
+        onSlideIsOpenChanged: (bool value) => slidableIconState.value = value,
         onSlideAnimationChanged: (_){}
         ),
         child: GestureDetector(
-          onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>IdeaDetail(idea: idea))),
+          onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>IdeaDetail(idea: idea))),
           child: Column(
             children: [
-              Container(
-                padding: EdgeInsets.only(top: 10,bottom: 10,left: 20,right: 10),
-                decoration: BoxDecoration(
-                  color: IdeaCardLight,
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          PercentageIncidator(percent: percent),
-                          IdeaTitle(idea: idea),
-                          ToggleSlidable(slidableIconState: slidableIconState)
-                        ],
-                      )
-                ],),
-              )
+              MainTile(
+                    percent: percent,
+                    idea: idea,
+                    slidableIconState: slidableIconState)
             ],
           ),
         ),
         secondaryActions: [
-                  IconSlideAction(
-                    icon: Icons.add,
-                    color: DarkBlue,
-                    caption: 'Add Task',
-                    onTap: ()=>
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context)=>
-                        AddToExistingIdea(idea: idea)))
-                  ),
-                  IconSlideAction(
-                    icon: Icons.delete,
-                    color: LightPink,
-                    caption: 'Delete',
-                    onTap: () async =>
-                    await IdeaManager.deleteIdeaFromDb(idea)
-                  )
+                  Transform.translate(
+                    offset: Offset(-5,0),
+                    child: TaskAdderSlideAction(idea: idea)),
+
+                  Transform.translate(
+                    offset: Offset(-5,0),
+                    child: DeleteSlideAction(idea: idea))
                   ]
       ),
     );
-  }
-}
-
-
-class IdeaTitle extends StatelessWidget {
-  const IdeaTitle({
-    Key? key,
-    required this.idea,
-  }) : super(key: key);
-
-  final IdeaModel idea;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Center(child: Text(idea.ideaTitle,
-      style: ReemKufi.copyWith(fontSize: 30),
-      overflow: TextOverflow.ellipsis)));
-  }
-}
-
-class PercentageIncidator extends StatelessWidget {
-  const PercentageIncidator({
-    Key? key,
-    required this.percent,
-  }) : super(key: key);
-
-  final double percent;
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-    message: 'Completed tasks in percent',
-    child: IgnorePointer(
-      child: Container(
-        height: 55,
-        width: 55,
-        child: SleekCircularSlider(
-          initialValue: percent,
-          innerWidget: (double percent)=> Center(
-            child: Text('${percent.toInt()}%',
-            style: TextStyle(fontSize: 16))),
-          appearance: CircularSliderAppearance(
-            animationEnabled: false,
-            angleRange: 360,
-            customWidths: CustomSliderWidths(
-              progressBarWidth: 6,
-              trackWidth: 6
-            ),
-            customColors: CustomSliderColors(
-              dotColor: Colors.transparent,
-              progressBarColor: AddToExistingLight,
-              trackColor: Colors.white
-            )
-          ),
-        )),
-    ),
-                      );
   }
 }
