@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/main.dart';
 import 'package:path/path.dart' as p;
 import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
@@ -26,7 +27,7 @@ LazyDatabase _openConnection() {
     // put the database file, called db.sqlite here, into the documents folder
     // for your app.
     final dbFolder = await getDatabasesPath();
-    final file = File(p.join(dbFolder, 'idealog_db.sqlite'));
+    final file = File(p.join(dbFolder, 'idealog.db'));
 
     return VmDatabase(file);
   });
@@ -68,5 +69,6 @@ class IdealogDb extends _$IdealogDb{
     }
 
     static final IdealogDb instance = IdealogDb();
+
 }
 

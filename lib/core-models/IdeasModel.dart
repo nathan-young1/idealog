@@ -11,13 +11,29 @@ class IdeaModel extends Tasks{
 
   IdeaModel.readFromDb({required this.ideaTitle,this.moreDetails,required List<List<int>> completedTasks,required this.uniqueId,required List<List<int>> uncompletedTasks}):super.fromDb(completedTasks: completedTasks,uncompletedTasks: uncompletedTasks);
 
-IdeaModel.readDb({required Idea idea}):
+  IdeaModel.readDb({required Idea idea}):
   uniqueId = idea.uniqueId,
   ideaTitle = idea.ideaTitle,
   moreDetails = idea.moreDetails,
   super.fromDb(completedTasks: idea.completedTasks!.fromDbStringToListInt,uncompletedTasks: idea.uncompletedTasks!.fromDbStringToListInt);
 
+  IdeaModel.fromFirebaseJson({required Map<String, dynamic> json}):
+  uniqueId = json['uniqueId'],
+  ideaTitle = json['ideaTitle'],
+  moreDetails = json['moreDetails'],
+  super.fromDb(completedTasks: json['completedTasks'],uncompletedTasks: json['uncompletedTasks']);
+
   String? changeMoreDetail(String? newDetails)=> moreDetails= newDetails;
+
+  Map<String, dynamic> toMap(){
+    return {
+        'uniqueId': uniqueId,
+        'ideaTitle': ideaTitle,
+        'moreDetails': moreDetails,
+        'completedTasks': completedTasks,
+        'uncompletedTasks': uncompletedTasks
+    };
+  }
 }
 
 

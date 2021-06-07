@@ -24,33 +24,34 @@ class IdeaCard extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 35),
-      child:  Slidable(
-        actionPane: SlidableDrawerActionPane(),
-        actionExtentRatio: 0.25,
-        controller: SlidableController(
-        onSlideIsOpenChanged: (bool? value) => slidableIconState.value = value!,
-        onSlideAnimationChanged: (_){}
-        ),
-        secondaryActions: [
-                  Transform.translate(
-                    offset: Offset(-5,0),
-                    child: TaskAdderSlideAction(idea: idea)),
+      child:  GestureDetector(
+        onTap: ()=> Navigator.push(context,
+         MaterialPageRoute(builder: (context)=> IdeaDetail(idea: idea))),
 
-                  Transform.translate(
-                    offset: Offset(-5,0),
-                    child: DeleteSlideAction(idea: idea))
-                  ],
-        child: GestureDetector(
-          onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>IdeaDetail(idea: idea))),
-          child: Column(
-            children: [
-              MainTile(
-                    percent: percent,
-                    idea: idea,
-                    slidableIconState: slidableIconState)
-            ],
+        child: Slidable(
+          key: UniqueKey(),
+          movementDuration: Duration(milliseconds: 400),
+          actionPane: SlidableBehindActionPane(),
+          actionExtentRatio: 0.3,
+          controller: SlidableController(
+          onSlideIsOpenChanged: (bool? value) => slidableIconState.value = value!,
+          onSlideAnimationChanged: (_){}
           ),
-        )
+          secondaryActions: [
+                    Transform.translate(
+                      offset: Offset(-8,0),
+                      child: TaskAdderSlideAction(idea: idea)),
+            
+                    Transform.translate(
+                      offset: Offset(-18,0),
+                      child: DeleteSlideAction(idea: idea))
+                    ],
+          child: MainTile(
+                percent: percent,
+                idea: idea,
+                slidableIconState: slidableIconState
+                )
+        ),
       ),
     );
   }

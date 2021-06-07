@@ -30,14 +30,14 @@ class TaskAdderSlideAction extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              iconSize: 35,
+              iconSize: 37,
               color: Colors.white,
               icon: Icon(Icons.add),
               onPressed: ()=> Navigator.of(context).push(
               MaterialPageRoute(builder: (context)=>
               AddToExistingIdea(idea: idea))),
             ),
-            Text('Add Task',style: TextStyle(fontSize: 10,color: Colors.white))
+            Text('New Task',style: TextStyle(fontSize: 13,color: Colors.white))
           ],
         ),
       ),

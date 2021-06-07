@@ -14,7 +14,7 @@ class IdeaListPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 25,left: 20,right: 10),
+          padding: EdgeInsets.only(top: 25,left: 20,right: 10,bottom: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

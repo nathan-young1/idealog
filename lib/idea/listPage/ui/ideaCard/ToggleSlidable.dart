@@ -23,7 +23,7 @@ class ToggleSlidable extends StatelessWidget {
         onPressed: () =>Slidable.of(context)!.close()
         )
     
-        : IconButton(onPressed: () => Slidable.of(context)!.open(),
+        : IconButton(onPressed: () => Slidable.of(context)!.open(actionType: SlideActionType.secondary),
         icon: Icon(Icons.more_vert,size: 32))
        ),
     );

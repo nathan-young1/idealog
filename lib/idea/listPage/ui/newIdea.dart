@@ -92,7 +92,7 @@ class _NewIdeaState extends State<NewIdea> {
           ),
         ),
           bottomNavigationBar: GestureDetector(
-            onTap: () async => (ideaTitle.text.isNotEmpty)?IdeaManager.addToDbAndSetAlarmIdea(
+            onTap: () async => (ideaTitle.text.isNotEmpty)? await IdeaManager.addToDbAndSetAlarmIdea(
                   context: context,
                   ideaTitle: ideaTitle.text,
                   moreDetails: moreDetails.text,

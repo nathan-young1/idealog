@@ -6,10 +6,12 @@ class GoogleUserData with ChangeNotifier{
   static String? _Email = auth.currentUser?.email;
   static String? _Photo_url = auth.currentUser?.photoURL;
   static GoogleIdentity? _User_Identity;
+  static String? _Uid;
 
   String? get user_email => _Email;
   String? get user_photo_url => _Photo_url;
   GoogleIdentity? get userIdentity => _User_Identity;
+  String? get user_uid => _Uid;
 
   set user_email(String? email){
     _Email = email;
@@ -23,6 +25,11 @@ class GoogleUserData with ChangeNotifier{
 
   set userIdentity(GoogleIdentity? userIdentity){
     _User_Identity = userIdentity;
+    notifyListeners();
+  }
+
+  set user_uid(String? userUid){
+    _Uid = userUid;
     notifyListeners();
   }
 

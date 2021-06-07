@@ -7,28 +7,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.google.type.DateTime;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import databaseModels.AnalyticsData;
 import databaseModels.IdeaModel;
 
 public class IdealogDatabase extends SQLiteOpenHelper {
 //    the actual moor table name is 'ideas'
     public static final String IDEAS = "ideas";
-    public static final String SCHEDULE = "SCHEDULE";
     public static final String COLUMN_UNIQUE_ID = "unique_id";
     public static final String COLUMN_IDEA_TITLE = "idea_title";
     public static final String Column_MoreDetails = "more_details";
     public static final String Column_CompletedTasks = "completed_tasks";
     public static final String Column_UncompletedTasks = "uncompleted_tasks";
-    public static final String IdealogDbName = "idealog_db.sqlite";
+    public static final String IdealogDbName = "idealog.db";
 
     public IdealogDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, @Nullable int version) {
         super(context, IdealogDbName, null, 1);
@@ -66,6 +58,7 @@ public class IdealogDatabase extends SQLiteOpenHelper {
                     ideas.add(newSchedule);
                 } while (ideasCursor.moveToNext());
             }
+
             //close the database reference
             db.close();
             return ideas;

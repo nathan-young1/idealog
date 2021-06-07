@@ -1,35 +1,34 @@
 package com.mobile.idealog;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.Operation;
 import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 import dataSyncronization.AutoSync;
 import dataSyncronization.SyncNow;
-import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.android.FlutterFragmentActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugins.GeneratedPluginRegistrant;
-import java.util.*;
+
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
-import static com.mobile.idealog.IdealogDatabase.COLUMN_UNIQUE_ID;
-import static com.mobile.idealog.IdealogDatabase.IDEAS;
-import static com.mobile.idealog.IdealogDatabase.SCHEDULE;
 
 public class MainActivity extends FlutterFragmentActivity {
     final private String AutoSyncWorkRequestTag = "AutoSync";
+    final private String SyncNowWorkRequestTag = "SyncNow";
     final private String startAutoSyncMethod = "startAutoSync";
     final private String cancelAutoSyncMethod = "cancelAutoSync";
     final private String syncNowMethod = "syncNow";
@@ -48,8 +47,7 @@ public class MainActivity extends FlutterFragmentActivity {
                     cancelAutoSync();
                     result.success("Auto Sync has been canceled");
                 }else  if(call.method.equals(syncNowMethod)){
-                    syncNow();
-                    result.success("Data has been synced");
+                    syncNow(result);
                 }
             }
         });
@@ -62,7 +60,7 @@ public class MainActivity extends FlutterFragmentActivity {
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-//        do the periodic work every 2 hours if there is internet connection and battery is not low
+//        do the periodic work every 2 hours if there is internet connection
 //        reduce the time later, though The interval period is defined as the minimum time between repetitions.
 //        The exact time that the worker is going to be executed depends on the constraints that you are using in your WorkRequest object
 //        and on the optimizations performed by the system.
@@ -87,19 +85,34 @@ public class MainActivity extends FlutterFragmentActivity {
         WorkManager.getInstance(this).cancelAllWorkByTag(AutoSyncWorkRequestTag);
     }
 
-    public void syncNow(){
+
+    public void syncNow(MethodChannel.Result result){
         Constraints workRequestConstraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-//        Later i will check whether i have to set period start time
 
         OneTimeWorkRequest syncNowWorkRequest = new OneTimeWorkRequest.Builder(SyncNow.class)
                 .setConstraints(workRequestConstraints)
+                .addTag(SyncNowWorkRequestTag)
                 .build();
 
-        WorkManager
-                .getInstance(this)
-                .enqueue(syncNowWorkRequest);
+
+        WorkManager workManagerInstance = WorkManager.getInstance(this);
+
+        workManagerInstance.enqueueUniqueWork(SyncNowWorkRequestTag, ExistingWorkPolicy.APPEND_OR_REPLACE,syncNowWorkRequest);
+
+        workManagerInstance
+                .getWorkInfoByIdLiveData(syncNowWorkRequest.getId())
+                .observe(this, workInfo -> {
+                    switch (workInfo.getState()){
+                        case SUCCEEDED:
+                            result.success("Success");
+                            break;
+                        case FAILED:
+                            result.error("Failed","Failed",null);
+                            break;
+                    }
+                });
     }
 }

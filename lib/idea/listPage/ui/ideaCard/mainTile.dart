@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/idea/listPage/ui/ideaCard/percentIndicator.dart';
-
 import 'ToggleSlidable.dart';
 import 'ideaTitle.dart';
 
@@ -21,7 +20,6 @@ class MainTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 85,
       padding: EdgeInsets.only(top: 15,bottom: 15,left: 20,right: 10),
       decoration: BoxDecoration(
                   color: IdeaCardLight,
@@ -33,7 +31,7 @@ class MainTile extends StatelessWidget {
                   PercentageIncidator(percent: percent),
                   IdeaTitle(idea: idea),
                   ToggleSlidable(
-                    slidableIconState: slidableIconState,
+                    slidableIconState: slidableIconState
                   )
                 ],
               ),

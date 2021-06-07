@@ -619,7 +619,7 @@ packages:
     source: hosted
     version: "2.0.1"
   pedantic:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: pedantic
       url: "https://pub.dartlang.org"

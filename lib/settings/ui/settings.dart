@@ -55,7 +55,7 @@ class Settings extends StatelessWidget {
                 onTap: ()=>Navigator.pushNamed(context, 'ManageAccount'),),
 
                 ListTile(leading: Icon(FeatherIcons.uploadCloud,size: 30,color: _listTileIconColor),
-                title: Text('Data Syncronization',style: Poppins.copyWith(fontSize: 20)),
+                title: Text('Data Backup',style: Poppins.copyWith(fontSize: 20)),
                 onTap: ()=> Navigator.pushNamed(context, 'Syncronization')),
 
                 ListTile(leading: Icon(PhosphorIcons.caret_double_up,size: 30,color: _listTileIconColor),

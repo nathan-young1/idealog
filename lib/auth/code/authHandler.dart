@@ -21,6 +21,7 @@ Future<void> signInWithGoogle() async {
   await auth.signInWithCredential(credential);
 
   // initialize the googleUserData class with the user credientials
+  GoogleUserData.instance.user_uid = auth.currentUser!.uid;
   GoogleUserData.instance.user_email = googleUser.email;
   GoogleUserData.instance.user_photo_url = googleUser.photoUrl;
   GoogleUserData.instance.userIdentity = googleUser;

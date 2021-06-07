@@ -24,12 +24,4 @@ class NativeCodeCaller{
     }
   }
 
-  static Future<void> syncNow() async{
-    try{
-      String result = await platform.invokeMethod(syncNowMethod);
-      print(result);
-    } catch (e){
-      print(e);
-    }
-  }
 }

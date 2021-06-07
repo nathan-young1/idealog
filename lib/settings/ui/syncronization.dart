@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/auth/code/authHandler.dart';
+import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/strings.dart';
+import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +41,7 @@ class Syncronization extends StatelessWidget {
                       iconSize: 35,
                       onPressed: ()=>Navigator.pop(context)),
                     SizedBox(width: 12),
-                    Text('Data Syncronization',style: Poppins.copyWith(fontSize: 24))
+                    Text('Data Backup',style: Poppins.copyWith(fontSize: 24))
                   ],
                 ),
               ),
@@ -81,12 +84,12 @@ class Syncronization extends StatelessWidget {
                     if (GoogleUserData.instance.user_email == null) {
                       await signInWithGoogle();
                     }
-                    await NativeCodeCaller.syncNow();
+                    await IdeaManager.syncIdeasNow(Provider.of<List<IdeaModel>>(context,listen: false));
                     },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                    Text('Sync Now',style: Overpass.copyWith(fontSize: 20)),
+                    Text('Backup Now',style: Overpass.copyWith(fontSize: 20)),
                     Container(
                       width: 60,
                       child: Icon(FeatherIcons.uploadCloud,size: 30,color: Colors.teal))
@@ -97,7 +100,7 @@ class Syncronization extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                  Text('Auto Sync',style: Overpass.copyWith(fontSize: 20)),
+                  Text('Auto Backup',style: Overpass.copyWith(fontSize: 20)),
                   Container(
                     width: 60,
                     child: Switch(value: Provider.of<Prefrences>(context).autoSyncEnabled,
