@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:idealog/Idea/code/ideaManager.dart';
+import 'package:idealog/Idea/ui/DetailPage/views/Tasks/MultiSelectTile/Notifier.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/colors.dart';
-import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 import 'package:idealog/global/extension.dart';
+import 'package:provider/provider.dart';
 
 
-class SlidableListView extends StatelessWidget {
-  const SlidableListView({
+class CompletedTaskTile extends StatelessWidget {
+  
+  CompletedTaskTile({
     Key? key,
-    required this.slidableIconState,
     required this.idea,
     required this.completedTask
   }) : super(key: key);
 
-  final ValueNotifier<bool> slidableIconState;
+  final ValueNotifier<bool> slidableIconState = ValueNotifier(false);
   final IdeaModel idea;
   final List<int> completedTask;
 
@@ -25,7 +27,7 @@ class SlidableListView extends StatelessWidget {
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.2,
        controller: SlidableController(
-        onSlideIsOpenChanged: (bool? value) =>slidableIconState.value = value!,
+        onSlideIsOpenChanged: (bool? value) => slidableIconState.value = value!,
         onSlideAnimationChanged: (_){}
         ),
 
@@ -35,22 +37,23 @@ class SlidableListView extends StatelessWidget {
           color: LightPink,
           caption: 'Delete',
           onTap: () async =>
-          await IdeaManager.deleteCompletedTask(idea, completedTask)
+          await IdeaManager.deleteTask(idea, completedTask)
         )
        ],
-      child: ListTile(
 
-      leading: Checkbox(
-      value: true,
-
-      onChanged: (bool? value) async =>
-      await IdeaManager.uncheckCompletedTask(idea, completedTask)
-      ),
-      
-      title: Text(completedTask.toAString),
-      trailing: SlidableControllerButton(slidableIconState),
-
+      child: GestureDetector(
+        onLongPress: ()=> Provider.of<MultiSelect>(context,listen: false).startMultiSelect(completedTask),
+        child: ListTile(
+        leading: Checkbox(
+        value: true,
+        onChanged: (bool? value) async =>
+        await IdeaManager.uncheckCompletedTask(idea, completedTask)
         ),
+        
+        title: Text(completedTask.toAString),
+        trailing: SlidableIconButton(slidableIconState),
+          ),
+      ),
     );
   }
 }
@@ -60,11 +63,11 @@ class SlidableListView extends StatelessWidget {
 
 
 
-class SlidableControllerButton extends StatelessWidget {
+class SlidableIconButton extends StatelessWidget {
 
   final ValueNotifier<bool> slidableIconState;
   
-  SlidableControllerButton(this.slidableIconState);
+  SlidableIconButton(this.slidableIconState);
 
   /* Events like add a list item causes the value notifier to reintialize to false, which results in controller icon
      to revert to default while the slidable is open.. In other to checkmate the problem _onListUpdate(context) checks

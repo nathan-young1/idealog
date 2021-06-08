@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/Idea/ui/ListPage/views/Card.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
-import 'ideaCard/ideaCard.dart';
 
 class IdeaListPage extends StatelessWidget {
 

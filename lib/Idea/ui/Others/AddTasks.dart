@@ -2,12 +2,12 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
+import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
-import 'package:idealog/idea/listPage/ui/newIdea.dart' show Info;
+import 'CreateIdea.dart' show Info;
 
 class AddToExistingIdea extends StatefulWidget {
   final IdeaModel idea;
@@ -101,7 +101,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
             onTap: () async {
               newTasks.forEach((task) => widget.idea.addNewTask(task.codeUnits));
               await IdealogDb.instance.updateDb(updatedEntry: widget.idea);
-              await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>IdeaDetail(idea: widget.idea)));
+              await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> IdeaDetail(idea: widget.idea)));
               },
             child: Container(
               height: 65,

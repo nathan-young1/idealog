@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
+import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/auth/code/authHandler.dart';
@@ -8,8 +8,6 @@ import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/strings.dart';
-import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
-import 'package:idealog/nativeCode/bridge.dart';
 import 'package:provider/provider.dart';
 
 class Syncronization extends StatelessWidget {
@@ -81,6 +79,7 @@ class Syncronization extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () async {
+                    
                     if (GoogleUserData.instance.user_email == null) {
                       await signInWithGoogle();
                     }

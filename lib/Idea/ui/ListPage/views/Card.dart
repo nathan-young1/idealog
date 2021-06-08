@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
+import 'package:idealog/Idea/ui/ListPage/views/slideActions.dart';
 import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
-import 'package:idealog/idea/listPage/ui/ideaCard/slideActions.dart';
+
 import 'mainTile.dart';
 
 class IdeaCard extends StatelessWidget {

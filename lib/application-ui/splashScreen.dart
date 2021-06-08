@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     void initState() {
       super.initState();
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-        timer = Timer(Duration(seconds: 2),()=>Prefrences.instance.fingerprintEnabled 
+        timer = Timer(Duration(milliseconds: 800),()=>Prefrences.instance.fingerprintEnabled 
         ?authenticateWithBiometrics(calledFromLogin: true)
         :changeRoute());
       });

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
+import 'package:idealog/Idea/ui/ListPage/ListPage.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/routes.dart';
-import 'package:idealog/idea/listPage/ui/ideaListPage.dart';
 import 'package:idealog/productivity/code/productivityManager.dart';
 import 'package:idealog/productivity/ui/productivity.dart';
 import 'package:idealog/settings/ui/settings.dart';

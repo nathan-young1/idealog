@@ -1,11 +1,11 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/idea/ideaDetails/code/ideaManager.dart';
 
 class NewIdea extends StatefulWidget {
   @override

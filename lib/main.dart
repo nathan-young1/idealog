@@ -6,15 +6,16 @@ import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/design/theme.dart';
 import 'package:idealog/global/routes.dart';
+import 'package:idealog/settings/code/settingsManager.dart';
 import 'package:idealog/settings/ui/manageAccount.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:provider/provider.dart';
 import 'Databases/analytics-db/analyticsSql.dart';
 import 'Databases/idealog-db/idealog_Db_Moor.dart';
+import 'Idea/ui/Others/CreateIdea.dart';
 import 'Prefs&Data/GoogleUserData.dart';
 import 'auth/ui/authUi.dart';
 import 'core-models/ideasModel.dart';
-import 'idea/listPage/ui/newIdea.dart';
 import 'settings/ui/syncronization.dart';
 
 void main() => runApp(Idealog());
@@ -37,6 +38,7 @@ class _IdealogState extends State<Idealog> {
       Prefrences.instance.initialize(), 
       Firebase.initializeApp()
       ]);
+      await test();
       });
   }
 

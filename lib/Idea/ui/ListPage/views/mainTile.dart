@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/Idea/ui/ListPage/views/percentIndicator.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/colors.dart';
-import 'package:idealog/idea/listPage/ui/ideaCard/percentIndicator.dart';
 import 'ToggleSlidable.dart';
 import 'ideaTitle.dart';
 

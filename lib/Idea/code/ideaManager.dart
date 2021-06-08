@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
@@ -19,12 +20,12 @@ class IdeaManager{
       Navigator.popAndPushNamed(context, menuPageView);
     }
 
-    static completeTask(IdeaModel idea,List<int> uncompletedTask) async {
+  static completeTask(IdeaModel idea,List<int> uncompletedTask) async {
 
-        idea.completeTask(uncompletedTask);
-        IdealogDb.instance.updateDb(updatedEntry: idea);
-        await AnalyticDB.instance.writeOrUpdate(uncompletedTask);
-    }
+      idea.completeTask(uncompletedTask);
+      IdealogDb.instance.updateDb(updatedEntry: idea);
+      await AnalyticDB.instance.writeOrUpdate(uncompletedTask);
+  }
 
   static uncheckCompletedTask(IdeaModel idea,List<int> completedTask) async {
     
@@ -33,17 +34,16 @@ class IdeaManager{
       await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
   }
 
-  static deleteUncompletedTask(IdeaModel idea,List<int> uncompletedTask) async {
-    // We are not removing it from analytics data because it is an uncompleted task so it has not been recorded in analytics sql
-      idea.deleteTask(uncompletedTask);
+  static deleteTask(IdeaModel idea,List<int> task) async {
+    // I am using delete task because analytics will not throw an error 
+    // if you try to delete a non-existent uncompleted task
+      idea.deleteTask(task);
       IdealogDb.instance.updateDb(updatedEntry: idea);
+      await AnalyticDB.instance.removeTaskFromAnalytics(task);
   }
 
-  static deleteCompletedTask(IdeaModel idea,List<int> completedTask) async {
-      idea.deleteTask(completedTask);
-      IdealogDb.instance.updateDb(updatedEntry: idea);
-      await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
-  }
+  static multiDelete(IdeaModel idea,List<List<int>> selectedTasks) => 
+          selectedTasks.forEach((task) => deleteTask(idea, task));
 
   static deleteIdeaFromDb(IdeaModel idea) async { 
       IdealogDb.instance.deleteFromDb(uniqueId: idea.uniqueId!);
@@ -53,10 +53,15 @@ class IdeaManager{
 
   static Future<void> syncIdeasNow(List<IdeaModel> allIdeas) async{
     // call the deleting cloud function
-    FirebaseFirestore cloudDb = FirebaseFirestore.instance;
-    var userUid = GoogleUserData.instance.user_uid;
-    allIdeas.forEach((idea) async { 
+    FirebaseFunctions functions = FirebaseFunctions.instance;
+
+    await functions.httpsCallable("deleteFormerData").call().then((value) {
+      FirebaseFirestore cloudDb = FirebaseFirestore.instance;
+      var userUid = GoogleUserData.instance.user_uid;
+      print(userUid);
+      allIdeas.forEach((idea) async { 
       await cloudDb.collection('$userUid').doc('Database').collection('Ideas').doc(idea.uniqueId.toString()).set(idea.toMap());
+    });
     });
     
   }

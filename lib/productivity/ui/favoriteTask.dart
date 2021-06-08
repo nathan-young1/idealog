@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/idea/ideaDetails/ui/ideaDetails.dart';
 import 'package:idealog/productivity/code/productivityManager.dart';
 import 'package:provider/provider.dart';
 
