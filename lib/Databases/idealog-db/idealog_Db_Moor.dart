@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:idealog/core-models/ideasModel.dart';
-import 'package:idealog/main.dart';
 import 'package:path/path.dart' as p;
 import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';

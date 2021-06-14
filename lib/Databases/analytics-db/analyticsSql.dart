@@ -67,18 +67,18 @@ class AnalyticDB extends _$AnalyticDB{
     dbResult.forEach((row) => recordedDaysInDb.add(row.day));
     //create a set to remove duplicate dates
 
-    var ActiveDays = Set<int>.from(recordedDaysInDb);
+    var activeDays = Set<int>.from(recordedDaysInDb);
 
     // To store the AnalyticChartData
     var fullChartData = <AnalyticChartData>[];
 
     // The number of times a day repeats is equilavent to the number of tasks completed that day
 
-    ActiveDays.forEach((ActiveDay) { 
-      var numberOfTasksCompleted = recordedDaysInDb.where((day) => day == ActiveDay).length;
+    activeDays.forEach((activeDay) { 
+      var numberOfTasksCompleted = recordedDaysInDb.where((day) => day == activeDay).length;
 
       var newData = AnalyticChartData(
-        date: DateTime(now.year,now.month,ActiveDay),
+        date: DateTime(now.year,now.month,activeDay),
         numberOfTasksCompleted: numberOfTasksCompleted);
 
       fullChartData.add(newData);

@@ -46,6 +46,11 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
+
+            // Because the release apk was stuck on the splash screen, i added FROM HERE
+            shrinkResources false
+            minifyEnabled false
+            // TO HERE
             signingConfig signingConfigs.debug
         }
     }
