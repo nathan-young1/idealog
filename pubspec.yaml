@@ -30,7 +30,6 @@ dependencies:
   flutter_screenutil: ^5.0.0-nullsafety.11
   local_auth: ^1.1.5
   velocity_x: ^3.2.0
-  google_nav_bar: ^5.0.3
   google_sign_in: ^5.0.0
   sqflite: ^2.0.0+2
   another_flushbar: ^1.10.17
@@ -49,6 +48,7 @@ dependencies:
   community_material_icon: ^5.9.55
   cloud_functions: ^1.1.1
   moor: ^4.3.0
+  moor_db_viewer: ^4.0.0
   sqlite3_flutter_libs:
   path_provider:
   path:

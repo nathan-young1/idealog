@@ -45,6 +45,9 @@ public class MainActivity extends FlutterFragmentActivity {
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
+//        if there is a malfunction with moor db in production mode then and only then will i add this constraint.
+//                        .setRequiresDeviceIdle(true)
+
 //        do the periodic work every 2 hours if there is internet connection
 //        reduce the time later, though The interval period is defined as the minimum time between repetitions.
 //        The exact time that the worker is going to be executed depends on the constraints that you are using in your WorkRequest object
