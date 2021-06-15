@@ -7,7 +7,8 @@ import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'CreateIdea.dart' show Info;
+import 'CreateIdea.dart' show Info, TaskAlreadyExists;
+import 'package:idealog/global/extension.dart';
 
 class AddToExistingIdea extends StatefulWidget {
   final IdeaModel idea;
@@ -25,10 +26,21 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
 
   Set<String> newTasks = <String>{};
 
-  void addNewTask(){
+  void addNewTask(BuildContext context){
     if(newTask.text != ''){
-      setState(() => newTasks.add(newTask.text));
-      newTask.text = '';
+      setState(() { 
+        List<String> allTasks = [...widget.idea.completedTasks.map((e) => e.toAString),
+        ...widget.idea.uncompletedTasks.map((e) => e.toAString)];
+        print('$allTasks , :contains ${allTasks.contains(newTask.text)}');
+        if(allTasks.contains(newTask.text)){
+          TaskAlreadyExists(pageContext: context);
+        }else{
+          newTasks.add(newTask.text);
+        }
+        });
+      // newTask.text = '';
+      newTask.value = TextEditingValue.empty;
+      // newTask.clear();
       }
   }
 
@@ -81,13 +93,13 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                           focusNode: newTaskFocus,
                           onFieldSubmitted: (_){
                             newTaskFocus.requestFocus();
-                            addNewTask();
+                            addNewTask(context);
                           },
                           style: TextStyle(fontSize: 18),
                           decoration: underlineAndFilled.copyWith(
                             labelText: 'Task',
                             suffixIcon: IconButton(icon: Icon(Icons.check,color: LightPink.withOpacity(0.7),size: 30),
-                            onPressed: () => addNewTask())
+                            onPressed: () => addNewTask(context))
                           ),
                         ),
                     ],

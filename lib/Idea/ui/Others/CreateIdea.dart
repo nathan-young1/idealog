@@ -23,7 +23,8 @@ class _NewIdeaState extends State<NewIdea> {
   void addNewTask(){
     if(taskField.text != ''){
       setState(() => tasks.add(taskField.text));
-      taskField.text = '';
+      // taskField.text = '';
+      taskField.clear();
       }
   }
 
@@ -135,6 +136,26 @@ Widget TitleIsRequired ({required BuildContext pageContext}){
     backgroundColor: Colors.white,
     messageText: Text('Idea Title is required',
     style: Overpass.copyWith(color: Colors.black87,fontSize: 18),),
+    )..show(pageContext);
+
+}
+
+Widget TitleAlreadyExists ({required BuildContext pageContext}){
+
+    return Flushbar(icon: Icon(Icons.text_fields,color: LightPink),duration: Duration(seconds: 1),
+    backgroundColor: Colors.white,
+    messageText: Text('This idea Title already exists',
+    style: Overpass.copyWith(color: Colors.black87,fontSize: 18)),
+    )..show(pageContext);
+
+}
+
+Widget TaskAlreadyExists ({required BuildContext pageContext}){
+
+    return Flushbar(icon: Icon(Icons.text_fields,color: LightPink),duration: Duration(seconds: 1),
+    backgroundColor: Colors.white,
+    messageText: Text('This task already exists',
+    style: Overpass.copyWith(color: Colors.black87,fontSize: 18)),
     )..show(pageContext);
 
 }
