@@ -10,8 +10,9 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Container(
-      height: BottomNavController.instance.bottomNavHeight,
+      height: Provider.of<BottomNavController>(context,listen: false).bottomNavHeight,
       decoration: BoxDecoration( 
         color: LightGray,
         borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))
@@ -54,7 +55,8 @@ class _ActiveTabState extends State<ActiveTab> with SingleTickerProviderStateMix
   late AnimationController tabAnimationController;
   late Animation<Color?> colorChangeAnimation;
   late Animation<double?> translateAnimation;
-
+  late BottomNavController listenableBottomNavController;
+  late BottomNavController nonListenableBottomNavController;
   @override
   void initState() {
     tabAnimationController = AnimationController(
@@ -78,16 +80,19 @@ class _ActiveTabState extends State<ActiveTab> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-
-    bool tabIsActive = Provider.of<BottomNavController>(context).currentPage == (widget.typeOfTab);
-    BottomNavController.instance.controlAnimation(animationController: tabAnimationController, tabIsActive: tabIsActive);
+    
+    listenableBottomNavController = Provider.of<BottomNavController>(context);
+    nonListenableBottomNavController = Provider.of<BottomNavController>(context,listen: false);
+    
+    bool tabIsActive = listenableBottomNavController.currentPage == (widget.typeOfTab);
+    nonListenableBottomNavController.controlAnimation(animationController: tabAnimationController, tabIsActive: tabIsActive);
 
     return GestureDetector(
-      onTap: ()=> BottomNavController.instance.currentPage = widget.typeOfTab,
+      onTap: ()=> nonListenableBottomNavController.currentPage = widget.typeOfTab,
 
       child: Container(
-        alignment: BottomNavController.instance.navTabAlignment(widget.typeOfTab),
-        height: BottomNavController.instance.bottomNavHeight * 0.8,
+        alignment: nonListenableBottomNavController.navTabAlignment(widget.typeOfTab),
+        height: nonListenableBottomNavController.bottomNavHeight * 0.8,
         color: Colors.transparent,
 
         child: AnimatedBuilder(

@@ -51,7 +51,7 @@ class _MenuPageViewState extends State<MenuPageView> {
               child: Scaffold(
                   body: PageView(
                     physics: NeverScrollableScrollPhysics(),
-                    controller: BottomNavController.instance.controller,
+                    controller: Provider.of<BottomNavController>(context,listen: false).controller,
                     children: [
                       IdeaListPage(),
                       Productivity(),

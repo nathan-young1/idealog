@@ -22,8 +22,11 @@ class MainTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(top: 15,bottom: 15,left: 20,right: 10),
       decoration: BoxDecoration(
-                  color: IdeaCardLight,
+                  color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(offset: Offset(0,0),blurRadius: 10,color: Colors.black.withOpacity(0.2))
+                  ]
                 ),
       child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

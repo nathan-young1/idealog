@@ -38,7 +38,6 @@ class _IdealogState extends State<Idealog> {
       Prefrences.instance.initialize(), 
       Firebase.initializeApp()
       ]);
-      await test();
       });
   }
 
