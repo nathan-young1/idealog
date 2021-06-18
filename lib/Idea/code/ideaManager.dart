@@ -31,14 +31,14 @@ class IdeaManager{
   static completeTask(IdeaModel idea,List<int> uncompletedTask) async {
 
       idea.completeTask(uncompletedTask);
-      IdealogDb.instance.updateDb(updatedEntry: idea);
+      await IdealogDb.instance.updateDb(updatedEntry: idea);
       await AnalyticDB.instance.writeOrUpdate(uncompletedTask);
   }
 
   static uncheckCompletedTask(IdeaModel idea,List<int> completedTask) async {
     
       idea.uncheckCompletedTask(completedTask);
-      IdealogDb.instance.updateDb(updatedEntry: idea);
+      await IdealogDb.instance.updateDb(updatedEntry: idea);
       await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
   }
 
@@ -46,7 +46,7 @@ class IdeaManager{
     // I am using delete task because analytics will not throw an error 
     // if you try to delete a non-existent uncompleted task
       idea.deleteTask(task);
-      IdealogDb.instance.updateDb(updatedEntry: idea);
+      await IdealogDb.instance.updateDb(updatedEntry: idea);
       await AnalyticDB.instance.removeTaskFromAnalytics(task);
   }
 
@@ -54,7 +54,7 @@ class IdeaManager{
           selectedTasks.forEach((task) => deleteTask(idea, task));
 
   static deleteIdeaFromDb(IdeaModel idea) async { 
-      IdealogDb.instance.deleteFromDb(uniqueId: idea.uniqueId!);
+      await IdealogDb.instance.deleteFromDb(uniqueId: idea.uniqueId!);
     // Delete all the completed tasks of this idea from analytics data
     idea.completedTasks.forEach((completedTask) async => await AnalyticDB.instance.removeTaskFromAnalytics(completedTask));
     }

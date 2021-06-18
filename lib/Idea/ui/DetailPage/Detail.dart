@@ -21,6 +21,13 @@ class IdeaDetail extends StatefulWidget {
 }
 
 class _IdeaDetailState extends State<IdeaDetail> {
+  
+  @override
+  void initState() { 
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) => SearchController.instance.stopSearch());
+    super.initState();
+  }
+
   bool descriptionEnabled = false;
   FocusNode descriptionFocus = FocusNode();
   @override
@@ -31,7 +38,6 @@ class _IdeaDetailState extends State<IdeaDetail> {
           providers: [
           ChangeNotifierProvider<IdeaModel>.value(value: widget.idea),
           ChangeNotifierProvider<MultiSelect>.value(value: MultiSelect.instance),
-          ChangeNotifierProvider<SearchController>.value(value: SearchController.instance)
           ],
           child: Column(
             children: [

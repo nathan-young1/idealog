@@ -12,6 +12,7 @@ import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:provider/provider.dart';
 import 'Databases/analytics-db/analyticsSql.dart';
 import 'Databases/idealog-db/idealog_Db_Moor.dart';
+import 'Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
 import 'Idea/ui/Others/CreateIdea.dart';
 import 'Prefs&Data/GoogleUserData.dart';
 import 'auth/ui/authUi.dart';
@@ -54,7 +55,8 @@ class _IdealogState extends State<Idealog> {
                       StreamProvider<List<IdeaModel>>.value(value: IdealogDb.instance.watchIdeasInDb,initialData: [],catchError: (_,__)=>[]),
                       ChangeNotifierProvider<GoogleUserData>.value(value: GoogleUserData.instance),
                       ChangeNotifierProvider<Prefrences>.value(value: Prefrences.instance),
-                      ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance)
+                      ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance),
+                      ChangeNotifierProvider<SearchController>.value(value: SearchController.instance)
                     ],
                     child: Builder(
                       builder: (BuildContext context) => MaterialApp(

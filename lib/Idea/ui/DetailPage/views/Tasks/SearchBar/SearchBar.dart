@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import 'SearchNotifier.dart';
 
 class SearchAppBar extends StatelessWidget {
-  const SearchAppBar({Key? key}) : super(key: key);
+  final String hintText;
+  const SearchAppBar({Key? key,this.hintText = 'Task'}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class SearchAppBar extends StatelessWidget {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.transparent,
-                  hintText: "Task",
+                  hintText: hintText,
                   suffixIcon: IconButton(
                    onPressed: ()=> SearchController.instance.stopSearch(),
                    icon: Icon(Icons.close)
