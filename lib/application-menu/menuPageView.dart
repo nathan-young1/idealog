@@ -11,26 +11,7 @@ import 'package:idealog/productivity/ui/productivity.dart';
 import 'package:idealog/settings/ui/settings.dart';
 import 'package:provider/provider.dart';
 
-class MenuPageView extends StatefulWidget {
-  @override
-  _MenuPageViewState createState() => _MenuPageViewState();
-}
-
-class _MenuPageViewState extends State<MenuPageView> {
-  final PageController _controller = PageController();
-  ValueNotifier<int> index = ValueNotifier(0);
-
-  @override
-    void initState() {
-      super.initState();
-    }
-
-  @override
-    void dispose() {
-      _controller.dispose();
-      index.dispose();
-      super.dispose();
-    }
+class MenuPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +23,12 @@ class _MenuPageViewState extends State<MenuPageView> {
       FutureProvider<List<AnalyticChartData>>.value(
       initialData: <AnalyticChartData>[],
       value: AnalyticDB.instance.readAnalytics(),
-      catchError: (_,__)=>[])
+      catchError: (_,__)=>[]),
+      ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance)
       ],
-      child: SafeArea(
+      child: Builder(
+        builder: (context) {
+          return SafeArea(
               child: Scaffold(
                   body: PageView(
                     physics: NeverScrollableScrollPhysics(),
@@ -66,7 +50,9 @@ class _MenuPageViewState extends State<MenuPageView> {
                         ),
                       ),
               bottomNavigationBar: BottomNavBar(),
-            )),
+            ));
+        }
+      ),
     );
   }
 }

@@ -24,8 +24,8 @@ class IdeaManager{
       
       var tasksInCharCodes = tasks.map((task) => task.codeUnits).toList();
       var newIdea = IdeaModel(ideaTitle: ideaTitle,moreDetails: moreDetails,tasksToCreate: tasksInCharCodes);
-      IdealogDb.instance.insertToDb(newEntry: newIdea);
-      Navigator.popAndPushNamed(context, menuPageView);
+      await IdealogDb.instance.insertToDb(newEntry: newIdea);
+      Navigator.popUntil(context, ModalRoute.withName(menuPageView));
     }
 
   static completeTask(IdeaModel idea,List<int> uncompletedTask) async {

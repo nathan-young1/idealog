@@ -7,7 +7,7 @@ class BottomNavController with ChangeNotifier{
   BottomNavController._();
   static BottomNavController instance = BottomNavController._();
 
-  final PageController controller = PageController(keepPage: true);
+  final PageController controller = PageController();
   final double bottomNavHeight = 75;
   int _currentPage = 0;
 
