@@ -34,13 +34,9 @@ class UpgradeToPremium extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _Features('Store unlimited ideas'),
+                    _Features('Backup Data'),
                     SizedBox(height: 10),
-                    _Features('Sync data across devices'),
-                    SizedBox(height: 10),
-                    _Features('Fingerprint authentication'),
-                    SizedBox(height: 10),
-                    _Features('Dark mode'),
+                    _Features('Authentication (fingerprint or face id)')
                   ],
                 ),
               ),

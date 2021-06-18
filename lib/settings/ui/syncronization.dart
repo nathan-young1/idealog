@@ -55,7 +55,7 @@ class Syncronization extends StatelessWidget {
                       topLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20)),
                   ),
-                  child: Center(child: Text('Last Synced at: Mar 15, 2021',
+                  child: Center(child: Text('Last backup at: Mar 15, 2021',
                   style: Overpass.copyWith(fontSize: 18,color: Colors.white),)),
                 ),
               )
@@ -68,7 +68,7 @@ class Syncronization extends StatelessWidget {
             children: [
               Icon(Icons.info_outline,color: Colors.teal.withOpacity(0.5),size: 30),
               SizedBox(width: 10),
-              Text('Your data will be synced every 24 hours.',
+              Text('Your data will be backed up every 24 hours.',
               style: Overpass.copyWith(fontSize: 15,fontWeight: FontWeight.w300))
             ],
           ),
@@ -111,7 +111,7 @@ class Syncronization extends StatelessWidget {
                 SizedBox(height: 10),
                 ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-                title: Text('Google Account',style: Overpass.copyWith(fontSize: 20)),
+                title: Text('Backup Account',style: Overpass.copyWith(fontSize: 20)),
                 subtitle: Text(Provider.of<GoogleUserData>(context).user_email ?? 'None',style: Overpass.copyWith(fontSize: 15)),
                 onTap: () async {
                   await signOutFromGoogle();
