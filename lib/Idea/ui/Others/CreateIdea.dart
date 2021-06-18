@@ -23,7 +23,6 @@ class _NewIdeaState extends State<NewIdea> {
   void addNewTask(){
     if(taskField.text != ''){
       setState(() => tasks.add(taskField.text));
-      // taskField.text = '';
       taskField.clear();
       }
   }

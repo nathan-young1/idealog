@@ -7,6 +7,8 @@ import 'MultiSelectTile/SectionTile.dart';
 import 'MultiSelectTile/Tile.dart';
 import 'NormalTile/completedTile.dart';
 import 'NormalTile/uncompletedTile.dart';
+import 'SearchBar/SearchNotifier.dart';
+import 'package:idealog/global/extension.dart';
 
 class DetailTasksList extends StatelessWidget {
   final IdeaModel idea;
@@ -14,13 +16,15 @@ class DetailTasksList extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    SearchController searchController = Provider.of<SearchController>(context);
+
     return Column(
         children: [
-          if(Provider.of<IdeaModel>(context).uncompletedTasks.isNotEmpty)
-          _UncompletedTasks(idea: idea),
+          if(Provider.of<IdeaModel>(context).uncompletedTasks.where(_searchTermExists).isNotEmpty)
+          _UncompletedTasks(idea: idea,searchTerm: searchController.searchTerm),
           SizedBox(height: 30),
-          if(Provider.of<IdeaModel>(context).completedTasks.isNotEmpty)
-          _CompletedTasks(idea: idea)
+          if(Provider.of<IdeaModel>(context).completedTasks.where(_searchTermExists).isNotEmpty)
+          _CompletedTasks(idea: idea,searchTerm: searchController.searchTerm)
         ],
       );
   }
@@ -28,7 +32,8 @@ class DetailTasksList extends StatelessWidget {
 
 class _UncompletedTasks extends StatelessWidget {
   final IdeaModel idea;
-  _UncompletedTasks({required this.idea});
+  final String searchTerm;
+  _UncompletedTasks({required this.idea,required this.searchTerm});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +48,8 @@ class _UncompletedTasks extends StatelessWidget {
              ),
 
              
-            ...uncompletedTasks.map((uncompletedTask) => 
+            ...uncompletedTasks.where(_searchTermExists)
+            .map((uncompletedTask) => 
                     (!selectionState)
                     ?UncompletedTaskTile(idea: idea,uncompletedTask: uncompletedTask)
                     :MultiSelectTaskTile(task: uncompletedTask)
@@ -57,7 +63,8 @@ class _UncompletedTasks extends StatelessWidget {
 
 class _CompletedTasks extends StatelessWidget {
   final IdeaModel idea;
-  _CompletedTasks({required this.idea});
+  final String searchTerm;
+  _CompletedTasks({required this.idea, required this.searchTerm});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +76,8 @@ class _CompletedTasks extends StatelessWidget {
             ?Text('Completed Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300))
             :SectionMultiSelect(sectionTasks: completedTasks, sectionName: Section.COMPLETED_TASK)),
 
-            ...completedTasks.map((completedTask) =>
+            ...completedTasks.where(_searchTermExists)
+            .map((completedTask) =>
                   (!selectionState)
                   ?CompletedTaskTile(idea: idea, completedTask: completedTask)
                   :MultiSelectTaskTile(task: completedTask)
@@ -78,3 +86,6 @@ class _CompletedTasks extends StatelessWidget {
         );
   }
 }
+
+// check if the search term exists in the list
+bool _searchTermExists(List<int> task)=> task.toAString.contains(SearchController.instance.searchTerm);

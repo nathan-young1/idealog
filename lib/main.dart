@@ -15,6 +15,7 @@ import 'Databases/idealog-db/idealog_Db_Moor.dart';
 import 'Idea/ui/Others/CreateIdea.dart';
 import 'Prefs&Data/GoogleUserData.dart';
 import 'auth/ui/authUi.dart';
+import 'bottomNav/notifier.dart';
 import 'core-models/ideasModel.dart';
 import 'settings/ui/syncronization.dart';
 
@@ -52,7 +53,8 @@ class _IdealogState extends State<Idealog> {
                     providers: [
                       StreamProvider<List<IdeaModel>>.value(value: IdealogDb.instance.watchIdeasInDb,initialData: [],catchError: (_,__)=>[]),
                       ChangeNotifierProvider<GoogleUserData>.value(value: GoogleUserData.instance),
-                      ChangeNotifierProvider<Prefrences>.value(value: Prefrences.instance)
+                      ChangeNotifierProvider<Prefrences>.value(value: Prefrences.instance),
+                      ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance)
                     ],
                     child: Builder(
                       builder: (BuildContext context) => MaterialApp(

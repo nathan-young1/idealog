@@ -42,12 +42,9 @@ class _MenuPageViewState extends State<MenuPageView> {
       FutureProvider<List<AnalyticChartData>>.value(
       initialData: <AnalyticChartData>[],
       value: AnalyticDB.instance.readAnalytics(),
-      catchError: (_,__)=>[]),
-      ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance)
+      catchError: (_,__)=>[])
       ],
-      child: Builder(
-        builder: (context) {
-          return SafeArea(
+      child: SafeArea(
               child: Scaffold(
                   body: PageView(
                     physics: NeverScrollableScrollPhysics(),
@@ -69,9 +66,7 @@ class _MenuPageViewState extends State<MenuPageView> {
                         ),
                       ),
               bottomNavigationBar: BottomNavBar(),
-            ));
-        }
-      ),
+            )),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
+import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
 import 'package:idealog/Idea/ui/Others/AddTasks.dart';
 import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/design/colors.dart';
@@ -17,7 +18,9 @@ class NormalActions extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        IconButton(onPressed: (){}, icon: Icon(Icons.search_outlined),color: Black242424,iconSize: 30),
+        IconButton(
+         onPressed: ()=> SearchController.instance.startSearch(),
+         icon: Icon(Icons.search_outlined),color: Black242424,iconSize: 30),
         SizedBox(width: 10),
 
         IconButton(

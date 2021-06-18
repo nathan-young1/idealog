@@ -38,9 +38,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
           newTasks.add(newTask.text);
         }
         });
-      // newTask.text = '';
-      newTask.value = TextEditingValue.empty;
-      // newTask.clear();
+      newTask.clear();
       }
   }
 
