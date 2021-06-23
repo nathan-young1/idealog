@@ -15,7 +15,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   Timer? timer;
-  Future<Object?> changeRoute() =>Navigator.pushReplacementNamed(context,menuPageView);
+  Future<dynamic> changeRoute() =>Navigator.pushReplacementNamed(context,menuPageView);
 
   @override
     void initState() {
@@ -25,9 +25,8 @@ class _SplashScreenState extends State<SplashScreen> {
         if(Prefrences.instance.fingerprintEnabled){
           // fingerprint authentication is enabled
             bool userIsAuthenticated = await authenticateWithBiometrics(calledFromLogin: true);
-            if(userIsAuthenticated){
+            if(userIsAuthenticated)
               changeRoute();
-            }
         }else{
           // fingerprint authentication is not enabled
         changeRoute();

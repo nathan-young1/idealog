@@ -1,5 +1,7 @@
 package com.mobile.idealog;
 
+import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
@@ -19,6 +21,7 @@ public class MainActivity extends FlutterFragmentActivity {
     final private String AutoSyncWorkRequestTag = "AutoSync";
     final private String startAutoSyncMethod = "startAutoSync";
     final private String cancelAutoSyncMethod = "cancelAutoSync";
+    final private String lastBackUpMethod = "lastBackUp";
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
     @Override
@@ -33,6 +36,8 @@ public class MainActivity extends FlutterFragmentActivity {
                 }else if(call.method.equals(cancelAutoSyncMethod)){
                     cancelAutoSync();
                     result.success("Auto Sync has been canceled");
+                }else if(call.method.equals(lastBackUpMethod)){
+                    result.success(getLastBackUpTime());
                 }
             }
         });
@@ -71,5 +76,10 @@ public class MainActivity extends FlutterFragmentActivity {
     public void cancelAutoSync(){
 //        cancel the autoSync work request by the tag
         WorkManager.getInstance(this).cancelAllWorkByTag(AutoSyncWorkRequestTag);
+    }
+
+    public String getLastBackUpTime(){
+        SharedPreferences pref = this.getSharedPreferences("BackUp",this.MODE_PRIVATE);
+        return pref.getString("lastBackup","");
     }
 }

@@ -13,11 +13,6 @@ import 'package:provider/provider.dart';
 class IdeaManager{
 
     static addToDbAndSetAlarmIdea({required String ideaTitle,String? moreDetails,required Set<String> tasks,required BuildContext context}) async {
-      
-      // if this idea title already exists show the already exists flushbar
-      if(Provider.of<List<IdeaModel>>(context,listen: false).map((ideaModel) => ideaModel.ideaTitle).contains(ideaTitle)){
-        return TitleAlreadyExists(pageContext: context);
-      }
 
       // ignore: unawaited_futures
       showDialog(context: context, builder: (context) => progressAlertDialog);

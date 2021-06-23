@@ -3,10 +3,12 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
+import 'package:idealog/core-models/ideasModel.dart';
 import 'package:idealog/customAppBar/appBar.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:provider/provider.dart';
 
 class NewIdea extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class _NewIdeaState extends State<NewIdea> {
   TextEditingController ideaTitle = TextEditingController();
   TextEditingController moreDetails = TextEditingController();
   FocusNode taskFieldFocus = FocusNode();
+  GlobalKey<FormState> formKey = GlobalKey();
 
   void addNewTask(){
     if(taskField.text != ''){
@@ -27,6 +30,9 @@ class _NewIdeaState extends State<NewIdea> {
       taskField.clear();
       }
   }
+
+  bool checkIfIdeaAlreadyExists({required String ideaTitle,required BuildContext context})=>
+     Provider.of<List<IdeaModel>>(context,listen: false).map((ideaModel) => ideaModel.ideaTitle).contains(ideaTitle);
 
   @override
   void initState() { 
@@ -42,6 +48,8 @@ class _NewIdeaState extends State<NewIdea> {
           padding: EdgeInsets.only(bottom: 10),
           child: SingleChildScrollView(
             child: Form(
+              key: formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20,right: 15),
                 child: Column(
@@ -49,6 +57,14 @@ class _NewIdeaState extends State<NewIdea> {
                     CustomAppBar(title: 'ADD IDEA'),
                     TextFormField(
                       controller: ideaTitle,
+                      validator: (value){
+                        if(value!.isEmpty)
+                        return "idea title is required";
+
+                        else if(checkIfIdeaAlreadyExists(ideaTitle: value,context: context))
+                        return "idea title already exists";
+                        
+                      },
                       style: TextStyle(fontSize: 18),
                       maxLength: 50,
                       decoration: underlineAndFilled.copyWith(
@@ -80,6 +96,9 @@ class _NewIdeaState extends State<NewIdea> {
                     TextFormField(
                       controller: taskField,
                       focusNode: taskFieldFocus,
+                      keyboardType: TextInputType.text,
+                      maxLines: null,
+                      maxLength: 350,
                       onFieldSubmitted: (_){
                         taskFieldFocus.requestFocus();
                         addNewTask();
@@ -99,12 +118,14 @@ class _NewIdeaState extends State<NewIdea> {
           ),
         ),
           bottomNavigationBar: GestureDetector(
-            onTap: () async => (ideaTitle.text.isNotEmpty)? await IdeaManager.addToDbAndSetAlarmIdea(
-                  context: context,
-                  ideaTitle: ideaTitle.text,
-                  moreDetails: moreDetails.text,
-                  tasks: tasks)
-                  :TitleIsRequired(pageContext: context),
+            onTap: () async {
+                if(formKey.currentState!.validate())
+                    await IdeaManager.addToDbAndSetAlarmIdea(
+                    context: context,
+                    ideaTitle: ideaTitle.text,
+                    moreDetails: moreDetails.text,
+                    tasks: tasks);
+              },
             child: Container(
               height: 65,
               color: DarkBlue,
@@ -134,36 +155,6 @@ class _NewIdeaState extends State<NewIdea> {
           ])]
     );
 }
-}
-
-Widget TitleIsRequired ({required BuildContext pageContext}){
-
-    return Flushbar(icon: Icon(Icons.text_fields,color: LightPink),duration: Duration(seconds: 1),
-    backgroundColor: Colors.white,
-    messageText: Text('Idea Title is required',
-    style: Overpass.copyWith(color: Colors.black87,fontSize: 18),),
-    )..show(pageContext);
-
-}
-
-Widget TitleAlreadyExists ({required BuildContext pageContext}){
-
-    return Flushbar(icon: Icon(Icons.text_fields,color: LightPink),duration: Duration(seconds: 1),
-    backgroundColor: Colors.white,
-    messageText: Text('This idea Title already exists',
-    style: Overpass.copyWith(color: Colors.black87,fontSize: 18)),
-    )..show(pageContext);
-
-}
-
-Widget TaskAlreadyExists ({required BuildContext pageContext}){
-
-    return Flushbar(icon: Icon(Icons.text_fields,color: LightPink),duration: Duration(seconds: 1),
-    backgroundColor: Colors.white,
-    messageText: Text('This task already exists',
-    style: Overpass.copyWith(color: Colors.black87,fontSize: 18)),
-    )..show(pageContext);
-
 }
 
 class Info extends StatelessWidget {

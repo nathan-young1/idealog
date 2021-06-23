@@ -31,14 +31,9 @@ public class SynchronizationHandler {
             sqlDbForIdealogDb.readFromDbForAutoSync().forEach((idea)-> db.collection(authUserUid).document("Database").collection("Ideas").document(String.valueOf(idea.uniqueId)).set(idea));
         });
 
-        DateTime now = DateTime.getDefaultInstance();
-        int year = now.getYear();
-        int month = now.getMonth();
-        int day = now.getDay();
-
-        System.out.println("The last sync time is now: "+year+":"+month+":"+day);
-        SharedPreferences pref = applicationContext.getSharedPreferences("FlutterSharedPreferences",applicationContext.MODE_PRIVATE);
-        pref.edit().putString("flutter.LastSync",year+":"+month+":"+day);
+        Calendar now = Calendar.getInstance();
+        SharedPreferences pref = applicationContext.getSharedPreferences("BackUp",applicationContext.MODE_PRIVATE);
+        pref.edit().putString("lastBackup",String.valueOf(now.getTimeInMillis()));
 
 //        To get back the sharedPreference
 //        SharedPreferences sp = getSharedPreferences(PREFS_GAME ,Context.MODE_PRIVATE);

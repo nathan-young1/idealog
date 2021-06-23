@@ -25,18 +25,12 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
   FocusNode newTaskFocus = FocusNode();
 
   Set<String> newTasks = <String>{};
+  GlobalKey<FormState> formKey = GlobalKey();
 
   void addNewTask(BuildContext context){
     if(newTask.text != ''){
-      setState(() { 
-        List<String> allTasks = [...widget.idea.completedTasks.map((e) => e.toAString),
-        ...widget.idea.uncompletedTasks.map((e) => e.toAString)];
-        print('$allTasks , :contains ${allTasks.contains(newTask.text)}');
-        if(allTasks.contains(newTask.text)){
-          TaskAlreadyExists(pageContext: context);
-        }else{
+      setState(() {
           newTasks.add(newTask.text);
-        }
         });
       newTask.clear();
       }
@@ -86,20 +80,34 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                       NewTasks(),
                       SizedBox(height: 20),
 
-                      TextFormField(
-                          controller: newTask,
-                          focusNode: newTaskFocus,
-                          onFieldSubmitted: (_){
-                            newTaskFocus.requestFocus();
-                            addNewTask(context);
-                          },
-                          style: TextStyle(fontSize: 18),
-                          decoration: underlineAndFilled.copyWith(
-                            labelText: 'Task',
-                            suffixIcon: IconButton(icon: Icon(Icons.check,color: LightPink.withOpacity(0.7),size: 30),
-                            onPressed: () => addNewTask(context))
+                      Form(
+                        key: formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: TextFormField(
+                            controller: newTask,
+                            focusNode: newTaskFocus,
+                            keyboardType: TextInputType.text,
+                            maxLines: null,
+                            maxLength: 350,
+                            validator: (value){
+                              if([...widget.idea.completedTasks.map((e) => e.toAString),...widget.idea.uncompletedTasks.map((e) => e.toAString)]
+                              .contains(newTask.text))
+                              return "Task already exists";
+                            },
+                            onFieldSubmitted: (_){
+                              if(formKey.currentState!.validate()){
+                              newTaskFocus.requestFocus();
+                              addNewTask(context);
+                              }
+                            },
+                            style: TextStyle(fontSize: 18),
+                            decoration: underlineAndFilled.copyWith(
+                              labelText: 'Task',
+                              suffixIcon: IconButton(icon: Icon(Icons.check,color: LightPink.withOpacity(0.7),size: 30),
+                              onPressed: () => (formKey.currentState!.validate()?(context):null)
+                            ),
                           ),
-                        ),
+                      ),)
                     ],
                   ),
                 ),
