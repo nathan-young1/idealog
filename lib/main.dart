@@ -4,9 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
+import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/design/theme.dart';
 import 'package:idealog/global/routes.dart';
-import 'package:idealog/settings/code/settingsManager.dart';
+import 'package:idealog/nativeCode/bridge.dart';
 import 'package:idealog/settings/ui/manageAccount.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:provider/provider.dart';
@@ -35,17 +36,20 @@ class _IdealogState extends State<Idealog> {
 
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      
       await Future.wait([
       AnalyticDB.instance.clearObsoluteData(), 
       Prefrences.instance.initialize(), 
-      Firebase.initializeApp()
+      Firebase.initializeApp(),
       ]);
+      
+      print('The last backup time was "${await NativeCodeCaller.getLastBackupTime()}"');
+
       });
   }
 
   @override
   Widget build(BuildContext context) {
-        
             return LayoutBuilder(
               builder: (_, constraints) {
                 ScreenUtil.init(constraints);

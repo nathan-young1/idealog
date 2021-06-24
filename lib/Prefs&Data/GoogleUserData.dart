@@ -4,13 +4,11 @@ import 'package:idealog/auth/code/authHandler.dart';
 
 class GoogleUserData with ChangeNotifier{
   static String? _Email = auth.currentUser?.email;
-  static String? _Photo_url = auth.currentUser?.photoURL;
-  static GoogleIdentity? _User_Identity;
+  static String? _Photo_url = googleSignIn.currentUser?.photoUrl;
   static String? _Uid;
 
   String? get user_email => _Email;
   String? get user_photo_url => _Photo_url;
-  GoogleIdentity? get userIdentity => _User_Identity;
   String? get user_uid => _Uid;
 
   set user_email(String? email){
@@ -23,11 +21,6 @@ class GoogleUserData with ChangeNotifier{
     notifyListeners();
   }
 
-  set userIdentity(GoogleIdentity? userIdentity){
-    _User_Identity = userIdentity;
-    notifyListeners();
-  }
-
   set user_uid(String? userUid){
     _Uid = userUid;
     notifyListeners();
@@ -37,10 +30,19 @@ class GoogleUserData with ChangeNotifier{
 
   static final GoogleUserData instance = GoogleUserData._();
 
+  void intialize({
+    required userUid,
+    required userEmail,
+    required userPhotoUrl
+  }){
+      this.user_uid = userUid;
+      this.user_email = userEmail;
+      this.user_photo_url = userPhotoUrl;
+  }
+
   void clearData(){
     // clear all the data on user signout
     user_email = null;
     user_photo_url = null;
-    userIdentity = null;
   }
 }

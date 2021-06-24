@@ -21,7 +21,7 @@ public class MainActivity extends FlutterFragmentActivity {
     final private String AutoSyncWorkRequestTag = "AutoSync";
     final private String startAutoSyncMethod = "startAutoSync";
     final private String cancelAutoSyncMethod = "cancelAutoSync";
-    final private String lastBackUpMethod = "lastBackUp";
+    final private String lastBackUpMethod = "lastBackup";
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
     @Override
@@ -50,16 +50,13 @@ public class MainActivity extends FlutterFragmentActivity {
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-//        if there is a malfunction with moor db in production mode then and only then will i add this constraint.
-//                        .setRequiresDeviceIdle(true)
 
-//        do the periodic work every 2 hours if there is internet connection
+//        do the periodic work every 24 hours if there is internet connection
 //        reduce the time later, though The interval period is defined as the minimum time between repetitions.
-//        The exact time that the worker is going to be executed depends on the constraints that you are using in your WorkRequest object
-//        and on the optimizations performed by the system.
 
 //        incase of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
 //        I am changing time unit to minutes for testing purposes
+
         PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(AutoSync.class,2, TimeUnit.MINUTES)
                 .setConstraints(workRequestConstraints)
                 .setBackoffCriteria(BackoffPolicy.LINEAR,10,TimeUnit.MINUTES)
@@ -74,7 +71,6 @@ public class MainActivity extends FlutterFragmentActivity {
     }
 
     public void cancelAutoSync(){
-//        cancel the autoSync work request by the tag
         WorkManager.getInstance(this).cancelAllWorkByTag(AutoSyncWorkRequestTag);
     }
 

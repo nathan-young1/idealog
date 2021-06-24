@@ -78,13 +78,8 @@ class Syncronization extends StatelessWidget {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () async {
-                    
-                    if (GoogleUserData.instance.user_email == null) {
-                      await signInWithGoogle();
-                    }
-                    await IdeaManager.syncIdeasNow(Provider.of<List<IdeaModel>>(context,listen: false));
-                    },
+                  onTap: () async =>
+                    await IdeaManager.syncIdeasNow(Provider.of<List<IdeaModel>>(context,listen: false)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

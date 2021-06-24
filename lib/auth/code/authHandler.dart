@@ -1,34 +1,38 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
-GoogleSignIn _googleSignIn = GoogleSignIn();
+GoogleSignIn googleSignIn = GoogleSignIn();
+
+Future<OAuthCredential> getUserCredientials({required GoogleSignInAccount account}) async {
+    final googleAuth = await account.authentication;
+
+  return GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+}
 
 Future<void> signInWithGoogle() async {
-  // Trigger the authentication flow
-  final googleUser = await _googleSignIn.signIn();
-  // Obtain the auth details from the request
-  final googleAuth = await googleUser!.authentication;
+  // if the user is already sign in then reauthenticate silently
+  final googleUser = (auth.currentUser != null)
+  ?await googleSignIn.signInSilently()
+  :await googleSignIn.signIn();
 
-  // Create a new credential
-  final credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
-  );
-
-  // Sign into firebase
-  await auth.signInWithCredential(credential);
+  await auth.signInWithCredential(await getUserCredientials(account: googleUser!));
 
   // initialize the googleUserData class with the user credientials
-  GoogleUserData.instance.user_uid = auth.currentUser!.uid;
-  GoogleUserData.instance.user_email = googleUser.email;
-  GoogleUserData.instance.user_photo_url = googleUser.photoUrl;
-  GoogleUserData.instance.userIdentity = googleUser;
+    GoogleUserData.instance.intialize(
+    userUid: auth.currentUser!.uid,
+    userEmail: googleUser.email,
+    userPhotoUrl: googleUser.photoUrl);
 }
 
 Future<void> signOutFromGoogle() async {
-GoogleUserData.instance.clearData();
-await _googleSignIn.signOut();
-await auth.signOut();
+  await Prefrences.instance.setAutoSync(false);
+  GoogleUserData.instance.clearData();
+  await googleSignIn.signOut();
+  await auth.signOut();
 }

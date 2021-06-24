@@ -24,4 +24,14 @@ class NativeCodeCaller{
     }
   }
 
+  static Future<String> getLastBackupTime() async {
+    String result = '';
+    try{
+      result = await platform.invokeMethod(lastBackupTimeMethod);
+    }catch (e){
+      print(e);
+    }
+    return result;
+  }
+
 }

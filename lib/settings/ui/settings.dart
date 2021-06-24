@@ -1,11 +1,13 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
+import 'package:idealog/customWidget/profilePicWidget.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
@@ -13,14 +15,16 @@ import 'package:provider/provider.dart';
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var _googleUserData = Provider.of<GoogleUserData>(context);
+    String? _userProfilePic = Provider.of<GoogleUserData>(context).user_photo_url;
     var isDarkMode = Provider.of<Prefrences>(context).isDarkMode;
     var _listTileIconColor = (isDarkMode) ?LightPink :DarkBlue;
     return Container(
       child: Column(
         children: [
           SizedBox(height: 55),
-          DottedBorder(
+          (_userProfilePic != null)
+          ?ProfilePicture(photoUrl: _userProfilePic,height: 150,width: 150)
+          :DottedBorder(
             color: LightGray,
             strokeWidth: 3,
             padding: EdgeInsets.only(bottom: 5),
@@ -30,9 +34,7 @@ class Settings extends StatelessWidget {
             child: Container(
               height: 170,
               width: 170,
-              child: (_googleUserData.userIdentity != null)
-              ? GoogleUserCircleAvatar(identity: _googleUserData.userIdentity!)
-              : Opacity(
+              child: Opacity(
                 opacity: 0.7,
                 child: Image.asset(Provider.of<Prefrences>(context).appLogoPath,
                 excludeFromSemantics: true,

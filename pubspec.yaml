@@ -48,10 +48,10 @@ dependencies:
   community_material_icon: ^5.9.55
   cloud_functions: ^1.1.1
   moor: ^4.3.0
-  moor_db_viewer: ^4.0.0
   sqlite3_flutter_libs:
   path_provider:
   path:
+  in_app_purchase: ^1.0.6
 
 
   # The following adds the Cupertino Icons font to your application.
