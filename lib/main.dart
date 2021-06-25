@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:idealog/Databases/idealog-db/test.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
@@ -42,8 +43,12 @@ class _IdealogState extends State<Idealog> {
       Prefrences.instance.initialize(), 
       Firebase.initializeApp(),
       ]);
-      
-      print('The last backup time was "${await NativeCodeCaller.getLastBackupTime()}"');
+
+      // print('The last backup time was "${await NativeCodeCaller.getLastBackupTime()}"');
+      await IdealogDatabase.instance.initialize();
+      // await IdealogDatabase.instance.drop();
+      await IdealogDatabase.instance.writeToDb(idea: IdeaModel.readFromDb(ideaTitle: "jakjfkheiuh", completedTasks: [], uniqueId: 24564, uncompletedTasks: ["run".codeUnits,"oop".codeUnits]));
+      print((await IdealogDatabase.instance.readFromDb()).map((e) => {e.ideaTitle,e.completedTasks,e.uncompletedTasks}));
 
       });
   }

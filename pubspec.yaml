@@ -52,6 +52,7 @@ dependencies:
   path_provider:
   path:
   in_app_purchase: ^1.0.6
+  sqlbrite: ^2.1.0
 
 
   # The following adds the Cupertino Icons font to your application.

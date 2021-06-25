@@ -4,6 +4,9 @@ import 'package:path/path.dart' as p;
 import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqlbrite/sqlbrite.dart';
+
+import 'idealog_variables.dart';
 
 // assuming that your file is called filename.dart. This will give an error at first,
 // but it's needed for moor to know about the generated code
@@ -70,4 +73,55 @@ class IdealogDb extends _$IdealogDb{
     static final IdealogDb instance = IdealogDb();
 
 }
+
+
+
+// class Sqlite{
+//   // making database object static so that all operations uses one db object
+//   static late Database _database;
+//   static Future<List<Idea>> readFromDb() async {
+//       List<Idea> allIdeasFromDb = [];
+
+//       var result = await _database.transaction((txn) async {
+//         await txn.execute(createIdeasTableSqlCommand);
+//         return await txn.query(ideasTableName);
+//         });
+
+//         result.forEach((idea) { 
+//         Object? completedTasks = idea[Column_completedTasks];
+//         Object? uncompletedTasks = idea[Column_uncompletedTasks];
+//         allIdeasFromDb.add(
+//         Idea.readFromDb(
+//         ideaTitle: idea[Column_ideaTitle].toString(),
+//         uniqueId: int.parse(idea[Column_uniqueId].toString()),
+//         moreDetails: idea[Column_moreDetails].toString(),
+//         completedTasks: (completedTasks != null)?completedTasks.fromDbStringToListInt:[],
+//         uncompletedTasks: (uncompletedTasks != null)?uncompletedTasks.fromDbStringToListInt:[]
+//         ));});
+
+//         return allIdeasFromDb;
+//   }
+
+//   static updateDb(int uniqueId,{required Idea idea}) async {
+//     await _database.transaction((txn) async {
+//     await txn.execute(createIdeasTableSqlCommand);
+//     List<List<int>> completedTasks = idea.completedTasks;
+//     List<List<int>> uncompletedTasks = idea.uncompletedTasks;
+//     Map<String,Object?> updatedData = Map<String,Object?>();
+//     updatedData[Column_completedTasks] = (completedTasks.isEmpty)?null:'$completedTasks';
+//     updatedData[Column_uncompletedTasks] = (uncompletedTasks.isEmpty)?null:'$uncompletedTasks';
+//     updatedData[Column_moreDetails] = idea.moreDetails;
+//     await txn.update(ideasTableName, updatedData,where: '$Column_uniqueId = $uniqueId');
+//     });
+//   }
+
+//   static Timer? periodicTimer;
+//   static initialize() async {
+//     _database = await openDatabase(sqliteDbName,version: 1,onCreate: (_db,_version)=>print('${_db.path} has been created'));
+//     periodicTimer = Timer.periodic(Duration(seconds: 1), (_) async {
+//         _dbStreamController.add(await Sqlite.readFromDb());
+//     });
+//   }
+
+// } 
 
