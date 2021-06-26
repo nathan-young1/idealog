@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
 import 'package:idealog/Idea/ui/Others/AddTasks.dart';
-import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 
 class NormalActions extends StatelessWidget {

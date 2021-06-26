@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/textStyles.dart';
 
 class IdeaTitle extends StatelessWidget {

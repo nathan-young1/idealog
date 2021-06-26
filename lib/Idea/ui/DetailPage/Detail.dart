@@ -1,8 +1,8 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
-import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:provider/provider.dart';
 import 'views/Tasks/MultiSelectTile/Notifier.dart';

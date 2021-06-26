@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
 import 'package:idealog/Idea/ui/ListPage/views/slideActions.dart';
-import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/core-models/ideaModel.dart';
 
 import 'mainTile.dart';
 

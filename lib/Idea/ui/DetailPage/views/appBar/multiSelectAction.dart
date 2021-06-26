@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/MultiSelectTile/Notifier.dart';
-import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/core-models/ideaModel.dart';
 import 'package:provider/provider.dart';
 
 class MultiSelectAction extends StatelessWidget {

@@ -1,9 +1,9 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:idealog/Databases/idealog-db/idealog_Db_Moor.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
-import 'package:idealog/core-models/ideasModel.dart';
+import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
