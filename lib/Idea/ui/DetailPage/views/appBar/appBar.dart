@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:idealog/Idea/ui/DetailPage/views/Tasks/MultiSelectTile/Notifier.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchBar.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
-
 import 'appBarButtons.dart';
-import 'multiSelectAction.dart';
-import 'normalActions.dart';
 
 class DetailAppBar extends StatelessWidget {
   
   DetailAppBar({required this.idea});
 
-  final IdeaModel idea;
+  final Idea idea;
 
   @override
   Widget build(BuildContext context) {

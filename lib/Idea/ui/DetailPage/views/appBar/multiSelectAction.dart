@@ -3,6 +3,7 @@ import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/MultiSelectTile/Notifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:provider/provider.dart';
+import 'package:idealog/global/typedef.dart';
 
 class MultiSelectAction extends StatelessWidget {
   const MultiSelectAction({
@@ -11,8 +12,8 @@ class MultiSelectAction extends StatelessWidget {
     required this.selectedTasks
   }) : super(key: key);
 
-  final IdeaModel idea;
-  final List<List<int>> selectedTasks;
+  final Idea idea;
+  final DBTaskList selectedTasks;
 
   @override
   Widget build(BuildContext context) {

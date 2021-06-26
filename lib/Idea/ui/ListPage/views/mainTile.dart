@@ -13,7 +13,7 @@ class MainTile extends StatelessWidget {
   }) : super(key: key);
 
   final double percent;
-  final IdeaModel idea;
+  final Idea idea;
   final ValueNotifier<bool> slidableIconState;
 
   @override

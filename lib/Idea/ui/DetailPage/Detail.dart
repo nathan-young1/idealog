@@ -10,7 +10,7 @@ import 'views/Tasks/TaskList.dart';
 import 'views/appBar/appBar.dart';
 
 class IdeaDetail extends StatefulWidget {
-  final IdeaModel idea;
+  final Idea idea;
   late final TextEditingController? description;
   IdeaDetail({required this.idea}){
     description = TextEditingController(text: idea.moreDetails);
@@ -36,7 +36,7 @@ class _IdeaDetailState extends State<IdeaDetail> {
       child: Scaffold(
         body: MultiProvider(
           providers: [
-          ChangeNotifierProvider<IdeaModel>.value(value: widget.idea),
+          ChangeNotifierProvider<Idea>.value(value: widget.idea),
           ChangeNotifierProvider<MultiSelect>.value(value: MultiSelect.instance),
           ],
           child: Column(
@@ -72,7 +72,8 @@ class _IdeaDetailState extends State<IdeaDetail> {
                                        descriptionEnabled=false;
                                        widget.idea.changeMoreDetail(widget.description!.text);
                                        });
-                                       await IdealogDb.instance.updateDb(updatedEntry: widget.idea);},
+                                       await IdealogDb.instance.changeMoreDetail(idea: widget.idea);
+                                       },
                                     decoration: InputDecoration(
                                       disabledBorder: InputBorder.none,
                                       filled: (descriptionEnabled),

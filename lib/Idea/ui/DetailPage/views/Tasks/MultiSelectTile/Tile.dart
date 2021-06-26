@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:provider/provider.dart';
 import 'Notifier.dart';
@@ -6,16 +7,16 @@ import 'Notifier.dart';
 class MultiSelectTaskTile extends StatelessWidget {
   const MultiSelectTaskTile({
     Key? key,
-    required this.task
+    required this.taskRow
   }) : super(key: key);
 
-  final List<int> task;
+  final Task taskRow;
 
   @override
   Widget build(BuildContext context) {
     
     MultiSelect multiSelectObj = Provider.of<MultiSelect>(context);
-    bool tileIsSelected = multiSelectObj.containsTask(task);
+    bool tileIsSelected = multiSelectObj.containsTask(taskRow);
 
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
@@ -24,10 +25,10 @@ class MultiSelectTaskTile extends StatelessWidget {
       value: tileIsSelected,
       onChanged: (bool? value)=>
         (value == true)
-        ?multiSelectObj.addTaskToMultiSelect(task)
-        :multiSelectObj.removeTaskFromMultiSelect(task)
+        ?multiSelectObj.addTaskToMultiSelect(taskRow)
+        :multiSelectObj.removeTaskFromMultiSelect(taskRow)
       ,
-      title: Text(task.toAString),
+      title: Text(taskRow.task.toAString),
       );
   }
 }

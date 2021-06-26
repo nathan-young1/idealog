@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 import 'Notifier.dart';
+import 'package:idealog/global/typedef.dart';
 
 
 enum Section{COMPLETED_TASK,UNCOMPLETED_TASK}
@@ -13,7 +14,7 @@ class SectionMultiSelect extends StatelessWidget {
     required this.sectionName
   }) : super(key: key);
 
-  final List<List<int>> sectionTasks;
+  final DBTaskList sectionTasks;
   final Section sectionName;
 
   @override

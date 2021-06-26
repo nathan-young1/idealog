@@ -4,12 +4,11 @@ import 'package:idealog/Idea/ui/DetailPage/views/Tasks/MultiSelectTile/Notifier.
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:provider/provider.dart';
-
 import 'multiSelectAction.dart';
 import 'normalActions.dart';
 
 class IdeaAppBarButtons extends StatelessWidget {
-  final IdeaModel idea;
+  final Idea idea;
   const IdeaAppBarButtons({required this.idea});
 
   @override

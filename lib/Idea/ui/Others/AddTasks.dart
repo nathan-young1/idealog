@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -7,11 +9,11 @@ import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'CreateIdea.dart' show Info, TaskAlreadyExists;
+import 'CreateIdea.dart' show Info;
 import 'package:idealog/global/extension.dart';
 
 class AddToExistingIdea extends StatefulWidget {
-  final IdeaModel idea;
+  final Idea idea;
 
   AddToExistingIdea({Key? key, required this.idea}) : super(key: key);
 
@@ -90,7 +92,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                             maxLines: null,
                             maxLength: 350,
                             validator: (value){
-                              if([...widget.idea.completedTasks.map((e) => e.toAString),...widget.idea.uncompletedTasks.map((e) => e.toAString)]
+                              if([...widget.idea.completedTasks.map((e) => e.task.toAString),...widget.idea.uncompletedTasks.map((e) => e.task.toAString)]
                               .contains(newTask.text))
                               return "Task already exists";
                             },
@@ -117,8 +119,16 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
         ),
         bottomNavigationBar: GestureDetector(
             onTap: () async {
-              newTasks.forEach((task) => widget.idea.addNewTask(task.codeUnits));
-              await IdealogDb.instance.updateDb(updatedEntry: widget.idea);
+              int orderIndex = 0;
+              int lastUncompletedOrderIndex = widget.idea.uncompletedTasks.map((e) => e.orderIndex).fold(0, (previousValue, currentValue) => max(previousValue, currentValue));
+              
+              for(var task in newTasks) { 
+                Task taskObject = Task(task: task.codeUnits, orderIndex: orderIndex);
+                widget.idea.addNewTask(taskObject);
+                await IdealogDb.instance.addTask(taskRow: taskObject, ideaPrimaryKey: widget.idea.uniqueId!,lastUncompletedRowIndex: lastUncompletedOrderIndex);
+                orderIndex++;
+              }
+
               await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> IdeaDetail(idea: widget.idea)));
               },
             child: Container(

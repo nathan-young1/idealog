@@ -11,7 +11,7 @@ class TaskAdderSlideAction extends StatelessWidget {
     required this.idea,
   }) : super(key: key);
 
-  final IdeaModel idea;
+  final Idea idea;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class DeleteSlideAction extends StatelessWidget {
     required this.idea,
   }) : super(key: key);
 
-  final IdeaModel idea;
+  final Idea idea;
 
   @override
   Widget build(BuildContext context) {

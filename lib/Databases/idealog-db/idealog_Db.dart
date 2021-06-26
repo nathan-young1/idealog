@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqlbrite/sqlbrite.dart';
 import 'package:idealog/global/typedef.dart';
 import 'idealog_variables.dart';
 
-class IdealogDb{
+class IdealogDb with ChangeNotifier{
 
   IdealogDb._();
   static final instance = new IdealogDb._();
@@ -27,7 +28,7 @@ class IdealogDb{
       List<Task> uncompletedTasks = idea.uncompletedTasks;
 
       // Insert the idea into the database
-      batch.insert(ideasTableName, {Column_ideaPrimaryKey: '${idea.uniqueId}',Column_ideaTitle: idea.ideaTitle,Column_moreDetails: idea.moreDetails});
+      batch.insert(ideasTableName, {Column_ideaPrimaryKey: '${idea.uniqueId}',Column_ideaTitle: idea.ideaTitle,Column_moreDetails: idea.moreDetails??''});
 
       _putTasksInTheirCorrespondingTable(batch: batch, uniqueId: idea.uniqueId!, uncompletedTasks: uncompletedTasks, completedTasks: completedTasks);
 
@@ -36,7 +37,7 @@ class IdealogDb{
     );
   }
 
-  Future<void> deleteIdea({required String uniqueId}) async {
+  Future<void> deleteIdea({required int uniqueId}) async {
 
     await briteDb.transactionAndTrigger((txn) async { 
       var batch = txn.batch();
@@ -63,14 +64,11 @@ class IdealogDb{
       });
   }
 
-  Future<void> addTask({required Task task, required int ideaPrimaryKey}) async {
+  Future<void> addTask({required Task taskRow, required int ideaPrimaryKey, required int lastUncompletedRowIndex}) async {
 
     await briteDb.transactionAndTrigger((txn) async { 
-      var batch = txn.batch();
 
-      _addTasksToTable(batch: batch, uniqueId: ideaPrimaryKey, tasks: [task], tableName: uncompletedTable);
-
-      await batch.commit(noResult: true);
+      await txn.insert(uncompletedTable, {Column_ideaPrimaryKey: '$ideaPrimaryKey',Column_tasks: '${taskRow.task}',Column_taskOrder: '$lastUncompletedRowIndex'});
       });
   }
 
@@ -90,7 +88,7 @@ class IdealogDb{
 
   Future<void> uncheckCompletedTask({required Task taskRow, required int ideaPrimaryKey, required int lastUncompletedOrderIndex}) async {
     
-       await briteDb.transactionAndTrigger((txn) async { 
+    await briteDb.transactionAndTrigger((txn) async { 
       var batch = txn.batch();
       
       batch.delete(completedTable,where: '$Column_taskPrimaryKey = ?',whereArgs: [taskRow.primaryKey]);
@@ -98,28 +96,52 @@ class IdealogDb{
       batch.insert(uncompletedTable, {Column_ideaPrimaryKey: '$ideaPrimaryKey',Column_tasks: '${taskRow.task}',Column_taskOrder: '${++lastUncompletedOrderIndex}'});
 
       await batch.commit(noResult: true);
-      });
+    });
 
   }
 
-  Future<List<Idea>> readFromDb() async {
+  Future<void> changeMoreDetail({required Idea idea}) async {
+      await briteDb.transactionAndTrigger((txn) async {
+        await txn.update(ideasTableName,
+          {Column_moreDetails : idea.moreDetails??''},
+          where: 'where $Column_ideaPrimaryKey = ?',
+          whereArgs: [idea.uniqueId]);
+      });
+  }
+
+  Stream<List<Idea>> get readFromDb {
       List<Idea> allIdeasFromDb = [];
       briteDb.execute(createIdeasTableSqlCommand);
       briteDb.execute(createCompletedTableSqlCommand);
       briteDb.execute(createUncompletedTableSqlCommand);
 
-      var resIdeas = await briteDb.query(ideasTableName);
+      // var resIdeas = await briteDb.query(ideasTableName);
+      // ignore: cancel_subscriptions
+      return briteDb.createQuery(ideasTableName).asyncMap((res) async => await res()).asyncMap((event) async { 
 
-      for(var idea in resIdeas){
-        int uniqueId = int.parse(idea[Column_ideaPrimaryKey].toString());
+        for(var idea in event){
+          int uniqueId = int.parse(idea[Column_ideaPrimaryKey].toString());
 
-        Map<String, DBTaskList> tasks = await getTasksForIdea(uniqueId: uniqueId);
+          Map<String, DBTaskList> tasks = await getTasksForIdea(uniqueId: uniqueId);
 
-        Idea test = Idea.readFromDb(ideaTitle: idea[Column_ideaTitle].toString(), completedTasks: tasks[completedTable]!, uniqueId: uniqueId, uncompletedTasks: tasks[uncompletedTable]!);
+          Idea test = Idea.readFromDb(ideaTitle: idea[Column_ideaTitle].toString(), completedTasks: tasks[completedTable]!, uniqueId: uniqueId, uncompletedTasks: tasks[uncompletedTable]!);
+          
+          allIdeasFromDb.add(test);
+        }
+        return allIdeasFromDb;
+      
+      });
+      
+      // for(var idea in resIdeas){
+      //   int uniqueId = int.parse(idea[Column_ideaPrimaryKey].toString());
+
+      //   Map<String, DBTaskList> tasks = await getTasksForIdea(uniqueId: uniqueId);
+
+      //   Idea test = Idea.readFromDb(ideaTitle: idea[Column_ideaTitle].toString(), completedTasks: tasks[completedTable]!, uniqueId: uniqueId, uncompletedTasks: tasks[uncompletedTable]!);
         
-        allIdeasFromDb.add(test);
-      }
-      return allIdeasFromDb;
+      //   allIdeasFromDb.add(test);
+      // }
+      // return allIdeasFromDb;
   }
 
   Future<void> dropAllTablesInDb() async {

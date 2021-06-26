@@ -43,9 +43,7 @@ class _IdealogState extends State<Idealog> {
 
       // print('The last backup time was "${await NativeCodeCaller.getLastBackupTime()}"');
       await IdealogDb.instance.initialize();
-      // await IdealogDatabase.instance.drop();
-      await IdealogDb.instance.writeToDb(idea: Idea.readFromDb(ideaTitle: "jakjfkheiuh", completedTasks: [], uniqueId: 564, uncompletedTasks: ["run".codeUnits,"oop".codeUnits]));
-      print((await IdealogDb.instance.readFromDb()).map((e) => {e.ideaTitle,e.completedTasks,e.uncompletedTasks}));
+      await IdealogDb.instance.dropAllTablesInDb();
 
       });
   }
@@ -58,7 +56,7 @@ class _IdealogState extends State<Idealog> {
                 return ScreenUtilInit(
                   builder: () => MultiProvider(
                     providers: [
-                      StreamProvider<List<Idea>>.value(value: IdealogDb.instance.watchIdeasInDb,initialData: [],catchError: (_,__)=>[]),
+                      StreamProvider<List<Idea>>.value(value: IdealogDb.instance.readFromDb,initialData: [],catchError: (_,__)=>[]),
                       ChangeNotifierProvider<GoogleUserData>.value(value: GoogleUserData.instance),
                       ChangeNotifierProvider<Prefrences>.value(value: Prefrences.instance),
                       ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance),

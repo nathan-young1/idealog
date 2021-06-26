@@ -9,7 +9,7 @@ import 'package:idealog/core-models/ideaModel.dart';
 import 'mainTile.dart';
 
 class IdeaCard extends StatelessWidget {
-  final IdeaModel idea;
+  final Idea idea;
   final ValueNotifier<bool> slidableIconState;
   IdeaCard({required this.idea,required this.slidableIconState});
 

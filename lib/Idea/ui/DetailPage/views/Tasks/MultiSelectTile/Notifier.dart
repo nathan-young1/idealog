@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/core-models/ideaModel.dart';
+import 'package:idealog/global/typedef.dart';
 
 class MultiSelect with ChangeNotifier{
   MultiSelect._();
   static final MultiSelect instance = MultiSelect._();
-  List<List<int>> _multiSelectedTasks = [];
+  DBTaskList _multiSelectedTasks = [];
   
   // if _multiSelectionState is true it means selection is activated
   bool _multiSelectState = false;
 
 
-  startMultiSelect(List<int> task){ 
+  startMultiSelect(Task task){ 
     addTaskToMultiSelect(task);
     _state = true;
     }
@@ -25,37 +27,37 @@ class MultiSelect with ChangeNotifier{
     notifyListeners();
   }
 
-  List<List<int>> get selectedTasks => _multiSelectedTasks;
+  DBTaskList get selectedTasks => _multiSelectedTasks;
 
-  set selectedTasks(List<List<int>> allTasksInSection){
+  set selectedTasks(DBTaskList allTasksInSection){
     _multiSelectedTasks = allTasksInSection;
     notifyListeners();
   }
 
   void clearSelectedTasks()=> selectedTasks = [];
 
-  bool containsTask(List<int> task) => _multiSelectedTasks.contains(task);
-  void addTaskToMultiSelect(List<int> task){
+  bool containsTask(Task task) => _multiSelectedTasks.contains(task);
+  void addTaskToMultiSelect(Task task){
     _multiSelectedTasks.add(task);
     notifyListeners();
   }
 
-  void addAllTaskInSectionToMultiSelect(List<List<int>> allTaskInSection){
+  void addAllTaskInSectionToMultiSelect(DBTaskList allTaskInSection){
     _multiSelectedTasks.addAll(allTaskInSection);
     notifyListeners();
   }
 
-  void removeTaskFromMultiSelect(List<int> task){
+  void removeTaskFromMultiSelect(Task task){
     _multiSelectedTasks.remove(task);
     notifyListeners();
   }
 
-   void removeAllTaskInSectionFromMultiSelect(List<List<int>> allTaskInSection){
+   void removeAllTaskInSectionFromMultiSelect(DBTaskList allTaskInSection){
      allTaskInSection.forEach((task) => _multiSelectedTasks.remove(task));
     notifyListeners();
   }
 
-  bool containsAllTaskInSection(List<List<int>> allTasksInSection){
+  bool containsAllTaskInSection(DBTaskList allTasksInSection){
     bool containsEveryTask = allTasksInSection.every((task) => _multiSelectedTasks.contains(task));
     return containsEveryTask;
   }

@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
@@ -32,7 +31,7 @@ class _NewIdeaState extends State<NewIdea> {
   }
 
   bool checkIfIdeaAlreadyExists({required String ideaTitle,required BuildContext context})=>
-     Provider.of<List<IdeaModel>>(context,listen: false).map((ideaModel) => ideaModel.ideaTitle).contains(ideaTitle);
+     Provider.of<List<Idea>>(context,listen: false).map((ideaModel) => ideaModel.ideaTitle).contains(ideaTitle);
 
   @override
   void initState() { 
@@ -120,7 +119,7 @@ class _NewIdeaState extends State<NewIdea> {
           bottomNavigationBar: GestureDetector(
             onTap: () async {
                 if(formKey.currentState!.validate())
-                    await IdeaManager.addToDbAndSetAlarmIdea(
+                    await IdeaManager.addIdeaToDb(
                     context: context,
                     ideaTitle: ideaTitle.text,
                     moreDetails: moreDetails.text,

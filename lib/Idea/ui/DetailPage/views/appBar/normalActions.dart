@@ -11,7 +11,7 @@ class NormalActions extends StatelessWidget {
     required this.idea,
   }) : super(key: key);
 
-  final IdeaModel idea;
+  final Idea idea;
 
   @override
   Widget build(BuildContext context) {

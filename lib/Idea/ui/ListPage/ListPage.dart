@@ -11,7 +11,7 @@ class IdeaListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // All the ideas should be in reverse so that the latest will be on top
-    var listOfIdeas = Provider.of<List<IdeaModel>>(context).reversed.where(_searchTermExists).toList();
+    var listOfIdeas = Provider.of<List<Idea>>(context).reversed.where(_searchTermExists).toList();
     SearchController searchController = Provider.of<SearchController>(context);
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -62,4 +62,4 @@ class IdeasAppBar extends StatelessWidget {
 }
 
 // check if the search term exists in the list
-bool _searchTermExists(IdeaModel idea)=> idea.ideaTitle.contains(SearchController.instance.searchTerm);
+bool _searchTermExists(Idea idea)=> idea.ideaTitle.contains(SearchController.instance.searchTerm);

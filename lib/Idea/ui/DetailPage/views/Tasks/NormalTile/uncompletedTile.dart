@@ -12,8 +12,8 @@ class UncompletedTaskTile extends StatelessWidget {
     required this.uncompletedTask
   }) : super(key: key);
 
-  final IdeaModel idea;
-  final List<int> uncompletedTask;
+  final Idea idea;
+  final Task uncompletedTask;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,9 @@ class UncompletedTaskTile extends StatelessWidget {
       child: ListTile(
     
       leading: Checkbox(value: false, onChanged: (bool? value) async =>
-       await IdeaManager.completeTask(idea, uncompletedTask)),
+       await IdeaManager.completeTask(idea, uncompletedTask,idea.completedTasks)),
     
-      title: Text(uncompletedTask.toAString),
+      title: Text(uncompletedTask.task.toAString),
     
       trailing: IconButton(icon: Icon(Icons.close),
       onPressed: () async => await IdeaManager.deleteTask(idea, uncompletedTask))

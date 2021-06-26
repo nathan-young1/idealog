@@ -1,61 +1,67 @@
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
-import 'package:idealog/Idea/ui/Others/CreateIdea.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customWidget/alertDialog.dart';
 import 'package:idealog/global/routes.dart';
-import 'package:provider/provider.dart';
+
 
 class IdeaManager{
 
-    static addToDbAndSetAlarmIdea({required String ideaTitle,String? moreDetails,required Set<String> tasks,required BuildContext context}) async {
+    static Future<void> addIdeaToDb({required String ideaTitle,String? moreDetails,required Set<String> tasks,required BuildContext context}) async {
 
       // ignore: unawaited_futures
       showDialog(context: context, builder: (context) => progressAlertDialog);
       
       var tasksInCharCodes = tasks.map((task) => task.codeUnits).toList();
-      var newIdea = IdeaModel(ideaTitle: ideaTitle,moreDetails: moreDetails,tasksToCreate: tasksInCharCodes);
-      await IdealogDb.instance.insertToDb(newEntry: newIdea);
+      var newIdea = Idea(ideaTitle: ideaTitle,moreDetails: moreDetails,tasksToCreate: tasksInCharCodes);
+
+      await IdealogDb.instance.writeToDb(idea: newIdea);
       Navigator.popUntil(context, ModalRoute.withName(menuPageView));
     }
 
-  static completeTask(IdeaModel idea,List<int> uncompletedTask) async {
 
-      idea.completeTask(uncompletedTask);
-      await IdealogDb.instance.updateDb(updatedEntry: idea);
-      await AnalyticDB.instance.writeOrUpdate(uncompletedTask);
+  static Future<void> completeTask(Idea idea,Task uncompletedTask,List<Task> allcompletedTasks) async {
+    // Get the last completed task order index which is the maximum order index
+    int lastCompletedOrderIndex = allcompletedTasks.map((e) => e.orderIndex).fold(0, (previousValue, currentValue) => max(previousValue, currentValue));
+      
+    idea.completeTask(uncompletedTask);
+    await IdealogDb.instance.completeTask(taskRow: uncompletedTask, ideaPrimaryKey: idea.uniqueId!, lastCompletedOrderIndex: lastCompletedOrderIndex);
+    await AnalyticDB.instance.writeOrUpdate(uncompletedTask.task);
   }
 
-  static uncheckCompletedTask(IdeaModel idea,List<int> completedTask) async {
+  static Future<void> uncheckCompletedTask(Idea idea,Task completedTask,List<Task> allUncompletedTasks) async {
+    // Get the last Uncompleted task order index which is the maximum order index
+    int lastUncompletedOrderIndex = allUncompletedTasks.map((e) => e.orderIndex).fold(0, (previousValue, currentValue) => max(previousValue, currentValue));
     
       idea.uncheckCompletedTask(completedTask);
-      await IdealogDb.instance.updateDb(updatedEntry: idea);
-      await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
+      await IdealogDb.instance.uncheckCompletedTask(taskRow: completedTask, ideaPrimaryKey: idea.uniqueId!, lastUncompletedOrderIndex: lastUncompletedOrderIndex);
+      await AnalyticDB.instance.removeTaskFromAnalytics(completedTask.task);
   }
 
-  static deleteTask(IdeaModel idea,List<int> task) async {
+  static Future<void> deleteTask(Idea idea,Task taskRow) async {
     // I am using delete task because analytics will not throw an error 
     // if you try to delete a non-existent uncompleted task
-      idea.deleteTask(task);
-      await IdealogDb.instance.updateDb(updatedEntry: idea);
-      await AnalyticDB.instance.removeTaskFromAnalytics(task);
+      idea.deleteTask(taskRow);
+      await IdealogDb.instance.deleteTask(task: taskRow);
+      await AnalyticDB.instance.removeTaskFromAnalytics(taskRow.task);
   }
 
-  static multiDelete(IdeaModel idea,List<List<int>> selectedTasks) => 
+  static multiDelete(Idea idea,List<Task> selectedTasks) => 
           selectedTasks.forEach((task) => deleteTask(idea, task));
 
-  static deleteIdeaFromDb(IdeaModel idea) async { 
-      await IdealogDb.instance.deleteFromDb(uniqueId: idea.uniqueId!);
+  static Future<void> deleteIdeaFromDb(Idea idea) async { 
+    await IdealogDb.instance.deleteIdea(uniqueId: idea.uniqueId!);
     // Delete all the completed tasks of this idea from analytics data
-    idea.completedTasks.forEach((completedTask) async => await AnalyticDB.instance.removeTaskFromAnalytics(completedTask));
+    idea.completedTasks.forEach((completedTask) async => await AnalyticDB.instance.removeTaskFromAnalytics(completedTask.task));
     }
 
-  static Future<void> syncIdeasNow(List<IdeaModel> allIdeas) async{
+  static Future<void> backupIdeasNow(List<Idea> allIdeas) async{
     
     await signInWithGoogle();
     // call the deleting cloud function

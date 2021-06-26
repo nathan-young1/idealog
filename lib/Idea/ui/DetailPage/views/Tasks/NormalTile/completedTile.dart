@@ -18,8 +18,8 @@ class CompletedTaskTile extends StatelessWidget {
   }) : super(key: key);
 
   final ValueNotifier<bool> slidableIconState = ValueNotifier(false);
-  final IdeaModel idea;
-  final List<int> completedTask;
+  final Idea idea;
+  final Task completedTask;
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +47,10 @@ class CompletedTaskTile extends StatelessWidget {
         leading: Checkbox(
         value: true,
         onChanged: (bool? value) async =>
-        await IdeaManager.uncheckCompletedTask(idea, completedTask)
+        await IdeaManager.uncheckCompletedTask(idea, completedTask, idea.uncompletedTasks)
         ),
         
-        title: Text(completedTask.toAString),
+        title: Text(completedTask.task.toAString),
         trailing: SlidableIconButton(slidableIconState),
           ),
       ),
