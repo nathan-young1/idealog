@@ -72,7 +72,9 @@ abstract class TaskList with ChangeNotifier{
 class Task {
   List<int> task;
   int orderIndex;
+  int? primaryKey;
 
+  Task.fromDb({required this.task, required this.orderIndex, required this.primaryKey});
   Task({required this.task, required this.orderIndex});
 
   static DBTaskList createTasks (List<List<int>> allTask){
