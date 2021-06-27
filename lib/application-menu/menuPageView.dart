@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
-import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
 import 'package:idealog/Idea/ui/ListPage/ListPage.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/bottomNav/bottomNav.dart';

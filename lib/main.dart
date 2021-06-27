@@ -42,50 +42,58 @@ class _IdealogState extends State<Idealog> {
       ]);
 
       // print('The last backup time was "${await NativeCodeCaller.getLastBackupTime()}"');
-      await IdealogDb.instance.initialize();
-      await IdealogDb.instance.dropAllTablesInDb();
+      // await IdealogDb.instance.initialize();
+      // await IdealogDb.instance.dropAllTablesInDb();
 
       });
   }
 
   @override
   Widget build(BuildContext context) {
-            return LayoutBuilder(
-              builder: (_, constraints) {
-                ScreenUtil.init(constraints);
-                return ScreenUtilInit(
-                  builder: () => MultiProvider(
-                    providers: [
-                      StreamProvider<List<Idea>>.value(value: IdealogDb.instance.readFromDb,initialData: [],catchError: (_,__)=>[]),
-                      ChangeNotifierProvider<GoogleUserData>.value(value: GoogleUserData.instance),
-                      ChangeNotifierProvider<Prefrences>.value(value: Prefrences.instance),
-                      ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance),
-                      ChangeNotifierProvider<SearchController>.value(value: SearchController.instance)
-                    ],
-                    child: Builder(
-                      builder: (BuildContext context) => MaterialApp(
-                        title: 'Idealog',
-                        debugShowCheckedModeBanner: false,
-                        themeMode: Provider.of<Prefrences>(context).isDarkMode
-                        ? ThemeMode.dark
-                        : ThemeMode.light,
-                        // The light theme
-                        theme: CustomTheme.lightTheme,
-                        // The Dark theme
-                        darkTheme: CustomTheme.darkTheme,
-                        routes: {
-                          homePage: (context) => SplashScreen(),
-                          authenticationPage: (context) => Login(),
-                          menuPageView: (context) => MenuPageView(),
-                          addNewIdeaPage: (context) => NewIdea(),
-                          manageAccountPage: (context) => ManageAccount(),
-                          syncronizationPage: (context) => Syncronization(),
-                          upgradeToPremiumPage: (context) => UpgradeToPremium()
-                        },
-                      ),
-                    ),
-                  ),
-                );
+            return FutureBuilder(
+              future: Future.wait([IdealogDb.instance.initialize()]).then((value) async => await IdealogDb.instance.dropAllTablesInDb()),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return LayoutBuilder(
+                    builder: (_, constraints) {
+                      ScreenUtil.init(constraints);
+                      return ScreenUtilInit(
+                        builder: () => MultiProvider(
+                          providers: [
+                            StreamProvider<List<Idea>>.value(value: IdealogDb.instance.readFromDb,initialData: [],catchError: (_,__)=>[]),
+                            ChangeNotifierProvider<GoogleUserData>.value(value: GoogleUserData.instance),
+                            ChangeNotifierProvider<Prefrences>.value(value: Prefrences.instance),
+                            ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance),
+                            ChangeNotifierProvider<SearchController>.value(value: SearchController.instance)
+                          ],
+                          child: Builder(
+                            builder: (BuildContext context) => MaterialApp(
+                              title: 'Idealog',
+                              debugShowCheckedModeBanner: false,
+                              themeMode: Provider.of<Prefrences>(context).isDarkMode
+                              ? ThemeMode.dark
+                              : ThemeMode.light,
+                              // The light theme
+                              theme: CustomTheme.lightTheme,
+                              // The Dark theme
+                              darkTheme: CustomTheme.darkTheme,
+                              routes: {
+                                homePage: (context) => SplashScreen(),
+                                authenticationPage: (context) => Login(),
+                                menuPageView: (context) => MenuPageView(),
+                                addNewIdeaPage: (context) => NewIdea(),
+                                manageAccountPage: (context) => ManageAccount(),
+                                syncronizationPage: (context) => Syncronization(),
+                                upgradeToPremiumPage: (context) => UpgradeToPremium()
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  );
+                }
+                return Container();
               }
             );
       }

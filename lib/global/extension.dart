@@ -26,6 +26,21 @@ extension DataFromSqliteDb on Object{
   }
   }
 
+    //Extension to convert direct to List<List<int>> for easier use
+  List<int> get StringToListInt{
+  var dataFromDb = toString();
+
+  // if the list is empty
+  if (dataFromDb == '[]') {
+    return <int>[];
+  } else {
+    return dataFromDb.substring(1,dataFromDb.length-1)
+  .split(',')
+  .map((char) => int.parse(char))
+  .toList();
+  }
+  }
+
 }
 
 extension StringToDateTime on String{

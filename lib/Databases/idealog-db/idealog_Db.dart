@@ -1,4 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:idealog/global/extension.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqlbrite/sqlbrite.dart';
@@ -21,18 +23,16 @@ class IdealogDb with ChangeNotifier{
 
     await briteDb.transactionAndTrigger((txn) async {
 
-      var batch = txn.batch();
-      _createTablesIfNotExist(batch);
+      _createTablesIfNotExist(txn);
 
       List<Task> completedTasks = idea.completedTasks;
       List<Task> uncompletedTasks = idea.uncompletedTasks;
 
       // Insert the idea into the database
-      batch.insert(ideasTableName, {Column_ideaPrimaryKey: '${idea.uniqueId}',Column_ideaTitle: idea.ideaTitle,Column_moreDetails: idea.moreDetails??''});
+      int uniqueIdForIdea = await getUniqueId(txn,ideasTableName);
+      await txn.insert(ideasTableName, {Column_ideaTitle: idea.ideaTitle,Column_moreDetails: idea.moreDetails??'',Column_ideaPrimaryKey: uniqueIdForIdea});
+      _putTasksInTheirCorrespondingTable(txn: txn, uncompletedTasks: uncompletedTasks, completedTasks: completedTasks, ideaPrimaryKey: uniqueIdForIdea);
 
-      _putTasksInTheirCorrespondingTable(batch: batch, uniqueId: idea.uniqueId!, uncompletedTasks: uncompletedTasks, completedTasks: completedTasks);
-
-      await batch.commit(noResult: true);
       }
     );
   }
@@ -41,11 +41,11 @@ class IdealogDb with ChangeNotifier{
 
     await briteDb.transactionAndTrigger((txn) async { 
       var batch = txn.batch();
-      Function delete = (String tableName) => 'delete from $tableName where $Column_ideaPrimaryKey = $uniqueId';
+      Function delete = (String tableName) => batch.delete(tableName,where: '$Column_ideaPrimaryKey = $uniqueId');
 
-      batch.execute(delete(ideasTableName));
-      batch.execute(delete(completedTable));
-      batch.execute(delete(uncompletedTable));
+      delete(ideasTableName);
+      delete(completedTable);
+      delete(uncompletedTable);
 
       await batch.commit(noResult: true);
       });
@@ -55,7 +55,7 @@ class IdealogDb with ChangeNotifier{
 
     await briteDb.transactionAndTrigger((txn) async { 
       var batch = txn.batch();
-      String deleteSql = 'where $Column_taskPrimaryKey = ?';
+      String deleteSql = '$Column_taskPrimaryKey = ?';
       // I am deleting from the two tables because if the task does not exist in a table it won't cause any error
       batch.delete(completedTable,where: deleteSql,whereArgs: [task.primaryKey]);
       batch.delete(uncompletedTable,where: deleteSql,whereArgs: [task.primaryKey]);
@@ -76,10 +76,12 @@ class IdealogDb with ChangeNotifier{
     
        await briteDb.transactionAndTrigger((txn) async { 
       var batch = txn.batch();
+      // get id that does not exist in completed table then use it for this task you are adding to the table
+      int uniqueIdForTask = await getUniqueId(txn,completedTable);
 
       batch.delete(uncompletedTable,where: '$Column_taskPrimaryKey = ?',whereArgs: [taskRow.primaryKey]);
       // Add one to the last Order index before adding it to the completed table
-      batch.insert(completedTable, {Column_ideaPrimaryKey: '$ideaPrimaryKey',Column_tasks: '${taskRow.task}',Column_taskOrder: '${++lastCompletedOrderIndex}'});
+      batch.insert(completedTable, {Column_ideaPrimaryKey: '$ideaPrimaryKey',Column_tasks: '${taskRow.task}',Column_taskOrder: '${++lastCompletedOrderIndex}',Column_taskPrimaryKey: uniqueIdForTask});
 
       await batch.commit(noResult: true);
       });
@@ -90,10 +92,11 @@ class IdealogDb with ChangeNotifier{
     
     await briteDb.transactionAndTrigger((txn) async { 
       var batch = txn.batch();
-      
+      // get id that does not exist in uncompleted table then use it for this task you are adding to the table
+      int uniqueIdForTask = await getUniqueId(txn,uncompletedTable);
       batch.delete(completedTable,where: '$Column_taskPrimaryKey = ?',whereArgs: [taskRow.primaryKey]);
       // Add one to the last Order index before adding it to the uncompleted table
-      batch.insert(uncompletedTable, {Column_ideaPrimaryKey: '$ideaPrimaryKey',Column_tasks: '${taskRow.task}',Column_taskOrder: '${++lastUncompletedOrderIndex}'});
+      batch.insert(uncompletedTable, {Column_ideaPrimaryKey: '$ideaPrimaryKey',Column_tasks: '${taskRow.task}',Column_taskOrder: '${++lastUncompletedOrderIndex}',Column_taskPrimaryKey: uniqueIdForTask});
 
       await batch.commit(noResult: true);
     });
@@ -103,31 +106,30 @@ class IdealogDb with ChangeNotifier{
   Future<void> changeMoreDetail({required Idea idea}) async {
       await briteDb.transactionAndTrigger((txn) async {
         await txn.update(ideasTableName,
-          {Column_moreDetails : idea.moreDetails??''},
-          where: 'where $Column_ideaPrimaryKey = ?',
+          {Column_moreDetails : idea.moreDetails},
+          where: '$Column_ideaPrimaryKey = ?',
           whereArgs: [idea.uniqueId]);
       });
   }
 
   Stream<List<Idea>> get readFromDb {
-      List<Idea> allIdeasFromDb = [];
       briteDb.execute(createIdeasTableSqlCommand);
       briteDb.execute(createCompletedTableSqlCommand);
       briteDb.execute(createUncompletedTableSqlCommand);
 
       // var resIdeas = await briteDb.query(ideasTableName);
       // ignore: cancel_subscriptions
-      return briteDb.createQuery(ideasTableName).asyncMap((res) async => await res()).asyncMap((event) async { 
+      return briteDb.createQuery(ideasTableName).asyncMap((res) => res()).asyncMap((event) async { 
+        List<Idea> allIdeasFromDb = [];
 
-        for(var idea in event){
+        event.forEach((idea) async {
           int uniqueId = int.parse(idea[Column_ideaPrimaryKey].toString());
 
           Map<String, DBTaskList> tasks = await getTasksForIdea(uniqueId: uniqueId);
-
-          Idea test = Idea.readFromDb(ideaTitle: idea[Column_ideaTitle].toString(), completedTasks: tasks[completedTable]!, uniqueId: uniqueId, uncompletedTasks: tasks[uncompletedTable]!);
-          
+          Idea test = Idea.readFromDb(ideaTitle: idea[Column_ideaTitle].toString(),moreDetails: idea[Column_moreDetails].toString(), completedTasks: tasks[completedTable]!, uniqueId: uniqueId, uncompletedTasks: tasks[uncompletedTable]!);
           allIdeasFromDb.add(test);
-        }
+        });
+
         return allIdeasFromDb;
       
       });
@@ -145,24 +147,41 @@ class IdealogDb with ChangeNotifier{
   }
 
   Future<void> dropAllTablesInDb() async {
-          await briteDb.delete(ideasTableName);
-          await briteDb.delete(completedTable);
-          await briteDb.delete(uncompletedTable);
+          // await briteDb.delete(ideasTableName);
+          // await briteDb.delete(completedTable);
+          // // // await briteDb.delete(uncompletedTable);
+          // await briteDb.execute('Drop Table $ideasTableName');
+          // await briteDb.execute('Drop Table $completedTable');
+          // await briteDb.execute('Drop Table $uncompletedTable');
+            //  print('dropped');
+  }
+
+  Future<int> getUniqueId(Transaction txn,String tableName) async {
+    var queryResult = await txn.query(tableName);
+    List<int> allPrimaryKeyInDb = queryResult.map((e) => e[(tableName == ideasTableName)?Column_ideaPrimaryKey:Column_taskPrimaryKey]).map((e) => e as int).toList();
+    Random generator = new Random();
+    int newUniqueKey = generator.nextInt(10000);
+    print(newUniqueKey);
+    print(allPrimaryKeyInDb.any((key) => key == newUniqueKey));
+    while(allPrimaryKeyInDb.any((key) => key == newUniqueKey)){
+      newUniqueKey = generator.nextInt(5000);
+    }
+    return newUniqueKey;
   }
 
 
 // =====================================================Private class methods==================================================== //
 
-  void _createTablesIfNotExist<T extends Batch>(T batch){    
-    batch.execute(createIdeasTableSqlCommand);
-    batch.execute(createCompletedTableSqlCommand);
-    batch.execute(createUncompletedTableSqlCommand);
+  Future<void> _createTablesIfNotExist(Transaction txn) async {    
+    await txn.execute(createIdeasTableSqlCommand);
+    await txn.execute(createCompletedTableSqlCommand);
+    await txn.execute(createUncompletedTableSqlCommand);
   }
 
 // Calls the method _addTasksToTable for completed and uncompleted tasks.
-  void _putTasksInTheirCorrespondingTable({required Batch batch,required int uniqueId,required DBTaskList uncompletedTasks,required DBTaskList completedTasks}){
-        _addTasksToTable(batch: batch, uniqueId: uniqueId,tasks: completedTasks,tableName: completedTable);
-        _addTasksToTable(batch: batch, uniqueId: uniqueId,tasks: uncompletedTasks,tableName: uncompletedTable);
+  void _putTasksInTheirCorrespondingTable({required Transaction txn,required DBTaskList uncompletedTasks,required DBTaskList completedTasks,required int ideaPrimaryKey}){
+        _addTasksToTable(txn: txn,tasks: completedTasks,tableName: completedTable,ideaPrimaryKey: ideaPrimaryKey);
+        _addTasksToTable(txn: txn,tasks: uncompletedTasks,tableName: uncompletedTable,ideaPrimaryKey: ideaPrimaryKey);
   }
 
 // Get the tasks from their corresponding table using the idea's uniqueId
@@ -179,19 +198,22 @@ class IdealogDb with ChangeNotifier{
 
   // Convert Db query to Task object
   Task _convertToTask(Map<String, Object?> e){
-      var task = e[Column_tasks] as List<int>;
+      var task = e[Column_tasks]!.StringToListInt;
       var orderIndex = e[Column_taskOrder] as int;
-      return Task(task: task, orderIndex: orderIndex);
+      var primaryKey = e[Column_taskPrimaryKey] as int;
+      return Task(task: task, orderIndex: orderIndex,primaryKey: primaryKey);
   }
 
   // Add tasks to a specified table.
-  void _addTasksToTable <T extends Batch>({required T batch,required int uniqueId,required DBTaskList tasks,required String tableName}) =>
-        tasks.forEach((row) =>
-          batch.insert(tableName, {Column_ideaPrimaryKey: '$uniqueId',Column_tasks: '${row.task}',Column_taskOrder: '${row.orderIndex}'}));
+  void _addTasksToTable({required Transaction txn,required DBTaskList tasks,required String tableName,required int ideaPrimaryKey}) =>
+        tasks.forEach((row) async {
+          int uniqueIdForTask = await getUniqueId(txn,tableName);
+          await txn.insert(tableName, {Column_tasks: '${row.task}',Column_taskOrder: '${row.orderIndex}',Column_ideaPrimaryKey: '$ideaPrimaryKey',Column_taskPrimaryKey: uniqueIdForTask});
+          });
 
   
   // Make query to database for the tasks
   Future<DBTaskList> _taskQuery(String tableName,int uniqueId) async =>
-     (await briteDb.query(tableName,where: 'uniqueId = ?',whereArgs: [uniqueId])).map(_convertToTask).toList();
+     (await briteDb.query(tableName,where: '$Column_ideaPrimaryKey = ?',whereArgs: [uniqueId])).map(_convertToTask).toList();
   
 }

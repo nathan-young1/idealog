@@ -68,11 +68,10 @@ class _IdeaDetailState extends State<IdeaDetail> {
                                     keyboardType: TextInputType.text,
                                     textInputAction: TextInputAction.done,
                                      onSubmitted: (_) async {
-                                       setState((){
-                                       descriptionEnabled=false;
-                                       widget.idea.changeMoreDetail(widget.description!.text);
-                                       });
+                                        descriptionEnabled=false;
+                                        widget.idea.changeMoreDetail(widget.description!.text);
                                        await IdealogDb.instance.changeMoreDetail(idea: widget.idea);
+                                       setState((){});
                                        },
                                     decoration: InputDecoration(
                                       disabledBorder: InputBorder.none,

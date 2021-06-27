@@ -12,6 +12,7 @@ class IdeaListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // All the ideas should be in reverse so that the latest will be on top
     var listOfIdeas = Provider.of<List<Idea>>(context).reversed.where(_searchTermExists).toList();
+    print(listOfIdeas.map((e) => e.uniqueId));
     SearchController searchController = Provider.of<SearchController>(context);
     return Column(
       mainAxisSize: MainAxisSize.max,

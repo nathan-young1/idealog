@@ -1,10 +1,8 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/customWidget/profilePicWidget.dart';

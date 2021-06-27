@@ -13,7 +13,7 @@ const String Column_taskPrimaryKey = 'taskPrimaryKey';
 
 
 // Sql execution strings
-const String createIdeasTableSqlCommand = 'create table if not exists $ideasTableName ($Column_ideaPrimaryKey INTEGER PRIMARY_KEY,$Column_ideaTitle TEXT,$Column_moreDetails TEXT)'; 
-const String createCompletedTableSqlCommand = 'create table if not exists $completedTable ($Column_taskPrimaryKey INTEGER PRIMARY_KEY,$Column_ideaPrimaryKey INTEGER, $Column_tasks Text, $Column_taskOrder INTEGER)';
-const String createUncompletedTableSqlCommand = 'create table if not exists $uncompletedTable ($Column_taskPrimaryKey INTEGER PRIMARY_KEY, $Column_ideaPrimaryKey INTEGER, $Column_tasks Text, $Column_taskOrder INTEGER)';
+const String createIdeasTableSqlCommand = 'create table if not exists $ideasTableName ($Column_ideaPrimaryKey INTEGER PRIMARY_KEY NOT NULL,$Column_ideaTitle TEXT,$Column_moreDetails TEXT)'; 
+const String createCompletedTableSqlCommand = 'create table if not exists $completedTable ($Column_taskPrimaryKey INTEGER PRIMARY_KEY NOT NULL,$Column_ideaPrimaryKey INTEGER NOT NULL, $Column_tasks Text, $Column_taskOrder INTEGER)';
+const String createUncompletedTableSqlCommand = 'create table if not exists $uncompletedTable ($Column_taskPrimaryKey INTEGER PRIMARY_KEY NOT NULL, $Column_ideaPrimaryKey INTEGER NOT NULL, $Column_tasks Text, $Column_taskOrder INTEGER)';
 
