@@ -56,7 +56,7 @@ class IdeaManager{
           selectedTasks.forEach((task) => deleteTask(idea, task));
 
   static Future<void> deleteIdeaFromDb(Idea idea) async { 
-    await IdealogDb.instance.deleteIdea(uniqueId: idea.uniqueId!);
+    await IdealogDb.instance.deleteIdea(ideaId: idea.uniqueId!);
     // Delete all the completed tasks of this idea from analytics data
     idea.completedTasks.forEach((completedTask) async => await AnalyticDB.instance.removeTaskFromAnalytics(completedTask.task));
     }

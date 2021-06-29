@@ -42,8 +42,6 @@ class _IdealogState extends State<Idealog> {
       ]);
 
       // print('The last backup time was "${await NativeCodeCaller.getLastBackupTime()}"');
-      // await IdealogDb.instance.initialize();
-      // await IdealogDb.instance.dropAllTablesInDb();
 
       });
   }
@@ -51,7 +49,7 @@ class _IdealogState extends State<Idealog> {
   @override
   Widget build(BuildContext context) {
             return FutureBuilder(
-              future: Future.wait([IdealogDb.instance.initialize()]).then((value) async => await IdealogDb.instance.dropAllTablesInDb()),
+              future: IdealogDb.instance.initialize(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return LayoutBuilder(

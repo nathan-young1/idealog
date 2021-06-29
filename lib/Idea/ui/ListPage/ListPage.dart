@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchBar.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
 import 'package:idealog/Idea/ui/ListPage/views/Card.dart';
@@ -12,7 +15,6 @@ class IdeaListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // All the ideas should be in reverse so that the latest will be on top
     var listOfIdeas = Provider.of<List<Idea>>(context).reversed.where(_searchTermExists).toList();
-    print(listOfIdeas.map((e) => e.uniqueId));
     SearchController searchController = Provider.of<SearchController>(context);
     return Column(
       mainAxisSize: MainAxisSize.max,

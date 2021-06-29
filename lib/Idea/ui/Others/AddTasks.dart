@@ -106,7 +106,12 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                             decoration: underlineAndFilled.copyWith(
                               labelText: 'Task',
                               suffixIcon: IconButton(icon: Icon(Icons.check,color: LightPink.withOpacity(0.7),size: 30),
-                              onPressed: () => (formKey.currentState!.validate()?(context):null)
+                              onPressed: (){
+                                if(formKey.currentState!.validate()){
+                                newTaskFocus.requestFocus();
+                                addNewTask(context);
+                                }
+                              }
                             ),
                           ),
                       ),)
@@ -125,7 +130,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
               for(var task in newTasks) { 
                 Task taskObject = Task(task: task.codeUnits, orderIndex: orderIndex);
                 widget.idea.addNewTask(taskObject);
-                await IdealogDb.instance.addTask(taskRow: taskObject, ideaPrimaryKey: widget.idea.uniqueId!,lastUncompletedRowIndex: lastUncompletedOrderIndex);
+                await IdealogDb.instance.addTask(taskRow: taskObject, ideaId: widget.idea.uniqueId!,lastUncompletedRowIndex: lastUncompletedOrderIndex);
                 orderIndex++;
               }
 

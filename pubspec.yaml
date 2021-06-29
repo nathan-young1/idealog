@@ -31,7 +31,6 @@ dependencies:
   local_auth: ^1.1.5
   velocity_x: ^3.2.0
   google_sign_in: ^5.0.0
-  sqflite: ^2.0.0+2
   another_flushbar: ^1.10.17
   provider: ^5.0.0
   sleek_circular_slider: ^2.0.0
@@ -49,10 +48,10 @@ dependencies:
   cloud_functions: ^1.1.1
   moor: ^4.3.0
   sqlite3_flutter_libs:
+  sqflite: ^2.0.0+3
   path_provider:
   path:
   in_app_purchase: ^1.0.6
-  sqlbrite: ^2.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
