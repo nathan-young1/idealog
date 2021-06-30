@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchBar.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
 import 'package:idealog/Idea/ui/ListPage/views/Card.dart';

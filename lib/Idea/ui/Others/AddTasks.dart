@@ -29,10 +29,10 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
   Set<String> newTasks = <String>{};
   GlobalKey<FormState> formKey = GlobalKey();
 
-  void addNewTask(BuildContext context){
-    if(newTask.text != ''){
+  void addNewTask(){
+    if(newTask.text.isNotEmpty){
       setState(() {
-          newTasks.add(newTask.text);
+          newTasks.add(newTask.text.trim());
         });
       newTask.clear();
       }
@@ -92,14 +92,14 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                             maxLines: null,
                             maxLength: 350,
                             validator: (value){
-                              if([...widget.idea.completedTasks.map((e) => e.task.toAString),...widget.idea.uncompletedTasks.map((e) => e.task.toAString)]
+                              if({...widget.idea.completedTasks.map((e) => e.task.toAString),...widget.idea.uncompletedTasks.map((e) => e.task.toAString)}
                               .contains(newTask.text))
                               return "Task already exists";
                             },
                             onFieldSubmitted: (_){
                               if(formKey.currentState!.validate()){
                               newTaskFocus.requestFocus();
-                              addNewTask(context);
+                              addNewTask();
                               }
                             },
                             style: TextStyle(fontSize: 18),
@@ -109,7 +109,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                               onPressed: (){
                                 if(formKey.currentState!.validate()){
                                 newTaskFocus.requestFocus();
-                                addNewTask(context);
+                                addNewTask();
                                 }
                               }
                             ),

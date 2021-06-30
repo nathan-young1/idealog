@@ -37,6 +37,13 @@ abstract class TaskList with ChangeNotifier{
   List<Task> uncompletedTasks = [];
 
   List<Task> get allTasks => [...completedTasks,...uncompletedTasks];
+  double get percentIndicator {
+        final totalNumberOfTasks = allTasks.length;
+        //first check that the total number of tasks is not zero, so as not to have division by zero error
+        // ignore: omit_local_variable_types
+        final double percent = (totalNumberOfTasks != 0)?(completedTasks.length/totalNumberOfTasks)*100:0;
+        return percent;
+  }
   
   TaskList({required List<List<int>> tasksToCreate})
     :this.uncompletedTasks = Task.createTasks(tasksToCreate);

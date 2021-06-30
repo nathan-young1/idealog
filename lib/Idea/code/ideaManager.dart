@@ -13,18 +13,22 @@ import 'package:idealog/global/routes.dart';
 
 class IdeaManager{
 
-    static Future<void> addIdeaToDb({required String ideaTitle,String? moreDetails,required Set<String> tasks,required BuildContext context}) async {
+  static Future<void> addIdeaToDb({required String ideaTitle,String? moreDetails,required Set<String> tasks,required BuildContext context}) async {
 
-      // ignore: unawaited_futures
-      showDialog(context: context, builder: (context) => progressAlertDialog);
-      
-      var tasksInCharCodes = tasks.map((task) => task.codeUnits).toList();
-      var newIdea = Idea(ideaTitle: ideaTitle,moreDetails: moreDetails,tasksToCreate: tasksInCharCodes);
+    // ignore: unawaited_futures
+    showDialog(context: context, builder: (context) => progressAlertDialog);
+    
+    var tasksInCharCodes = tasks.map((task) => task.codeUnits).toList();
+    var newIdea = Idea(ideaTitle: ideaTitle,moreDetails: moreDetails,tasksToCreate: tasksInCharCodes);
 
-      await IdealogDb.instance.writeToDb(idea: newIdea);
-      Navigator.popUntil(context, ModalRoute.withName(menuPageView));
-    }
+    await IdealogDb.instance.writeToDb(idea: newIdea);
+    Navigator.popUntil(context, ModalRoute.withName(menuPageView));
+  }
 
+  static Future<void> changeMoreDetail({required Idea idea, required String newMoreDetail}) async {
+    idea.changeMoreDetail(newMoreDetail);
+    await IdealogDb.instance.changeMoreDetail(ideaId: idea.uniqueId!,newMoreDetail: newMoreDetail);
+  }
 
   static Future<void> completeTask(Idea idea,Task uncompletedTask,List<Task> allcompletedTasks) async {
     // Get the last completed task order index which is the maximum order index

@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:sqflite/sqflite.dart';
@@ -30,7 +28,7 @@ class IdealogDb {
 
   Future<void> writeToDb({required Idea idea}) async {
 
-    await _dbInstance.transaction((txn) async {
+    await _dbInstance.transactionAndTrigger((txn) async {
 
       _createTablesIfNotExist(txn);
 
@@ -41,14 +39,12 @@ class IdealogDb {
       int uniqueIdForIdea = await getUniqueId(txn,ideasTable);
       await txn.insert(ideasTable, {Column_ideaTitle: idea.ideaTitle,Column_moreDetails: idea.moreDetails??'',Column_ideaId: uniqueIdForIdea});
       _putTasksInTheirCorrespondingTable(txn: txn, uncompletedTasks: uncompletedTasks, completedTasks: completedTasks, ideaPrimaryKey: uniqueIdForIdea);
-      }
-    );
-    notifyListeners();
+      });
   }
 
   Future<void> deleteIdea({required int ideaId}) async {
 
-    await _dbInstance.transaction((txn) async { 
+    await _dbInstance.transactionAndTrigger((txn) async { 
       var batch = txn.batch();
       Function delete = (String tableName) => batch.delete(tableName,where: '$Column_ideaId = $ideaId');
 
@@ -58,7 +54,6 @@ class IdealogDb {
 
       await batch.commit(noResult: true);
       });
-      notifyListeners();
   }
 
   Future<void> deleteTask({required Task task}) async {
@@ -67,12 +62,11 @@ class IdealogDb {
       var batch = txn.batch();
       String deleteSql = '$Column_taskId = ?';
       // I am deleting from the two tables because if the task does not exist in a table it won't cause any error
-      batch.delete(completedTable,where: deleteSql,whereArgs: [task.primaryKey]);
-      batch.delete(uncompletedTable,where: deleteSql,whereArgs: [task.primaryKey]);
+      batch.delete(completedTable,where: deleteSql,whereArgs: [task.primaryKey!]);
+      batch.delete(uncompletedTable,where: deleteSql,whereArgs: [task.primaryKey!]);
 
       await batch.commit(noResult: true);
       });
-      notifyListeners();
   }
 
   Future<void> addTask({required Task taskRow, required int ideaId, required int lastUncompletedRowIndex}) async {
@@ -81,7 +75,6 @@ class IdealogDb {
       int uniqueIdForTask = await getUniqueId(txn,uncompletedTable);
       await txn.insert(uncompletedTable, {Column_ideaId: '$ideaId',Column_tasks: '${taskRow.task}',Column_taskOrder: '$lastUncompletedRowIndex',Column_taskId: '$uniqueIdForTask'});
       });
-    notifyListeners();
   }
 
   Future<void> completeTask({required Task taskRow, required int ideaPrimaryKey, required int lastCompletedOrderIndex}) async {
@@ -111,47 +104,51 @@ class IdealogDb {
 
       await batch.commit(noResult: true);
     });
-    notifyListeners();
 
   }
 
-  Future<void> changeMoreDetail({required Idea idea}) async {
+  Future<void> changeMoreDetail({required int ideaId, required String newMoreDetail}) async {
       await _dbInstance.transaction((txn) async {
         await txn.update(ideasTable,
-          {Column_moreDetails : idea.moreDetails},
+          {Column_moreDetails : newMoreDetail},
           where: '$Column_ideaId = ?',
-          whereArgs: [idea.uniqueId]);
+          whereArgs: [ideaId]);
       });
-      notifyListeners();
   }
 
-   Stream<List<Idea>> get readFromDb async* {
+  /// Watch the idea's table for updates. 
+  Stream<List<Idea>> get readFromDb async* {
 
       // await for every new event in the stream then yield the current dbstate
       await for (var _ in _controller.stream){
-        print('called');
-      _dbInstance.execute(createIdeasTableSqlCommand);
-      _dbInstance.execute(createCompletedTableSqlCommand);
-      _dbInstance.execute(createUncompletedTableSqlCommand);
-      List<Idea> allIdeasFromDb = [];
+        List<Idea> allIdeasFromDb = [];
+      await _dbInstance.transaction((txn) async {
+        _createTablesIfNotExist(txn);
 
-      var resIdeas = await _dbInstance.query(ideasTable);
+        var allIdeasFromQuery = await txn.query(ideasTable);
       
-      for(var idea in resIdeas){
-        int uniqueId = int.parse(idea[Column_ideaId].toString());
+        for(var idea in allIdeasFromQuery){
+          int uniqueId = int.parse(idea[Column_ideaId].toString());
 
-        Map<String, DBTaskList> tasks = await getTasksForIdea(uniqueId: uniqueId);
+          Map<String, DBTaskList> tasks = await getTasksForIdea(uniqueId: uniqueId, txn: txn);
 
-        Idea test = Idea.readFromDb(ideaTitle: idea[Column_ideaTitle].toString(), completedTasks: tasks[completedTable]!, uniqueId: uniqueId, uncompletedTasks: tasks[uncompletedTable]!);
-        
-        allIdeasFromDb.add(test);
-      }
-
+          Idea test = Idea.readFromDb(
+           ideaTitle: idea[Column_ideaTitle].toString(),
+           completedTasks: tasks[completedTable]!,
+           uniqueId: uniqueId,
+           uncompletedTasks: tasks[uncompletedTable]!,
+           moreDetails: idea[Column_moreDetails].toString()
+           );
+          
+          allIdeasFromDb.add(test);
+        }
+      });
+      
       yield allIdeasFromDb;
-
       }  
   }
 
+  /// Drop all tables in the database
   Future<void> dropAllTablesInDb() async {
     await _dbInstance.execute('Drop Table $ideasTable');
     await _dbInstance.execute('Drop Table $completedTable');
@@ -159,39 +156,41 @@ class IdealogDb {
     notifyListeners();
   }
 
+  
+  /// Get the last primary key in the table ,then increment it by one for a new unique key.
   Future<int> getUniqueId(Transaction txn,String tableName) async {
+    String idColumn = (tableName == ideasTable)?Column_ideaId:Column_taskId;
 
-    var queryResult = await txn.query(tableName);
-    List<int> allPrimaryKeyInDb = queryResult.map((e) => e[(tableName == ideasTable)?Column_ideaId:Column_taskId]).map((e) => e as int).toList();
-    int newUniqueKey = Random().nextInt(10000);
+    var queryResult = await txn.query(tableName,orderBy: '$idColumn DESC LIMIT 1',columns: [idColumn]);
 
-    while(allPrimaryKeyInDb.any((key) => key == newUniqueKey)){
-      newUniqueKey = Random().nextInt(5000);
-    }
+    List<int> keysInDb = queryResult.map((e) => e[idColumn] as int).toList();
 
-    return newUniqueKey;
+    int newKey = (keysInDb.isEmpty)?0:++keysInDb.last;
+
+    return newKey;
   }
 
 
 // =====================================================Private class methods==================================================== //
 
+  /// Creates the following tables [Ideas,CompletedTable,UncompletedTable] if they don't already exist.
   Future<void> _createTablesIfNotExist(Transaction txn) async {    
     await txn.execute(createIdeasTableSqlCommand);
     await txn.execute(createCompletedTableSqlCommand);
     await txn.execute(createUncompletedTableSqlCommand);
   }
 
-// Calls the method _addTasksToTable for completed and uncompleted tasks.
+  /// Calls the method _addTasksToTable for both completed and uncompleted tasks.
   void _putTasksInTheirCorrespondingTable({required Transaction txn,required DBTaskList uncompletedTasks,required DBTaskList completedTasks,required int ideaPrimaryKey}){
         _addTasksToTable(txn: txn,tasks: completedTasks,tableName: completedTable,ideaPrimaryKey: ideaPrimaryKey);
         _addTasksToTable(txn: txn,tasks: uncompletedTasks,tableName: uncompletedTable,ideaPrimaryKey: ideaPrimaryKey);
   }
 
-// Get the tasks from their corresponding table using the idea's uniqueId
-  Future<Map<String, DBTaskList>> getTasksForIdea({required int uniqueId}) async {
+  /// Get the tasks from their corresponding table using the idea's Id
+  Future<Map<String, DBTaskList>> getTasksForIdea({required int uniqueId,required Transaction txn}) async {
 
-    List<Task> completedTasks = await _taskQuery(completedTable, uniqueId);
-    List<Task> uncompletedTasks = await _taskQuery(uncompletedTable, uniqueId);
+    List<Task> completedTasks = await _taskQuery(completedTable, uniqueId, txn);
+    List<Task> uncompletedTasks = await _taskQuery(uncompletedTable, uniqueId, txn);
     
     return {uncompletedTable: uncompletedTasks,completedTable: completedTasks};
   }
@@ -199,7 +198,7 @@ class IdealogDb {
 
 // ==============================================================Functions for methods============================================== //
 
-  // Convert Db query to Task object
+  /// Convert the Db query result to a Task object
   Task _convertToTask(Map<String, Object?> e){
       var task = e[Column_tasks]!.StringToListInt;
       var orderIndex = e[Column_taskOrder] as int;
@@ -207,7 +206,7 @@ class IdealogDb {
       return Task(task: task, orderIndex: orderIndex,primaryKey: primaryKey);
   }
 
-  // Add tasks to a specified table.
+  /// Add tasks to the specified table.
   void _addTasksToTable({required Transaction txn,required DBTaskList tasks,required String tableName,required int ideaPrimaryKey}) =>
         tasks.forEach((row) async {
           int uniqueIdForTask = await getUniqueId(txn,tableName);
@@ -215,8 +214,8 @@ class IdealogDb {
           });
 
   
-  // Make query to database for the tasks
-  Future<DBTaskList> _taskQuery(String tableName,int uniqueId) async =>
-     (await _dbInstance.query(tableName,where: '$Column_ideaId = ?',whereArgs: [uniqueId])).map(_convertToTask).toList();
+  /// Make query to the specified table for tasks
+  Future<DBTaskList> _taskQuery(String tableName,int uniqueId,Transaction txn) async =>
+     (await txn.query(tableName,where: '$Column_ideaId = ?',whereArgs: [uniqueId])).map(_convertToTask).toList();
   
 }

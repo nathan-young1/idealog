@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
+import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
@@ -68,10 +69,8 @@ class _IdeaDetailState extends State<IdeaDetail> {
                                     keyboardType: TextInputType.text,
                                     textInputAction: TextInputAction.done,
                                      onSubmitted: (_) async {
-                                        descriptionEnabled=false;
-                                        widget.idea.changeMoreDetail(widget.description!.text);
-                                       await IdealogDb.instance.changeMoreDetail(idea: widget.idea);
-                                       setState((){});
+                                       setState((){descriptionEnabled=false;});
+                                       await IdeaManager.changeMoreDetail(idea: widget.idea, newMoreDetail: widget.description!.text);
                                        },
                                     decoration: InputDecoration(
                                       disabledBorder: InputBorder.none,

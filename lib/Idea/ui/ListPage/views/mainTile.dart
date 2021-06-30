@@ -7,12 +7,10 @@ import 'ideaTitle.dart';
 class MainTile extends StatelessWidget {
   const MainTile({
     Key? key,
-    required this.percent,
     required this.idea,
     required this.slidableIconState
   }) : super(key: key);
 
-  final double percent;
   final Idea idea;
   final ValueNotifier<bool> slidableIconState;
 
@@ -30,7 +28,7 @@ class MainTile extends StatelessWidget {
       child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  PercentageIncidator(percent: percent),
+                  PercentageIncidator(),
                   IdeaTitle(idea: idea),
                   ToggleSlidable(
                     slidableIconState: slidableIconState

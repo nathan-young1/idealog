@@ -41,6 +41,7 @@ class _IdealogState extends State<Idealog> {
       Firebase.initializeApp(),
       ]);
 
+
       // print('The last backup time was "${await NativeCodeCaller.getLastBackupTime()}"');
 
       });
