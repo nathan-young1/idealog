@@ -36,7 +36,7 @@ class IdeaManager{
       
     idea.completeTask(uncompletedTask);
     await IdealogDb.instance.completeTask(taskRow: uncompletedTask, ideaPrimaryKey: idea.uniqueId!, lastCompletedOrderIndex: lastCompletedOrderIndex);
-    await AnalyticDB.instance.writeOrUpdate(uncompletedTask.task);
+    await AnalyticDB.instance.writeOrUpdate(uncompletedTask);
   }
 
   static Future<void> uncheckCompletedTask(Idea idea,Task completedTask,List<Task> allUncompletedTasks) async {
@@ -45,7 +45,7 @@ class IdeaManager{
     
       idea.uncheckCompletedTask(completedTask);
       await IdealogDb.instance.uncheckCompletedTask(taskRow: completedTask, ideaPrimaryKey: idea.uniqueId!, lastUncompletedOrderIndex: lastUncompletedOrderIndex);
-      await AnalyticDB.instance.removeTaskFromAnalytics(completedTask.task);
+      await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
   }
 
   static Future<void> deleteTask(Idea idea,Task taskRow) async {
@@ -53,7 +53,7 @@ class IdeaManager{
     // if you try to delete a non-existent uncompleted task
       idea.deleteTask(taskRow);
       await IdealogDb.instance.deleteTask(task: taskRow);
-      await AnalyticDB.instance.removeTaskFromAnalytics(taskRow.task);
+      await AnalyticDB.instance.removeTaskFromAnalytics(taskRow);
   }
 
   static multiDelete(Idea idea,List<Task> selectedTasks) => 
@@ -62,7 +62,7 @@ class IdeaManager{
   static Future<void> deleteIdeaFromDb(Idea idea) async { 
     await IdealogDb.instance.deleteIdea(ideaId: idea.uniqueId!);
     // Delete all the completed tasks of this idea from analytics data
-    idea.completedTasks.forEach((completedTask) async => await AnalyticDB.instance.removeTaskFromAnalytics(completedTask.task));
+    idea.completedTasks.forEach((completedTask) async => await AnalyticDB.instance.removeTaskFromAnalytics(completedTask));
     }
 
   static Future<void> backupIdeasNow(List<Idea> allIdeas) async{

@@ -1,9 +1,6 @@
-import 'dart:io';
-import 'package:moor/ffi.dart';
-import 'package:moor/moor.dart';
+import 'package:idealog/Databases/analytics-db/analytics_config.dart';
+import 'package:idealog/core-models/ideaModel.dart' show Task;
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as p;
-part 'analyticsSql.g.dart';
 
 class AnalyticChartData{
   DateTime date;
@@ -11,55 +8,52 @@ class AnalyticChartData{
   AnalyticChartData({required this.date,required this.numberOfTasksCompleted});
 }
 
-@DataClassName('Analytic')
-class AnalyticsSql extends Table{
-  IntColumn get key => integer().autoIncrement()();
-  IntColumn get year => integer()();
-  IntColumn get month => integer()();
-  IntColumn get day => integer()();
-  TextColumn get completedTasks => text()();
-}
+class AnalyticDB{
 
+  AnalyticDB._();
+  static final AnalyticDB instance = new AnalyticDB._();
 
-LazyDatabase _openConnection() {
-  // the LazyDatabase util lets us find the right location for the file async.
-  return LazyDatabase(() async {
-    // put the database file, called db.sqlite here, into the documents folder
-    // for your app.
-    final dbFolder = await getDatabasesPath();
-    final file = File(p.join(dbFolder, 'analytics.db'));
+  late Database _analyticsDb;
 
-    return VmDatabase(file);
-  });
-}
+  Future<void> initialize() async =>
+    _analyticsDb = await openDatabase("analytics.sqlite",version: 1);
 
+  /// Record a task in the analytics table.
+  Future<void> writeOrUpdate(Task taskRow) async {
 
-@UseMoor(tables: [AnalyticsSql])
-class AnalyticDB extends _$AnalyticDB{
-  AnalyticDB() : super(_openConnection());
-
-
-  @override
-  int get schemaVersion => 1;
-
-  static final AnalyticDB instance = AnalyticDB();
-  
-
-  Future<void> writeOrUpdate(List<int> task) async {
     var now = DateTime.now();
-    await into(analyticsSql).insert(AnalyticsSqlCompanion(
-    year: Value(now.year),
-    month: Value(now.month),
-    day: Value(now.day),
-    completedTasks: Value(task.toString())
-    ));
+    _analyticsDb.transaction((txn) async {
+      var uniqueKey = await getUniqueId(txn, analyticsTable);
+      // first get the unique id for the primary key
+      await txn.insert(analyticsTable, {
+        Column_year : now.year,
+        Column_month : now.month,
+        Column_day : now.day,
+        Column_key : uniqueKey,
+        Column_completedTasks : taskRow.task
+      });
+    });
   }
+
+    /// Get the last primary key in the table ,then increment it by one for a new unique key.
+  Future<int> getUniqueId(Transaction txn,String tableName) async {
+
+    var queryResult = await txn.query(analyticsTable,orderBy: '$Column_key DESC LIMIT 1',columns: [Column_key]);
+
+    List<int> keysInDb = queryResult.map((e) => e[Column_key] as int).toList();
+
+    int newKey = (keysInDb.isEmpty)?0:++keysInDb.last;
+
+    return newKey;
+  }
+
 
   Future<List<AnalyticChartData>> readAnalytics() async {
 
     var now = DateTime.now();
-    
-    var dbResult = await (select(analyticsSql)..where((row) => row.month.equals(now.month) & row.year.equals(now.year))).get();
+    var dbResult = await _analyticsDb.transaction((txn) async {
+        await txn.query(analyticsTable,where: '$Column_year == ? and $Column_month == ?',whereArgs: [now.year,now.month]);
+      });
 
     //create a list of all the days recorded in the database
     var recordedDaysInDb = <int>[];
@@ -87,12 +81,19 @@ class AnalyticDB extends _$AnalyticDB{
 
   }
 
-    Future<void> clearObsoluteData() async {
-    var now = DateTime.now();
-    await (delete(analyticsSql)..where((row) => row.month.isNotIn([now.month]))).go();
-    }
 
-    Future<void> removeTaskFromAnalytics(List<int> task) async =>
-      await (delete(analyticsSql)..where((row) => row.completedTasks.equals(task.toString()))).go();
+  /// Clear the data of all months that is not the current month.
+  Future<void> clearObsoluteData() async {
+    var now = DateTime.now();
+    await _analyticsDb.transaction((txn) async {
+        await txn.delete(analyticsTable,where: '$Column_month != ?',whereArgs: [now.month]);
+    });
+  }
+
+  /// Remove a particular task from the analytics table.
+  Future<void> removeTaskFromAnalytics(Task taskRow) async =>
+    await _analyticsDb.transaction((txn) async {
+        await txn.delete(analyticsTable,where: '$Column_completedTasks == ?',whereArgs: [taskRow.task]);
+    });
 
 }
