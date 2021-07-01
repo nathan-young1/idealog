@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.type.DateTime;
 import com.mobile.idealog.IdealogDatabase;
@@ -32,8 +36,17 @@ public class SynchronizationHandler {
 
 //            call the delete function first
         functions.getHttpsCallable("deleteFormerData").call().addOnSuccessListener(task -> {
-            sqlDbForIdealogDb.readAllIdeasInDb().forEach((idea)-> db.collection(authUserUid).document(cloudFirebasePath[0]).collection(cloudFirebasePath[1]).document(String.valueOf(idea.IdeaId)).set(idea));
+            db.runBatch((WriteBatch batch)-> {
+
+                    sqlDbForIdealogDb.readAllIdeasInDb().forEach((idea)-> {
+                        DocumentReference documentReference = db.collection(authUserUid).document(cloudFirebasePath[0]).collection(cloudFirebasePath[1]).document(String.valueOf(idea.IdeaId));
+                        batch.set(documentReference,idea);
+                    });
+                    batch.commit();
+            });
+
         });
+
 
         Calendar now = Calendar.getInstance();
         SharedPreferences pref = applicationContext.getSharedPreferences("BackUp",applicationContext.MODE_PRIVATE);
