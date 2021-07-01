@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +8,6 @@ import 'MultiSelectTile/SectionTile.dart';
 import 'MultiSelectTile/Tile.dart';
 import 'NormalTile/completedTile.dart';
 import 'NormalTile/uncompletedTile.dart';
-import 'SearchBar/SearchNotifier.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:idealog/global/typedef.dart';
 

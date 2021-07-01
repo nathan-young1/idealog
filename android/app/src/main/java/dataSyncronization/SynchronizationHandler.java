@@ -32,7 +32,7 @@ public class SynchronizationHandler {
 
 //            call the delete function first
         functions.getHttpsCallable("deleteFormerData").call().addOnSuccessListener(task -> {
-            sqlDbForIdealogDb.readFromDbForAutoSync().forEach((idea)-> db.collection(authUserUid).document(cloudFirebasePath[0]).collection(cloudFirebasePath[1]).document(String.valueOf(idea.uniqueId)).set(idea));
+            sqlDbForIdealogDb.readAllIdeasInDb().forEach((idea)-> db.collection(authUserUid).document(cloudFirebasePath[0]).collection(cloudFirebasePath[1]).document(String.valueOf(idea.IdeaId)).set(idea));
         });
 
         Calendar now = Calendar.getInstance();

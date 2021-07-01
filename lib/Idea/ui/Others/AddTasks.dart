@@ -102,6 +102,12 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                               addNewTask();
                               }
                             },
+                            onSaved: (_){
+                              if(formKey.currentState!.validate()){
+                              newTaskFocus.requestFocus();
+                              addNewTask();
+                              }
+                            },
                             style: TextStyle(fontSize: 18),
                             decoration: underlineAndFilled.copyWith(
                               labelText: 'Task',

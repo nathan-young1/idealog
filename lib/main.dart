@@ -11,9 +11,9 @@ import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:provider/provider.dart';
 import 'Databases/analytics-db/analyticsSql.dart';
 import 'Databases/idealog-db/idealog_Db.dart';
-import 'Idea/ui/DetailPage/views/Tasks/SearchBar/SearchNotifier.dart';
 import 'Idea/ui/Others/CreateIdea.dart';
 import 'Prefs&Data/GoogleUserData.dart';
+import 'SearchBar/SearchNotifier.dart';
 import 'auth/ui/authUi.dart';
 import 'bottomNav/notifier.dart';
 import 'core-models/ideaModel.dart';
@@ -35,13 +35,10 @@ class _IdealogState extends State<Idealog> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       
-      await Future.wait([
-      AnalyticDB.instance.clearObsoluteData(), 
+      await Future.wait([ 
       Prefrences.instance.initialize(), 
-      Firebase.initializeApp(),
+      Firebase.initializeApp()
       ]);
-
-
       // print('The last backup time was "${await NativeCodeCaller.getLastBackupTime()}"');
 
       });
@@ -50,7 +47,10 @@ class _IdealogState extends State<Idealog> {
   @override
   Widget build(BuildContext context) {
             return FutureBuilder(
-              future: IdealogDb.instance.initialize(),
+              future: Future.wait([
+                IdealogDb.instance.initialize(),
+                AnalyticDB.instance.initialize().then((value) async => await AnalyticDB.instance.clearObsoluteData())
+              ]),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return LayoutBuilder(

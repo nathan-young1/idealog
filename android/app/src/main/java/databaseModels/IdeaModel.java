@@ -1,19 +1,18 @@
 package databaseModels;
 
 
-public class IdeaModel {
-    public final int uniqueId;
+import java.util.ArrayList;
+
+public class IdeaModel extends TaskList{
+    public final int IdeaId;
     public final String ideaTitle;
     public final String moreDetails;
 
-    public final String completedTasks;
-    public final String uncompletedTasks;
 
-    public IdeaModel(int uniqueId,String ideaTitle, String moreDetails, String uncompletedTasks, String completedTasks){
-        this.uniqueId = uniqueId;
+    public IdeaModel(int IdeaId, String ideaTitle, String moreDetails, ArrayList<Task> uncompletedTasks, ArrayList<Task> completedTasks){
+        super(uncompletedTasks,completedTasks);
+        this.IdeaId = IdeaId;
         this.ideaTitle = ideaTitle;
         this.moreDetails = moreDetails;
-        this.completedTasks = completedTasks;
-        this.uncompletedTasks = uncompletedTasks;
     }
 }

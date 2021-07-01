@@ -46,7 +46,7 @@ class IdealogDb {
 
     await _dbInstance.transactionAndTrigger((txn) async { 
       var batch = txn.batch();
-      Function delete = (String tableName) => batch.delete(tableName,where: '$Column_ideaId = $ideaId');
+      Function delete = (String tableName) => batch.delete(tableName,where: '$Column_ideaId = ?',whereArgs: [ideaId]);
 
       delete(ideasTable);
       delete(completedTable);

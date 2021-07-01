@@ -13,16 +13,18 @@ class AnalyticDB{
   AnalyticDB._();
   static final AnalyticDB instance = new AnalyticDB._();
 
-  late Database _analyticsDb;
+  late final Database _analyticsDb;
 
-  Future<void> initialize() async =>
+  Future<void> initialize() async {
     _analyticsDb = await openDatabase("analytics.sqlite",version: 1);
+  }
 
   /// Record a task in the analytics table.
   Future<void> writeOrUpdate(Task taskRow) async {
 
     var now = DateTime.now();
     _analyticsDb.transaction((txn) async {
+      await _createTableIfNotExist(txn);
       var uniqueKey = await getUniqueId(txn, analyticsTable);
       // first get the unique id for the primary key
       await txn.insert(analyticsTable, {
@@ -37,7 +39,7 @@ class AnalyticDB{
 
     /// Get the last primary key in the table ,then increment it by one for a new unique key.
   Future<int> getUniqueId(Transaction txn,String tableName) async {
-
+    await _createTableIfNotExist(txn);
     var queryResult = await txn.query(analyticsTable,orderBy: '$Column_key DESC LIMIT 1',columns: [Column_key]);
 
     List<int> keysInDb = queryResult.map((e) => e[Column_key] as int).toList();
@@ -52,6 +54,7 @@ class AnalyticDB{
 
     var now = DateTime.now();
     var dbResult = await _analyticsDb.transaction((txn) async {
+        await _createTableIfNotExist(txn);
         await txn.query(analyticsTable,where: '$Column_year == ? and $Column_month == ?',whereArgs: [now.year,now.month]);
       });
 
@@ -81,11 +84,11 @@ class AnalyticDB{
 
   }
 
-
   /// Clear the data of all months that is not the current month.
   Future<void> clearObsoluteData() async {
     var now = DateTime.now();
     await _analyticsDb.transaction((txn) async {
+        await _createTableIfNotExist(txn);
         await txn.delete(analyticsTable,where: '$Column_month != ?',whereArgs: [now.month]);
     });
   }
@@ -93,7 +96,10 @@ class AnalyticDB{
   /// Remove a particular task from the analytics table.
   Future<void> removeTaskFromAnalytics(Task taskRow) async =>
     await _analyticsDb.transaction((txn) async {
+        await _createTableIfNotExist(txn);
         await txn.delete(analyticsTable,where: '$Column_completedTasks == ?',whereArgs: [taskRow.task]);
     });
 
+  Future<void> _createTableIfNotExist(Transaction txn) async =>
+      await txn.execute(createAnalyticsTable);
 }

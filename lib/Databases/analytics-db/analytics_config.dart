@@ -9,4 +9,4 @@ const String Column_completedTasks = 'completedTasks';
 const String analyticsTable = 'analytics';
 
 // Analytics Sql statements
-const String createAnalyticsTable = 'Create Table $analyticsTable If Not Exist ($Column_key INTEGER PRIMARY_KEY NOT NULL, $Column_year INTEGER, $Column_month INTEGER, $Column_day INTEGER, $Column_completedTasks TEXT)';
+const String createAnalyticsTable = 'create table if not exists $analyticsTable ($Column_key INTEGER PRIMARY_KEY NOT NULL, $Column_year INTEGER, $Column_month INTEGER, $Column_day INTEGER, $Column_completedTasks TEXT)';
