@@ -1,32 +1,27 @@
 package com.mobile.idealog;
 
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import java.util.concurrent.TimeUnit;
+
 import dataSyncronization.AutoSync;
 import io.flutter.embedding.android.FlutterFragmentActivity;
 import io.flutter.embedding.engine.FlutterEngine;
-import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends FlutterFragmentActivity {
     final private String AutoSyncWorkRequestTag = "AutoSync";
     final private String startAutoSyncMethod = "startAutoSync";
     final private String cancelAutoSyncMethod = "cancelAutoSync";
-    final private String lastBackUpMethod = "lastBackup";
+    final private String GET_LAST_SYNC_TIME_METHOD = "get_last_sync_time";
+    final private String UPDATE_LAST_SYNC_TIME_METHOD = "update_last_sync_time";
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
     @Override
@@ -55,37 +50,40 @@ public class MainActivity extends FlutterFragmentActivity {
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
-        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CHANNEL).setMethodCallHandler(new MethodChannel.MethodCallHandler() {
-            @Override
-            public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-                if(call.method.equals(startAutoSyncMethod)){
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CHANNEL).setMethodCallHandler((call, result) -> {
+
+            switch (call.method) {
+                case startAutoSyncMethod:
                     startAutoSync();
                     result.success("Auto Sync Started");
-                }else if(call.method.equals(cancelAutoSyncMethod)){
+                    break;
+                case cancelAutoSyncMethod:
                     cancelAutoSync();
                     result.success("Auto Sync has been canceled");
-                }else if(call.method.equals(lastBackUpMethod)){
-                    result.success(getLastBackUpTime());
-                }
+                    break;
+                case GET_LAST_SYNC_TIME_METHOD:
+                    result.success(IdealogDatabase.GetLastBackUpTime(getApplicationContext()));
+                    break;
+                case UPDATE_LAST_SYNC_TIME_METHOD:
+                    result.success(IdealogDatabase.WriteLastSyncTime(getApplicationContext()));
+                    break;
             }
         });
     }
 
 
-//    work manager code added below
+    /**
+     * This method gives the auto sync task to the work manager.
+     */
     public void startAutoSync(){
         Constraints workRequestConstraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
 
-//        do the periodic work every 24 hours if there is internet connection
-//        reduce the time later, though The interval period is defined as the minimum time between repetitions.
+//        In case of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
 
-//        incase of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
-//        I am changing time unit to minutes for testing purposes
-
-        PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(AutoSync.class,2, TimeUnit.MINUTES)
+        PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(AutoSync.class,1, TimeUnit.DAYS)
                 .setConstraints(workRequestConstraints)
                 .setBackoffCriteria(BackoffPolicy.LINEAR,10,TimeUnit.MINUTES)
                 .addTag(AutoSyncWorkRequestTag)
@@ -98,12 +96,12 @@ public class MainActivity extends FlutterFragmentActivity {
 
     }
 
+    /**
+     * This method cancels the auto sync task in the work manager.
+     */
     public void cancelAutoSync(){
         WorkManager.getInstance(this).cancelAllWorkByTag(AutoSyncWorkRequestTag);
     }
 
-    public String getLastBackUpTime(){
-        SharedPreferences pref = this.getSharedPreferences("BackUp",this.MODE_PRIVATE);
-        return pref.getString("lastBackup","");
-    }
+
 }

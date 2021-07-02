@@ -16,58 +16,58 @@ class Settings extends StatelessWidget {
     String? _userProfilePic = Provider.of<GoogleUserData>(context).user_photo_url;
     var isDarkMode = Provider.of<Prefrences>(context).isDarkMode;
     var _listTileIconColor = (isDarkMode) ?LightPink :DarkBlue;
-    return Container(
-      child: Column(
-        children: [
-          SizedBox(height: 55),
-          (_userProfilePic != null)
-          ?ProfilePicture(photoUrl: _userProfilePic,height: 150,width: 150)
-          :DottedBorder(
-            color: LightGray,
-            strokeWidth: 3,
-            padding: EdgeInsets.only(bottom: 5),
-            dashPattern: [10, 20], 
-            borderType: BorderType.Oval,
-            strokeCap: StrokeCap.square,
-            child: Container(
-              height: 170,
-              width: 170,
-              child: Opacity(
-                opacity: 0.7,
-                child: Image.asset(Provider.of<Prefrences>(context).appLogoPath,
-                excludeFromSemantics: true,
-                fit: BoxFit.contain),
-              )),
-          ),
-
-        SizedBox(height: 30),
-          Text('Idealog v1.2',
-            style: Overpass.copyWith(fontSize: 25,color: Color.fromRGBO(112, 112, 112, 1))
-            ),
-            SizedBox(height: 60),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              children: [
-                ListTile(leading: Icon(FeatherIcons.user,size: 30,color: _listTileIconColor),
-                title: Text('Manage Account',style: Poppins.copyWith(fontSize: 20)),
-                onTap: ()=>Navigator.pushNamed(context, 'ManageAccount'),),
-
-                ListTile(leading: Icon(FeatherIcons.uploadCloud,size: 30,color: _listTileIconColor),
-                title: Text('Data Backup',style: Poppins.copyWith(fontSize: 20)),
-                onTap: ()=> Navigator.pushNamed(context, 'Syncronization')),
-
-                ListTile(leading: Icon(PhosphorIcons.caret_double_up,size: 30,color: _listTileIconColor),
-                title: Text('Upgrade to premium',style: Poppins.copyWith(fontSize: 20)),
-                onTap: ()=> Navigator.pushNamed(context,'UpgradeToPremium')),
-
-                ListTile(leading: Icon(CommunityMaterialIcons.help,size: 30,color: _listTileIconColor), 
-                title: Text('About Idealog',style: Poppins.copyWith(fontSize: 20))),
-              ],
-            ),
-          )
-      ]),
-    );
+        return Container(
+          child: Column(
+            children: [
+              SizedBox(height: 55),
+              (_userProfilePic != null)
+              ?ProfilePicture(photoUrl: _userProfilePic,height: 150,width: 150)
+              :DottedBorder(
+                color: LightGray,
+                strokeWidth: 3,
+                padding: EdgeInsets.only(bottom: 5),
+                dashPattern: [10, 20], 
+                borderType: BorderType.Oval,
+                strokeCap: StrokeCap.square,
+                child: Container(
+                  height: 170,
+                  width: 170,
+                  child: Opacity(
+                    opacity: 0.7,
+                    child: Image.asset(Provider.of<Prefrences>(context).appLogoPath,
+                    excludeFromSemantics: true,
+                    fit: BoxFit.contain),
+                  )),
+              ),
+        
+            SizedBox(height: 30),
+              Text('Idealog v1.2',
+                style: Overpass.copyWith(fontSize: 25,color: Color.fromRGBO(112, 112, 112, 1))
+                ),
+                SizedBox(height: 60),
+        
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  children: [
+                    ListTile(leading: Icon(FeatherIcons.user,size: 30,color: _listTileIconColor),
+                    title: Text('Manage Account',style: Poppins.copyWith(fontSize: 20)),
+                    onTap: ()=>Navigator.pushNamed(context, 'ManageAccount'),),
+        
+                    ListTile(leading: Icon(FeatherIcons.uploadCloud,size: 30,color: _listTileIconColor),
+                    title: Text('Data Backup',style: Poppins.copyWith(fontSize: 20)),
+                    onTap: ()=> Navigator.pushNamed(context, 'Syncronization')),
+        
+                    ListTile(leading: Icon(PhosphorIcons.caret_double_up,size: 30,color: _listTileIconColor),
+                    title: Text('Upgrade to premium',style: Poppins.copyWith(fontSize: 20)),
+                    onTap: ()=> Navigator.pushNamed(context,'UpgradeToPremium')),
+        
+                    ListTile(leading: Icon(CommunityMaterialIcons.help,size: 30,color: _listTileIconColor), 
+                    title: Text('About Idealog',style: Poppins.copyWith(fontSize: 20))),
+                  ],
+                ),
+              )
+          ]),
+        );
   }
 }

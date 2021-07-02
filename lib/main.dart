@@ -6,10 +6,10 @@ import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/design/theme.dart';
 import 'package:idealog/global/routes.dart';
+import 'package:idealog/nativeCode/bridge.dart';
 import 'package:idealog/settings/ui/manageAccount.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:provider/provider.dart';
-import 'Databases/analytics-db/analyticsSql.dart';
 import 'Databases/idealog-db/idealog_Db.dart';
 import 'Idea/ui/Others/CreateIdea.dart';
 import 'Prefs&Data/GoogleUserData.dart';
@@ -38,14 +38,15 @@ class _IdealogState extends State<Idealog> {
       await Future.wait([ 
       Prefrences.instance.initialize(), 
       Firebase.initializeApp(),
+      NativeCodeCaller.instance.initialize()
       ]);
-      // print('The last backup time was "${await NativeCodeCaller.getLastBackupTime()}"');
 
       });
   }
 
   @override
   Widget build(BuildContext context) {
+    
             return FutureBuilder(
               future: IdealogDb.instance.initialize(),
               builder: (context, snapshot) {

@@ -9,6 +9,7 @@ import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customWidget/alertDialog.dart';
 import 'package:idealog/global/routes.dart';
+import 'package:idealog/nativeCode/bridge.dart';
 
 
 class IdeaManager{
@@ -70,13 +71,15 @@ class IdeaManager{
     // call the deleting cloud function
     FirebaseFunctions functions = FirebaseFunctions.instance;
 
-    await functions.httpsCallable("deleteFormerData").call().then((value) {
+    await functions.httpsCallable("deleteFormerData").call().then((value) async {
       FirebaseFirestore cloudDb = FirebaseFirestore.instance;
       var userUid = GoogleUserData.instance.user_uid;
       print(userUid);
       allIdeas.forEach((idea) async { 
       await cloudDb.collection('$userUid').doc('Database').collection('Ideas').doc(idea.ideaId.toString()).set(idea.toMap());
-    });
+      });
+      await NativeCodeCaller.instance.updateLastBackupTime();
+      
     });
     
   }

@@ -1,21 +1,23 @@
 package com.mobile.idealog;
 
-import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
 
 import databaseModels.IdeaModel;
 import databaseModels.Task;
 
 public class IdealogDatabase extends SQLiteOpenHelper {
-
+//  Database variables
     public static final String IDEAS = "ideasTable";
     public static final String COLUMN_Idea_ID = "ideaId";
     public static final String COLUMN_IDEA_TITLE = "ideaTitle";
@@ -27,7 +29,13 @@ public class IdealogDatabase extends SQLiteOpenHelper {
     public static final String UncompletedTable = "UncompletedTable";
     public static final String IdealogDbName = "idealog.sqlite";
 
-    public IdealogDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, @Nullable int version) {
+//  SharedPreferences variables
+    public static final String LAST_SYNC_SHARED_PREFERENCES_PAGE = "Backup";
+    public static final String LAST_SYNC_STRING_KEY = "LastSync";
+
+
+
+    public IdealogDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, IdealogDbName, null, 1);
     }
 
@@ -100,14 +108,32 @@ public class IdealogDatabase extends SQLiteOpenHelper {
         }
     }
 
-    public void writeLastSyncTime(String lastSyncTime){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String createLastSyncTable = "create table if not exists LastSync (id_no Integer Primary Key, time Text Not Null)";
-        db.execSQL(createLastSyncTable);
-        ContentValues values = new ContentValues();
-        values.put("id_no",1);
-        values.put("time",lastSyncTime);
-        db.insert("LastSync",null,values);
-        db.close();
+    /**
+        Method that records the last backup time in shared preferences.
+        @param  applicationContext - The context of the application to access shared preferences
+     */
+    public static String WriteLastSyncTime(Context applicationContext){
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd yyyy hh:mm a");
+
+        String lastSyncTime = localDateTime.format(formatter);
+        SharedPreferences sharedPreferences = applicationContext.getSharedPreferences(LAST_SYNC_SHARED_PREFERENCES_PAGE,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(LAST_SYNC_STRING_KEY,lastSyncTime);
+        editor.apply();
+
+        System.out.println("This is the last sync time given to be written: " + lastSyncTime);
+
+        return "Success";
+    }
+
+    /**
+     Method that gets the last backup time from shared preferences.
+     @param  applicationContext - The context of the application to access shared preferences
+     */
+    public static String GetLastBackUpTime(Context applicationContext){
+        SharedPreferences pref = applicationContext.getSharedPreferences(LAST_SYNC_SHARED_PREFERENCES_PAGE,Context.MODE_PRIVATE);
+        return pref.getString(LAST_SYNC_STRING_KEY,"0");
     }
 }
