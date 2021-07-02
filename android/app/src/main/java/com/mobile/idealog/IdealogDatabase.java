@@ -113,7 +113,6 @@ public class IdealogDatabase extends SQLiteOpenHelper {
         @param  applicationContext - The context of the application to access shared preferences
      */
     public static String WriteLastSyncTime(Context applicationContext){
-
         LocalDateTime localDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd yyyy hh:mm a");
 

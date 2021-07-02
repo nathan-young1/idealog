@@ -26,7 +26,7 @@ class IdealogDb {
   }
 
   
-  static Function notifyListeners = ()=>_controller.add(null);
+  static Function notifyListeners = ()=> _controller.add(null);
 
   Future<void> writeToDb({required Idea idea}) async {
 
@@ -220,23 +220,4 @@ class IdealogDb {
   Future<DBTaskList> _taskQuery(String tableName,int ideaId,Transaction txn) async =>
      (await txn.query(tableName,where: '$Column_ideaId = ?',whereArgs: [ideaId])).map(_convertToTask).toList();
   
-  /// Get the last sync time
-  Future<void> get getLastSyncTime async {
-     await dbInstance.transaction((txn) async {
-        await txn.execute(createLastSyncTable);
-        return await txn.query("LastSync",where: "id_no = ?",whereArgs: [1]);
-      });
-  }
-
-  /// Update last sync time
-  Future<void> updateLastSyncTime() async {
-    int now = DateTime.now().millisecondsSinceEpoch;
-    await dbInstance.transaction((txn) async {
-      await txn.execute(createLastSyncTable);
-      await txn.update("LastSync", {
-        "time": now.toString()
-      });
-    });
-
-  }
 }
