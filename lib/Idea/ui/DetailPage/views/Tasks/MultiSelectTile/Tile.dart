@@ -28,7 +28,7 @@ class MultiSelectTaskTile extends StatelessWidget {
         ?multiSelectObj.addTaskToMultiSelect(taskRow)
         :multiSelectObj.removeTaskFromMultiSelect(taskRow)
       ,
-      title: Text(taskRow.task.toAString),
+      title: Text(taskRow.task),
       );
   }
 }

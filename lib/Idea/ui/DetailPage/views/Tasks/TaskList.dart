@@ -89,4 +89,4 @@ class _CompletedTasks extends StatelessWidget {
 }
 
 // check if the search term exists in the list
-bool _searchTermExists(Task taskRow)=> taskRow.task.toAString.contains(SearchController.instance.searchTerm);
+bool _searchTermExists(Task taskRow)=> taskRow.task.contains(SearchController.instance.searchTerm);

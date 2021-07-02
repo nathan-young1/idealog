@@ -3,16 +3,16 @@ import 'package:idealog/global/typedef.dart';
 
 
 class Idea extends TaskList{
-  int? uniqueId;
+  int? ideaId;
   String ideaTitle;
   String? moreDetails;
   
-  Idea({required this.ideaTitle,this.moreDetails,required List<List<int>> tasksToCreate}):super(tasksToCreate: tasksToCreate);
+  Idea({required this.ideaTitle,this.moreDetails,required List<String> tasksToCreate}):super(tasksToCreate: tasksToCreate);
 
-  Idea.readFromDb({required this.ideaTitle,this.moreDetails,required DBTaskList completedTasks,required this.uniqueId,required DBTaskList uncompletedTasks}):super.fromDb(completedTasks: completedTasks,uncompletedTasks: uncompletedTasks);
+  Idea.readFromDb({required this.ideaTitle,this.moreDetails,required DBTaskList completedTasks,required this.ideaId,required DBTaskList uncompletedTasks}):super.fromDb(completedTasks: completedTasks,uncompletedTasks: uncompletedTasks);
 
   Idea.fromFirebaseJson({required Map<String, dynamic> json}):
-  uniqueId = json['uniqueId'],
+  ideaId = json['ideaId'],
   ideaTitle = json['ideaTitle'],
   moreDetails = json['moreDetails'],
   super.fromDb(completedTasks: json['completedTasks'],uncompletedTasks: json['uncompletedTasks']);
@@ -21,11 +21,11 @@ class Idea extends TaskList{
 
   Map<String, dynamic> toMap(){
     return {
-        'uniqueId': uniqueId,
+        'ideaId': ideaId,
         'ideaTitle': ideaTitle,
         'moreDetails': moreDetails,
-        'completedTasks': completedTasks,
-        'uncompletedTasks': uncompletedTasks
+        'completedTasks': completedTasks.map((e) => e.toMap()).toList(),
+        'uncompletedTasks': uncompletedTasks.map((e) => e.toMap()).toList()
     };
   }
 }
@@ -45,7 +45,7 @@ abstract class TaskList with ChangeNotifier{
         return percent;
   }
   
-  TaskList({required List<List<int>> tasksToCreate})
+  TaskList({required List<String> tasksToCreate})
     :this.uncompletedTasks = Task.createTasks(tasksToCreate);
 
   TaskList.fromDb({required this.completedTasks, required this.uncompletedTasks});
@@ -77,14 +77,14 @@ abstract class TaskList with ChangeNotifier{
 
 
 class Task {
-  List<int> task;
+  String task;
   int orderIndex;
   int? primaryKey;
 
   Task.fromDb({required this.task, required this.orderIndex, required this.primaryKey});
   Task({required this.task, required this.orderIndex,this.primaryKey});
 
-  static DBTaskList createTasks (List<List<int>> allTask){
+  static DBTaskList createTasks (List<String> allTask){
     DBTaskList taskList = [];
 
     for(int i = 0; i< allTask.length; i++){
@@ -92,6 +92,14 @@ class Task {
       taskList.add(newTask);
     }
     return taskList;
+  }
+
+  Map toMap(){
+    return {
+      "task": task,
+      "orderIndex": orderIndex,
+      "primaryKey": primaryKey
+    };
   }
 }
 

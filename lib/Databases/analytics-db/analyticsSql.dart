@@ -1,4 +1,5 @@
 import 'package:idealog/Databases/analytics-db/analytics_config.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/core-models/ideaModel.dart' show Task;
 import 'package:sqflite/sqflite.dart';
 
@@ -13,17 +14,17 @@ class AnalyticDB{
   AnalyticDB._();
   static final AnalyticDB instance = new AnalyticDB._();
 
-  late final Database _analyticsDb;
+  late final Database dbInstance = IdealogDb.instance.dbInstance;
 
-  Future<void> initialize() async {
-    _analyticsDb = await openDatabase("analytics.sqlite",version: 1);
+  Future<void> close() async {
+    await dbInstance.close();
   }
 
   /// Record a task in the analytics table.
   Future<void> writeOrUpdate(Task taskRow) async {
 
     var now = DateTime.now();
-    _analyticsDb.transaction((txn) async {
+    dbInstance.transaction((txn) async {
       await _createTableIfNotExist(txn);
       var uniqueKey = await getUniqueId(txn, analyticsTable);
       // first get the unique id for the primary key
@@ -53,7 +54,7 @@ class AnalyticDB{
   Future<List<AnalyticChartData>> readAnalytics() async {
 
     var now = DateTime.now();
-    var dbResult = await _analyticsDb.transaction((txn) async {
+    var dbResult = await dbInstance.transaction((txn) async {
         await _createTableIfNotExist(txn);
         await txn.query(analyticsTable,where: '$Column_year == ? and $Column_month == ?',whereArgs: [now.year,now.month]);
       });
@@ -61,7 +62,7 @@ class AnalyticDB{
     //create a list of all the days recorded in the database
     var recordedDaysInDb = <int>[];
     
-    dbResult.forEach((row) => recordedDaysInDb.add(row.day));
+    dbResult?.forEach((row) => recordedDaysInDb.add(row.day));
     //create a set to remove duplicate dates
 
     var activeDays = Set<int>.from(recordedDaysInDb);
@@ -87,7 +88,7 @@ class AnalyticDB{
   /// Clear the data of all months that is not the current month.
   Future<void> clearObsoluteData() async {
     var now = DateTime.now();
-    await _analyticsDb.transaction((txn) async {
+    await dbInstance.transaction((txn) async {
         await _createTableIfNotExist(txn);
         await txn.delete(analyticsTable,where: '$Column_month != ?',whereArgs: [now.month]);
     });
@@ -95,7 +96,7 @@ class AnalyticDB{
 
   /// Remove a particular task from the analytics table.
   Future<void> removeTaskFromAnalytics(Task taskRow) async =>
-    await _analyticsDb.transaction((txn) async {
+    await dbInstance.transaction((txn) async {
         await _createTableIfNotExist(txn);
         await txn.delete(analyticsTable,where: '$Column_completedTasks == ?',whereArgs: [taskRow.task]);
     });

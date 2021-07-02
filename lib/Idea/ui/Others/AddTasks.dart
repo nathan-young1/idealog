@@ -92,7 +92,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                             maxLines: null,
                             maxLength: 350,
                             validator: (value){
-                              if({...widget.idea.completedTasks.map((e) => e.task.toAString),...widget.idea.uncompletedTasks.map((e) => e.task.toAString)}
+                              if({...widget.idea.completedTasks.map((e) => e.task),...widget.idea.uncompletedTasks.map((e) => e.task)}
                               .contains(newTask.text))
                               return "Task already exists";
                             },
@@ -134,9 +134,9 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
               int lastUncompletedOrderIndex = widget.idea.uncompletedTasks.map((e) => e.orderIndex).fold(0, (previousValue, currentValue) => max(previousValue, currentValue));
               
               for(var task in newTasks) { 
-                Task taskObject = Task(task: task.codeUnits, orderIndex: orderIndex);
+                Task taskObject = Task(task: task, orderIndex: orderIndex);
                 widget.idea.addNewTask(taskObject);
-                await IdealogDb.instance.addTask(taskRow: taskObject, ideaId: widget.idea.uniqueId!,lastUncompletedRowIndex: lastUncompletedOrderIndex);
+                await IdealogDb.instance.addTask(taskRow: taskObject, ideaId: widget.idea.ideaId!,lastUncompletedRowIndex: lastUncompletedOrderIndex);
                 orderIndex++;
               }
 

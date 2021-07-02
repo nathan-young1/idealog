@@ -50,7 +50,7 @@ class CompletedTaskTile extends StatelessWidget {
         await IdeaManager.uncheckCompletedTask(idea, completedTask, idea.uncompletedTasks)
         ),
         
-        title: Text(completedTask.task.toAString),
+        title: Text(completedTask.task),
         trailing: SlidableIconButton(slidableIconState),
           ),
       ),

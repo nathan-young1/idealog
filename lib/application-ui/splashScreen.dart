@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/routes.dart';
@@ -21,6 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
     void initState() {
       super.initState();
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+        
+        AnalyticDB.instance.clearObsoluteData();
         timer = Timer(Duration(milliseconds: 800),() async {
         if(Prefrences.instance.fingerprintEnabled){
           // fingerprint authentication is enabled

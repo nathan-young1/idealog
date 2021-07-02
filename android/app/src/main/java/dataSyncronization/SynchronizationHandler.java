@@ -17,7 +17,10 @@ import com.mobile.idealog.IdealogDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
+import databaseModels.IdeaModel;
 import firebaseServices.Authentication;
 
 public class SynchronizationHandler {
@@ -36,21 +39,12 @@ public class SynchronizationHandler {
 
 //            call the delete function first
         functions.getHttpsCallable("deleteFormerData").call().addOnSuccessListener(task -> {
-            db.runBatch((WriteBatch batch)-> {
-
-                    sqlDbForIdealogDb.readAllIdeasInDb().forEach((idea)-> {
-                        DocumentReference documentReference = db.collection(authUserUid).document(cloudFirebasePath[0]).collection(cloudFirebasePath[1]).document(String.valueOf(idea.IdeaId));
-                        batch.set(documentReference,idea);
-                    });
-                    batch.commit();
-            });
-
+            sqlDbForIdealogDb.readAllIdeasInDb().forEach(idea -> db.collection(authUserUid).document(cloudFirebasePath[0]).collection(cloudFirebasePath[1]).document(String.valueOf(idea.IdeaId)).set(idea));
+            Calendar now = Calendar.getInstance();
+            sqlDbForIdealogDb.writeLastSyncTime(String.valueOf(now.getTimeInMillis()));
         });
 
 
-        Calendar now = Calendar.getInstance();
-        SharedPreferences pref = applicationContext.getSharedPreferences("BackUp",applicationContext.MODE_PRIVATE);
-        Toast.makeText(applicationContext,"The data has been auto synced",Toast.LENGTH_LONG);
-        pref.edit().putString("lastBackup",String.valueOf(now.getTimeInMillis()));
+
     }
 }

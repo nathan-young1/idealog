@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/DetailPage/views/Tasks/MultiSelectTile/Notifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
-import 'package:idealog/global/extension.dart';
 import 'package:provider/provider.dart';
 
 class UncompletedTaskTile extends StatelessWidget {
@@ -24,7 +23,7 @@ class UncompletedTaskTile extends StatelessWidget {
       leading: Checkbox(value: false, onChanged: (bool? value) async =>
        await IdeaManager.completeTask(idea, uncompletedTask,idea.completedTasks)),
     
-      title: Text(uncompletedTask.task.toAString),
+      title: Text(uncompletedTask.task),
     
       trailing: IconButton(icon: Icon(Icons.close),
       onPressed: () async => await IdeaManager.deleteTask(idea, uncompletedTask))

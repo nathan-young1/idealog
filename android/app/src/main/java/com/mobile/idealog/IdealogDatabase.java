@@ -1,5 +1,6 @@
 package com.mobile.idealog;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -97,5 +98,16 @@ public class IdealogDatabase extends SQLiteOpenHelper {
             System.out.println("An error occurred");
             return ListOfIdeas;
         }
+    }
+
+    public void writeLastSyncTime(String lastSyncTime){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String createLastSyncTable = "create table if not exists LastSync (id_no Integer Primary Key, time Text Not Null)";
+        db.execSQL(createLastSyncTable);
+        ContentValues values = new ContentValues();
+        values.put("id_no",1);
+        values.put("time",lastSyncTime);
+        db.insert("LastSync",null,values);
+        db.close();
     }
 }

@@ -18,8 +18,7 @@ class IdeaManager{
     // ignore: unawaited_futures
     showDialog(context: context, builder: (context) => progressAlertDialog);
     
-    var tasksInCharCodes = tasks.map((task) => task.codeUnits).toList();
-    var newIdea = Idea(ideaTitle: ideaTitle,moreDetails: moreDetails,tasksToCreate: tasksInCharCodes);
+    var newIdea = Idea(ideaTitle: ideaTitle,moreDetails: moreDetails,tasksToCreate: tasks.toList());
 
     await IdealogDb.instance.writeToDb(idea: newIdea);
     Navigator.popUntil(context, ModalRoute.withName(menuPageView));
@@ -27,7 +26,7 @@ class IdeaManager{
 
   static Future<void> changeMoreDetail({required Idea idea, required String newMoreDetail}) async {
     idea.changeMoreDetail(newMoreDetail);
-    await IdealogDb.instance.changeMoreDetail(ideaId: idea.uniqueId!,newMoreDetail: newMoreDetail);
+    await IdealogDb.instance.changeMoreDetail(ideaId: idea.ideaId!,newMoreDetail: newMoreDetail);
   }
 
   static Future<void> completeTask(Idea idea,Task uncompletedTask,List<Task> allcompletedTasks) async {
@@ -35,7 +34,7 @@ class IdeaManager{
     int lastCompletedOrderIndex = allcompletedTasks.map((e) => e.orderIndex).fold(0, (previousValue, currentValue) => max(previousValue, currentValue));
       
     idea.completeTask(uncompletedTask);
-    await IdealogDb.instance.completeTask(taskRow: uncompletedTask, ideaPrimaryKey: idea.uniqueId!, lastCompletedOrderIndex: lastCompletedOrderIndex);
+    await IdealogDb.instance.completeTask(taskRow: uncompletedTask, ideaPrimaryKey: idea.ideaId!, lastCompletedOrderIndex: lastCompletedOrderIndex);
     await AnalyticDB.instance.writeOrUpdate(uncompletedTask);
   }
 
@@ -44,7 +43,7 @@ class IdeaManager{
     int lastUncompletedOrderIndex = allUncompletedTasks.map((e) => e.orderIndex).fold(0, (previousValue, currentValue) => max(previousValue, currentValue));
     
       idea.uncheckCompletedTask(completedTask);
-      await IdealogDb.instance.uncheckCompletedTask(taskRow: completedTask, ideaPrimaryKey: idea.uniqueId!, lastUncompletedOrderIndex: lastUncompletedOrderIndex);
+      await IdealogDb.instance.uncheckCompletedTask(taskRow: completedTask, ideaPrimaryKey: idea.ideaId!, lastUncompletedOrderIndex: lastUncompletedOrderIndex);
       await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
   }
 
@@ -60,7 +59,7 @@ class IdeaManager{
           selectedTasks.forEach((task) => deleteTask(idea, task));
 
   static Future<void> deleteIdeaFromDb(Idea idea) async { 
-    await IdealogDb.instance.deleteIdea(ideaId: idea.uniqueId!);
+    await IdealogDb.instance.deleteIdea(ideaId: idea.ideaId!);
     // Delete all the completed tasks of this idea from analytics data
     idea.completedTasks.forEach((completedTask) async => await AnalyticDB.instance.removeTaskFromAnalytics(completedTask));
     }
@@ -76,7 +75,7 @@ class IdeaManager{
       var userUid = GoogleUserData.instance.user_uid;
       print(userUid);
       allIdeas.forEach((idea) async { 
-      await cloudDb.collection('$userUid').doc('Database').collection('Ideas').doc(idea.uniqueId.toString()).set(idea.toMap());
+      await cloudDb.collection('$userUid').doc('Database').collection('Ideas').doc(idea.ideaId.toString()).set(idea.toMap());
     });
     });
     
