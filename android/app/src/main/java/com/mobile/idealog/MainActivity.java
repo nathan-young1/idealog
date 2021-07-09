@@ -3,15 +3,21 @@ package com.mobile.idealog;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.work.BackoffPolicy;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import java.util.concurrent.TimeUnit;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import dataSyncronization.AutoSync;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import databaseModels.IdeaModel;
+import databaseModels.Task;
+import databaseModels.TaskList;
 import io.flutter.embedding.android.FlutterFragmentActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
@@ -23,6 +29,7 @@ public class MainActivity extends FlutterFragmentActivity {
     final private String GET_LAST_SYNC_TIME_METHOD = "get_last_sync_time";
     final private String UPDATE_LAST_SYNC_TIME_METHOD = "update_last_sync_time";
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
+
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -54,7 +61,11 @@ public class MainActivity extends FlutterFragmentActivity {
 
             switch (call.method) {
                 case startAutoSyncMethod:
-                    startAutoSync();
+                    try {
+                        startAutoSync();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     result.success("Auto Sync Started");
                     break;
                 case cancelAutoSyncMethod:
@@ -75,24 +86,34 @@ public class MainActivity extends FlutterFragmentActivity {
     /**
      * This method gives the auto sync task to the work manager.
      */
-    public void startAutoSync(){
-        Constraints workRequestConstraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
+    public void startAutoSync() throws JSONException{
+        IdealogDatabase sqlDbForIdealogDb = new IdealogDatabase(this,null,null,1);
 
+        List allIdeas = sqlDbForIdealogDb.readAllIdeasInDb().stream().map(IdeaModel::toMap).collect(Collectors.toList());
+        JSONArray jsonArray = new JSONArray(allIdeas);
+        System.out.println(jsonArray);
+        String output = jsonArray.toString();
 
-//        In case of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
+        allIdeasFromJson(output);
 
-        PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(AutoSync.class,1, TimeUnit.DAYS)
-                .setConstraints(workRequestConstraints)
-                .setBackoffCriteria(BackoffPolicy.LINEAR,10,TimeUnit.MINUTES)
-                .addTag(AutoSyncWorkRequestTag)
-                .build();
-
-//        Add work request to work manager
-        WorkManager
-                .getInstance(this)
-                .enqueue(autoSyncWorkRequest);
+        IdealogDatabase.WriteLastSyncTime(this);
+//        Constraints workRequestConstraints = new Constraints.Builder()
+//                .setRequiredNetworkType(NetworkType.CONNECTED)
+//                .build();
+//
+//
+////        In case of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
+//
+//        PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(AutoSync.class,1, TimeUnit.DAYS)
+//                .setConstraints(workRequestConstraints)
+//                .setBackoffCriteria(BackoffPolicy.LINEAR,10,TimeUnit.MINUTES)
+//                .addTag(AutoSyncWorkRequestTag)
+//                .build();
+//
+////        Add work request to work manager
+//        WorkManager
+//                .getInstance(this)
+//                .enqueue(autoSyncWorkRequest);
 
     }
 
@@ -103,5 +124,23 @@ public class MainActivity extends FlutterFragmentActivity {
         WorkManager.getInstance(this).cancelAllWorkByTag(AutoSyncWorkRequestTag);
     }
 
+
+    public static ArrayList<IdeaModel> allIdeasFromJson(String JsonString) throws JSONException {
+        JSONArray jj = new JSONArray(JsonString);
+        ArrayList<IdeaModel> allIdeas = new ArrayList<>();
+        for(int i = 0; i < jj.length(); i++){
+
+            JSONObject obj = jj.getJSONObject(i);
+            IdeaModel idea = new IdeaModel(obj.getInt("ideaId"),obj.getString("ideaTitle"),obj.getString("moreDetails"), TaskList.FromJsonArray(obj.getJSONArray("uncompletedTasks")),TaskList.FromJsonArray(obj.getJSONArray("completedTasks")));
+            System.out.println("ID: "+idea.ideaId);
+            System.out.println("Title: "+idea.ideaTitle);
+            System.out.println("MoreDetails: "+idea.moreDetails);
+            System.out.println("CompletedTasks: "+idea.completedTasks.stream().map(Task::toMap).collect(Collectors.toList()));
+            System.out.println("unCompletedTasks:  "+idea.uncompletedTasks.stream().map(Task::toMap).collect(Collectors.toList()));
+            allIdeas.add(idea);
+        }
+
+        return allIdeas;
+    }
 
 }

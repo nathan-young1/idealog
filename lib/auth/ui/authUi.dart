@@ -17,7 +17,7 @@ class _LoginState extends State<Login> {
     return SafeArea(
       child: Scaffold(
         body: StreamBuilder<User?>(
-          stream: auth.authStateChanges(),
+          stream: null,
           builder: (context, snapshot) {
             if(snapshot.data != null){
              // print('auth is available');

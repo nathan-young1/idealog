@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:idealog/auth/code/authHandler.dart';
 
 class GoogleUserData with ChangeNotifier{
-  static String? _Email = auth.currentUser?.email;
+  static String? _Email = googleSignIn.currentUser?.email;
   static String? _Photo_url = googleSignIn.currentUser?.photoUrl;
   static String? _Uid;
+  GoogleSignInAccount? googleSignInAccount;
 
   String? get user_email => _Email;
   String? get user_photo_url => _Photo_url;
@@ -32,11 +34,14 @@ class GoogleUserData with ChangeNotifier{
   void intialize({
     required userUid,
     required userEmail,
-    required userPhotoUrl
+    required userPhotoUrl,
+    required googleSignInAccount
   }){
       this.user_uid = userUid;
       this.user_email = userEmail;
       this.user_photo_url = userPhotoUrl;
+      this.googleSignInAccount = googleSignInAccount;
+      
   }
 
   void clearData(){

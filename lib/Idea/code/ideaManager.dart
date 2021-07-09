@@ -1,6 +1,4 @@
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
@@ -68,19 +66,10 @@ class IdeaManager{
   static Future<void> backupIdeasNow(List<Idea> allIdeas) async{
     
     await signInWithGoogle();
-    // call the deleting cloud function
-    FirebaseFunctions functions = FirebaseFunctions.instance;
 
-    await functions.httpsCallable("deleteFormerData").call().then((value) async {
-      FirebaseFirestore cloudDb = FirebaseFirestore.instance;
-      var userUid = GoogleUserData.instance.user_uid;
-      print(userUid);
-      allIdeas.forEach((idea) async { 
-      await cloudDb.collection('$userUid').doc('Database').collection('Ideas').doc(idea.ideaId.toString()).set(idea.toMap());
-      });
+   
       await NativeCodeCaller.instance.updateLastBackupTime();
-      
-    });
+      // upload to google drive
     
   }
 }

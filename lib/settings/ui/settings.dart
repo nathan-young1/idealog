@@ -1,5 +1,4 @@
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
@@ -22,23 +21,15 @@ class Settings extends StatelessWidget {
               SizedBox(height: 55),
               (_userProfilePic != null)
               ?ProfilePicture(photoUrl: _userProfilePic,height: 150,width: 150)
-              :DottedBorder(
-                color: LightGray,
-                strokeWidth: 3,
-                padding: EdgeInsets.only(bottom: 5),
-                dashPattern: [10, 20], 
-                borderType: BorderType.Oval,
-                strokeCap: StrokeCap.square,
-                child: Container(
-                  height: 170,
-                  width: 170,
-                  child: Opacity(
-                    opacity: 0.7,
-                    child: Image.asset(Provider.of<Prefrences>(context).appLogoPath,
-                    excludeFromSemantics: true,
-                    fit: BoxFit.contain),
-                  )),
-              ),
+              :Container(
+                height: 170,
+                width: 170,
+                child: Opacity(
+                  opacity: 0.7,
+                  child: Image.asset(Provider.of<Prefrences>(context).appLogoPath,
+                  excludeFromSemantics: true,
+                  fit: BoxFit.contain),
+                )),
         
             SizedBox(height: 30),
               Text('Idealog v1.2',

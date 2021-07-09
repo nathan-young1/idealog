@@ -1,7 +1,9 @@
 package databaseModels;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Task {
     public String task;
@@ -13,4 +15,15 @@ public class Task {
         this.primaryKey = primaryKey;
         this.orderIndex = orderIndex;
     }
+
+    public Map toMap(){
+        Map json = new HashMap();
+        json.put("task",task);
+        json.put("primaryKey",primaryKey);
+        json.put("orderIndex",orderIndex);
+        return json;
+    }
+
+
+
 }

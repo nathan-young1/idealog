@@ -13,7 +13,7 @@ class IdealogDb {
   static final StreamController<String?> _controller = StreamController();
   static final Stream _updateStream = _controller.stream.asBroadcastStream();
 
-  late final Database dbInstance;
+  late Database dbInstance;
 
   Future<void> close() async {
     await _controller.close();

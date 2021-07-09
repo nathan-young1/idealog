@@ -15,8 +15,9 @@ class MenuPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var userPref = Provider.of<Prefrences>(context);
 
+    var userPref = Provider.of<Prefrences>(context);
+    
     return MultiProvider(
       providers: [
       Provider<ProductivityManager>.value(value: ProductivityManager(context: context)),

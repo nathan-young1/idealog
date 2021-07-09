@@ -1,32 +1,33 @@
 package dataSyncronization;
 
 import android.content.Context;
+
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.functions.FirebaseFunctions;
 import com.mobile.idealog.IdealogDatabase;
-import java.util.Calendar;
-import firebaseServices.Authentication;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.Map;
+
+import databaseModels.IdeaModel;
 
 public class SynchronizationHandler {
 
-    public static void synchronize(Context applicationContext){
-        final String[] cloudFirebasePath = {"Database","Ideas"};
+    public static void synchronize(Context applicationContext) throws JSONException {
 
-        FirebaseApp.initializeApp(applicationContext);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseFunctions functions = FirebaseFunctions.getInstance();
-
-//      Get the user UID from firebase auth
-        final String authUserUid = Authentication.googleAuth(applicationContext);
 
         IdealogDatabase sqlDbForIdealogDb = new IdealogDatabase(applicationContext,null,null,1);
 
-//      Call the cloud Delete function first
-        functions.getHttpsCallable("deleteFormerData").call().addOnSuccessListener(task -> {
-            sqlDbForIdealogDb.readAllIdeasInDb().forEach(idea -> db.collection(authUserUid).document(cloudFirebasePath[0]).collection(cloudFirebasePath[1]).document(String.valueOf(idea.IdeaId)).set(idea));
+            Map[] allIdeas = (Map[]) sqlDbForIdealogDb.readAllIdeasInDb().stream().map(IdeaModel::toMap).toArray();
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(allIdeas);
+            System.out.println(jsonArray.toString());
+            String output = jsonArray.toString();
+            JSONArray jj = new JSONArray(output);
+            System.out.println(jj.toString());
+
             IdealogDatabase.WriteLastSyncTime(applicationContext);
-        });
 
 
 
