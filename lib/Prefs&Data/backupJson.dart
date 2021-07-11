@@ -3,106 +3,145 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/auth/code/authHandler.dart';
+import 'package:idealog/nativeCode/bridge.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class BackupJson{
   BackupJson._();
 
   static final BackupJson instance = BackupJson._();
 
-  String? googleJsonFileId;
-  late final drive.DriveApi driveApi;
+  String? _googleJsonFileId;
+  late final drive.DriveApi _driveApi;
   static const String _DRIVE_SPACE =  "appDataFolder";
   static const String _FILE_NAME = 'idealog.json';
-  static const String SHARED_PREF_KEY_NAME = "GoogleJsonFileId";
-  drive.File? lastBackupFileIfExists;
+  drive.File? _lastBackupFileIfExists;
+
   
   /// Create an authenticated client in other to use drive api.
   Future<void> _authenticateDriveUser() async {
     final authHeaders = await GoogleUserData.instance.googleSignInAccount!.authHeaders;
     final authenticateClient = GoogleAuthClient(authHeaders);
-    driveApi = drive.DriveApi(authenticateClient);
+    _driveApi = drive.DriveApi(authenticateClient);
   }
 
   Future<void> initialize() async {
     await _authenticateDriveUser();
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    googleJsonFileId = pref.containsKey(SHARED_PREF_KEY_NAME)? pref.getString(SHARED_PREF_KEY_NAME) : null;
-
-    if (googleJsonFileId == null){
-      await _getLastBackupFileIfExists();
-      if (lastBackupFileIfExists != null){
-       _setGoogleJsonFileId(lastBackupFileIfExists!);
-      }
-    }
-
+    await _getLastBackupFileIfExists();
   }
 
-  /// Get the last backup file in google drive if any exists.
+  /// Get the last backup file in google drive if any exists and set the google json id.
   Future<void> _getLastBackupFileIfExists() async {
     bool Function(drive.File) equalsFileName = (e) => e.name!.trim() == _FILE_NAME;
-    List<drive.File> allFilesInDriveAppScope = (await driveApi.files.list(spaces: _DRIVE_SPACE)).files!;
-    lastBackupFileIfExists = allFilesInDriveAppScope.any(equalsFileName)?allFilesInDriveAppScope.lastWhere(equalsFileName):null;
+
+    List<drive.File> filesInAppScope = (await _driveApi.files.list(spaces: _DRIVE_SPACE)).files!;
+    _lastBackupFileIfExists = filesInAppScope.any(equalsFileName)?filesInAppScope.lastWhere(equalsFileName):null;
+
+     if (_lastBackupFileIfExists != null){
+       _setGoogleJsonFileId(_lastBackupFileIfExists!);
+      }
   }
 
   /// upload the file to the drive.
   Future<void> uploadToDrive() async {
     // if the file id exists it means we just need to update the file in google drive not create a new one.
-    bool isUpdate = googleJsonFileId != null;
+    bool isUpdate = _googleJsonFileId != null;
 
+  // The metadata request file
     var driveFile = new drive.File()
     ..name = _FILE_NAME
     ..parents = [_DRIVE_SPACE];
     
     String filePath = (await getTemporaryDirectory()).path + "/$_FILE_NAME";
     // Encode to json on a different isolate.
-    File jsonFile = new File(filePath)
-    ..writeAsStringSync(await compute(convertToJson,await IdealogDb.instance.allIdeasForJson));
+    try {
+      File jsonFile = new File(filePath)
+      ..writeAsStringSync(await compute(_convertToJson,await IdealogDb.instance.allIdeasForJson));
+      
+      Uint8List jsonFile_AsBytes = await jsonFile.readAsBytes();
+      Stream<Uint8List> streamFromBytes = Future.value(jsonFile_AsBytes).asStream();
+      drive.Media driveMedia = drive.Media(streamFromBytes,jsonFile_AsBytes.lengthInBytes,contentType: 'application/json');
+      
+      // if it is an update then update else create the file.
+      if(isUpdate){
+        await _driveApi.files.update(driveFile, _googleJsonFileId!, uploadMedia: driveMedia);
+      } else {
+        final drive.File uploadedFile = await _driveApi.files.create(driveFile, uploadMedia: driveMedia);
+        _setGoogleJsonFileId(uploadedFile);
+      }
 
-    Uint8List jsonFile_AsBytes = await jsonFile.readAsBytes();
-    Stream<Uint8List> streamFromBytes = Future.value(jsonFile_AsBytes).asStream();
-    drive.Media driveMedia = drive.Media(streamFromBytes,jsonFile_AsBytes.lengthInBytes);
-
-    // if it is an update then update else create the file.
-    if(isUpdate){
-      await driveApi.files.update(driveFile, googleJsonFileId!, uploadMedia: driveMedia);
-    } else {
-      final drive.File uploadedFile = await driveApi.files.create(driveFile, uploadMedia: driveMedia);
-      _setGoogleJsonFileId(uploadedFile);
+      await jsonFile.delete();
+      await NativeCodeCaller.instance.updateLastBackupTime();
+      
+    } on IOException catch (e) {
+      print('file system error');
+    } on drive.ApiRequestError catch (e){
+      print('api related error');
+    } on PlatformException {
+      print('error while writing to shared preference');
     }
-
-    await jsonFile.delete();
   }
 
   /// Convert a list of strings to json format.
-  String convertToJson(List<String> allIdeasForJson) => jsonEncode(allIdeasForJson.toString());
+  String _convertToJson(List<String> allIdeasForJson) => jsonEncode(allIdeasForJson.toString());
+
   /// Convert a json string to object.
-  dynamic fromJsonToObject(String source) => jsonDecode(source);
+  List<Map<String, dynamic>> _fromJsonToObject(String source) => jsonDecode(source) as List<Map<String, dynamic>>;
 
   /// Set ID from the uploaded drive.File id.
-  Future<void> _setGoogleJsonFileId(drive.File driveFile) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    googleJsonFileId = driveFile.id;
-    await pref.setString(SHARED_PREF_KEY_NAME, driveFile.id!);
-  }
+  void _setGoogleJsonFileId(drive.File driveFile) => _googleJsonFileId = driveFile.id;
 
   /// Download the file from the drive.
   Future<void> downloadFromDrive() async {
-    // if googleJsonFileId is null it means there is no backUp file on the drive.
-    final drive.Media downloadedJson = (await driveApi.files.get(googleJsonFileId!,downloadOptions: drive.DownloadOptions.fullMedia)) as drive.Media;
-    String filePath = (await getTemporaryDirectory()).path + "/$_FILE_NAME";
-    File jsonFile = new File(filePath);
-    downloadedJson.stream.listen((byte)=> jsonFile.writeAsBytesSync(byte,mode: FileMode.writeOnlyAppend),
-    onDone: () async { 
+    // if _googleJsonFileId is null it means there is no backUp file on the drive.
+    if(_googleJsonFileId != null){
+      final drive.Media downloadedJson = (await _driveApi.files.get(_googleJsonFileId!,downloadOptions: drive.DownloadOptions.fullMedia)) as drive.Media;
+      String filePath = (await getTemporaryDirectory()).path + "/$_FILE_NAME";
+      File jsonFile = new File(filePath);
+      await for(var byte in downloadedJson.stream){
+        jsonFile.writeAsBytesSync(byte,mode: FileMode.writeOnlyAppend);
+      }
+      
       // Convert json string to object on isolate.
-      var fileResult = await compute(fromJsonToObject,jsonFile.readAsStringSync());
-      print("file result $fileResult");
-      jsonFile.deleteSync();
-      });
+        var fileResult = await compute(_fromJsonToObject,jsonFile.readAsStringSync());
+        print("file result $fileResult");
+        jsonFile.deleteSync();
+
+      // downloadedJson.stream.listen((byte)=> jsonFile.writeAsBytesSync(byte,mode: FileMode.writeOnlyAppend),
+      // onDone: () async { 
+      //   // Convert json string to object on isolate.
+      //   var fileResult = await compute(_fromJsonToObject,jsonFile.readAsStringSync());
+      //   print("file result $fileResult");
+      //   jsonFile.deleteSync();
+      //   });
+    } else {
+        try {
+          throw _DriveBackupDoesNotExist();
+        } on _DriveBackupDoesNotExist catch (e) {
+          print(e);
+        }
+    }
   }
+}
+
+
+/// Custom Exception class For when [Backup file] does not exist.
+class _DriveBackupDoesNotExist implements Exception {
+
+  String? _message = "No backup file exists in the drive";
+  
+  @override
+  String toString() {
+    return _message!;
+  }
+
+  String get message => _message!;
+
+  _DriveBackupDoesNotExist([this._message]);
+
 }

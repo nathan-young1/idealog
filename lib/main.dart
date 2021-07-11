@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
@@ -6,7 +5,6 @@ import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/design/theme.dart';
 import 'package:idealog/global/routes.dart';
-import 'package:idealog/nativeCode/bridge.dart';
 import 'package:idealog/settings/ui/manageAccount.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:provider/provider.dart';
@@ -16,19 +14,14 @@ import 'Prefs&Data/GoogleUserData.dart';
 import 'SearchBar/SearchNotifier.dart';
 import 'auth/ui/authUi.dart';
 import 'bottomNav/notifier.dart';
+import 'config.dart';
 import 'core-models/ideaModel.dart';
 import 'settings/ui/syncronization.dart';
 
 Future<void> main() async { 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await IdealogDb.instance.initialize();
-
-  await Future.wait([ 
-      Prefrences.instance.initialize(), 
-      Firebase.initializeApp(),
-      NativeCodeCaller.instance.initialize()
-      ]);
+  await InitializeAppConfig();
 
   runApp(Idealog());
   }
