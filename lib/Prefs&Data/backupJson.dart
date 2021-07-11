@@ -31,6 +31,9 @@ class BackupJson{
   }
 
   Future<void> initialize() async {
+    // for the sake of testing purposes signInWithGoogle()
+    await signInWithGoogle();
+    //-------------------------------------------------
     await _authenticateDriveUser();
     await _getLastBackupFileIfExists();
   }
@@ -60,8 +63,9 @@ class BackupJson{
     String filePath = (await getTemporaryDirectory()).path + "/$_FILE_NAME";
     // Encode to json on a different isolate.
     try {
-      File jsonFile = new File(filePath)
-      ..writeAsStringSync(await compute(_convertToJson,await IdealogDb.instance.allIdeasForJson));
+      File jsonFile = new File(filePath);
+      String jsonString = await compute(_convertToJson,await IdealogDb.instance.allIdeasForJson);
+      jsonFile.writeAsStringSync(jsonString);
       
       Uint8List jsonFile_AsBytes = await jsonFile.readAsBytes();
       Stream<Uint8List> streamFromBytes = Future.value(jsonFile_AsBytes).asStream();
@@ -86,12 +90,6 @@ class BackupJson{
       print('error while writing to shared preference');
     }
   }
-
-  /// Convert a list of strings to json format.
-  String _convertToJson(List<String> allIdeasForJson) => jsonEncode(allIdeasForJson.toString());
-
-  /// Convert a json string to object.
-  List<Map<String, dynamic>> _fromJsonToObject(String source) => jsonDecode(source) as List<Map<String, dynamic>>;
 
   /// Set ID from the uploaded drive.File id.
   void _setGoogleJsonFileId(drive.File driveFile) => _googleJsonFileId = driveFile.id;
@@ -128,6 +126,14 @@ class BackupJson{
     }
   }
 }
+
+
+  /// Convert a list of strings to json format.
+  String _convertToJson(List<String> allIdeasForJson) => jsonEncode(allIdeasForJson);
+
+  /// Convert a json string to object.
+List<Map<String, dynamic>> _fromJsonToObject(String source) => jsonDecode(source) as List<Map<String, dynamic>>;
+
 
 
 /// Custom Exception class For when [Backup file] does not exist.
