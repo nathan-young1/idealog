@@ -123,7 +123,17 @@ class IdealogDb {
 
       // await for every new event in the stream then yield the current dbstate
       await for (var _ in _updateStream){
-        List<Idea> allIdeasFromDb = [];
+       yield await _DbIdeasGetter();
+      }  
+  }
+
+  Future<List<String>> get allIdeasForJson async => (await _DbIdeasGetter())
+  .map((e) => e.toMap().toString())
+  .toList();
+
+  /// The function that actually reads the Database for ideas.
+  Future<List<Idea>> _DbIdeasGetter() async {
+    List<Idea> allIdeasFromDb = [];
       await dbInstance.transaction((txn) async {
         await _createTablesIfNotExist(txn);
 
@@ -145,10 +155,10 @@ class IdealogDb {
           allIdeasFromDb.add(test);
         }
       });
-      
-      yield allIdeasFromDb;
-      }  
+
+      return allIdeasFromDb;
   }
+
 
   /// Drop all tables in the database
   Future<void> dropAllTablesInDb() async {

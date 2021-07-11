@@ -6,6 +6,8 @@ import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:http/http.dart' as http;
 
 GoogleSignIn googleSignIn = GoogleSignIn(scopes: [DriveApi.driveAppdataScope]);
+FirebaseAuth auth = FirebaseAuth.instance;
+
 
 Future<OAuthCredential> getUserCredientials({required GoogleSignInAccount account}) async {
     final googleAuth = await account.authentication;
@@ -17,13 +19,13 @@ Future<OAuthCredential> getUserCredientials({required GoogleSignInAccount accoun
 }
 
 Future<void> signInWithGoogle() async {
-  print('i was called ');
   // if the user is already sign in then reauthenticate silently
-  var googleUser = (googleSignIn.currentUser != null)
-  ?await googleSignIn.signInSilently().catchError((e)=>print(e))
-  :await googleSignIn.signIn().catchError((e)=>print(e));
+  var googleUser = (auth.currentUser != null)
+  ?await googleSignIn.signInSilently()
+  :await googleSignIn.signIn();
 
-
+  await auth.signInWithCredential(await getUserCredientials(account: googleUser!));
+  
   // initialize the googleUserData class with the user credientials
     GoogleUserData.instance.intialize(
     userUid: googleSignIn.currentUser!.id,
@@ -37,6 +39,7 @@ Future<void> signOutFromGoogle() async {
   await Prefrences.instance.setAutoSync(false);
   GoogleUserData.instance.clearData();
   await googleSignIn.signOut();
+  await auth.signOut();
 }
 
 class GoogleAuthClient extends http.BaseClient {

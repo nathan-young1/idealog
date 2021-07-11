@@ -24,10 +24,14 @@ class Idea extends TaskList{
         'ideaId': ideaId,
         'ideaTitle': ideaTitle,
         'moreDetails': moreDetails,
-        'completedTasks': completedTasks.map((e) => e.toMap()).toList(),
-        'uncompletedTasks': uncompletedTasks.map((e) => e.toMap()).toList()
+        'completedTasks': _taskToMap(completedTasks),
+        'uncompletedTasks': _taskToMap(uncompletedTasks)
     };
   }
+
+
+
+  List<Map> _taskToMap(List<Task> tasks)=> tasks.map((e)=> e.toMap()).toList();
 }
 
 
@@ -49,6 +53,11 @@ abstract class TaskList with ChangeNotifier{
     :this.uncompletedTasks = Task.createTasks(tasksToCreate);
 
   TaskList.fromDb({required this.completedTasks, required this.uncompletedTasks});
+  
+  TaskList.fromJson({required List<Map<String, dynamic>> completedTasks, required List<Map<String, dynamic>> uncompletedTasks}):
+    this.completedTasks = completedTasks.map((e) => Task.fromJson(json: e)).toList(),
+    this.uncompletedTasks = uncompletedTasks.map((e) => Task.fromJson(json: e)).toList();
+  
 
   void deleteTask(Task task){
     (uncompletedTasks.contains(task))
@@ -83,6 +92,10 @@ class Task {
 
   Task.fromDb({required this.task, required this.orderIndex, required this.primaryKey});
   Task({required this.task, required this.orderIndex,this.primaryKey});
+  Task.fromJson({required Map<String, dynamic> json}):
+    this.task = json['task'],
+    this.orderIndex = json['orderIndex'],
+    this.primaryKey = json['primaryKey'];
 
   static DBTaskList createTasks (List<String> allTask){
     DBTaskList taskList = [];
