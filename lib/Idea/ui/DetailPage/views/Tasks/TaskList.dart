@@ -8,7 +8,6 @@ import 'MultiSelectTile/SectionTile.dart';
 import 'MultiSelectTile/Tile.dart';
 import 'NormalTile/completedTile.dart';
 import 'NormalTile/uncompletedTile.dart';
-import 'package:idealog/global/extension.dart';
 import 'package:idealog/global/typedef.dart';
 
 class DetailTasksList extends StatelessWidget {
@@ -44,7 +43,7 @@ class _UncompletedTasks extends StatelessWidget {
             children: [
             Center(
             child: (!selectionState)
-            ?Text('Uncompleted Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300))
+            ?Text('Uncompleted Tasks',style: overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300))
             :SectionMultiSelect(sectionTasks: uncompletedTasks, sectionName: Section.UNCOMPLETED_TASK)
              ),
 
@@ -74,7 +73,7 @@ class _CompletedTasks extends StatelessWidget {
     return Column(
             children: [
             Center(child: (!selectionState)
-            ?Text('Completed Tasks',style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300))
+            ?Text('Completed Tasks',style: overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300))
             :SectionMultiSelect(sectionTasks: completedTasks, sectionName: Section.COMPLETED_TASK)),
 
             ...completedTasks.where(_searchTermExists)

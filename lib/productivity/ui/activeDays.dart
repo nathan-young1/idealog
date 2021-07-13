@@ -25,7 +25,7 @@ class ActiveDaysChart extends StatelessWidget {
           enableAxisAnimation: true,
               title: ChartTitle(
                 text: 'Active Days',
-                textStyle: RhodiumLibre.copyWith(fontSize: 25)
+                textStyle: rhodiumLibre.copyWith(fontSize: 25)
               ),
               zoomPanBehavior: ZoomPanBehavior(
                 enablePanning: true
@@ -77,11 +77,11 @@ class ActiveDaysChart extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text('Active Days',
-              style: RhodiumLibre.copyWith(fontSize: 25)),
+              style: rhodiumLibre.copyWith(fontSize: 25)),
               Icon(Icons.lock_outlined,size: 60,color: Colors.black45,),
               SizedBox(height: 6),
               Text('Complete tasks for 3 days this month',
-              style: Lato.copyWith(fontSize: 17))
+              style: lato.copyWith(fontSize: 17))
             ]),
         ),
       ),

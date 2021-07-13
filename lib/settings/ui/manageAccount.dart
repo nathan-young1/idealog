@@ -20,14 +20,14 @@ class ManageAccount extends StatelessWidget {
                 iconSize: 35,
                 onPressed: ()=>Navigator.pop(context)),
                 SizedBox(width: 10),
-                Text('Manage Account',style: Poppins.copyWith(fontSize: 28))
+                Text('Manage Account',style: poppins.copyWith(fontSize: 28))
               ],
             ),
 
             SizedBox(height: 50),
             ListTile(
               leading: Icon(Icons.alarm_rounded,color: Colors.black87,size: 35),
-              title: Text('Subscription status',style: Poppins.copyWith(fontSize: 20),),
+              title: Text('Subscription status',style: poppins.copyWith(fontSize: 20),),
               trailing: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Icon(Icons.arrow_forward_ios,size: 22,color: Colors.black87))
@@ -36,7 +36,7 @@ class ManageAccount extends StatelessWidget {
             SizedBox(height: 20),
             ListTile(
               leading: Icon(Icons.fingerprint,color: Colors.black87,size: 35),
-              title: Text('Fingerprint Lock',style: Poppins.copyWith(fontSize: 20)),
+              title: Text('Fingerprint Lock',style: poppins.copyWith(fontSize: 20)),
               trailing: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Switch(value: Provider.of<Prefrences>(context).fingerprintEnabled,
@@ -47,7 +47,7 @@ class ManageAccount extends StatelessWidget {
 
             
             SizedBox(height: 20),
-            ListTile(leading: Text('Dark Mode',style: Poppins.copyWith(fontSize: 20)),
+            ListTile(leading: Text('Dark Mode',style: poppins.copyWith(fontSize: 20)),
             trailing: Switch(value: Provider.of<Prefrences>(context).isDarkMode,
             onChanged: (bool isDarkMode) async => await Prefrences.instance.setDarkMode(isDarkMode))),
           ],

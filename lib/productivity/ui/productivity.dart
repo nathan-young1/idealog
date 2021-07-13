@@ -25,7 +25,7 @@ class _ProductivityState extends State<Productivity> {
           Padding(
             padding: EdgeInsets.only(top: 25,left: 20,right: 10,bottom: 20),
             child: Text('Productivity',
-            style: Poppins.copyWith(fontSize: 30)),
+            style: poppins.copyWith(fontSize: 30)),
           ),
           Expanded(
             child: ListView(

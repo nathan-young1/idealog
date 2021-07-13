@@ -25,7 +25,7 @@ class FavoriteTasks extends StatelessWidget {
         child: Column(
           children: [
             Text('Favorite Tasks',
-            style: RhodiumLibre.copyWith(fontSize: 25)),
+            style: rhodiumLibre.copyWith(fontSize: 25)),
             if(favorites.isNotEmpty)
             for(int index = 0; index < favorites.length; index++)
             GestureDetector(
@@ -34,14 +34,14 @@ class FavoriteTasks extends StatelessWidget {
                   :(index == 1)?FaIcon(FontAwesomeIcons.solidHeart,color: Colors.blue)
                   :FaIcon(FontAwesomeIcons.solidHeart,color: Colors.amber),
               title: Text(favorites[index].ideaTitle,
-              style: Lato.copyWith(fontSize: 18),
+              style: lato.copyWith(fontSize: 18),
               overflow: TextOverflow.ellipsis,
               ),
               trailing: Icon(Icons.arrow_forward_ios)),
             )
             else
             Text('No tasks available',
-            style: Lato.copyWith(fontSize: 19))
+            style: lato.copyWith(fontSize: 19))
             ],
         ),
       ),

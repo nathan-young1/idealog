@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/ui/ListPage/views/Card.dart';
 import 'package:idealog/SearchBar/SearchBar.dart';
@@ -49,7 +47,7 @@ class IdeasAppBar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('IDEAS',style: Poppins.copyWith(fontSize: 30)),
+        Text('IDEAS',style: poppins.copyWith(fontSize: 30)),
         Row(
           children: [
             IconButton(icon: Icon(Icons.search_sharp),

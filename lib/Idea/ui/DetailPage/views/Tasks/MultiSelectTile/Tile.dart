@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideaModel.dart';
-import 'package:idealog/global/extension.dart';
 import 'package:provider/provider.dart';
 import 'Notifier.dart';
 

@@ -20,14 +20,14 @@ class UpgradeToPremium extends StatelessWidget {
                   iconSize: 35,
                   onPressed: ()=>Navigator.pop(context)),
                   SizedBox(width: 10),
-                  Text('Premium Access',style: Poppins.copyWith(fontSize: 28))
+                  Text('Premium Access',style: poppins.copyWith(fontSize: 28))
                 ],
               ),
 
               SizedBox(height: 50),
               Padding(
                 padding: EdgeInsets.only(left: 40),
-                child: Text('Features',style: Overpass.copyWith(fontWeight: FontWeight.w200,fontSize: 30),),
+                child: Text('Features',style: overpass.copyWith(fontWeight: FontWeight.w200,fontSize: 30),),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 50,top: 10),
@@ -50,10 +50,10 @@ class UpgradeToPremium extends StatelessWidget {
                       text: TextSpan(children: [
                         TextSpan(
                           text: 'Duration: ',
-                          style: Poppins.copyWith(color: Colors.black,fontSize: 22,fontWeight: FontWeight.w600)
+                          style: poppins.copyWith(color: Colors.black,fontSize: 22,fontWeight: FontWeight.w600)
                         ),
                         TextSpan(text: '1 year',
-                        style: Overpass.copyWith(color: Colors.black,fontSize: 25)
+                        style: overpass.copyWith(color: Colors.black,fontSize: 25)
                         )
                       ]
                       )
@@ -79,7 +79,7 @@ class _Features extends StatelessWidget {
       children: [
       Icon(Icons.circle,size: 17,color: DarkBlue),
       SizedBox(width: 10),
-      Text(_feature,style: Poppins.copyWith(fontSize: 19))
+      Text(_feature,style: poppins.copyWith(fontSize: 19))
     ]
     );
   }
@@ -103,7 +103,7 @@ class _PurchaseButton extends StatelessWidget {
            icon: Icon(FontAwesomeIcons.solidCreditCard,size: 30),
            label: Padding(
              padding: EdgeInsets.only(left: 12),
-             child: Text('Get Access',style: Poppins.copyWith(fontSize: 20)),
+             child: Text('Get Access',style: poppins.copyWith(fontSize: 20)),
            )),
         ),
       ],

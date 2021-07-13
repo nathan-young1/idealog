@@ -10,7 +10,6 @@ import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'CreateIdea.dart' show Info;
-import 'package:idealog/global/extension.dart';
 
 class AddToExistingIdea extends StatefulWidget {
   final Idea idea;
@@ -59,7 +58,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                   Expanded(
                     child: Center(
                       child: Container(
-                        child: Text(widget.idea.ideaTitle,style: Overpass.copyWith(fontSize: 35,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis),
+                        child: Text(widget.idea.ideaTitle,style: overpass.copyWith(fontSize: 35,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis),
                       ),
                     ),
                   ),
@@ -146,7 +145,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
               height: 65,
               color: DarkBlue,
               child: Center(
-                child: Text('Save',style: Overpass.copyWith(fontSize: 32,color: Colors.white))
+                child: Text('Save',style: overpass.copyWith(fontSize: 32,color: Colors.white))
                 ),
             ),
           ),

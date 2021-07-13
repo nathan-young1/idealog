@@ -44,7 +44,7 @@ class TaskCompletionRate extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text('Tasks Completion Rate',
-            style: RhodiumLibre.copyWith(fontSize: 22)),
+            style: rhodiumLibre.copyWith(fontSize: 22)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -85,7 +85,7 @@ class TaskCompletionRate extends StatelessWidget {
                       Container(height: 25, width: 25, color: PieChartCompletedColor),
                       SizedBox(width: 5),
                       Text('Completed Tasks',
-                      style: Lato.copyWith(fontSize: 17)),
+                      style: lato.copyWith(fontSize: 17)),
                     ],)
                   ),
                 ),
@@ -97,7 +97,7 @@ class TaskCompletionRate extends StatelessWidget {
                       Container(height: 25, width: 25, color: PieChartUncompletedColor),
                       SizedBox(width: 5),
                       Text('Uncompleted Tasks',
-                      style: Lato.copyWith(fontSize: 17)),
+                      style: lato.copyWith(fontSize: 17)),
                     ],
                   ),),
                 ),

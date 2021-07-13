@@ -32,7 +32,7 @@ class DetailAppBar extends StatelessWidget {
               padding: EdgeInsets.only(left: 15,right: 15),
               child: Center(
                 child: Text(idea.ideaTitle,
-                style: Overpass.copyWith(fontSize: 35,fontWeight: FontWeight.w500),
+                style: overpass.copyWith(fontSize: 35,fontWeight: FontWeight.w500),
                 overflow: TextOverflow.ellipsis)),
           )),
         ],

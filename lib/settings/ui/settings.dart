@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    String? _userProfilePic = Provider.of<GoogleUserData>(context).user_photo_url;
+    String? _userProfilePic = Provider.of<GoogleUserData>(context).userPhotoUrl;
     var isDarkMode = Provider.of<Prefrences>(context).isDarkMode;
     var _listTileIconColor = (isDarkMode) ?LightPink :DarkBlue;
         return Container(
@@ -33,7 +33,7 @@ class Settings extends StatelessWidget {
         
             SizedBox(height: 30),
               Text('Idealog v1.2',
-                style: Overpass.copyWith(fontSize: 25,color: Color.fromRGBO(112, 112, 112, 1))
+                style: overpass.copyWith(fontSize: 25,color: Color.fromRGBO(112, 112, 112, 1))
                 ),
                 SizedBox(height: 60),
         
@@ -42,19 +42,19 @@ class Settings extends StatelessWidget {
                 child: Column(
                   children: [
                     ListTile(leading: Icon(FeatherIcons.user,size: 30,color: _listTileIconColor),
-                    title: Text('Manage Account',style: Poppins.copyWith(fontSize: 20)),
+                    title: Text('Manage Account',style: poppins.copyWith(fontSize: 20)),
                     onTap: ()=>Navigator.pushNamed(context, 'ManageAccount'),),
         
                     ListTile(leading: Icon(FeatherIcons.uploadCloud,size: 30,color: _listTileIconColor),
-                    title: Text('Data Backup',style: Poppins.copyWith(fontSize: 20)),
+                    title: Text('Data Backup',style: poppins.copyWith(fontSize: 20)),
                     onTap: ()=> Navigator.pushNamed(context, 'Syncronization')),
         
                     ListTile(leading: Icon(PhosphorIcons.caret_double_up,size: 30,color: _listTileIconColor),
-                    title: Text('Upgrade to premium',style: Poppins.copyWith(fontSize: 20)),
+                    title: Text('Upgrade to premium',style: poppins.copyWith(fontSize: 20)),
                     onTap: ()=> Navigator.pushNamed(context,'UpgradeToPremium')),
         
                     ListTile(leading: Icon(CommunityMaterialIcons.help,size: 30,color: _listTileIconColor), 
-                    title: Text('About Idealog',style: Poppins.copyWith(fontSize: 20))),
+                    title: Text('About Idealog',style: poppins.copyWith(fontSize: 20))),
                   ],
                 ),
               )

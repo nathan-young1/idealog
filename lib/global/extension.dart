@@ -36,7 +36,7 @@ extension DataFromSqliteDb on Object{
   }
 
     //Extension to convert direct to List<List<int>> for easier use
-  List<int> get StringToListInt{
+  List<int> get stringToListInt{
   var dataFromDb = toString();
 
   // if the list is empty

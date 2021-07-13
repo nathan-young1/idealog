@@ -30,7 +30,7 @@ class SectionMultiSelect extends StatelessWidget {
      (sectionName == Section.COMPLETED_TASK)
      ?'Completed Tasks'
      :'Uncompleted Tasks',
-     style: Overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300)
+     style: overpass.copyWith(fontSize: 25,fontWeight: FontWeight.w300)
      ),
      onChanged: (bool? value)=>
                 (value == true)

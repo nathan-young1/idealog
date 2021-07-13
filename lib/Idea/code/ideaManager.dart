@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
-import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customWidget/alertDialog.dart';

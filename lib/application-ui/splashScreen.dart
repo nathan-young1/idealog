@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text('Idealog v1.2',
-              style: Overpass.copyWith(fontSize: 28,color: Color.fromRGBO(112, 112, 112, 1))
+              style: overpass.copyWith(fontSize: 28,color: Color.fromRGBO(112, 112, 112, 1))
               )
           ],
         ),

@@ -14,7 +14,7 @@ class IdeaTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Center(child: Text(idea.ideaTitle,
-      style: ReemKufi.copyWith(fontSize: 30),
+      style: reemKufi.copyWith(fontSize: 30),
       overflow: TextOverflow.ellipsis)));
   }
 }

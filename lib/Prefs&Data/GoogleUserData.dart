@@ -3,27 +3,27 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:idealog/auth/code/authHandler.dart';
 
 class GoogleUserData with ChangeNotifier{
-  static String? _Email = googleSignIn.currentUser?.email;
-  static String? _Photo_url = googleSignIn.currentUser?.photoUrl;
-  static String? _Uid;
+  static String? _email = googleSignIn.currentUser?.email;
+  static String? _photoUrl = googleSignIn.currentUser?.photoUrl;
+  static String? _uid;
   GoogleSignInAccount? googleSignInAccount;
 
-  String? get user_email => _Email;
-  String? get user_photo_url => _Photo_url;
-  String? get user_uid => _Uid;
+  String? get userEmail => _email;
+  String? get userPhotoUrl => _photoUrl;
+  String? get userUid => _uid;
 
-  set user_email(String? email){
-    _Email = email;
+  set userEmail(String? email){
+    _email = email;
     notifyListeners();
   }
 
-  set user_photo_url(String? photoUrl){
-    _Photo_url = photoUrl;
+  set userPhotoUrl(String? photoUrl){
+    _photoUrl = photoUrl;
     notifyListeners();
   }
 
-  set user_uid(String? userUid){
-    _Uid = userUid;
+  set userUid(String? userUid){
+    _uid = userUid;
     notifyListeners();
   }
 
@@ -37,16 +37,16 @@ class GoogleUserData with ChangeNotifier{
     required userPhotoUrl,
     required googleSignInAccount
   }){
-      this.user_uid = userUid;
-      this.user_email = userEmail;
-      this.user_photo_url = userPhotoUrl;
+      this.userUid = userUid;
+      this.userEmail = userEmail;
+      this.userPhotoUrl = userPhotoUrl;
       this.googleSignInAccount = googleSignInAccount;
       
   }
 
   void clearData(){
     // clear all the data on user signout
-    user_email = null;
-    user_photo_url = null;
+    userEmail = null;
+    userPhotoUrl = null;
   }
 }

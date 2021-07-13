@@ -48,7 +48,7 @@ class Syncronization extends StatelessWidget {
                             iconSize: 35,
                             onPressed: ()=>Navigator.pop(context)),
                           SizedBox(width: 12),
-                          Text('Data Backup',style: Poppins.copyWith(fontSize: 24))
+                          Text('Data Backup',style: poppins.copyWith(fontSize: 24))
                         ],
                       ),
                     ),
@@ -65,7 +65,7 @@ class Syncronization extends StatelessWidget {
                             bottomRight: Radius.circular(20)),
                         ),
                         child: Center(child: Text('Last backup at: $date',
-                        style: Overpass.copyWith(fontSize: 18,color: Colors.white),)),
+                        style: overpass.copyWith(fontSize: 18,color: Colors.white),)),
                       ),
                     )
                   ],),
@@ -78,7 +78,7 @@ class Syncronization extends StatelessWidget {
                     Icon(Icons.info_outline,color: Colors.teal.withOpacity(0.5),size: 30),
                     SizedBox(width: 10),
                     Text('Your data will be backed up every 24 hours.',
-                    style: Overpass.copyWith(fontSize: 15,fontWeight: FontWeight.w300))
+                    style: overpass.copyWith(fontSize: 15,fontWeight: FontWeight.w300))
                   ],
                 ),
                 SizedBox(height: 40),
@@ -92,7 +92,7 @@ class Syncronization extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                          Text('Backup Now',style: Overpass.copyWith(fontSize: 20)),
+                          Text('Backup Now',style: overpass.copyWith(fontSize: 20)),
                           Container(
                             width: 60,
                             child: Icon(FeatherIcons.uploadCloud,size: 30,color: Colors.teal))
@@ -103,7 +103,7 @@ class Syncronization extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        Text('Auto Backup',style: Overpass.copyWith(fontSize: 20)),
+                        Text('Auto Backup',style: overpass.copyWith(fontSize: 20)),
                         Container(
                           width: 60,
                           child: Switch(value: Provider.of<Prefrences>(context).autoSyncEnabled,
@@ -115,8 +115,8 @@ class Syncronization extends StatelessWidget {
                       SizedBox(height: 10),
                       ListTile(
                       contentPadding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-                      title: Text('Backup Account',style: Overpass.copyWith(fontSize: 20)),
-                      subtitle: Text(Provider.of<GoogleUserData>(context).user_email ?? 'None',style: Overpass.copyWith(fontSize: 15)),
+                      title: Text('Backup Account',style: overpass.copyWith(fontSize: 20)),
+                      subtitle: Text(Provider.of<GoogleUserData>(context).userEmail ?? 'None',style: overpass.copyWith(fontSize: 15)),
                       onTap: () async {
                         await signOutFromGoogle();
                         await signInWithGoogle();

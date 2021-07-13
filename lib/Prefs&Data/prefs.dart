@@ -10,9 +10,9 @@ class Prefrences with ChangeNotifier{
 
   late SharedPreferences pref;
 
-  static bool? _DarkMode;
-  static bool? _AutoSync;
-  static bool? _FingerprintAuth;
+  static bool? _darkMode;
+  static bool? _autoSync;
+  static bool? _fingerprintAuth;
 
   
 
@@ -21,9 +21,9 @@ class Prefrences with ChangeNotifier{
 
   Future<void> initialize() async {
     pref = await SharedPreferences.getInstance();
-    _DarkMode = pref.containsKey('DarkMode')? pref.getBool('DarkMode') : false;
-    _AutoSync = pref.containsKey('AutoSync')? pref.getBool('AutoSync') : false;
-    _FingerprintAuth = pref.containsKey('FingerprintAuth')? pref.getBool('FingerprintAuth') : false;
+    _darkMode = pref.containsKey('DarkMode')? pref.getBool('DarkMode') : false;
+    _autoSync = pref.containsKey('AutoSync')? pref.getBool('AutoSync') : false;
+    _fingerprintAuth = pref.containsKey('FingerprintAuth')? pref.getBool('FingerprintAuth') : false;
     // notify listeners was called to update the providers after the data has been initialized
     notifyListeners();
   }
@@ -35,7 +35,7 @@ class Prefrences with ChangeNotifier{
     if (userIsAuthenticated == true){
     // if user is authenticated make the change to his/her prefrences
     await pref.setBool('FingerprintAuth', allowFingerAuth);
-    _FingerprintAuth = allowFingerAuth;
+    _fingerprintAuth = allowFingerAuth;
 
     }
 
@@ -44,7 +44,7 @@ class Prefrences with ChangeNotifier{
 
   Future<void> setDarkMode(bool onDarkMode) async {
     await pref.setBool('DarkMode', onDarkMode);
-    _DarkMode = onDarkMode;
+    _darkMode = onDarkMode;
     notifyListeners();
   }
 
@@ -52,7 +52,7 @@ class Prefrences with ChangeNotifier{
     if (onAutoSync){
       // if auto sync is set to true and the user is not signed in , then sign the user in before it start auto sync
       // if the user is already signed in , there will be no need to sign in again
-        if (GoogleUserData.instance.user_email == null) {
+        if (GoogleUserData.instance.userEmail == null) {
           await signInWithGoogle();
         }
 
@@ -63,13 +63,13 @@ class Prefrences with ChangeNotifier{
     }
 
     await pref.setBool('AutoSync', onAutoSync);
-    _AutoSync = onAutoSync;
+    _autoSync = onAutoSync;
     notifyListeners();
   }
 
-  bool get isDarkMode => _DarkMode ?? false;
-  bool get fingerprintEnabled => _FingerprintAuth ?? false;
-  bool get autoSyncEnabled => _AutoSync ?? false;
+  bool get isDarkMode => _darkMode ?? false;
+  bool get fingerprintEnabled => _fingerprintAuth ?? false;
+  bool get autoSyncEnabled => _autoSync ?? false;
   String get appLogoPath => !isDarkMode ?'assets/images/logo.png' :'assets/images/logo_Dark.png';
 
 }

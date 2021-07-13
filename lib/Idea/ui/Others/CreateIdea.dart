@@ -129,7 +129,7 @@ class _NewIdeaState extends State<NewIdea> {
               height: 65,
               color: DarkBlue,
               child: Center(
-                child: Text('Save',style: Overpass.copyWith(fontSize: 32,color: Colors.white)),
+                child: Text('Save',style: overpass.copyWith(fontSize: 32,color: Colors.white)),
               )),
           ),
       ),
