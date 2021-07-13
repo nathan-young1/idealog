@@ -40,7 +40,7 @@ class IdealogDb {
       // Insert the idea into the database
       int uniqueIdForIdea = await getUniqueId(txn,ideasTable);
       await txn.insert(ideasTable, {Column_ideaTitle: idea.ideaTitle,Column_moreDetails: idea.moreDetails??'',Column_ideaId: uniqueIdForIdea});
-      _putTasksInTheirCorrespondingTable(txn: txn, uncompletedTasks: uncompletedTasks, completedTasks: completedTasks, ideaPrimaryKey: uniqueIdForIdea);
+      await _putTasksInTheirCorrespondingTable(txn: txn, uncompletedTasks: uncompletedTasks, completedTasks: completedTasks, ideaPrimaryKey: uniqueIdForIdea);
       });
   }
 
@@ -127,8 +127,8 @@ class IdealogDb {
       }  
   }
 
-  Future<List<String>> get allIdeasForJson async => (await _DbIdeasGetter())
-  .map((e) => e.toMap().toString())
+  Future<List<Map<String, dynamic>>> get allIdeasForJson async => (await _DbIdeasGetter())
+  .map((e) => e.toMap())
   .toList();
 
   /// The function that actually reads the Database for ideas.
@@ -193,9 +193,9 @@ class IdealogDb {
   }
 
   /// Calls the method _addTasksToTable for both completed and uncompleted tasks.
-  void _putTasksInTheirCorrespondingTable({required Transaction txn,required DBTaskList uncompletedTasks,required DBTaskList completedTasks,required int ideaPrimaryKey}){
-        _addTasksToTable(txn: txn,tasks: completedTasks,tableName: completedTable,ideaPrimaryKey: ideaPrimaryKey);
-        _addTasksToTable(txn: txn,tasks: uncompletedTasks,tableName: uncompletedTable,ideaPrimaryKey: ideaPrimaryKey);
+  Future<void> _putTasksInTheirCorrespondingTable({required Transaction txn,required DBTaskList uncompletedTasks,required DBTaskList completedTasks,required int ideaPrimaryKey}) async {
+        await _addTasksToTable(txn: txn,tasks: completedTasks,tableName: completedTable,ideaPrimaryKey: ideaPrimaryKey);
+        await _addTasksToTable(txn: txn,tasks: uncompletedTasks,tableName: uncompletedTable,ideaPrimaryKey: ideaPrimaryKey);
   }
 
   /// Get the tasks from their corresponding table using the idea's Id
@@ -219,13 +219,13 @@ class IdealogDb {
   }
 
   /// Add tasks to the specified table.
-  void _addTasksToTable({required Transaction txn,required DBTaskList tasks,required String tableName,required int ideaPrimaryKey}) =>
-        tasks.forEach((row) async {
+  Future<void> _addTasksToTable({required Transaction txn,required DBTaskList tasks,required String tableName,required int ideaPrimaryKey}) async {
+        for(var row in tasks){
           int uniqueIdForTask = await getUniqueId(txn,tableName);
           await txn.insert(tableName, {Column_tasks: '${row.task}',Column_taskOrder: '${row.orderIndex}',Column_ideaId: '$ideaPrimaryKey',Column_taskId: uniqueIdForTask});
-          });
+        }
+  }
 
-  
   /// Make query to the specified table for tasks
   Future<DBTaskList> _taskQuery(String tableName,int ideaId,Transaction txn) async =>
      (await txn.query(tableName,where: '$Column_ideaId = ?',whereArgs: [ideaId])).map(_convertToTask).toList();

@@ -11,11 +11,11 @@ class Idea extends TaskList{
 
   Idea.readFromDb({required this.ideaTitle,this.moreDetails,required DBTaskList completedTasks,required this.ideaId,required DBTaskList uncompletedTasks}):super.fromDb(completedTasks: completedTasks,uncompletedTasks: uncompletedTasks);
 
-  Idea.fromFirebaseJson({required Map<String, dynamic> json}):
+  Idea.fromJson({required Map<String, dynamic> json}):
   ideaId = json['ideaId'],
   ideaTitle = json['ideaTitle'],
   moreDetails = json['moreDetails'],
-  super.fromDb(completedTasks: json['completedTasks'],uncompletedTasks: json['uncompletedTasks']);
+  super.fromDb(completedTasks: _jsonObject_To_Task(json['completedTasks']),uncompletedTasks: _jsonObject_To_Task(json['uncompletedTasks']));
 
   String? changeMoreDetail(String? newDetails)=> moreDetails= newDetails;
 
@@ -29,9 +29,12 @@ class Idea extends TaskList{
     };
   }
 
-
-
   List<Map> _taskToMap(List<Task> tasks)=> tasks.map((e)=> e.toMap()).toList();
+
+  // ignore: non_constant_identifier_names
+  static List<Task> _jsonObject_To_Task(List jsonObject) =>
+            jsonObject.map((e) => Task.fromJson(json: e)).toList();
+  
 }
 
 
@@ -82,6 +85,7 @@ abstract class TaskList with ChangeNotifier{
   uncompletedTasks.add(task);
   notifyListeners();
   }
+  
 }
 
 

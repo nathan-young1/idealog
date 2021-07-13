@@ -8,6 +8,7 @@ import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/auth/code/authHandler.dart';
+import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -19,7 +20,7 @@ class BackupJson{
   String? _googleJsonFileId;
   late final drive.DriveApi _driveApi;
   static const String _DRIVE_SPACE =  "appDataFolder";
-  static const String _FILE_NAME = 'idealog.json';
+  static const String _FILE_NAME = 'Idealog.json';
   drive.File? _lastBackupFileIfExists;
 
   
@@ -31,9 +32,6 @@ class BackupJson{
   }
 
   Future<void> initialize() async {
-    // for the sake of testing purposes signInWithGoogle()
-    await signInWithGoogle();
-    //-------------------------------------------------
     await _authenticateDriveUser();
     await _getLastBackupFileIfExists();
   }
@@ -67,13 +65,14 @@ class BackupJson{
       String jsonString = await compute(_convertToJson,await IdealogDb.instance.allIdeasForJson);
       jsonFile.writeAsStringSync(jsonString);
       
-      Uint8List jsonFile_AsBytes = await jsonFile.readAsBytes();
-      Stream<Uint8List> streamFromBytes = Future.value(jsonFile_AsBytes).asStream();
-      drive.Media driveMedia = drive.Media(streamFromBytes,jsonFile_AsBytes.lengthInBytes,contentType: 'application/json');
+      drive.Media driveMedia = drive.Media(jsonFile.openRead(),jsonFile.lengthSync(),contentType: 'application/json');
       
       // if it is an update then update else create the file.
       if(isUpdate){
+        // The metadata parents cannot be edited in update, so am setting it back to default which is Null.
+        driveFile.parents = null;
         await _driveApi.files.update(driveFile, _googleJsonFileId!, uploadMedia: driveMedia);
+
       } else {
         final drive.File uploadedFile = await _driveApi.files.create(driveFile, uploadMedia: driveMedia);
         _setGoogleJsonFileId(uploadedFile);
@@ -83,11 +82,11 @@ class BackupJson{
       await NativeCodeCaller.instance.updateLastBackupTime();
       
     } on IOException catch (e) {
-      print('file system error');
+      print('file system error $e');
     } on drive.ApiRequestError catch (e){
-      print('api related error');
-    } on PlatformException {
-      print('error while writing to shared preference');
+      print('api related error $e');
+    } on PlatformException catch (e){
+      print('error while writing to shared preference $e');
     }
   }
 
@@ -96,27 +95,26 @@ class BackupJson{
 
   /// Download the file from the drive.
   Future<void> downloadFromDrive() async {
+
     // if _googleJsonFileId is null it means there is no backUp file on the drive.
     if(_googleJsonFileId != null){
       final drive.Media downloadedJson = (await _driveApi.files.get(_googleJsonFileId!,downloadOptions: drive.DownloadOptions.fullMedia)) as drive.Media;
       String filePath = (await getTemporaryDirectory()).path + "/$_FILE_NAME";
       File jsonFile = new File(filePath);
+
       await for(var byte in downloadedJson.stream){
-        jsonFile.writeAsBytesSync(byte,mode: FileMode.writeOnlyAppend);
+        await jsonFile.writeAsBytes(byte,mode: FileMode.writeOnlyAppend);
       }
       
       // Convert json string to object on isolate.
-        var fileResult = await compute(_fromJsonToObject,jsonFile.readAsStringSync());
-        print("file result $fileResult");
-        jsonFile.deleteSync();
+        List<Idea> fileResult = (await compute(_fromJsonToObject,jsonFile.readAsStringSync()))
+        .map((idea) =>  Idea.fromJson(json: idea))
+        .toList();
+        
+        await jsonFile.delete();
 
-      // downloadedJson.stream.listen((byte)=> jsonFile.writeAsBytesSync(byte,mode: FileMode.writeOnlyAppend),
-      // onDone: () async { 
-      //   // Convert json string to object on isolate.
-      //   var fileResult = await compute(_fromJsonToObject,jsonFile.readAsStringSync());
-      //   print("file result $fileResult");
-      //   jsonFile.deleteSync();
-      //   });
+        //Write all ideas from json to the database.
+        fileResult.forEach((idea) async => await IdealogDb.instance.writeToDb(idea: idea));
     } else {
         try {
           throw _DriveBackupDoesNotExist();
@@ -128,26 +126,25 @@ class BackupJson{
 }
 
 
-  /// Convert a list of strings to json format.
-  String _convertToJson(List<String> allIdeasForJson) => jsonEncode(allIdeasForJson);
+/// Convert a list of strings to json format.
+String _convertToJson(List<Map<String, dynamic>> allIdeasForJson) => jsonEncode(allIdeasForJson);
 
   /// Convert a json string to object.
-List<Map<String, dynamic>> _fromJsonToObject(String source) => jsonDecode(source) as List<Map<String, dynamic>>;
+List<dynamic> _fromJsonToObject(String source) => jsonDecode(source) as List<dynamic>;
+
 
 
 
 /// Custom Exception class For when [Backup file] does not exist.
 class _DriveBackupDoesNotExist implements Exception {
 
-  String? _message = "No backup file exists in the drive";
+  String _message = "No backup file exists in the drive";
   
   @override
   String toString() {
-    return _message!;
+    return _message;
   }
 
-  String get message => _message!;
-
-  _DriveBackupDoesNotExist([this._message]);
+  String get message => _message;
 
 }
