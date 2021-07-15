@@ -46,48 +46,6 @@ class BackupJson{
       }
   }
 
-  /// upload the file to the drive.
-  Future<void> uploadToDrive() async {
-    // if the file id exists it means we just need to update the file in google drive not create a new one.
-    bool isUpdate = _googleJsonFileId != null;
-
-  // The metadata request file
-    var driveFile = new drive.File()
-    ..name = _FILE_NAME
-    ..parents = [_DRIVE_SPACE];
-    
-    String filePath = (await getTemporaryDirectory()).path + "/$_FILE_NAME";
-    // Encode to json on a different isolate.
-    try {
-      File jsonFile = new File(filePath);
-      String jsonString = await compute(_convertToJson,await IdealogDb.instance.allIdeasForJson);
-      jsonFile.writeAsStringSync(jsonString);
-      
-      drive.Media driveMedia = drive.Media(jsonFile.openRead(),jsonFile.lengthSync(),contentType: 'application/json');
-      
-      // if it is an update then update else create the file.
-      if(isUpdate){
-        // The metadata parents cannot be edited in update, so am setting it back to default which is Null.
-        driveFile.parents = null;
-        await _driveApi.files.update(driveFile, _googleJsonFileId!, uploadMedia: driveMedia);
-
-      } else {
-        final drive.File uploadedFile = await _driveApi.files.create(driveFile, uploadMedia: driveMedia);
-        _setGoogleJsonFileId(uploadedFile);
-      }
-
-      await jsonFile.delete();
-      await NativeCodeCaller.instance.updateLastBackupTime();
-      
-    } on IOException catch (e) {
-      print('file system error $e');
-    } on drive.ApiRequestError catch (e){
-      print('api related error $e');
-    } on PlatformException catch (e){
-      print('error while writing to shared preference $e');
-    }
-  }
-
   /// Set ID from the uploaded drive.File id.
   void _setGoogleJsonFileId(drive.File driveFile) => _googleJsonFileId = driveFile.id;
 
@@ -125,6 +83,15 @@ class BackupJson{
   Future<void> deleteFile() async {
     await _driveApi.files.delete(_googleJsonFileId!);
     print('delete');
+  }
+
+  Future<void> listAllFiles() async {
+    List<drive.File> filesInAppScope = (await _driveApi.files.list(spaces: _DRIVE_SPACE)).files!;
+    List<String?> ids = filesInAppScope.map((e) => e.id).toList();
+    // for(var id in ids){
+    //   await _driveApi.files.delete(id!);
+    // }
+    print(ids);
   }
 }
 

@@ -2,6 +2,10 @@ package dataSyncronization;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.services.drive.DriveScopes;
@@ -16,7 +20,28 @@ import java.util.Map;
 
 import databaseModels.IdeaModel;
 
-public class SynchronizationHandler {
+public class SynchronizationHandler extends Worker {
+
+    Context applicationContext;
+
+    public SynchronizationHandler(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
+        applicationContext = context;
+    }
+
+    @NonNull
+    @Override
+    public Result doWork() {
+//        try {
+//            SynchronizationHandler.synchronize(applicationContext);
+//            return Result.success();
+//
+//        }catch (Exception e){
+////            either returning retry or failure in case of constant exception
+//            return Result.retry();
+//        }
+        return null;
+    }
 
     public static GoogleAccountCredential authenticateUser(Context context){
         GoogleSignInAccount currentUser = GoogleSignIn.getLastSignedInAccount(context);
@@ -48,4 +73,5 @@ public class SynchronizationHandler {
 
 
     }
+
 }

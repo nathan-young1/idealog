@@ -1,9 +1,16 @@
 package com.mobile.idealog;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import org.json.JSONArray;
@@ -14,6 +21,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import dataSyncronization.GoogleDrive;
@@ -61,17 +69,21 @@ public class MainActivity extends FlutterFragmentActivity {
         super.configureFlutterEngine(flutterEngine);
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CHANNEL).setMethodCallHandler((call, result) -> {
 
+            applicationContext = getApplicationContext();
+
             switch (call.method) {
                 case startAutoSyncMethod:
-                    applicationContext = getApplicationContext();
-                    Thread newk = new Thread(new GoogleDrive());
-                    newk.start();
-                    //                        startAutoSync();
+
+                    try {
+                        startAutoSync();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     result.success("Auto Sync Started");
                     break;
+
                 case cancelAutoSyncMethod:
-                    cancelAutoSync();
-                    result.success("Auto Sync has been canceled");
+                    cancelAutoSync(result);
                     break;
                 case GET_LAST_SYNC_TIME_METHOD:
                     result.success(IdealogDatabase.GetLastBackUpTime(getApplicationContext()));
@@ -88,6 +100,23 @@ public class MainActivity extends FlutterFragmentActivity {
      * This method gives the auto sync task to the work manager.
      */
     public void startAutoSync() throws JSONException{
+        Constraints workRequestConstraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+///        In case of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
+
+        PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(GoogleDrive.class,1, TimeUnit.DAYS)
+                .setConstraints(workRequestConstraints)
+                .setBackoffCriteria(BackoffPolicy.LINEAR,10, TimeUnit.MINUTES)
+                .addTag(AutoSyncWorkRequestTag)
+                .build();
+
+//        Add work request to work manager
+        WorkManager
+                .getInstance(this)
+                .enqueue(autoSyncWorkRequest);
+
         IdealogDatabase sqlDbForIdealogDb = new IdealogDatabase(this,null,null,1);
 
         List allIdeas = sqlDbForIdealogDb.readAllIdeasInDb().stream().map(IdeaModel::toMap).collect(Collectors.toList());
@@ -104,8 +133,10 @@ public class MainActivity extends FlutterFragmentActivity {
     /**
      * This method cancels the auto sync task in the work manager.
      */
-    public void cancelAutoSync(){
+    public void cancelAutoSync(MethodChannel.Result result){
         WorkManager.getInstance(this).cancelAllWorkByTag(AutoSyncWorkRequestTag);
+        result.success("Auto Sync has been canceled");
+
     }
 
 
@@ -125,6 +156,16 @@ public class MainActivity extends FlutterFragmentActivity {
         }
 
         return allIdeas;
+    }
+
+    public static String allIdeasToJson(Context context){
+        IdealogDatabase sqlDbForIdealogDb = new IdealogDatabase(context,null,null,1);
+
+        List allIdeas = sqlDbForIdealogDb.readAllIdeasInDb().stream().map(IdeaModel::toMap).collect(Collectors.toList());
+        JSONArray jsonArray = new JSONArray(allIdeas);
+        System.out.println(jsonArray);
+
+        return jsonArray.toString();
     }
 
 }
