@@ -28,4 +28,6 @@ public class IdeaModel extends TaskList{
         json.put("completedTasks",completedTasks.stream().map(Task::toMap).collect(Collectors.toList()));
         return json;
     }
+
+
 }

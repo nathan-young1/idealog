@@ -21,9 +21,10 @@ Future<void> InitializeAppConfig() async {
   await signInWithGoogle();
   await AnalyticDB.instance.clearObsoluteData();
   await BackupJson.instance.initialize();
-  await BackupJson.instance.listAllFiles();
+  // await IdealogDb.instance.dropAllTablesInDb();
+
   // await BackupJson.instance.deleteFile();
-  // await BackupJson.instance.uploadToDrive();
+  // await BackupJson.instance.downloadFromDrive();
   
 }
 

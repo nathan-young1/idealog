@@ -12,22 +12,28 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import com.mobile.idealog.IdealogDatabase;
-import com.mobile.idealog.MainActivity;
 
-import java.io.BufferedWriter;
+import org.json.JSONArray;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import databaseModels.IdeaModel;
 
 import static com.google.api.client.extensions.android.http.AndroidHttp.newCompatibleTransport;
+
 
 public class GoogleDrive extends Worker {
 
     private static Context applicationContext;
     private static final String APPLICATION_NAME = "Idealog";
     private static final String DRIVE_SPACE = "appDataFolder";
-    private static String FILE_NAME = "Idealog.json";
+    private static final String FILE_NAME = "Idealog.json";
     private File _lastBackupFileIfExists;
 
     Drive drive;
@@ -35,12 +41,13 @@ public class GoogleDrive extends Worker {
     public GoogleDrive(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         applicationContext = context;
-        drive = new Drive.Builder(newCompatibleTransport(), new GsonFactory(), SynchronizationHandler.authenticateUser(applicationContext))
+        drive = new Drive.Builder(newCompatibleTransport(), new GsonFactory(), Authentication.authenticateUser(applicationContext))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
     }
 
 
+    @NonNull
     @Override
     public Result doWork() {
         try {
@@ -57,11 +64,12 @@ public class GoogleDrive extends Worker {
 
     /**
      * This method gets all the ideas in the database parses it to a json file and then uploads it to the user's google drive.
-     * @param context
-     * @throws IOException
+     * @param context : The application's context
+     * @throws IOException : A File exception may occur while writing json to a file
      */
     public void uploadToDrive(Context context) throws IOException {
 
+//      If a last backup file exists then this operation is an update.
         boolean isUpdate = _lastBackupFileIfExists != null;
 
         // The metadata request file.
@@ -70,25 +78,29 @@ public class GoogleDrive extends Worker {
                 .setParents(Collections.singletonList(DRIVE_SPACE));
 
         java.io.File jsonFile = new java.io.File(context.getCacheDir(),FILE_NAME);
-        String jsonString = MainActivity.allIdeasToJson(context);
+        String jsonString = AllIdeasToJson(context);
 
-//      Created a buffered writer to write the json string to the temporary file.
-        BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile));
+//      Created a file writer to write the json string to the temporary file.
+        FileWriter writer = new FileWriter(jsonFile);
         writer.write(jsonString);
 
-//      Release the buffered writer resources.
+
+//      Release the file writer resources.
         writer.close();
+
 
 //      Convert the jsonFile to a driveMediaContent.
         FileContent mediaContent = new FileContent("application/json", jsonFile);
 
         if(isUpdate){
+//          You cannot edit the parents on an update so i am setting it to null, before updating it.
             metadataFile.setParents(null);
             drive.files().update(_lastBackupFileIfExists.getId(),metadataFile, mediaContent).execute();
         }else {
-//      create the file in google drive.
+//          Create the file in google drive.
             drive.files().create(metadataFile, mediaContent).execute();
         }
+
         IdealogDatabase.WriteLastSyncTime(context);
 
     }
@@ -106,6 +118,17 @@ public class GoogleDrive extends Worker {
         if (files == null || files.isEmpty()) System.out.println("No files found.");
          else _lastBackupFileIfExists = files.get(0);
 
+    }
+
+    public static String AllIdeasToJson(Context context){
+        IdealogDatabase sqlDbForIdealogDb = new IdealogDatabase(context,null,null,1);
+
+        List allIdeas = sqlDbForIdealogDb.readAllIdeasInDb().stream().map(IdeaModel::toMap).collect(Collectors.toList());
+
+
+        JSONArray jsonArray = new JSONArray(allIdeas);
+
+        return jsonArray.toString();
     }
 
 }

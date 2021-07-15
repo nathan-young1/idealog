@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
-import 'package:idealog/nativeCode/bridge.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BackupJson{
@@ -58,10 +56,13 @@ class BackupJson{
       String filePath = (await getTemporaryDirectory()).path + "/$_FILE_NAME";
       File jsonFile = new File(filePath);
 
+      // If the temporary file exists then delete it.
+      if(await jsonFile.exists()) jsonFile.deleteSync();
+
       await for(var byte in downloadedJson.stream){
         await jsonFile.writeAsBytes(byte,mode: FileMode.writeOnlyAppend);
       }
-      
+
       // Convert json string to object on isolate.
         List<Idea> fileResult = (await compute(_fromJsonToObject,jsonFile.readAsStringSync()))
         .map((idea) =>  Idea.fromJson(json: idea))
@@ -85,22 +86,18 @@ class BackupJson{
     print('delete');
   }
 
-  Future<void> listAllFiles() async {
+  /// This is a debugging method
+  Future<void> _listAllFiles() async {
     List<drive.File> filesInAppScope = (await _driveApi.files.list(spaces: _DRIVE_SPACE)).files!;
     List<String?> ids = filesInAppScope.map((e) => e.id).toList();
-    // for(var id in ids){
-    //   await _driveApi.files.delete(id!);
-    // }
     print(ids);
   }
+
 }
 
 
-/// Convert a list of strings to json format.
-String _convertToJson(List<Map<String, dynamic>> allIdeasForJson) => jsonEncode(allIdeasForJson);
-
   /// Convert a json string to object.
-List<dynamic> _fromJsonToObject(String source) => jsonDecode(source) as List<dynamic>;
+List<dynamic> _fromJsonToObject(String source) => json.decode(source) as List<dynamic>;
 
 
 

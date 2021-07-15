@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:idealog/global/strings.dart';
@@ -16,7 +18,10 @@ class NativeCodeCaller with ChangeNotifier{
     try{
       String result = await platform.invokeMethod(startAutoSyncMethod);
       print(result);
-
+      
+      // Notify the app to get the updated time whether worker is a success or not.
+      instance.notifyListeners();
+      
     } catch (e,s){
       print('$e \n\n $s');
     }

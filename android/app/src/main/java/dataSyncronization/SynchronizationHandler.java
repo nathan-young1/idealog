@@ -2,76 +2,56 @@ package dataSyncronization;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
+import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.api.services.drive.DriveScopes;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.mobile.idealog.IdealogDatabase;
+import java.util.concurrent.TimeUnit;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import io.flutter.plugin.common.MethodChannel;
 
-import java.util.Collections;
-import java.util.Map;
+public class SynchronizationHandler {
 
-import databaseModels.IdeaModel;
+    final static private String AutoSyncWorkRequestTag = "AutoSync";
 
-public class SynchronizationHandler extends Worker {
+    /**
+     * This method gives the auto sync task to the work manager.
+     */
+    public static void START_AUTO_SYNC(Context context, MethodChannel.Result result){
+        try {
+            Constraints workRequestConstraints = new Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build();
 
-    Context applicationContext;
+///        In case of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
 
-    public SynchronizationHandler(@NonNull Context context, @NonNull WorkerParameters workerParams) {
-        super(context, workerParams);
-        applicationContext = context;
+            PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(GoogleDrive.class, 1, TimeUnit.DAYS)
+                    .setConstraints(workRequestConstraints)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES)
+                    .addTag(AutoSyncWorkRequestTag)
+                    .build();
+
+//        Add work request to work manager
+            WorkManager
+                    .getInstance(context)
+                    .enqueue(autoSyncWorkRequest);
+        } finally {
+            result.success("Auto Sync Start Was Called");
+        }
     }
 
-    @NonNull
-    @Override
-    public Result doWork() {
-//        try {
-//            SynchronizationHandler.synchronize(applicationContext);
-//            return Result.success();
-//
-//        }catch (Exception e){
-////            either returning retry or failure in case of constant exception
-//            return Result.retry();
-//        }
-        return null;
-    }
 
-    public static GoogleAccountCredential authenticateUser(Context context){
-        GoogleSignInAccount currentUser = GoogleSignIn.getLastSignedInAccount(context);
-
-        GoogleAccountCredential credential =
-                GoogleAccountCredential.usingOAuth2(
-                        context, Collections.singleton(DriveScopes.DRIVE_APPDATA));
-
-        credential.setSelectedAccount(currentUser.getAccount());
-
-        return credential;
-    }
-
-    public static void synchronize(Context applicationContext) throws JSONException {
-
-
-        IdealogDatabase sqlDbForIdealogDb = new IdealogDatabase(applicationContext,null,null,1);
-
-            Map[] allIdeas = (Map[]) sqlDbForIdealogDb.readAllIdeasInDb().stream().map(IdeaModel::toMap).toArray();
-            JSONArray jsonArray = new JSONArray();
-            jsonArray.put(allIdeas);
-            System.out.println(jsonArray.toString());
-            String output = jsonArray.toString();
-            JSONArray jj = new JSONArray(output);
-            System.out.println(jj.toString());
-
-            IdealogDatabase.WriteLastSyncTime(applicationContext);
-
-
-
+    /**
+     * This method cancels the auto sync task in the work manager.
+     */
+    public static void CANCEL_AUTO_SYNC(Context context,MethodChannel.Result result){
+        try {
+            WorkManager.getInstance(context).cancelAllWorkByTag(AutoSyncWorkRequestTag);
+        } finally {
+            result.success("Auto Sync Stop was called");
+        }
     }
 
 }
