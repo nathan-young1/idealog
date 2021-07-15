@@ -1,5 +1,6 @@
 package com.mobile.idealog;
 
+import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dataSyncronization.GoogleDrive;
 import databaseModels.IdeaModel;
 import databaseModels.Task;
 import databaseModels.TaskList;
@@ -23,6 +25,7 @@ import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
 
 public class MainActivity extends FlutterFragmentActivity {
+    public static Context applicationContext = null;
     final private String AutoSyncWorkRequestTag = "AutoSync";
     final private String startAutoSyncMethod = "startAutoSync";
     final private String cancelAutoSyncMethod = "cancelAutoSync";
@@ -35,7 +38,6 @@ public class MainActivity extends FlutterFragmentActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) hideSystemUI();
-
     }
 
 
@@ -61,11 +63,10 @@ public class MainActivity extends FlutterFragmentActivity {
 
             switch (call.method) {
                 case startAutoSyncMethod:
-                    try {
-                        startAutoSync();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    applicationContext = getApplicationContext();
+                    Thread newk = new Thread(new GoogleDrive());
+                    newk.start();
+                    //                        startAutoSync();
                     result.success("Auto Sync Started");
                     break;
                 case cancelAutoSyncMethod:
@@ -97,23 +98,6 @@ public class MainActivity extends FlutterFragmentActivity {
         allIdeasFromJson(output);
 
         IdealogDatabase.WriteLastSyncTime(this);
-//        Constraints workRequestConstraints = new Constraints.Builder()
-//                .setRequiredNetworkType(NetworkType.CONNECTED)
-//                .build();
-//
-//
-////        In case of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
-//
-//        PeriodicWorkRequest autoSyncWorkRequest = new PeriodicWorkRequest.Builder(AutoSync.class,1, TimeUnit.DAYS)
-//                .setConstraints(workRequestConstraints)
-//                .setBackoffCriteria(BackoffPolicy.LINEAR,10,TimeUnit.MINUTES)
-//                .addTag(AutoSyncWorkRequestTag)
-//                .build();
-//
-////        Add work request to work manager
-//        WorkManager
-//                .getInstance(this)
-//                .enqueue(autoSyncWorkRequest);
 
     }
 

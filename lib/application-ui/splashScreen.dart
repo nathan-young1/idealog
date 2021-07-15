@@ -7,6 +7,7 @@ import 'package:idealog/global/routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -21,18 +22,16 @@ class _SplashScreenState extends State<SplashScreen> {
     void initState() {
       super.initState();
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-        
+
         timer = Timer(Duration(milliseconds: 800),() async {
         if(Prefrences.instance.fingerprintEnabled){
           // fingerprint authentication is enabled
-            bool userIsAuthenticated = await authenticateWithBiometrics(calledFromLogin: true);
-            if(userIsAuthenticated)
+            if(await authenticateWithBiometrics(calledFromLogin: true))
               changeRoute();
-        }else{
+        } else
           // fingerprint authentication is not enabled
-        changeRoute();
-        }
-
+          changeRoute();
+        
         });
       });
     }

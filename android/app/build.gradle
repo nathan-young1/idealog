@@ -59,14 +59,23 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
 
             // Because the release apk was stuck on the splash screen, i added FROM HERE
             shrinkResources false
             minifyEnabled false
             // TO HERE
             signingConfig signingConfigs.release
+        }
+
+        packagingOptions {
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/license.txt'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/NOTICE.txt'
+            exclude 'META-INF/notice.txt'
+            exclude 'META-INF/ASL2.0'
         }
     }
 
@@ -75,9 +84,6 @@ android {
 
         // (Java only) implementation of workManager
         implementation "androidx.work:work-runtime:$work_version"
-
-        // optional - Multiprocess support implementation of workManager
-        implementation "androidx.work:work-multiprocess:$work_version"
 
         // Import the Firebase BoM
         implementation platform('com.google.firebase:firebase-bom:28.1.0')
@@ -92,6 +98,17 @@ android {
 
         // Also declare the dependency for the Google Play services library and specify its version
         implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
+        implementation 'com.google.http-client:google-http-client-gson:1.39.2'
+
+        implementation ('com.google.api-client:google-api-client-android:1.26.0') {
+            exclude group: 'org.apache.httpcomponents'
+        }
+
+        implementation ('com.google.apis:google-api-services-drive:v3-rev110-1.23.0') {
+            exclude group: 'org.apache.httpcomponents'
+        }
+
 
         // Add the dependencies for any other desired Firebase products
         // https://firebase.google.com/docs/android/setup#available-libraries

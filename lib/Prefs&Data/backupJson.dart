@@ -121,6 +121,11 @@ class BackupJson{
         }
     }
   }
+
+  Future<void> deleteFile() async {
+    await _driveApi.files.delete(_googleJsonFileId!);
+    print('delete');
+  }
 }
 
 

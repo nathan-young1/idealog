@@ -48,6 +48,7 @@ dependencies:
   in_app_purchase: ^1.0.6
   googleapis: ^3.0.0
   path_provider: ^2.0.2
+  workmanager: ^0.4.1
 
 
   # The following adds the Cupertino Icons font to your application.
