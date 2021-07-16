@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -15,15 +16,15 @@ import io.flutter.plugin.common.MethodChannel;
 public class SynchronizationHandler {
 
     final static private String AutoSyncWorkRequestTag = "AutoSync";
+    final static private Constraints workRequestConstraints = new Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build();
 
     /**
      * This method gives the auto sync task to the work manager.
      */
     public static void START_AUTO_SYNC(Context context, MethodChannel.Result result){
         try {
-            Constraints workRequestConstraints = new Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build();
 
 ///        In case of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
 

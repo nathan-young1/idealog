@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
+import 'package:idealog/Prefs&Data/backupJson.dart';
 import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customWidget/alertDialog.dart';
@@ -62,13 +63,17 @@ class IdeaManager{
     idea.completedTasks.forEach((completedTask) async => await AnalyticDB.instance.removeTaskFromAnalytics(completedTask));
     }
 
-  static Future<void> backupIdeasNow(List<Idea> allIdeas) async{
+
+  static Future<void> backupIdeasNow() async{
     
     await signInWithGoogle();
-
-   
-      await NativeCodeCaller.instance.updateLastBackupTime();
-      // upload to google drive
     
+    // upload to google drive
+    await BackupJson.instance.uploadToDrive();
+   
+    await NativeCodeCaller.instance.updateLastBackupTime();
+    
+    print('sync now clicked');
   }
+
 }

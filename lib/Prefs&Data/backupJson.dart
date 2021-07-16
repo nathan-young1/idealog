@@ -1,14 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
+import 'package:idealog/nativeCode/bridge.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BackupJson{
+  
   BackupJson._();
 
   static final BackupJson instance = BackupJson._();
@@ -20,6 +23,8 @@ class BackupJson{
   drive.File? _lastBackupFileIfExists;
 
   
+
+
   /// Create an authenticated client in other to use drive api.
   Future<void> _authenticateDriveUser() async {
     final authHeaders = await GoogleUserData.instance.googleSignInAccount!.authHeaders;
@@ -27,10 +32,14 @@ class BackupJson{
     _driveApi = drive.DriveApi(authenticateClient);
   }
 
+
+
   Future<void> initialize() async {
     await _authenticateDriveUser();
     await _getLastBackupFileIfExists();
   }
+
+
 
   /// Get the last backup file in google drive if any exists and set the google json id.
   Future<void> _getLastBackupFileIfExists() async {
@@ -44,8 +53,58 @@ class BackupJson{
       }
   }
 
+
+
   /// Set ID from the uploaded drive.File id.
   void _setGoogleJsonFileId(drive.File driveFile) => _googleJsonFileId = driveFile.id;
+
+
+
+
+  /// upload the file to the drive.
+  Future<void> uploadToDrive() async {
+    // if the file id exists it means we just need to update the file in google drive not create a new one.
+    bool isUpdate = _googleJsonFileId != null;
+
+  // The metadata request file
+    var driveFile = new drive.File()
+    ..name = _FILE_NAME
+    ..parents = [_DRIVE_SPACE];
+
+    String filePath = (await getTemporaryDirectory()).path + "/$_FILE_NAME";
+    // Encode to json on a different isolate.
+    try {
+      File jsonFile = new File(filePath);
+      String jsonString = await compute(_convertToJson,await IdealogDb.instance.allIdeasForJson);
+      jsonFile.writeAsStringSync(jsonString);
+
+      drive.Media driveMedia = drive.Media(jsonFile.openRead(),jsonFile.lengthSync(),contentType: 'application/json');
+
+      // if it is an update then update else create the file.
+      if(isUpdate){
+        // The metadata parents cannot be edited in update, so am setting it back to default which is Null.
+        driveFile.parents = null;
+        await _driveApi.files.update(driveFile, _googleJsonFileId!, uploadMedia: driveMedia);
+
+      } else {
+        final drive.File uploadedFile = await _driveApi.files.create(driveFile, uploadMedia: driveMedia);
+        _setGoogleJsonFileId(uploadedFile);
+      }
+
+      await jsonFile.delete();
+      await NativeCodeCaller.instance.updateLastBackupTime();
+
+    } on IOException catch (e) {
+      print('file system error $e');
+    } on drive.ApiRequestError catch (e){
+      print('api related error $e');
+    } on PlatformException catch (e){
+      print('error while writing to shared preference $e');
+    }
+  }
+
+
+
 
   /// Download the file from the drive.
   Future<void> downloadFromDrive() async {
@@ -81,10 +140,15 @@ class BackupJson{
     }
   }
 
+
+
+
   Future<void> deleteFile() async {
     await _driveApi.files.delete(_googleJsonFileId!);
     print('delete');
   }
+
+
 
   /// This is a debugging method
   Future<void> _listAllFiles() async {
@@ -95,6 +159,10 @@ class BackupJson{
 
 }
 
+
+
+/// Convert a list of strings to json format.
+String _convertToJson(List<Map<String, dynamic>> allIdeasForJson) => jsonEncode(allIdeasForJson);
 
   /// Convert a json string to object.
 List<dynamic> _fromJsonToObject(String source) => json.decode(source) as List<dynamic>;

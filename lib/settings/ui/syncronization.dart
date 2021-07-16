@@ -87,8 +87,7 @@ class Syncronization extends StatelessWidget {
                   child: Column(
                     children: [
                       GestureDetector(
-                        onTap: () async =>
-                          await IdeaManager.backupIdeasNow(Provider.of<List<Idea>>(context,listen: false)),
+                        onTap: () async => await IdeaManager.backupIdeasNow(),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
