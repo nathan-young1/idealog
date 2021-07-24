@@ -4,6 +4,7 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
+import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
@@ -129,16 +130,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
         ),
         bottomNavigationBar: GestureDetector(
             onTap: () async {
-              int orderIndex = 0;
-              int lastUncompletedOrderIndex = widget.idea.uncompletedTasks.map((e) => e.orderIndex).fold(0, (previousValue, currentValue) => max(previousValue, currentValue));
-              
-              for(var task in newTasks) { 
-                Task taskObject = Task(task: task, orderIndex: orderIndex);
-                widget.idea.addNewTask(taskObject);
-                await IdealogDb.instance.addTask(taskRow: taskObject, ideaId: widget.idea.ideaId!,lastUncompletedRowIndex: lastUncompletedOrderIndex);
-                orderIndex++;
-              }
-
+              await IdeaManager.addNewTasksToExistingIdea(idea: widget.idea, newTasks: newTasks.toList());
               await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> IdeaDetail(idea: widget.idea)));
               },
             child: Container(

@@ -101,7 +101,7 @@ class Task {
     this.orderIndex = json['orderIndex'],
     this.primaryKey = json['primaryKey'];
 
-  static DBTaskList createTasks (List<String> allTask){
+  static DBTaskList createTasks(List<String> allTask){
     DBTaskList taskList = [];
 
     for(int i = 0; i< allTask.length; i++){

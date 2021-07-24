@@ -4,7 +4,6 @@ import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/auth/code/authHandler.dart';
-import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/strings.dart';

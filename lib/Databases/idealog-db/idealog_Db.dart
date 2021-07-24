@@ -71,12 +71,10 @@ class IdealogDb {
       });
   }
 
-  Future<void> addTask({required Task taskRow, required int ideaId, required int lastUncompletedRowIndex}) async {
-
-    await dbInstance.transaction((txn) async { 
-      int uniqueIdForTask = await getUniqueId(txn,uncompletedTable);
-      await txn.insert(uncompletedTable, {Column_ideaId: '$ideaId',Column_tasks: '${taskRow.task}',Column_taskOrder: '$lastUncompletedRowIndex',Column_taskId: '$uniqueIdForTask'});
-      });
+  Future<void> addNewTasks({required DBTaskList taskList, required int ideaId}) async {
+    await dbInstance.transaction((txn) async =>
+      await _addTasksToTable(txn: txn, tasks: taskList, tableName: uncompletedTable, ideaPrimaryKey: ideaId)
+    );
   }
 
   Future<void> completeTask({required Task taskRow, required int ideaPrimaryKey, required int lastCompletedOrderIndex}) async {

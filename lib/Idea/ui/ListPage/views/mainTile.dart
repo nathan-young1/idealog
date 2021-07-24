@@ -8,7 +8,7 @@ class MainTile extends StatelessWidget {
   const MainTile({
     Key? key,
     required this.idea,
-    required this.slidableIconState
+    required this.slidableIconState,
   }) : super(key: key);
 
   final Idea idea;
@@ -16,25 +16,30 @@ class MainTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 15,bottom: 15,left: 20,right: 10),
-      decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(offset: Offset(0,0),blurRadius: 10,color: Colors.black.withOpacity(0.2))
-                  ]
-                ),
-      child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  PercentageIncidator(),
-                  IdeaTitle(idea: idea),
-                  ToggleSlidable(
-                    slidableIconState: slidableIconState
-                  )
-                ],
-              ),
+    return ValueListenableBuilder<bool>(
+      valueListenable: slidableIconState,
+      builder: (context, _slidableIsOpen,snapshot) {
+        return Container(
+          padding: EdgeInsets.only(top: 15,bottom: 15,left: 20,right: 10),
+          decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular((_slidableIsOpen)?0:10),
+                      boxShadow: [
+                        BoxShadow(offset: Offset(0,0),blurRadius: 10,color: Colors.black.withOpacity(0.2))
+                      ]
+                    ),
+          child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      PercentageIncidator(),
+                      IdeaTitle(idea: idea),
+                      ToggleSlidable(
+                        slidableIsOpen: _slidableIsOpen
+                      )
+                    ],
+                  ),
+        );
+      }
     );
   }
 }

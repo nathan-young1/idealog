@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:idealog/global/strings.dart';
 import 'package:idealog/nativeCode/methodNames.dart';

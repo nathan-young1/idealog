@@ -46,6 +46,21 @@ class IdeaManager{
       await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
   }
 
+  static Future<void> addNewTasksToExistingIdea({required Idea idea, required List<String> newTasks}) async {
+    
+    List<Task> taskList = [];
+    // Get the last orderIndex in the uncompletedTasks table, add one to it then increment from there.
+    int lastOrderIndex = idea.uncompletedTasks.map((e) => e.orderIndex).fold(0, (previousValue, currentValue) => max(previousValue, currentValue));
+    
+    for(var task in newTasks) { 
+      Task taskObject = Task(task: task, orderIndex: ++lastOrderIndex);
+      idea.addNewTask(taskObject);
+      taskList.add(taskObject);
+    }
+
+    await IdealogDb.instance.addNewTasks(taskList: taskList, ideaId: idea.ideaId!);
+  }
+
   static Future<void> deleteTask(Idea idea,Task taskRow) async {
     // I am using delete task because analytics will not throw an error 
     // if you try to delete a non-existent uncompleted task

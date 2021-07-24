@@ -94,7 +94,7 @@ class _IdeaDetailState extends State<IdeaDetail> {
                           ),
                         ),
                        SizedBox(height: 30),
-                       DetailTasksList(idea: widget.idea)
+                      TaskManager(idea: widget.idea)
                       ],
                     ),
                   ),

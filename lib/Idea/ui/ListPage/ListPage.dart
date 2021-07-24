@@ -26,8 +26,7 @@ class IdeaListPage extends StatelessWidget {
             child: Scrollbar(
               child: ListView.builder(
                 itemCount: listOfIdeas.length,
-                itemBuilder: (_,index) => IdeaCard(idea: listOfIdeas[index],
-                slidableIconState: ValueNotifier(false)),
+                itemBuilder: (_,index) => IdeaCard(idea: listOfIdeas[index]),
               ),
             ),
           )

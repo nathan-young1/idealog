@@ -10,8 +10,8 @@ import 'mainTile.dart';
 
 class IdeaCard extends StatelessWidget {
   final Idea idea;
-  final ValueNotifier<bool> slidableIconState;
-  IdeaCard({required this.idea,required this.slidableIconState});
+  final ValueNotifier<bool> slidableIconState = ValueNotifier(false);
+  IdeaCard({required this.idea});
 
 
   @override
@@ -35,13 +35,8 @@ class IdeaCard extends StatelessWidget {
             onSlideAnimationChanged: (_){}
             ),
             secondaryActions: [
-                      Transform.translate(
-                        offset: Offset(-8,0),
-                        child: TaskAdderSlideAction(idea: idea)),
-              
-                      Transform.translate(
-                        offset: Offset(-18,0),
-                        child: DeleteSlideAction(idea: idea))
+                      TaskAdderSlideAction(idea: idea),
+                      DeleteSlideAction(idea: idea)
                       ],
             child: MainTile(
                   idea: idea,

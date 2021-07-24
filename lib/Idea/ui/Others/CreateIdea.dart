@@ -1,6 +1,5 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customAppBar/appBar.dart';
@@ -8,6 +7,8 @@ import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
+
+  enum PRIORITY{HIGH,MEDIUM,LOW}
 
 class NewIdea extends StatefulWidget {
   @override
@@ -43,6 +44,7 @@ class _NewIdeaState extends State<NewIdea> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: Padding(
           padding: EdgeInsets.only(bottom: 10),
           child: SingleChildScrollView(
@@ -118,12 +120,124 @@ class _NewIdeaState extends State<NewIdea> {
         ),
           bottomNavigationBar: GestureDetector(
             onTap: () async {
-                if(formKey.currentState!.validate())
-                    await IdeaManager.addIdeaToDb(
-                    context: context,
-                    ideaTitle: ideaTitle.text,
-                    moreDetails: moreDetails.text,
-                    tasks: tasks);
+              FocusNode taskFieldFocus = FocusNode();
+              int i=0;
+                // taskFieldFocus.addListener((){
+                //   // if keyboard is open and text field does not have focus, give the text field focus.
+                //   if(MediaQuery.of(context).viewInsets.bottom > 0 && !taskFieldFocus.hasFocus)
+                //   taskFieldFocus.requestFocus();
+                // });
+
+                // if(formKey.currentState!.validate())
+                //     await IdeaManager.addIdeaToDb(
+                //     context: context,
+                //     ideaTitle: ideaTitle.text,
+                //     moreDetails: moreDetails.text,
+                //     tasks: tasks);
+                showModalBottomSheet(
+                enableDrag: false,
+                isScrollControlled: true,
+                isDismissible: false,
+                context: context,
+                builder: (BuildContext context) =>
+                SingleChildScrollView(
+                  child: AnimatedPadding(
+                    duration: Duration(milliseconds: 200),
+                    curve: Curves.easeOut,
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                              GestureDetector(
+                                onTap: ()=> Navigator.pop(context),
+                                child: Container(
+                                  padding: EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: DarkRed, width: 2),
+                                    borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child: Icon(Icons.close, size: 25, color: DarkRed),
+                                ),
+                              ),
+                      
+                              Text('New Task',style: overpass.copyWith(fontSize: 25)),
+                      
+                              ElevatedButton.icon(onPressed: (){addNewTask();},
+                               icon: Icon(Icons.add), label: Text('Add',style: TextStyle(fontSize: 20)),
+                               style: ButtonStyle(
+                                 backgroundColor: MaterialStateProperty.resolveWith((states) => DarkBlue)
+                               ),
+                               )
+                            ],),
+                          ),
+                      
+                          Text('Set Priority', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
+                          DropdownButton<PRIORITY>(
+                            value: PRIORITY.MEDIUM,
+                            items: [
+                              DropdownMenuItem(child: Text("High"),value:PRIORITY.HIGH),
+                              DropdownMenuItem(child: Text("Medium"),value:PRIORITY.MEDIUM),
+                              DropdownMenuItem(child: Text("Low"),value:PRIORITY.LOW)
+                            ],
+                            onChanged: (PRIORITY? value){}),
+                          
+                          SizedBox(height: 30),
+                          Text('Task:', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
+                          SizedBox(height: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                              BoxShadow(offset: Offset(0,0),blurRadius: 10,color: Colors.black.withOpacity(0.2))
+                            ]
+                            ),
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: Focus(
+                              onFocusChange: (hasFocus){
+                                if(!hasFocus && MediaQuery.of(context).viewInsets.bottom > 0){
+                                  print(++i);
+                                taskFieldFocus.requestFocus();
+                                }
+                              },
+                              child: TextFormField(
+                                controller: taskField,
+                                focusNode: taskFieldFocus,
+                                keyboardType: TextInputType.text,
+                                minLines: 2,
+                                maxLines: null,
+                                onFieldSubmitted: (_){
+                                  taskFieldFocus.requestFocus();
+                                  addNewTask();
+                                },
+                                style: TextStyle(fontSize: 18),
+                                decoration: underlineAndFilled.copyWith(
+                                  labelText: 'Task',
+                                  fillColor: Colors.white,
+                                  border: InputBorder.none,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide.none
+                                  ),
+                                  focusedBorder: InputBorder.none,
+                                  
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 30)
+                        ],
+                      ),
+                    ),
+                  ),
+                ));
               },
             child: Container(
               height: 65,

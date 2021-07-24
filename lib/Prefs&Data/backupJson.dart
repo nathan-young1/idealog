@@ -11,7 +11,7 @@ import 'package:idealog/nativeCode/bridge.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BackupJson{
-  
+
   BackupJson._();
 
   static final BackupJson instance = BackupJson._();
@@ -151,6 +151,7 @@ class BackupJson{
 
 
   /// This is a debugging method
+  // ignore: unused_element
   Future<void> _listAllFiles() async {
     List<drive.File> filesInAppScope = (await _driveApi.files.list(spaces: _DRIVE_SPACE)).files!;
     List<String?> ids = filesInAppScope.map((e) => e.id).toList();

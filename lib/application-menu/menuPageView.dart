@@ -45,11 +45,11 @@ class MenuPageView extends StatelessWidget {
                   floatingActionButton: Visibility(
                         visible: (Provider.of<BottomNavController>(context).currentPage == ActiveNavTab.Ideas),
                         child: FloatingActionButton(
+                          tooltip: "Add a new idea",
                           elevation: 10,
                           backgroundColor: !userPref.isDarkMode ?DarkBlue :ActiveTabLight,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           onPressed: ()=> Navigator.pushNamed(context, addNewIdeaPage),
-                          child: Icon(Icons.add,size: 40,color: Colors.white)
+                          child: Icon(Icons.add,size: 32,color: Colors.white)
                         ),
                       ),
               bottomNavigationBar: BottomNavBar(),

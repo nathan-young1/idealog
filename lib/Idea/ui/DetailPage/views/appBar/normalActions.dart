@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
-import 'package:idealog/Idea/ui/Others/AddTasks.dart';
-import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 
@@ -19,16 +18,10 @@ class NormalActions extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         IconButton(
-         onPressed: ()=> SearchController.instance.startSearch(),
-         icon: Icon(Icons.search_outlined),color: Black242424,iconSize: 30),
-        SizedBox(width: 10),
-
-        IconButton(
-         icon: Icon(Icons.add,size: 32,color: Black242424),
-         onPressed: () =>
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> AddToExistingIdea(idea: idea)))
+         icon: Icon(FeatherIcons.heart,size: 28,color: Black242424),
+         onPressed: (){}
         ),
-        SizedBox(width: 10),
+        SizedBox(width: 5),
 
         PopupMenuButton(
             iconSize: 30,
