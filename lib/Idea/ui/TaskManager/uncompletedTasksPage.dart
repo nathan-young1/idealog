@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 
-class HighPriorityTaskPage extends StatelessWidget {
-  const HighPriorityTaskPage({ Key? key, required this.idea}) : super(key: key);
+class UncompletedTasksPage extends StatelessWidget {
+  const UncompletedTasksPage({Key? key, required this.idea}) : super(key: key);
   final Idea idea;
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HighPriorityColor,
+        backgroundColor: uncompletedTasksColor,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -23,7 +23,7 @@ class HighPriorityTaskPage extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 5,
-                      child: Text("High Priority Tasks", style: overpass.copyWith(fontSize: 25, color: Colors.white))),
+                      child: Text("Uncompleted Tasks", style: overpass.copyWith(fontSize: 25, color: Colors.white))),
                     Expanded(
                       flex: 1,
                       child: IconButton(onPressed: ()=> Navigator.of(context).pop(),
@@ -44,17 +44,51 @@ class HighPriorityTaskPage extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(bottom: 15.0),
-                          child: HighPriorityMenu(),
+                          child: UncompletedTaskMenu(),
                         ),
-                        ...idea.uncompletedTasks.where((task)=> task.priority == Priority_High)
-                        .map((uncompletedTask) => 
-                             ListTile(
-                            leading: Checkbox(value: false, onChanged: (bool? value) {}),
-                            title: Text(uncompletedTask.task),
-                            trailing: IconButton(icon: Icon(Icons.close), onPressed: (){})
+                        // ...idea.uncompletedTasks.map((uncompletedTask) => 
+                        //      ListTile(
+                        //     leading: Checkbox(value: false, onChanged: (bool? value) {}),
+                        //     title: Text(uncompletedTask.task),
+                        //     trailing: IconButton(icon: Icon(Icons.close), onPressed: (){})
                             
-                              ),
-                        ).toList()
+                        //       ),
+                        // ).toList(),
+
+                        GroupedListView(
+                          shrinkWrap: true,
+                          elements: idea.uncompletedTasks,
+                          groupBy: (Task task)=> task.priority,
+                          groupSeparatorBuilder: (int? priority) {
+                            switch(priority){
+                              case Priority_High:
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                                  child: Text('High', style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.bold)),
+                                );
+  
+                              case Priority_Medium:
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                                  child: Text('Medium', style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.bold)),
+                                );
+
+                              case Priority_Low:
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                                  child: Text('Low', style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.bold)),
+                                );
+
+                              default:
+                                return Container();
+                            }
+                          },
+                          itemBuilder: (context, Task taskRow)=> 
+                            ListTile(
+                            leading: Checkbox(value: false, onChanged: (bool? value) {}),
+                            title: Text(taskRow.task),
+                            trailing: IconButton(icon: Icon(Icons.close), onPressed: (){})
+                              )),
                       ],
                     ),
                   )
@@ -67,10 +101,11 @@ class HighPriorityTaskPage extends StatelessWidget {
   }
 }
 
+
 enum _Menu{ReorderTasks}
 
-class HighPriorityMenu extends StatelessWidget {
-  const HighPriorityMenu({
+class UncompletedTaskMenu extends StatelessWidget {
+  const UncompletedTaskMenu({
     Key? key,
   }) : super(key: key);
 
