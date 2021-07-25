@@ -38,9 +38,16 @@ class IdealogDb {
       List<Task> uncompletedTasks = idea.uncompletedTasks;
 
       // Insert the idea into the database
-      int uniqueIdForIdea = await getUniqueId(txn,ideasTable);
-      await txn.insert(ideasTable, {Column_ideaTitle: idea.ideaTitle,Column_moreDetails: idea.moreDetails??'',Column_ideaId: uniqueIdForIdea});
+      int uniqueIdForIdea = await getUniqueId(txn,ideaTable);
+      await txn.insert(ideaTable, {
+        Column_ideaTitle: idea.ideaTitle,
+        Column_moreDetails: idea.moreDetails??'',
+        Column_ideaId: uniqueIdForIdea,
+        Column_favorite: idea.isFavorite.toString()
+        });
+
       await _putTasksInTheirCorrespondingTable(txn: txn, uncompletedTasks: uncompletedTasks, completedTasks: completedTasks, ideaPrimaryKey: uniqueIdForIdea);
+
       });
   }
 
@@ -50,7 +57,7 @@ class IdealogDb {
       var batch = txn.batch();
       Function delete = (String tableName) => batch.delete(tableName,where: '$Column_ideaId = ?',whereArgs: [ideaId]);
 
-      delete(ideasTable);
+      delete(ideaTable);
       delete(completedTable);
       delete(uncompletedTable);
 
@@ -86,7 +93,7 @@ class IdealogDb {
 
       batch.delete(uncompletedTable,where: '$Column_taskId = ?',whereArgs: [taskRow.primaryKey]);
       // Add one to the last Order index before adding it to the completed table
-      batch.insert(completedTable, {Column_ideaId: '$ideaPrimaryKey',Column_tasks: '${taskRow.task}',Column_taskOrder: '${++lastCompletedOrderIndex}',Column_taskId: uniqueIdForTask});
+      batch.insert(completedTable, {Column_ideaId: '$ideaPrimaryKey',Column_task: '${taskRow.task}',Column_taskOrder: '${++lastCompletedOrderIndex}',Column_taskId: uniqueIdForTask});
 
       await batch.commit(noResult: true);
       });
@@ -100,7 +107,7 @@ class IdealogDb {
       int uniqueIdForTask = await getUniqueId(txn,uncompletedTable);
       batch.delete(completedTable,where: '$Column_taskId = ?',whereArgs: [taskRow.primaryKey]);
       // Add one to the last Order index before adding it to the uncompleted table
-      batch.insert(uncompletedTable, {Column_ideaId: '$ideaPrimaryKey',Column_tasks: '${taskRow.task}',Column_taskOrder: '${++lastUncompletedOrderIndex}',Column_taskId: uniqueIdForTask});
+      batch.insert(uncompletedTable, {Column_ideaId: '$ideaPrimaryKey',Column_task: '${taskRow.task}',Column_taskOrder: '${++lastUncompletedOrderIndex}',Column_taskId: uniqueIdForTask});
 
       await batch.commit(noResult: true);
     });
@@ -109,7 +116,7 @@ class IdealogDb {
 
   Future<void> changeMoreDetail({required int ideaId, required String newMoreDetail}) async {
       await dbInstance.transaction((txn) async {
-        await txn.update(ideasTable,
+        await txn.update(ideaTable,
           {Column_moreDetails : newMoreDetail},
           where: '$Column_ideaId = ?',
           whereArgs: [ideaId]);
@@ -135,20 +142,28 @@ class IdealogDb {
       await dbInstance.transaction((txn) async {
         await _createTablesIfNotExist(txn);
 
-        var allIdeasFromQuery = await txn.query(ideasTable);
+        var allIdeasFromQuery = await txn.query(ideaTable);
       
         for(var idea in allIdeasFromQuery){
           int ideaId = int.parse(idea[Column_ideaId].toString());
 
           Map<String, DBTaskList> tasks = await getTasksForIdea(ideaId: ideaId, txn: txn);
 
-          Idea test = Idea.readFromDb(
-           ideaTitle: idea[Column_ideaTitle].toString(),
-           completedTasks: tasks[completedTable]!,
-           ideaId: ideaId,
-           uncompletedTasks: tasks[uncompletedTable]!,
-           moreDetails: idea[Column_moreDetails].toString()
-           );
+          // Idea test = Idea.readFromDb(
+          //  ideaTitle: idea[Column_ideaTitle].toString(),
+          //  completedTasks: tasks[completedTable]!,
+          //  ideaId: ideaId,
+          //  uncompletedTasks: tasks[uncompletedTable]!,
+          //  moreDetails: idea[Column_moreDetails].toString()
+          //  );
+
+          Idea test = Idea.test()
+              ..ideaTitle = idea[Column_ideaTitle].toString()
+              ..completedTasks = tasks[completedTable]!
+              ..ideaId = ideaId
+              ..uncompletedTasks = tasks[uncompletedTable]!
+              ..moreDetails = idea[Column_moreDetails].toString()
+              ..isFavorite = (idea[Column_favorite].toString() == 'true') ? true : false;
           
           allIdeasFromDb.add(test);
         }
@@ -160,7 +175,7 @@ class IdealogDb {
 
   /// Drop all tables in the database
   Future<void> dropAllTablesInDb() async {
-    await dbInstance.execute('Drop Table $ideasTable');
+    await dbInstance.execute('Drop Table $ideaTable');
     await dbInstance.execute('Drop Table $completedTable');
     await dbInstance.execute('Drop Table $uncompletedTable');
     notifyListeners();
@@ -169,7 +184,7 @@ class IdealogDb {
   
   /// Get the last primary key in the table ,then increment it by one for a new unique key.
   Future<int> getUniqueId(Transaction txn,String tableName) async {
-    String idColumn = (tableName == ideasTable)?Column_ideaId:Column_taskId;
+    String idColumn = (tableName == ideaTable)?Column_ideaId:Column_taskId;
 
     var queryResult = await txn.query(tableName,orderBy: '$idColumn DESC LIMIT 1',columns: [idColumn]);
 
@@ -210,17 +225,29 @@ class IdealogDb {
 
   /// Convert the Db query result to a Task object
   Task _convertToTask(Map<String, Object?> e){
-      var task = e[Column_tasks]!.toString();
+      var task = e[Column_task]!.toString();
       var orderIndex = e[Column_taskOrder] as int;
       var primaryKey = e[Column_taskId] as int;
-      return Task(task: task, orderIndex: orderIndex,primaryKey: primaryKey);
+      var priority = e[Column_taskPriority] as int;
+      // return Task(task: task, orderIndex: orderIndex,primaryKey: primaryKey);
+      return Task.test()
+                  ..task = task
+                  ..orderIndex = orderIndex
+                  ..primaryKey = primaryKey
+                  ..priority = priority;
   }
 
   /// Add tasks to the specified table.
   Future<void> _addTasksToTable({required Transaction txn,required DBTaskList tasks,required String tableName,required int ideaPrimaryKey}) async {
         for(var row in tasks){
           int uniqueIdForTask = await getUniqueId(txn,tableName);
-          await txn.insert(tableName, {Column_tasks: '${row.task}',Column_taskOrder: '${row.orderIndex}',Column_ideaId: '$ideaPrimaryKey',Column_taskId: uniqueIdForTask});
+          await txn.insert(tableName, {
+            Column_task: '${row.task}',
+            Column_taskOrder: '${row.orderIndex}',
+            Column_ideaId: '$ideaPrimaryKey',
+            Column_taskId: uniqueIdForTask,
+            Column_taskPriority: '${row.priority}'
+            });
         }
   }
 

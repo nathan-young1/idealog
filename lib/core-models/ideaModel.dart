@@ -4,8 +4,13 @@ import 'package:idealog/global/typedef.dart';
 
 class Idea extends TaskList{
   int? ideaId;
-  String ideaTitle;
+  // Made ideaTitle nullable
+  late String ideaTitle;
   String? moreDetails;
+  bool isFavorite = false;
+
+  Idea.test():super.test();
+
   
   Idea({required this.ideaTitle,this.moreDetails,required List<String> tasksToCreate}):super(tasksToCreate: tasksToCreate);
 
@@ -52,6 +57,7 @@ abstract class TaskList with ChangeNotifier{
         return percent;
   }
   
+  TaskList.test();
   TaskList({required List<String> tasksToCreate})
     :this.uncompletedTasks = Task.createTasks(tasksToCreate);
 
@@ -90,23 +96,28 @@ abstract class TaskList with ChangeNotifier{
 
 
 class Task {
-  String task;
-  int orderIndex;
+  late String task;
+  late int orderIndex;
   int? primaryKey;
+  int? priority;
+
+  Task.test();
 
   Task.fromDb({required this.task, required this.orderIndex, required this.primaryKey});
+  Task.jj({required this.task, required this.orderIndex,this.primaryKey, required this.priority});
   Task({required this.task, required this.orderIndex,this.primaryKey});
   Task.fromJson({required Map<String, dynamic> json}):
     this.task = json['task'],
     this.orderIndex = json['orderIndex'],
-    this.primaryKey = json['primaryKey'];
+    this.primaryKey = json['primaryKey'],
+    this.priority = json['priority'];
 
   static DBTaskList createTasks(List<String> allTask){
     DBTaskList taskList = [];
 
     for(int i = 0; i< allTask.length; i++){
-      Task newTask = Task(task: allTask[i], orderIndex: i);
-      taskList.add(newTask);
+      // Task newTask = Task(task: allTask[i], orderIndex: i);
+      // taskList.add(newTask);
     }
     return taskList;
   }
@@ -115,7 +126,8 @@ class Task {
     return {
       "task": task,
       "orderIndex": orderIndex,
-      "primaryKey": primaryKey
+      "primaryKey": primaryKey,
+      "priority": priority
     };
   }
 }

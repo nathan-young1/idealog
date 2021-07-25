@@ -12,12 +12,15 @@ import 'package:idealog/nativeCode/bridge.dart';
 
 class IdeaManager{
 
-  static Future<void> addIdeaToDb({required String ideaTitle,String? moreDetails,required Set<String> tasks,required BuildContext context}) async {
+  static Future<void> addIdeaToDb({required String ideaTitle,String? moreDetails,required BuildContext context,required Idea newIdea}) async {
 
     // ignore: unawaited_futures
     showDialog(context: context, builder: (context) => progressAlertDialog);
     
-    var newIdea = Idea(ideaTitle: ideaTitle,moreDetails: moreDetails,tasksToCreate: tasks.toList());
+    // Give the idea a title and description
+    newIdea
+      ..ideaTitle = ideaTitle
+      ..moreDetails = moreDetails;
 
     await IdealogDb.instance.writeToDb(idea: newIdea);
     Navigator.popUntil(context, ModalRoute.withName(menuPageView));
