@@ -1,9 +1,21 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:idealog/settings/code/PremiumClass.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
-class UpgradeToPremium extends StatelessWidget {
+
+const Set<String> _ProductId = <String>{'premium_plan'};
+
+class UpgradeToPremium extends StatefulWidget {
+  @override
+  _UpgradeToPremiumState createState() => _UpgradeToPremiumState();
+}
+
+class _UpgradeToPremiumState extends State<UpgradeToPremium> {
+
   @override
   Widget build(BuildContext context) {
 
@@ -36,7 +48,7 @@ class UpgradeToPremium extends StatelessWidget {
                   children: [
                     _Features('Backup Data'),
                     SizedBox(height: 10),
-                    _Features('Authentication (fingerprint or face id)')
+                    _Features('Biometric Authentication')
                   ],
                 ),
               ),
@@ -95,7 +107,11 @@ class _PurchaseButton extends StatelessWidget {
         Container(
           height: 55,
           width: 220,
-          child: ElevatedButton.icon(onPressed: (){},
+          child: ElevatedButton.icon(
+          onPressed: () async {
+            await Premium.initializePlugin();
+            await Premium.buyProduct();
+          },
           style: ButtonStyle(
             backgroundColor: MaterialStateColor.resolveWith((states) => Colors.teal[800]!),
             shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))
