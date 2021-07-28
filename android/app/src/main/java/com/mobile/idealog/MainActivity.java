@@ -66,10 +66,11 @@ public class MainActivity extends FlutterFragmentActivity {
         for(int i = 0; i < jj.length(); i++){
 
             JSONObject obj = jj.getJSONObject(i);
-            IdeaModel idea = new IdeaModel(obj.getInt("ideaId"),obj.getString("ideaTitle"),obj.getString("moreDetails"), TaskList.FromJsonArray(obj.getJSONArray("uncompletedTasks")),TaskList.FromJsonArray(obj.getJSONArray("completedTasks")));
+            IdeaModel idea = new IdeaModel(obj.getInt("ideaId"),obj.getString("ideaTitle"),obj.getString("moreDetails"), obj.getString("isFavorite"),TaskList.FromJsonArray(obj.getJSONArray("uncompletedTasks")),TaskList.FromJsonArray(obj.getJSONArray("completedTasks")));
             System.out.println("ID: "+idea.ideaId);
             System.out.println("Title: "+idea.ideaTitle);
             System.out.println("MoreDetails: "+idea.moreDetails);
+            System.out.println("Favorite: "+ idea.isFavorite);
             System.out.println("CompletedTasks: "+idea.completedTasks.stream().map(Task::toMap).collect(Collectors.toList()));
             System.out.println("unCompletedTasks:  "+idea.uncompletedTasks.stream().map(Task::toMap).collect(Collectors.toList()));
             allIdeas.add(idea);

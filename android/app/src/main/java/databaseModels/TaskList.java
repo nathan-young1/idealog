@@ -30,7 +30,9 @@ public abstract class TaskList {
                     new Task(
                             eachTask.getString("task"),
                             eachTask.getInt("primaryKey"),
-                            eachTask.getInt("orderIndex"))
+                            eachTask.getInt("orderIndex"),
+                            eachTask.getInt("priority")
+                    )
             );
         }
 

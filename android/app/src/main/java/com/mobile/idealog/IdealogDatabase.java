@@ -11,23 +11,25 @@ import androidx.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import databaseModels.IdeaModel;
 import databaseModels.Task;
 
 public class IdealogDatabase extends SQLiteOpenHelper {
 //  Database variables
-    public static final String IDEAS = "ideasTable";
+    public static final String IDEAS = "ideaTable";
     public static final String COLUMN_Idea_ID = "ideaId";
     public static final String COLUMN_IDEA_TITLE = "ideaTitle";
     public static final String Column_MoreDetails = "moreDetails";
-    public static final String Column_tasks = "tasks";
+    public static final String Column_task = "task";
     public static final String Column_taskOrder = "taskOrder";
     public static final String Column_taskId = "taskId";
+    public static final String Column_taskPriority = "taskPriority";
     public static final String CompletedTable = "CompletedTable";
     public static final String UncompletedTable = "UncompletedTable";
     public static final String IdealogDbName = "idealog.sqlite";
+    public static final String Column_favorite = "favorite";
+
 
 //  SharedPreferences variables
     public static final String LAST_SYNC_SHARED_PREFERENCES_PAGE = "Backup";
@@ -51,19 +53,23 @@ public class IdealogDatabase extends SQLiteOpenHelper {
 
 
     private ArrayList<Task> _GetTasksForIdea(String tableName,int IdeaId,SQLiteDatabase db){
-        Cursor tableCursor = db.query(tableName, new String[]{Column_taskId, Column_taskOrder, Column_tasks},COLUMN_Idea_ID+" = ?",new String[]{String.valueOf(IdeaId)},null,null,null);
+        Cursor tableCursor = db.query(tableName, new String[]{Column_taskId, Column_taskOrder, Column_task},COLUMN_Idea_ID+" = ?",new String[]{String.valueOf(IdeaId)},null,null,null);
         ArrayList<Task> ListOfTasks = new ArrayList<>();
 
         if(tableCursor.moveToFirst()){
             do{
                 int columnTaskId = tableCursor.getColumnIndex(Column_taskId);
-                int columnTask = tableCursor.getColumnIndex(Column_tasks);
+                int columnTask = tableCursor.getColumnIndex(Column_task);
                 int columnOrderIndex = tableCursor.getColumnIndex(Column_taskOrder);
+                int columnPriority = tableCursor.getColumnIndex(Column_taskPriority);
 
                 int taskId = tableCursor.getInt(columnTaskId);
                 String task = tableCursor.getString(columnTask);
                 int orderIndex = tableCursor.getInt(columnOrderIndex);
-                Task taskRow = new Task(task, taskId, orderIndex);
+                int priority = tableCursor.getInt(columnPriority);
+
+                // Create an instance of the task.
+                Task taskRow = new Task(task, taskId, orderIndex, priority);
                 ListOfTasks.add(taskRow);
             } while (tableCursor.moveToNext());
         }
@@ -85,14 +91,17 @@ public class IdealogDatabase extends SQLiteOpenHelper {
                     int columnUniqueId = ideasCursor.getColumnIndex(COLUMN_Idea_ID);
                     int columnIdeaTitle = ideasCursor.getColumnIndex(COLUMN_IDEA_TITLE);
                     int columnMoreDetails = ideasCursor.getColumnIndex(Column_MoreDetails);
+                    int columnIsFavorite = ideasCursor.getColumnIndex(Column_favorite);
+
                     int IdeaId = ideasCursor.getInt(columnUniqueId);
                     String IdeaTitle = ideasCursor.getString(columnIdeaTitle);
                     String MoreDetails = ideasCursor.getString(columnMoreDetails);
+                    String isFavorite = ideasCursor.getString(columnIsFavorite);
 
                     ArrayList<Task> completedTasks = _GetTasksForIdea(CompletedTable, IdeaId, db);
                     ArrayList<Task> uncompletedTasks = _GetTasksForIdea(UncompletedTable, IdeaId, db);
 
-                    IdeaModel newSchedule = new IdeaModel(IdeaId, IdeaTitle, MoreDetails,uncompletedTasks,completedTasks);
+                    IdeaModel newSchedule = new IdeaModel(IdeaId, IdeaTitle, MoreDetails, isFavorite, uncompletedTasks,completedTasks);
                     ListOfIdeas.add(newSchedule);
                 } while (ideasCursor.moveToNext());
             }
