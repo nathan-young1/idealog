@@ -5,6 +5,7 @@ import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/design/theme.dart';
 import 'package:idealog/global/routes.dart';
+import 'package:idealog/settings/code/PremiumClass.dart';
 import 'package:idealog/settings/ui/manageAccount.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,8 @@ class Idealog extends StatelessWidget {
                             ChangeNotifierProvider<GoogleUserData>.value(value: GoogleUserData.instance),
                             ChangeNotifierProvider<Prefrences>.value(value: Prefrences.instance),
                             ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance),
-                            ChangeNotifierProvider<SearchController>.value(value: SearchController.instance)
+                            ChangeNotifierProvider<SearchController>.value(value: SearchController.instance),
+                            ChangeNotifierProvider<Premium>.value(value: Premium.instance)
                           ],
                           child: Builder(
                             builder: (BuildContext context) => MaterialApp(

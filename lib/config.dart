@@ -3,9 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:idealog/settings/code/PremiumClass.dart';
 import 'Databases/analytics-db/analyticsSql.dart';
 import 'Databases/idealog-db/idealog_Db.dart';
-import 'Prefs&Data/backupJson.dart';
 import 'Prefs&Data/prefs.dart';
-import 'auth/code/authHandler.dart';
 import 'nativeCode/bridge.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
@@ -20,12 +18,13 @@ Future<void> InitializeAppConfig() async {
       NativeCodeCaller.instance.initialize(),
       ]);
 
-  
-  await signInWithGoogle();
+  await Premium.instance.initializePlugin();
   await AnalyticDB.instance.clearObsoluteData();
-  await BackupJson.instance.initialize();
+
+
   // await IdealogDb.instance.dropAllTablesInDb();
 
+  // await BackupJson.instance.initialize();
   // await BackupJson.instance.deleteFile();
   // await BackupJson.instance.downloadFromDrive();
   

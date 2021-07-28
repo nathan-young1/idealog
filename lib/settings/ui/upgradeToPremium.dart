@@ -5,6 +5,7 @@ import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/settings/code/PremiumClass.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:provider/provider.dart';
 
 
 const Set<String> _ProductId = <String>{'premium_plan'};
@@ -107,11 +108,15 @@ class _PurchaseButton extends StatelessWidget {
         Container(
           height: 55,
           width: 220,
-          child: ElevatedButton.icon(
-          onPressed: () async {
-            await Premium.initializePlugin();
-            await Premium.buyProduct();
-          },
+          child: Provider.of<Premium>(context).isPremiumUser
+          ?Container(
+            height: 55,
+            width: 220,
+            color: LightGray,
+            child: Text('Purchased', style: poppins.copyWith(fontSize: 18)),
+          )
+          :ElevatedButton.icon(
+          onPressed: () async => await Premium.buyProduct(),
           style: ButtonStyle(
             backgroundColor: MaterialStateColor.resolveWith((states) => Colors.teal[800]!),
             shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))
