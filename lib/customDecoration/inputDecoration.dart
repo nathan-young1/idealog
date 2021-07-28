@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 
-InputDecoration underlineAndFilled = InputDecoration(
+final InputDecoration formTextField = InputDecoration(
   filled: true,
+  fillColor: Colors.white,
   labelStyle: TextStyle(fontSize: 15),
   errorStyle: TextStyle(fontSize: 15),
   border: UnderlineInputBorder(
-    borderRadius: BorderRadius.only(
-      topLeft: Radius.circular(15),
-      topRight: Radius.circular(15))
-  )
+    borderSide: BorderSide.none,
+    borderRadius: BorderRadius.circular(5)
+  ),
+);
+
+final BoxDecoration elevatedBoxDecoration = BoxDecoration(
+  boxShadow: [
+    BoxShadow(
+    offset: Offset(0,0),
+    blurRadius: 10,
+    color: Colors.black.withOpacity(0.2))
+  ]
 );

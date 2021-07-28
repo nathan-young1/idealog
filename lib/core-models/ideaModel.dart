@@ -20,15 +20,20 @@ class Idea extends TaskList{
   ideaId = json['ideaId'],
   ideaTitle = json['ideaTitle'],
   moreDetails = json['moreDetails'],
+  isFavorite = json['favorite'],
   super.fromDb(completedTasks: _jsonObject_To_Task(json['completedTasks']),uncompletedTasks: _jsonObject_To_Task(json['uncompletedTasks']));
 
   String? changeMoreDetail(String? newDetails)=> moreDetails= newDetails;
+
+  void makeFavorite()=> isFavorite = true;
+  void unFavorite()=> isFavorite = false;
 
   Map<String, dynamic> toMap(){
     return {
         'ideaId': ideaId,
         'ideaTitle': ideaTitle,
         'moreDetails': moreDetails,
+        'favorite': isFavorite,
         'completedTasks': _taskToMap(completedTasks),
         'uncompletedTasks': _taskToMap(uncompletedTasks)
     };

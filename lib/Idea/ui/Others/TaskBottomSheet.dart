@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/core-models/ideaModel.dart';
@@ -8,8 +10,9 @@ import 'package:idealog/design/textStyles.dart';
 // ignore: must_be_immutable
 class AddTaskBottomSheet extends StatelessWidget {
 
-  AddTaskBottomSheet(this.idea);
-  final Idea idea;
+  AddTaskBottomSheet(this.addBottomSheetTaskToList);
+  Function(Task task) addBottomSheetTaskToList;
+
 
   final TextEditingController taskField = TextEditingController();
   final FocusNode taskFieldFocus = FocusNode();
@@ -17,13 +20,13 @@ class AddTaskBottomSheet extends StatelessWidget {
 
   void _AddTaskToList(){
     if(taskField.text != ''){
+      
       // Just create the task with priority and task then use the uncompletedTasks length as the order index.
       Task newTask = Task.test()
-                      ..orderIndex = idea.uncompletedTasks.length
                       ..priority = dropDownPriority
                       ..task = taskField.text;
-
-      idea.addNewTask(newTask);
+            
+      addBottomSheetTaskToList(newTask);
       
       // Clear the keyboard
       taskField.clear();
@@ -38,13 +41,13 @@ class AddTaskBottomSheet extends StatelessWidget {
       curve: Curves.easeOut,
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(vertical: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -56,12 +59,12 @@ class AddTaskBottomSheet extends StatelessWidget {
                       border: Border.all(color: DarkRed, width: 2),
                       borderRadius: BorderRadius.circular(5)
                     ),
-                    child: Icon(Icons.close, size: 25, color: DarkRed),
+                    child: Icon(Icons.close, size: 24, color: DarkRed),
                   ),
                 ),
-        
+                  
                 Text('New Task',style: overpass.copyWith(fontSize: 25)),
-        
+                  
                 ElevatedButton.icon(onPressed: ()=> _AddTaskToList(),
                  icon: Icon(Icons.add), label: Text('Add',style: TextStyle(fontSize: 20)),
                  style: ButtonStyle(
@@ -72,17 +75,24 @@ class AddTaskBottomSheet extends StatelessWidget {
             ),
         
             Text('Set Priority', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
+            SizedBox(height: 10),
             StatefulBuilder(
               builder: (context, _setState) {
                 
-                return DropdownButton<int>(
-                  value: dropDownPriority,
-                  items: [
-                    DropdownMenuItem(child: Text("High"),value: Priority_High),
-                    DropdownMenuItem(child: Text("Medium"),value: Priority_Medium),
-                    DropdownMenuItem(child: Text("Low"),value: Priority_Low)
-                  ],
-                  onChanged: (int? value)=> _setState(()=> dropDownPriority = value!));
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  decoration: elevatedBoxDecoration.copyWith(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<int>(
+                      value: dropDownPriority,
+                      items: [
+                        DropdownMenuItem(child: Text("High"),value: Priority_High),
+                        DropdownMenuItem(child: Text("Medium"),value: Priority_Medium),
+                        DropdownMenuItem(child: Text("Low"),value: Priority_Low)
+                      ],
+                      onChanged: (int? value)=> _setState(()=> dropDownPriority = value!)),
+                  ),
+                );
               }
             ),
             
@@ -90,13 +100,7 @@ class AddTaskBottomSheet extends StatelessWidget {
             Text('Task:', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
             SizedBox(height: 10),
             Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                BoxShadow(offset: Offset(0,0),blurRadius: 10,color: Colors.black.withOpacity(0.2))
-              ]
-              ),
-              width: MediaQuery.of(context).size.width * 0.8,
+              decoration: elevatedBoxDecoration,
               child: Focus(
                 onFocusChange: (hasFocus){
                   // if keyboard is open and textfield does not have focus give it focus,
@@ -109,20 +113,10 @@ class AddTaskBottomSheet extends StatelessWidget {
                   controller: taskField,
                   focusNode: taskFieldFocus,
                   keyboardType: TextInputType.text,
-                  minLines: 2,
+                  minLines: 3,
                   maxLines: null,
                   style: TextStyle(fontSize: 18),
-                  decoration: underlineAndFilled.copyWith(
-                    hintText: 'Task',
-                    fillColor: Colors.white,
-                    border: InputBorder.none,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none
-                    ),
-                    focusedBorder: InputBorder.none,
-                    
-                  ),
+                  decoration: formTextField.copyWith(hintText: 'Task')
                 ),
               ),
             ),

@@ -1,6 +1,5 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
@@ -22,6 +21,7 @@ class NewIdea extends StatefulWidget {
 
 class _NewIdeaState extends State<NewIdea> {
   Idea newIdea = Idea.test();
+  ValueNotifier<List<Task>> allNewTasks = ValueNotifier([]);
   TextEditingController deadline = TextEditingController();
   TextEditingController ideaTitle = TextEditingController();
   TextEditingController moreDetails = TextEditingController();
@@ -30,20 +30,23 @@ class _NewIdeaState extends State<NewIdea> {
   bool checkIfIdeaAlreadyExists({required String ideaTitle,required BuildContext context})=>
      Provider.of<List<Idea>>(context,listen: false).map((ideaModel) => ideaModel.ideaTitle).contains(ideaTitle);
 
-  Function(List<Map> tasksForIdea) addAllTaskFromBottomSheet = (List<Map> tasksForIdea)=> tasksForIdea.addAll(tasksForIdea);
+  late Function(Task task) addBottomSheetTaskToList;
 
   @override
   void initState() { 
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) => SearchController.instance.stopSearch());
+
+    addBottomSheetTaskToList = (Task task){
+       allNewTasks.value.add(task);
+       setState(() {});
+    };
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    return ChangeNotifierProvider<Idea>.value(
-      value: newIdea,
-      child: SafeArea(
+    return SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           body: Padding(
@@ -57,33 +60,35 @@ class _NewIdeaState extends State<NewIdea> {
                   child: Column(
                     children: [
                       CustomAppBar(title: 'ADD IDEA'),
-                      TextFormField(
-                        controller: ideaTitle,
-                        validator: (value){
-                          if(value!.isEmpty)
-                          return "idea title is required";
+                      SizedBox(height: 10),
+                      Container(
+                        decoration: elevatedBoxDecoration,
+                        child: TextFormField(
+                          controller: ideaTitle,
+                          validator: (value){
+                            if(value!.isEmpty)
+                            return "Idea title is required";
     
-                          else if(checkIfIdeaAlreadyExists(ideaTitle: value,context: context))
-                          return "idea title already exists";
-                          
-                        },
-                        style: TextStyle(fontSize: 18),
-                        maxLength: 50,
-                        decoration: underlineAndFilled.copyWith(
-                          labelText: 'Idea title',
-                          prefixIcon: Icon(Icons.text_fields)
-                        )
+                            else if(checkIfIdeaAlreadyExists(ideaTitle: value,context: context))
+                            return "Idea title already exists";
+                            
+                          },
+                          style: TextStyle(fontSize: 18),
+                          decoration: formTextField.copyWith(labelText: 'Idea title', prefixIcon: Icon(Icons.text_fields))
+                        ),
                       ),
     
                       SizedBox(height: 20),
-                      TextFormField(
-                        controller: moreDetails,
-                        maxLines: null,
-                        maxLength: 300,
-                        minLines: 5,
-                        style: TextStyle(fontSize: 18),
-                        keyboardType: TextInputType.multiline,
-                        decoration: underlineAndFilled.copyWith(labelText: 'More details on idea...'),
+                      Container(
+                        decoration: elevatedBoxDecoration,
+                        child: TextFormField(
+                          controller: moreDetails,
+                          maxLines: null,
+                          minLines: 5,
+                          style: TextStyle(fontSize: 18),
+                          keyboardType: TextInputType.multiline,
+                          decoration: formTextField.copyWith(labelText: 'Idea Description...'),
+                        ),
                       ),
     
                       SizedBox(height: 25),
@@ -95,7 +100,7 @@ class _NewIdeaState extends State<NewIdea> {
                       ListOfTasks(),
     
                       SizedBox(height: 10),
-                      AddTaskButton(newIdea),
+                      AddTaskButton(addBottomSheetTaskToList),
     
                       SizedBox(height: 50)
                     ],
@@ -110,7 +115,7 @@ class _NewIdeaState extends State<NewIdea> {
                       context: context,
                       ideaTitle: ideaTitle.text,
                       moreDetails: moreDetails.text,
-                      newIdea: newIdea);
+                      allNewTasks: allNewTasks.value);
                 },
               child: Container(
                 height: 65,
@@ -120,38 +125,36 @@ class _NewIdeaState extends State<NewIdea> {
                 )),
             ),
         ),
-      ),
-    );
+      );
   }
 
   // ignore: non_constant_identifier_names
-}
-
-class ListOfTasks extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: Provider.of<Idea>(context).uncompletedTasks.reversed.map((taskRow) =>
-        Row(
-          children: [
-          Icon(Icons.circle,color: Colors.grey,size: 20),
-          SizedBox(width: 25),
-          Expanded(child: Container(child: Text(taskRow.task))),
-          IconButton(
-          icon: Icon(CommunityMaterialIcons.close,color: Colors.grey),
-          onPressed: ()=>
-            Provider.of<Idea>(context,listen: false).deleteTask(taskRow))
-          ])
-          ).toList());
-}
+  Widget ListOfTasks(){
+    return ValueListenableBuilder(
+      valueListenable: allNewTasks,
+      builder: (context, List<Task> tasks, _) => Column(
+          children: tasks.reversed.map((taskRow) =>
+            Row(
+              children: [
+                Icon(Icons.circle,color: Colors.grey,size: 20),
+                SizedBox(width: 25),
+                Expanded(child: Container(child: Text(taskRow.task))),
+                IconButton(
+                icon: Icon(CommunityMaterialIcons.close,color: Colors.grey),
+                onPressed: (){ 
+                  allNewTasks.value.remove(taskRow); 
+                  setState(() {});})
+              ])
+              ).toList()),
+    );
+  }
 }
 
 
 
 class AddTaskButton extends StatelessWidget {
-  final Idea _idea;
-  AddTaskButton(this._idea);
+  Function(Task task) addBottomSheetTaskToList;
+  AddTaskButton(this.addBottomSheetTaskToList);
 
   @override
   Widget build(BuildContext context) {
@@ -166,14 +169,11 @@ class AddTaskButton extends StatelessWidget {
                 isDismissible: false,
                 context: context,
                 builder: (BuildContext context) => 
-                AddTaskBottomSheet(_idea));
+                AddTaskBottomSheet(addBottomSheetTaskToList));
                 },
+                
       child: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(offset: Offset(0,0),blurRadius: 10,color: Colors.black.withOpacity(0.2))
-          ]
-        ),
+        decoration: elevatedBoxDecoration,
         child: Row(
           children: [
             Expanded(

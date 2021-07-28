@@ -123,6 +123,15 @@ class IdealogDb {
       });
   }
 
+  Future<void> setFavorite({required Idea idea}) async {
+      await dbInstance.transaction((txn) async {
+        await txn.update(ideaTable,
+          {Column_favorite : idea.isFavorite.toString()},
+          where: '$Column_ideaId = ?',
+          whereArgs: [idea.ideaId]);
+      });
+  }
+
   /// Watch the idea's table for updates. 
   Stream<List<Idea>> get readFromDb async* {
 

@@ -13,7 +13,7 @@ class CompletedTasksPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: completedTasksColor,
+        backgroundColor: completedTasksColor, 
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -93,7 +93,7 @@ class CompletedTasksMenu extends StatelessWidget {
                 PopupMenuItem(child: TextButton.icon(
                  onPressed: (){},
                  icon: Icon(FontAwesomeIcons.tasks),
-                 label: Text('Multi-Selection', style: overpass.copyWith(fontSize: 16))),
+                 label: Text('Multi-Selection', style: TextStyle(fontSize: 16))),
                 value: _Menu.MultiSelect)
               ]),
           )
