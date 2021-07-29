@@ -1,16 +1,13 @@
-import 'dart:math';
-
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:provider/provider.dart';
-import 'CreateIdea.dart' show AddTaskButton, Info, ListOfTasks;
+import 'CreateIdea.dart';
+import 'ListOfTasksToAdd.dart';
+import 'OpenBottomSheet.dart';
 
 class AddToExistingIdea extends StatefulWidget {
   final Idea idea;
@@ -23,7 +20,7 @@ class AddToExistingIdea extends StatefulWidget {
 
 class _AddToExistingIdeaState extends State<AddToExistingIdea> {
   final TextEditingController newTask = TextEditingController();
-  ValueNotifier<List<Task>> allNewTasks = ValueNotifier([]);
+  List<Task> allNewTasks = [];
   FocusNode newTaskFocus = FocusNode();
 
   late Function(Task task) addBottomSheetTaskToList;
@@ -32,11 +29,8 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
 
   @override
   void initState() {
-
-    addBottomSheetTaskToList = (Task task){
-       allNewTasks.value.add(task);
-       setState(() {});
-    };
+    // Initialize the function.
+    addBottomSheetTaskToList = (Task task)=> setState(() => allNewTasks.add(task));
     super.initState();
   }
 
@@ -79,13 +73,13 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
                         Text('Add a new task',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500)),
                         SizedBox(height: 20),
     
-                        Info(),
+                        HowToAddTaskInfo(),
                         SizedBox(height: 10),
     
-                        ListOfTasks(),
+                        ListOfTasksToAdd(tasks: allNewTasks),
                         SizedBox(height: 20),
 
-                        AddTaskButton(addBottomSheetTaskToList)
+                        OpenBottomSheet(addBottomSheetTaskToList)
                       ],
                     ),
                   ),
@@ -95,7 +89,7 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
           ),
           bottomNavigationBar: GestureDetector(
               onTap: () async {
-                await IdeaManager.addNewTasksToExistingIdea(idea: widget.idea, newTasks: allNewTasks.value);
+                await IdeaManager.addNewTasksToExistingIdea(idea: widget.idea, newTasks: allNewTasks);
                 await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> IdeaDetail(idea: widget.idea)));
                 },
               child: Container(
@@ -108,27 +102,5 @@ class _AddToExistingIdeaState extends State<AddToExistingIdea> {
             ),
         ),
       );
-  }
-
-
-  // ignore: non_constant_identifier_names
-  Widget ListOfTasks(){
-    return ValueListenableBuilder(
-      valueListenable: allNewTasks,
-      builder: (context, List<Task> tasks, _) => Column(
-          children: tasks.reversed.map((taskRow) =>
-            Row(
-              children: [
-                Icon(Icons.circle,color: Colors.grey,size: 20),
-                SizedBox(width: 25),
-                Expanded(child: Container(child: Text(taskRow.task))),
-                IconButton(
-                icon: Icon(CommunityMaterialIcons.close,color: Colors.grey),
-                onPressed: (){ 
-                  allNewTasks.value.remove(taskRow); 
-                  setState(() {});})
-              ])
-              ).toList()),
-    );
   }
 }

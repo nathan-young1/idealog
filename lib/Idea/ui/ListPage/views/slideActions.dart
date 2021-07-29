@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/Others/AddTasks.dart';
 import 'package:idealog/core-models/ideaModel.dart';
@@ -15,9 +16,13 @@ class TaskAdderSlideAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()=> Navigator.of(context).push(
+      onTap: () async {
+        await Navigator.of(context).push(
                       MaterialPageRoute(builder: (context)=>
-                      AddToExistingIdea(idea: idea))),
+                      AddToExistingIdea(idea: idea)));
+        // close the slidable.
+        Slidable.of(context)!.close();
+      },
       child: Container(
         decoration: BoxDecoration(
           color: ActiveTabLight,

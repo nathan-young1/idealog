@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:idealog/Idea/ui/ListPage/code/SlidableList.dart';
 
-class ToggleSlidable extends StatelessWidget {
-  final bool slidableIsOpen;
-
-  ToggleSlidable({
-    Key? key,
-    required this.slidableIsOpen,
-  }) : super(key: key);
+class ToggleSlidable extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    
-    return AnimatedContainer(duration: Duration(milliseconds: 400),
-      child: slidableIsOpen
-      
+     return AnimatedContainer(duration: Duration(milliseconds: 400),
+      child: SlidableList.isOpen(context)
         ? IconButton( icon:Icon(Icons.arrow_forward_ios,size: 28),
         onPressed: () =>Slidable.of(context)!.close()
         )
@@ -24,4 +16,5 @@ class ToggleSlidable extends StatelessWidget {
         icon: Icon(Icons.more_vert,size: 32))
        );
   }
+
 }

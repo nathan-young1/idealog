@@ -1,37 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:idealog/Idea/ui/ListPage/views/Card.dart';
 import 'package:idealog/SearchBar/SearchBar.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
+import 'code/SlidableList.dart';
 
 class IdeaListPage extends StatelessWidget {
-
+  
   @override
   Widget build(BuildContext context) {
     // All the ideas should be in reverse so that the latest will be on top
     var listOfIdeas = Provider.of<List<Idea>>(context).reversed.where(_searchTermExists).toList();
     SearchController searchController = Provider.of<SearchController>(context);
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 25,left: 20,right: 10,bottom: 10),
-          child: (searchController.searchIsActive)
-          ?SearchAppBar(hintText: 'Idea')
-          :IdeasAppBar(),
-        ),
-        Expanded(
-            child: Scrollbar(
-              child: ListView.builder(
-                itemCount: listOfIdeas.length,
-                itemBuilder: (_,index) => IdeaCard(idea: listOfIdeas[index]),
+
+    return MultiProvider(
+      providers: [ChangeNotifierProvider.value(value: SlidableList.instance)],
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 25,left: 20,right: 10,bottom: 10),
+            child: (searchController.searchIsActive)
+            ?SearchAppBar(hintText: 'Idea')
+            :IdeasAppBar(),
+          ),
+          Expanded(
+              child: Scrollbar(
+                child: ListView.builder(
+                  itemCount: listOfIdeas.length,
+                  itemBuilder: (BuildContext context, index) => IdeaCard(idea: listOfIdeas[index], key: UniqueKey()),
+                ),
               ),
-            ),
-          )
-         
-      ],
+            )
+           
+        ],
+      ),
     );
   }
 }
