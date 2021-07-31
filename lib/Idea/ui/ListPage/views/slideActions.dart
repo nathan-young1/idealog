@@ -19,7 +19,7 @@ class TaskAdderSlideAction extends StatelessWidget {
       onTap: () async {
         await Navigator.of(context).push(
                       MaterialPageRoute(builder: (context)=>
-                      AddToExistingIdea(idea: idea)));
+                      AddTasksToExistingIdea(idea: idea)));
         // close the slidable.
         Slidable.of(context)!.close();
       },

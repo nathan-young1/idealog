@@ -9,16 +9,16 @@ import 'CreateIdea.dart';
 import 'ListOfTasksToAdd.dart';
 import 'OpenBottomSheet.dart';
 
-class AddToExistingIdea extends StatefulWidget {
+class AddTasksToExistingIdea extends StatefulWidget {
   final Idea idea;
 
-  AddToExistingIdea({Key? key, required this.idea}) : super(key: key);
+  AddTasksToExistingIdea({Key? key, required this.idea}) : super(key: key);
 
   @override
-  _AddToExistingIdeaState createState() => _AddToExistingIdeaState();
+  _AddTasksToExistingIdeaState createState() => _AddTasksToExistingIdeaState();
 }
 
-class _AddToExistingIdeaState extends State<AddToExistingIdea> {
+class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
   final TextEditingController newTask = TextEditingController();
   List<Task> allNewTasks = [];
   FocusNode newTaskFocus = FocusNode();

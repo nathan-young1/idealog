@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LengthLimitingTextInputFormatter;
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
@@ -61,6 +62,9 @@ class _NewIdeaState extends State<NewIdea> {
                         decoration: elevatedBoxDecoration,
                         child: TextFormField(
                           controller: ideaTitle,
+                          inputFormatters:[
+                          LengthLimitingTextInputFormatter(50),
+                          ],
                           validator: (value){
                             if(value!.isEmpty)
                             return "Idea title is required";
@@ -80,6 +84,9 @@ class _NewIdeaState extends State<NewIdea> {
                         child: TextFormField(
                           controller: moreDetails,
                           maxLines: null,
+                          inputFormatters:[
+                          LengthLimitingTextInputFormatter(300),
+                          ],
                           minLines: 5,
                           style: TextStyle(fontSize: 18),
                           keyboardType: TextInputType.multiline,

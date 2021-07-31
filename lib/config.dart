@@ -9,7 +9,7 @@ import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 // ignore: non_constant_identifier_names
 Future<void> InitializeAppConfig() async {
-  InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
+  // InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
   await IdealogDb.instance.initialize();
 
   await Future.wait([ 
@@ -18,7 +18,7 @@ Future<void> InitializeAppConfig() async {
       NativeCodeCaller.instance.initialize(),
       ]);
 
-  await Premium.instance.initializePlugin();
+  // await Premium.instance.initializePlugin();
   await AnalyticDB.instance.clearObsoluteData();
 
 

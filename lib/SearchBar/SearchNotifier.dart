@@ -30,6 +30,7 @@ class SearchController extends ChangeNotifier{
   }
 
   void clearSearch()=> searchTerm = "";
+  /// close the search textField if open.
   void stopSearch()=> searchIsActive = false;
   void startSearch()=> searchIsActive = true;
   void searchFor(String? term)=> searchTerm = term!;

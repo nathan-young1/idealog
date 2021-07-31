@@ -1,11 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LengthLimitingTextInputFormatter;
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+
+// The priority is stored outside here because textfield focus keeps rebuilding the entire class.
+int dropDownPriority = Priority_Medium;
 
 // ignore: must_be_immutable
 class AddTaskBottomSheet extends StatelessWidget {
@@ -16,9 +18,8 @@ class AddTaskBottomSheet extends StatelessWidget {
 
   final TextEditingController taskField = TextEditingController();
   final FocusNode taskFieldFocus = FocusNode();
-  int dropDownPriority = Priority_Medium;
 
-  void _AddTaskToList(){
+  void _addTaskToList(){
     if(taskField.text != ''){
       
       // Just create the task with priority and task then use the uncompletedTasks length as the order index.
@@ -65,7 +66,7 @@ class AddTaskBottomSheet extends StatelessWidget {
                   
                 Text('New Task',style: overpass.copyWith(fontSize: 25)),
                   
-                ElevatedButton.icon(onPressed: ()=> _AddTaskToList(),
+                ElevatedButton.icon(onPressed: ()=> _addTaskToList(),
                  icon: Icon(Icons.add), label: Text('Add',style: TextStyle(fontSize: 20)),
                  style: ButtonStyle(
                    backgroundColor: MaterialStateProperty.resolveWith((states) => DarkBlue)
@@ -113,6 +114,9 @@ class AddTaskBottomSheet extends StatelessWidget {
                   controller: taskField,
                   focusNode: taskFieldFocus,
                   keyboardType: TextInputType.text,
+                   inputFormatters:[
+                    LengthLimitingTextInputFormatter(350),
+                  ],
                   minLines: 3,
                   maxLines: null,
                   style: TextStyle(fontSize: 18),
