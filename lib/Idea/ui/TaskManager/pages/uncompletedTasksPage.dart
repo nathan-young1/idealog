@@ -43,7 +43,16 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
   ScrollController scrollController = ScrollController();
 
   @override
+  void initState() {
+    widget.idea.uncompletedTasks.sort((a,b)=> a.priority!.compareTo(b.priority!));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    widget.idea.uncompletedTasks.forEach((e) => print(e.priority));
+    print('The length is ${widget.idea.uncompletedTasks.length}');
+
 
     return SafeArea(
       child: Scaffold(
@@ -85,9 +94,9 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
                             child: UncompletedTaskMenu(),
                           ),
 
-                        ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_High, scrollController: scrollController, update: setState),
-                        ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_Medium, scrollController: scrollController, update: setState),
-                        ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_Low, scrollController: scrollController, update: setState)
+                        ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_High, scrollController: scrollController),
+                        ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_Medium, scrollController: scrollController),
+                        ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_Low, scrollController: scrollController)
                         ],
                       ),
                     )
@@ -99,75 +108,19 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
       ),
     );
   }
-}
 
 
-enum _Menu{ReorderTasks}
+  Widget ReorderableGroupedList ({required Idea idea, required int priorityGroup, required ScrollController scrollController}){
 
-class UncompletedTaskMenu extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          Expanded(
-            flex: 4,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30),
-              child: Container(
-                decoration: elevatedBoxDecoration,
-                child: TextField(
-                  decoration: formTextField.copyWith(
-                    hintText: 'Search for a task'
-                  ),
-                ),
-              ),
-            )),
-          Expanded(
-            flex: 1,
-            child: PopupMenuButton<_Menu>(
-              itemBuilder: (BuildContext context) => [
-                PopupMenuItem(child: TextButton.icon(
-                 onPressed: (){},
-                 icon: Icon(FeatherIcons.move),
-                 label: Text('Reorder Tasks', style: overpass.copyWith(fontSize: 16))),
-                value: _Menu.ReorderTasks)
-              ]),
-          )
-        ]
-      ),
-    );
-  }
-}
-
-class ReorderableGroupedList extends StatefulWidget {
-  ReorderableGroupedList({required this.idea, required this.priorityGroup, required this.scrollController, required this.update});
-  final Idea idea;
-  final int priorityGroup;
-  final ScrollController scrollController;
-  final Function update;
-
-  @override
-  _ReorderableGroupedListState createState() => _ReorderableGroupedListState();
-}
-
-class _ReorderableGroupedListState extends State<ReorderableGroupedList> {
-  
-  List<Task> groupTasks = [];
-
-
-  @override
-  Widget build(BuildContext context) {
-    groupTasks = widget.idea.uncompletedTasks.where((task) => task.priority == widget.priorityGroup).toList();
+  List<Task> groupTasks = idea.uncompletedTasks.where((task) => task.priority == priorityGroup).toList();
     
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Text((widget.priorityGroup == Priority_High)
+          child: Text((priorityGroup == Priority_High)
           ?'High Priority'
-          :(widget.priorityGroup == Priority_Medium) ? 'Medium Priority' : 'Low Priority',
+          :(priorityGroup == Priority_Medium) ? 'Medium Priority' : 'Low Priority',
            style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
         ),
 
@@ -181,20 +134,30 @@ class _ReorderableGroupedListState extends State<ReorderableGroupedList> {
                 
                 onAccept: (_){
                   notifier.value = 0;
-                  
-                  if(_.priority != widget.priorityGroup){
-                    _.priority = widget.priorityGroup;
+
+                  if(_.priority != priorityGroup){
+                    _.priority = priorityGroup;
                   }
+                  //////////////////////////////////////////
+                  int amountToAddToIndex = 0;
+                  if(_.priority == Priority_Low){
+                    amountToAddToIndex = idea.uncompletedTasks.length - groupTasks.length;
+                  } else if(_.priority == Priority_Medium){
+                    amountToAddToIndex = idea.uncompletedTasks.where((e) => e.priority == Priority_High).length;
+                  }
+                  ////////////////////////////////////////////////
                   
-                  int incomingIndex =  widget.idea.uncompletedTasks.indexOf(_);
-                  int currentIndex = widget.idea.uncompletedTasks.indexOf(groupTasks[index]);
+                  
+                  int incomingIndex =  idea.uncompletedTasks.indexOf(_);
+                  int recieverIndex = idea.uncompletedTasks.indexOf(groupTasks[index]);
 
-                  widget.idea.uncompletedTasks.remove(_);
-
-                  if (incomingIndex < currentIndex)
-                    widget.idea.uncompletedTasks.insert(--index, _);
+                  idea.uncompletedTasks.remove(_);
+                 
+                  if (incomingIndex < recieverIndex)
+                    idea.uncompletedTasks.insert((index+amountToAddToIndex)-1, _);
                   else
-                    widget.idea.uncompletedTasks.insert(index, _);
+                    idea.uncompletedTasks.insert((index+amountToAddToIndex), _);
+                
                     
                 setState((){});
 
@@ -221,7 +184,7 @@ class _ReorderableGroupedListState extends State<ReorderableGroupedList> {
                   onDragUpdate: (dragUpdateDetails){
                     ReorderableGroupedListController.instance.updateDraggableDirection(dragUpdateDetails);
                     // scroll the page with the drag widget.
-                    widget.scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
+                    scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
                   },
                   data: groupTasks[index],
 
@@ -266,16 +229,60 @@ class _ReorderableGroupedListState extends State<ReorderableGroupedList> {
           height: 70,
           child: DragTarget<Task>(
             onAccept: (_){
-              if(_.priority != widget.priorityGroup){
-                    _.priority = widget.priorityGroup;
+              if(_.priority != priorityGroup){
+                    _.priority = priorityGroup;
               }
-              widget.idea.uncompletedTasks.remove(_);
-              widget.idea.uncompletedTasks.add(_);
+
+              idea.uncompletedTasks.remove(_);
+              int whereToAddto = idea.uncompletedTasks.indexOf(idea.uncompletedTasks.where((e) => e.priority == priorityGroup).last);
+              idea.uncompletedTasks.insert(++whereToAddto, _);
+              // idea.uncompletedTasks.add(_);
               setState(() {});
             },
             builder: (context,_,__)=> Container()),
         ),
       ],
     );         
+}
+
+}
+
+
+enum _Menu{ReorderTasks}
+
+class UncompletedTaskMenu extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        children: [
+          Expanded(
+            flex: 4,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30),
+              child: Container(
+                decoration: elevatedBoxDecoration,
+                child: TextField(
+                  decoration: formTextField.copyWith(
+                    hintText: 'Search for a task'
+                  ),
+                ),
+              ),
+            )),
+          Expanded(
+            flex: 1,
+            child: PopupMenuButton<_Menu>(
+              itemBuilder: (BuildContext context) => [
+                PopupMenuItem(child: TextButton.icon(
+                 onPressed: (){},
+                 icon: Icon(FeatherIcons.move),
+                 label: Text('Reorder Tasks', style: overpass.copyWith(fontSize: 16))),
+                value: _Menu.ReorderTasks)
+              ]),
+          )
+        ]
+      ),
+    );
   }
 }
