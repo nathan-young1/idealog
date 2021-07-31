@@ -16,6 +16,8 @@ class IdeaManager{
 
     // ignore: unawaited_futures
     showDialog(context: context, builder: (context) => progressAlertDialog);
+    // sort the list by their priority.
+    allNewTasks.sort((a,b)=> a.priority!.compareTo(b.priority!));
 
     // set the order index for all the tasks.
     for(var i = 0; i < allNewTasks.length; i++) {allNewTasks[i].orderIndex = i;}

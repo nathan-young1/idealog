@@ -9,9 +9,9 @@ import 'package:idealog/design/textStyles.dart';
 
 enum Direction {Up, Down}
 
-class ReorderableGroupedList with ChangeNotifier{
-  ReorderableGroupedList._();
-  static ReorderableGroupedList instance = ReorderableGroupedList._();
+class ReorderableGroupedListController with ChangeNotifier{
+  ReorderableGroupedListController._();
+  static ReorderableGroupedListController instance = ReorderableGroupedListController._();
   
   int height = 20;
 
@@ -40,11 +40,10 @@ class UncompletedTasksPage extends StatefulWidget {
 }
 
 class _UncompletedTasksPageState extends State<UncompletedTasksPage> with SingleTickerProviderStateMixin{
-  ScrollController j = ScrollController();
+  ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    List<Task> highList = widget.idea.uncompletedTasks.where((element) => element.priority == Priority_High).toList();
 
     return SafeArea(
       child: Scaffold(
@@ -71,7 +70,7 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
               Expanded(
                 child: SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
-                  controller: j,
+                  controller: scrollController,
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -86,112 +85,9 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
                             child: UncompletedTaskMenu(),
                           ),
 
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: Text('High Priority', style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
-                                    ),
-
-                         
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: highList.length,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (BuildContext context, int index){
-                            ValueNotifier<double> notifier = ValueNotifier(0);
-                             return DragTarget<Task>(
-                                  
-                                  onAccept: (_){
-                                    notifier.value = 0;
-                                    
-                                    // if(_.priority != taskRow.priority){
-                                    //   _.priority = taskRow.priority;
-                                    // }
-                                    int incomingIndex =  widget.idea.uncompletedTasks.indexOf(_);
-                                    int currentIndex = widget.idea.uncompletedTasks.indexOf(highList[index]);
-                                    widget.idea.uncompletedTasks.remove(_);
-                                    if (incomingIndex < currentIndex)
-                                      widget.idea.uncompletedTasks.insert(--index, _);
-                                    else
-                                      widget.idea.uncompletedTasks.insert(index, _);
-                                      
-                                    
-                                    
-                                    // widget.idea.uncompletedTasks.insert(--index, _);
-                                   
-                                    setState((){});
-                                  },
-                                  onMove: (_){
-                                    print('in ${highList.indexOf(highList[index])}');
-                                   if(_.data != highList[index]){
-                                     if(notifier.value == 0.0){
-                                        notifier.value = 40;
-                                     }
-                                   }
-                                  },
-                                  onLeave: (_){
-                                    notifier.value = 0;
-                                  },
-                                  builder: (_,__,___)=> 
-                                  LongPressDraggable<Task>(
-                                    feedbackOffset: Offset(0, 10),
-                                    maxSimultaneousDrags: 1,
-                                    axis: Axis.vertical,
-                                    childWhenDragging: Container(
-                                      height: 50,
-                                      width: MediaQuery.of(context).size.width,
-                                       color: Colors.grey,),
-                                    onDragUpdate: (dragUpdateDetails){
-                                      ReorderableGroupedList.instance.updateDraggableDirection(dragUpdateDetails);
-                                      
-                                      j.position.pointerScroll(dragUpdateDetails.delta.dy);
-                                    },
-                                    data: highList[index],
-                                    feedback: Material(
-                                      child: Container(
-                                        decoration: elevatedBoxDecoration.copyWith(color: Colors.white),
-                                        width: MediaQuery.of(context).size.width,
-                                        child: ListTile(
-                                          leading: Checkbox(value: false, onChanged: (bool? value) {}),
-                                        title: Text(highList[index].task),
-                                        trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
-                                          ),
-                                      ),
-                                    ),
-                                    child: ValueListenableBuilder<double>(
-                                        valueListenable: notifier,
-                                        builder: (BuildContext context,_,__) {
-
-                                          return AnimatedPadding(
-                                            padding: (ReorderableGroupedList.instance.draggableDirection == Direction.Up)
-                                            ?EdgeInsets.only(top: _)
-                                            :(ReorderableGroupedList.instance.draggableDirection == Direction.Down && index == 0)
-                                            ?EdgeInsets.only(top: _)
-                                            :(index == 0)?EdgeInsets.only(bottom: _):EdgeInsets.only(top: _),
-
-                                            duration: Duration(milliseconds: 200),
-                                            child: ListTile(
-                                            key: UniqueKey(),
-                                            leading: Checkbox(value: false, onChanged: (bool? value) {}),
-                                            title: Text(highList[index].task),
-                                            trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
-                                              ),
-                                          );
-                                        }
-                                      )
-                                  ),
-                                );
-                                }
-                          ),
-                          Container(
-                            height: 100,
-                            child: DragTarget<Task>(
-                              onAccept: (_){
-                                widget.idea.uncompletedTasks.remove(_);
-                                widget.idea.uncompletedTasks.add(_);
-                                setState(() {});
-                              },
-                              builder: (context,_,__)=> Container()),
-                          ),
+                        ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_High, scrollController: scrollController, update: setState),
+                        ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_Medium, scrollController: scrollController, update: setState),
+                        ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_Low, scrollController: scrollController, update: setState)
                         ],
                       ),
                     )
@@ -209,9 +105,6 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
 enum _Menu{ReorderTasks}
 
 class UncompletedTaskMenu extends StatelessWidget {
-  const UncompletedTaskMenu({
-    Key? key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -248,40 +141,141 @@ class UncompletedTaskMenu extends StatelessWidget {
   }
 }
 
+class ReorderableGroupedList extends StatefulWidget {
+  ReorderableGroupedList({required this.idea, required this.priorityGroup, required this.scrollController, required this.update});
+  final Idea idea;
+  final int priorityGroup;
+  final ScrollController scrollController;
+  final Function update;
+
+  @override
+  _ReorderableGroupedListState createState() => _ReorderableGroupedListState();
+}
+
+class _ReorderableGroupedListState extends State<ReorderableGroupedList> {
+  
+  List<Task> groupTasks = [];
 
 
-                          // GroupedListView(
-                          //   shrinkWrap: true,
-                          //   elements: idea.uncompletedTasks,
-                          //   groupBy: (Task task)=> task.priority,
-                          //   groupSeparatorBuilder: (int? priority) {
-                          //     switch(priority){
-                          //       case Priority_High:
-                          //         return Padding(
-                          //           padding: const EdgeInsets.symmetric(horizontal: 30),
-                          //           child: Text('High Priority', style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
-                          //         );
+  @override
+  Widget build(BuildContext context) {
+    groupTasks = widget.idea.uncompletedTasks.where((task) => task.priority == widget.priorityGroup).toList();
+    
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Text((widget.priorityGroup == Priority_High)
+          ?'High Priority'
+          :(widget.priorityGroup == Priority_Medium) ? 'Medium Priority' : 'Low Priority',
+           style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
+        ),
+
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: groupTasks.length,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index){
+          ValueNotifier<double> notifier = ValueNotifier(0);
+            return DragTarget<Task>(
+                
+                onAccept: (_){
+                  notifier.value = 0;
                   
-                          //       case Priority_Medium:
-                          //         return Padding(
-                          //           padding: const EdgeInsets.symmetric(horizontal: 30),
-                          //           child: Text('Medium Priority', style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
-                          //         );
-                
-                          //       case Priority_Low:
-                          //         return Padding(
-                          //           padding: const EdgeInsets.symmetric(horizontal: 30),
-                          //           child: Text('Low Priority', style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
-                          //         );
-                
-                          //       default:
-                          //         return Container();
-                          //     }
-                          //   },
-                          //   itemBuilder: (context, Task taskRow)=> 
-                          //     ListTile(
-                          //     leading: Checkbox(value: false, onChanged: (bool? value) {}),
-                          //     title: Text(taskRow.task),
-                          //     trailing: IconButton(icon: Icon(Icons.close), onPressed: (){})
-                          //       )),
+                  if(_.priority != widget.priorityGroup){
+                    _.priority = widget.priorityGroup;
+                  }
+                  
+                  int incomingIndex =  widget.idea.uncompletedTasks.indexOf(_);
+                  int currentIndex = widget.idea.uncompletedTasks.indexOf(groupTasks[index]);
 
+                  widget.idea.uncompletedTasks.remove(_);
+
+                  if (incomingIndex < currentIndex)
+                    widget.idea.uncompletedTasks.insert(--index, _);
+                  else
+                    widget.idea.uncompletedTasks.insert(index, _);
+                    
+                setState((){});
+
+                },
+                onMove: (_){
+                  if(_.data != groupTasks[index]){
+                    if(notifier.value == 0.0){
+                      notifier.value = 40;
+                    }
+                  }
+                },
+                onLeave: (_){
+                  notifier.value = 0;
+                },
+                builder: (_,__,___)=> 
+                LongPressDraggable<Task>(
+                  feedbackOffset: Offset(0, 10),
+                  maxSimultaneousDrags: 1,
+                  axis: Axis.vertical,
+                  childWhenDragging: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                      color: Colors.grey,),
+                  onDragUpdate: (dragUpdateDetails){
+                    ReorderableGroupedListController.instance.updateDraggableDirection(dragUpdateDetails);
+                    // scroll the page with the drag widget.
+                    widget.scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
+                  },
+                  data: groupTasks[index],
+
+                  feedback: Material(
+                    child: Container(
+                      decoration: elevatedBoxDecoration.copyWith(color: Colors.white),
+                      width: MediaQuery.of(context).size.width,
+                      child: ListTile(
+                        leading: Checkbox(value: false, onChanged: (bool? value) {}),
+                      title: Text(groupTasks[index].task),
+                      trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
+                        ),
+                    ),
+                  ),
+                  child: ValueListenableBuilder<double>(
+                      valueListenable: notifier,
+                      builder: (BuildContext context,_,__) {
+
+                        return AnimatedPadding(
+                          padding: (ReorderableGroupedListController.instance.draggableDirection == Direction.Up)
+                          ?EdgeInsets.only(top: _)
+                          :(ReorderableGroupedListController.instance.draggableDirection == Direction.Down && index == 0)
+                          ?EdgeInsets.only(top: _)
+                          :(index == 0)?EdgeInsets.only(bottom: _):EdgeInsets.only(top: _),
+
+                          duration: Duration(milliseconds: 200),
+                          child: ListTile(
+                          key: UniqueKey(),
+                          leading: Checkbox(value: false, onChanged: (bool? value) {}),
+                          title: Text(groupTasks[index].task),
+                          trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
+                            ),
+                        );
+                      }
+                    )
+                ),
+              );
+              }
+        ),
+
+        Container(
+          height: 70,
+          child: DragTarget<Task>(
+            onAccept: (_){
+              if(_.priority != widget.priorityGroup){
+                    _.priority = widget.priorityGroup;
+              }
+              widget.idea.uncompletedTasks.remove(_);
+              widget.idea.uncompletedTasks.add(_);
+              setState(() {});
+            },
+            builder: (context,_,__)=> Container()),
+        ),
+      ],
+    );         
+  }
+}
