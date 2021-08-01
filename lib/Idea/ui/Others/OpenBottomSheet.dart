@@ -9,21 +9,23 @@ class OpenBottomSheet extends StatelessWidget {
 
   OpenBottomSheet(this.addBottomSheetTaskToList);
   final Function(Task task) addBottomSheetTaskToList;
+  final TextEditingController taskField = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
 
     return GestureDetector(
-      onTap: (){ 
+      onTap: () async { 
         // close the keyboard if open , before opening bottom sheet
         FocusScope.of(context).unfocus();
-        showModalBottomSheet(
+        await showModalBottomSheet(
                 enableDrag: false,
                 isScrollControlled: true,
                 isDismissible: false,
                 context: context,
-                builder: (BuildContext context) => 
-                AddTaskBottomSheet(addBottomSheetTaskToList));
+                builder: (BuildContext context) =>
+                          AddTaskBottomSheet(addBottomSheetTaskToList, taskField: taskField)
+                );
                 },
                 
       child: Container(

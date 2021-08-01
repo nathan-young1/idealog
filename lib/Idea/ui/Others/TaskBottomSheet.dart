@@ -6,17 +6,17 @@ import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 
-// The priority is stored outside here because textfield focus keeps rebuilding the entire class.
+// The priority is stored outside here because show bottom modal always rebuilds the entire class.
 int dropDownPriority = Priority_Medium;
 
 // ignore: must_be_immutable
 class AddTaskBottomSheet extends StatelessWidget {
 
-  AddTaskBottomSheet(this.addBottomSheetTaskToList);
+  AddTaskBottomSheet(this.addBottomSheetTaskToList,{required this.taskField});
   Function(Task task) addBottomSheetTaskToList;
 
 
-  final TextEditingController taskField = TextEditingController();
+  final TextEditingController taskField;
   final FocusNode taskFieldFocus = FocusNode();
 
   void _addTaskToList(){
@@ -32,6 +32,12 @@ class AddTaskBottomSheet extends StatelessWidget {
       // Clear the keyboard
       taskField.clear();
       }
+  }
+
+  void closeBottomSheet(BuildContext context){
+    Navigator.pop(context);
+    // Clear the keyboard
+    taskField.clear();
   }
 
 
@@ -53,7 +59,7 @@ class AddTaskBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                 GestureDetector(
-                  onTap: ()=> Navigator.pop(context),
+                  onTap: ()=> closeBottomSheet(context),
                   child: Container(
                     padding: EdgeInsets.all(3),
                     decoration: BoxDecoration(

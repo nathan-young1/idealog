@@ -50,9 +50,6 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
 
   @override
   Widget build(BuildContext context) {
-    widget.idea.uncompletedTasks.forEach((e) => print(e.priority));
-    print('The length is ${widget.idea.uncompletedTasks.length}');
-
 
     return SafeArea(
       child: Scaffold(
@@ -194,7 +191,7 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
                       decoration: elevatedBoxDecoration.copyWith(color: Colors.white),
                       width: MediaQuery.of(context).size.width,
                       child: ListTile(
-                        leading: Checkbox(value: false, onChanged: (bool? value) {}),
+                      leading: Checkbox(value: false, onChanged: (bool? value) {}),
                       title: Text(groupTasks[index].task),
                       trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
                         ),
@@ -214,7 +211,8 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
                           duration: Duration(milliseconds: 200),
                           child: ListTile(
                           key: UniqueKey(),
-                          leading: Checkbox(value: false, onChanged: (bool? value) {}),
+                          leading: Text('List index : '+idea.uncompletedTasks.indexOf(groupTasks[index]).toString()),
+                          // leading: Checkbox(value: false, onChanged: (bool? value) {}),
                           title: Text(groupTasks[index].task),
                           trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
                             ),
