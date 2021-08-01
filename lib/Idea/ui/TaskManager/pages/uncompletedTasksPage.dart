@@ -196,9 +196,11 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
                     double extentBefore = scrollController.position.extentBefore;
                     double extentAfter = scrollController.position.extentAfter;
                     
+                    // Start scrolling down when draggable widget is at 30 percent of the screen and there is content below the view port.
                     if ((ReorderableGroupedListController.instance.draggableDirection == Direction.Down) && scrollPositionInRelativeToScreenHeight > 30 && extentAfter > 0){
                       scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
                     }else if((ReorderableGroupedListController.instance.draggableDirection == Direction.Up) && scrollPositionInRelativeToScreenHeight < 70 && extentBefore > 0){
+                      // Start scrolling up when draggable widget is at 70 percent of the screen and there is content above the view port.
                       scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
                     }
                     
