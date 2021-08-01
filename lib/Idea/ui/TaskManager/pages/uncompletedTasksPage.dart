@@ -88,6 +88,9 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
   Widget ReorderableGroupedList ({required Idea idea, required int priorityGroup, required ScrollController scrollController}){
 
   List<Task> groupTasks = idea.uncompletedTasks.where((task) => task.priority == priorityGroup).toList();
+  // Store the high priority tasks, so i don't need to map over the entire list to get the last task.
+  if(priorityGroup == Priority_High)
+    ReorderListController.instance.setHighPriorityTasks(groupTasks);
     
     return Column(
       children: [
@@ -182,43 +185,13 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
         Container(
           height: 70,
           child: DragTarget<Task>(
-            onAccept: (draggedTask){
-              if(draggedTask.priority != priorityGroup){
-                draggedTask.priority = priorityGroup;
-              }
-              // if task is the only task in the priority group , and it drop in the container do not do anything.
-              if(!(groupTasks.length == 1 && draggedTask == groupTasks.first)){
-                idea.uncompletedTasks.remove(draggedTask);
-              }
+            onAccept: (incomingTask){
+              ReorderListController.instance.addTaskToBottomOfPriorityGroup(
+               incomingTask: incomingTask,
+               priorityGroup: priorityGroup,
+               idea: idea,
+               groupTasks: groupTasks);
 
-              if(groupTasks.isNotEmpty){
-                // if task is the only task in the priority group , and it drop in the container do not do anything.
-                if(!(groupTasks.length == 1 && draggedTask == groupTasks.first)){
-                // if the task is not empty follow the normal procedure.
-
-                // Add one to the index of the last task in other for new task to be added below it.
-                int indexForNewTask = idea.uncompletedTasks.indexOf(groupTasks.last) + 1;
-                idea.uncompletedTasks.insert(indexForNewTask, draggedTask);
-                }
-              }else if(priorityGroup == Priority_High){
-                // if priority high is empty, then just add task to the beginning of the list.
-                idea.uncompletedTasks.insert(0,draggedTask);
-
-              }else if(priorityGroup == Priority_Medium){
-                // if priority medium is empty then check if high priority is empty if yes then add task to the zero index , but if not add task to plus one of the last high priority index.
-                if(idea.uncompletedTasks.where((e) => e.priority == Priority_High).isEmpty){
-                  idea.uncompletedTasks.insert(0,draggedTask);
-                }else{
-                  int whereToAddto = idea.uncompletedTasks.indexOf(idea.uncompletedTasks.where((e) => e.priority == Priority_High).last);
-                  idea.uncompletedTasks.insert(++whereToAddto, draggedTask);
-                }
-
-              }else if (priorityGroup == Priority_Low){
-                // if priority low is empty , just add to the end of the list the incoming task.
-                idea.uncompletedTasks.add(draggedTask);
-              }
-
-              ReorderListController.instance.updateTasksOrderIndex(idea);
               setState(() {});
             },
             builder: (context,_,__)=> Container()),
