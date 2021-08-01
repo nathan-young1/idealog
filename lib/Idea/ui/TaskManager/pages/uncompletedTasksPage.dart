@@ -2,34 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
+import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 
-enum Direction {Up, Down}
-
-class ReorderableGroupedListController with ChangeNotifier{
-  ReorderableGroupedListController._();
-  static ReorderableGroupedListController instance = ReorderableGroupedListController._();
-  
-  int height = 20;
-
-  bool _draggableIsGoingUp = false;
-
-  Direction get draggableDirection => (_draggableIsGoingUp) ? Direction.Up : Direction.Down;
-
-  /// Updates the draggable direction only if there was a change in direction.
-  void updateDraggableDirection(DragUpdateDetails dragUpdateDetails){
-    bool isGoingUp = dragUpdateDetails.delta.direction.isNegative ? true : false;
-
-    // only update if there was a change in direction.
-    if (isGoingUp != _draggableIsGoingUp){
-      _draggableIsGoingUp = isGoingUp;
-      notifyListeners();
-    }
-  }
-}
 
 class UncompletedTasksPage extends StatefulWidget {
   const UncompletedTasksPage({Key? key, required this.idea}) : super(key: key);
@@ -109,8 +87,7 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
 
   Widget ReorderableGroupedList ({required Idea idea, required int priorityGroup, required ScrollController scrollController}){
 
-  List<Task> groupTasks = [];
-  groupTasks.addAll(idea.uncompletedTasks.where((task) => task.priority == priorityGroup).toList());
+  List<Task> groupTasks = idea.uncompletedTasks.where((task) => task.priority == priorityGroup).toList();
     
     return Column(
       children: [
@@ -128,85 +105,41 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index){
           ValueNotifier<double> notifier = ValueNotifier(0);
-          double intialPoint = 0;
+
             return DragTarget<Task>(
                 
-                onAccept: (_){
-                  notifier.value = 0;
+                onAccept: (draggedTask){
 
-                  if(_.priority != priorityGroup){
-                    _.priority = priorityGroup;
-                  }
-                  //////////////////////////////////////////
-                  int amountToAddToIndex = 0;
-                  if(_.priority == Priority_Low){
-                    amountToAddToIndex = idea.uncompletedTasks.length - groupTasks.length;
-                  } else if(_.priority == Priority_Medium){
-                    amountToAddToIndex = idea.uncompletedTasks.where((e) => e.priority == Priority_High).length;
-                  }
-                  ////////////////////////////////////////////////
-                  
-                  
-                  int incomingIndex =  idea.uncompletedTasks.indexOf(_);
-                  int recieverIndex = idea.uncompletedTasks.indexOf(groupTasks[index]);
-
-                  idea.uncompletedTasks.remove(_);
-                 
-                  if (incomingIndex < recieverIndex)
-                    idea.uncompletedTasks.insert((index+amountToAddToIndex)-1, _);
-                  else
-                    idea.uncompletedTasks.insert((index+amountToAddToIndex), _);
-                
+                  ReorderListController.instance.reorderList(
+                  incomingTask: draggedTask,
+                  idea: idea,
+                  recieverTask: groupTasks[index],
+                  priorityGroup: priorityGroup,
+                  notifier: notifier);
                     
                 setState((){});
 
                 },
-                onMove: (_){
-                  if(_.data != groupTasks[index]){
-                    if(notifier.value == 0.0){
-                      notifier.value = 40;
-                    }
-                  }
-                },
-                onLeave: (_){
-                  notifier.value = 0;
-                },
+                onMove: (incomingTask) =>
+                  ReorderListController.increasePadding(
+                  notifier: notifier,
+                  incomingTask: incomingTask.data,
+                  recieverTask: groupTasks[index]),
+
+                onLeave: (_)=> ReorderListController.removePadding(notifier),
                 builder: (_,__,___)=> 
                 LongPressDraggable<Task>(
-                  feedbackOffset: Offset(0, 10),
                   maxSimultaneousDrags: 1,
                   axis: Axis.vertical,
                   childWhenDragging: Container(
                     height: 50,
                     width: MediaQuery.of(context).size.width,
-                      color: Colors.grey,),
-                  onDragUpdate: (dragUpdateDetails) async {
-
-                    if(intialPoint == 0){
-                      intialPoint = dragUpdateDetails.globalPosition.dy;
-                    }
-
-                    ReorderableGroupedListController.instance.updateDraggableDirection(dragUpdateDetails);
-                    
-                    
-                    // scrollController.position.jumpTo(400);
-                    double screenHeight = MediaQuery.of(context).size.height;
-                    double scrollPosition = dragUpdateDetails.globalPosition.dy;
-                    double scrollPositionInRelativeToScreenHeight = scrollPosition/screenHeight * 100;
-                    double extentBefore = scrollController.position.extentBefore;
-                    double extentAfter = scrollController.position.extentAfter;
-                    
-                    // Start scrolling down when draggable widget is at 30 percent of the screen and there is content below the view port.
-                    if ((ReorderableGroupedListController.instance.draggableDirection == Direction.Down) && scrollPositionInRelativeToScreenHeight > 30 && extentAfter > 0){
-                      scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
-                    }else if((ReorderableGroupedListController.instance.draggableDirection == Direction.Up) && scrollPositionInRelativeToScreenHeight < 70 && extentBefore > 0){
-                      // Start scrolling up when draggable widget is at 70 percent of the screen and there is content above the view port.
-                      scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
-                    }
-                    
-                    // scroll the page with the drag widget.
-                    // scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
-                  },
+                    color: Colors.grey),
+                    onDragUpdate: (dragUpdateDetails) =>
+                        ReorderListController.instance.scrollPageWithDraggable(
+                          scrollController: scrollController,
+                          dragUpdateDetails: dragUpdateDetails,
+                          context: context),
                   data: groupTasks[index],
 
                   feedback: Material(
@@ -222,14 +155,12 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
                   ),
                   child: ValueListenableBuilder<double>(
                       valueListenable: notifier,
-                      builder: (BuildContext context,_,__) {
+                      builder: (BuildContext context,double padding,__) {
 
                         return AnimatedPadding(
-                          padding: (ReorderableGroupedListController.instance.draggableDirection == Direction.Up)
-                          ?EdgeInsets.only(top: _)
-                          :(ReorderableGroupedListController.instance.draggableDirection == Direction.Down && index == 0)
-                          ?EdgeInsets.only(top: _)
-                          :(index == 0)?EdgeInsets.only(bottom: _):EdgeInsets.only(top: _),
+                          padding: ReorderListController.instance.animatePaddingTo(
+                            padding: padding,
+                            currentIndex: index),
 
                           duration: Duration(milliseconds: 200),
                           child: ListTile(
@@ -237,7 +168,8 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
                           leading: Text('List index : '+idea.uncompletedTasks.indexOf(groupTasks[index]).toString()),
                           // leading: Checkbox(value: false, onChanged: (bool? value) {}),
                           title: Text(groupTasks[index].task),
-                          trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
+                          trailing: Text('order index : '+groupTasks[index].orderIndex.toString()),
+                          // trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
                             ),
                         );
                       }
@@ -250,39 +182,43 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
         Container(
           height: 70,
           child: DragTarget<Task>(
-            onAccept: (_){
-              if(_.priority != priorityGroup){
-                    _.priority = priorityGroup;
+            onAccept: (draggedTask){
+              if(draggedTask.priority != priorityGroup){
+                draggedTask.priority = priorityGroup;
               }
               // if task is the only task in the priority group , and it drop in the container do not do anything.
-              if(!(groupTasks.length == 1 && _ == groupTasks.first)){
-                idea.uncompletedTasks.remove(_);
+              if(!(groupTasks.length == 1 && draggedTask == groupTasks.first)){
+                idea.uncompletedTasks.remove(draggedTask);
               }
 
               if(groupTasks.isNotEmpty){
                 // if task is the only task in the priority group , and it drop in the container do not do anything.
-                if(!(groupTasks.length == 1 && _ == groupTasks.first)){
+                if(!(groupTasks.length == 1 && draggedTask == groupTasks.first)){
                 // if the task is not empty follow the normal procedure.
-                int whereToAddto = idea.uncompletedTasks.indexOf(idea.uncompletedTasks.where((e) => e.priority == priorityGroup).last);
-                idea.uncompletedTasks.insert(++whereToAddto, _);
+
+                // Add one to the index of the last task in other for new task to be added below it.
+                int indexForNewTask = idea.uncompletedTasks.indexOf(groupTasks.last) + 1;
+                idea.uncompletedTasks.insert(indexForNewTask, draggedTask);
                 }
               }else if(priorityGroup == Priority_High){
                 // if priority high is empty, then just add task to the beginning of the list.
-                idea.uncompletedTasks.insert(0,_);
+                idea.uncompletedTasks.insert(0,draggedTask);
 
               }else if(priorityGroup == Priority_Medium){
                 // if priority medium is empty then check if high priority is empty if yes then add task to the zero index , but if not add task to plus one of the last high priority index.
                 if(idea.uncompletedTasks.where((e) => e.priority == Priority_High).isEmpty){
-                  idea.uncompletedTasks.insert(0,_);
+                  idea.uncompletedTasks.insert(0,draggedTask);
                 }else{
                   int whereToAddto = idea.uncompletedTasks.indexOf(idea.uncompletedTasks.where((e) => e.priority == Priority_High).last);
-                  idea.uncompletedTasks.insert(++whereToAddto, _);
+                  idea.uncompletedTasks.insert(++whereToAddto, draggedTask);
                 }
 
               }else if (priorityGroup == Priority_Low){
                 // if priority low is empty , just add to the end of the list the incoming task.
-                idea.uncompletedTasks.add(_);
+                idea.uncompletedTasks.add(draggedTask);
               }
+
+              ReorderListController.instance.updateTasksOrderIndex(idea);
               setState(() {});
             },
             builder: (context,_,__)=> Container()),
