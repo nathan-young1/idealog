@@ -128,6 +128,7 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index){
           ValueNotifier<double> notifier = ValueNotifier(0);
+          double intialPoint = 0;
             return DragTarget<Task>(
                 
                 onAccept: (_){
@@ -179,10 +180,30 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
                     height: 50,
                     width: MediaQuery.of(context).size.width,
                       color: Colors.grey,),
-                  onDragUpdate: (dragUpdateDetails){
+                  onDragUpdate: (dragUpdateDetails) async {
+
+                    if(intialPoint == 0){
+                      intialPoint = dragUpdateDetails.globalPosition.dy;
+                    }
+
                     ReorderableGroupedListController.instance.updateDraggableDirection(dragUpdateDetails);
+                    
+                    
+                    // scrollController.position.jumpTo(400);
+                    double screenHeight = MediaQuery.of(context).size.height;
+                    double scrollPosition = dragUpdateDetails.globalPosition.dy;
+                    double scrollPositionInRelativeToScreenHeight = scrollPosition/screenHeight * 100;
+                    double extentBefore = scrollController.position.extentBefore;
+                    double extentAfter = scrollController.position.extentAfter;
+                    
+                    if ((ReorderableGroupedListController.instance.draggableDirection == Direction.Down) && scrollPositionInRelativeToScreenHeight > 30 && extentAfter > 0){
+                      scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
+                    }else if((ReorderableGroupedListController.instance.draggableDirection == Direction.Up) && scrollPositionInRelativeToScreenHeight < 70 && extentBefore > 0){
+                      scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
+                    }
+                    
                     // scroll the page with the drag widget.
-                    scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
+                    // scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
                   },
                   data: groupTasks[index],
 
