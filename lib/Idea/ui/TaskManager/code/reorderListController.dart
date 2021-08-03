@@ -1,15 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/core-models/ideaModel.dart';
+
+enum Direction {Up, Down}
 
 class ReorderListController with ChangeNotifier{
   ReorderListController._();
   static ReorderListController instance = ReorderListController._();
 
+  static late ValueNotifier<double> currentPaddingNotifier;
 
   bool _draggableIsGoingUp = false;
   /// Use this to track high priority task.
   List<Task> highPriorityTasks = [];
+  /// Stores the timer that controls the custom scrolling.
+  Timer? scrollTimer;
 
   void setHighPriorityTasks(List<Task> highPriorityTasks)=> this.highPriorityTasks = highPriorityTasks;
 
@@ -37,6 +44,9 @@ class ReorderListController with ChangeNotifier{
 
   /// Reorganize the list of tasks.
   void reorderList({required Task incomingTask, required Idea idea, required Task recieverTask, required int priorityGroup, required ValueNotifier<double> notifier}){
+    // if the user release a draggable while scrolling do not do anything.
+    if(scrollViewCanScroll) return;
+    
     removePadding(notifier);
     _promoteTaskIfNecessary(incomingTask: incomingTask, priorityGroup: priorityGroup);
     
@@ -49,7 +59,6 @@ class ReorderListController with ChangeNotifier{
       idea.uncompletedTasks.insert(recieverIndex-1, incomingTask);
     else
       idea.uncompletedTasks.insert(recieverIndex, incomingTask);
-
   }
 
   /// Change the task priority if it was dragged into another priority group.
@@ -59,6 +68,7 @@ class ReorderListController with ChangeNotifier{
     }
   }
 
+// =============================================================SCROLL CONTROLLER==================================================//
   /// Scroll the page in sync with the draggable.
   void scrollPageWithDraggable({required ScrollController scrollController, required DragUpdateDetails dragUpdateDetails, required BuildContext context}){
     updateDraggableDirection(dragUpdateDetails);
@@ -66,20 +76,86 @@ class ReorderListController with ChangeNotifier{
     double screenHeight = MediaQuery.of(context).size.height;
     double scrollPosition = dragUpdateDetails.globalPosition.dy;
     double dragScreenPositionInPercent = scrollPosition/screenHeight * 100;
-    double extentBefore = scrollController.position.extentBefore;
-    double extentAfter = scrollController.position.extentAfter;
+
+    // Start scrolling down when the draggable is held at 75% of the screen.
+    if (!userIsDraggingTaskUp && dragScreenPositionInPercent > 75){
+      startScrollTimer(scrollViewDirection: Direction.Down, scrollController: scrollController);
+      autoAdjustScrollSpeed(scrollViewDirection: Direction.Down, dragScreenPositionInPercent: dragScreenPositionInPercent);
+
+    } else if (userIsDraggingTaskUp && dragScreenPositionInPercent < 25){
+      // Start scrolling up when the draggable is held at 25% of the screen.
+      startScrollTimer(scrollViewDirection: Direction.Up, scrollController: scrollController);
+      autoAdjustScrollSpeed(scrollViewDirection: Direction.Up, dragScreenPositionInPercent: dragScreenPositionInPercent);
+
+    } else if (scrollViewCanScroll) stopScrolling();
     
-    // Start scrolling down when draggable widget is at 30 percent of the screen and there is content below the view port.
-    if (!userIsDraggingTaskUp && dragScreenPositionInPercent > 30 && extentAfter > 0){
-      scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
-    }else if(userIsDraggingTaskUp && dragScreenPositionInPercent < 70 && extentBefore > 0){
-      // Start scrolling up when draggable widget is at 70 percent of the screen and there is content above the view port.
-      scrollController.position.pointerScroll(dragUpdateDetails.delta.dy);
+  }
+
+  /// Controls whether our custom scroller can scroll or not.
+  bool scrollViewCanScroll = false;
+  /// The amount in height the custom scroller scrolls by, these and the interval of the scroll timer determines the scroll speed.
+  double scrollSpeed = 15;
+
+
+  /// Disable the custom scrolling of the scroll view.
+  void stopScrolling()=> scrollViewCanScroll = false;
+  /// Enable the custom scrolling of the scroll view.
+  void startScrolling()=> scrollViewCanScroll = true;
+
+  /// Adjust the scroll speed based on the user's position on the screen while scrolling.
+  void autoAdjustScrollSpeed({required Direction scrollViewDirection, required double dragScreenPositionInPercent}){
+    switch (scrollViewDirection){
+      
+      case Direction.Up:
+        if(dragScreenPositionInPercent < 20)
+          scrollSpeed = 20;
+        else if (dragScreenPositionInPercent < 10)
+          scrollSpeed = 30;
+        else scrollSpeed = 15;
+      break;
+
+      case Direction.Down:
+        if(dragScreenPositionInPercent > 80)
+          scrollSpeed = 20;
+        else if (dragScreenPositionInPercent > 90)
+          scrollSpeed = 30;
+        else scrollSpeed = 15;
+        break;
     }
   }
 
+  /// Automatically scroll the scroll view over a specified interval.
+  void startScrollTimer({required Direction scrollViewDirection, required ScrollController scrollController}) {
+
+    if(!scrollViewCanScroll){
+      startScrolling();
+    scrollTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
+      /// when scrolling remove the padding from the current drag target.
+      removePadding(currentPaddingNotifier);
+      /// if the scroll view has been stopped from scrolling then cancel the timer.
+      if (!scrollViewCanScroll) timer.cancel();
+
+      switch(scrollViewDirection){
+        case Direction.Up: 
+          if (scrollController.position.extentBefore > 0) scrollController.position.pointerScroll(-scrollSpeed);
+          else timer.cancel();
+        break;
+
+        case Direction.Down: 
+          if (scrollController.position.extentAfter > 0)  scrollController.position.pointerScroll(scrollSpeed);
+          else timer.cancel();
+        break;
+      }
+
+          });
+    }
+  }
+
+//============================================================================================================================================//
+
   /// Increase padding if the incoming Task is not the same as the recieverTask.
   static void increasePadding({required ValueNotifier<double> notifier, required Task incomingTask, required Task recieverTask}){
+    currentPaddingNotifier = notifier;
     if(incomingTask != recieverTask){
       if(notifier.value == 0.0){
         notifier.value = 40;
@@ -88,7 +164,7 @@ class ReorderListController with ChangeNotifier{
   }
 
   /// Remove the padding on the recieving widget.
-  static void removePadding(ValueNotifier<double> notifier)=> notifier.value = 0;
+  static void removePadding(ValueNotifier<double> notifier)=> (notifier.value != 0) ? notifier.value = 0 : null;
 
   /// Returns an EdgeInsets specifying where to add padding to.
   EdgeInsets animatePaddingTo({required double padding, required int currentIndex}){
@@ -113,8 +189,9 @@ class ReorderListController with ChangeNotifier{
     _promoteTaskIfNecessary(incomingTask: incomingTask, priorityGroup: priorityGroup);
 
       // if task is the only task in the priority group , and it drop in the container do not do anything.
-      if(!(groupTasks.length == 1 && incomingTask == groupTasks.first)){
-        idea.uncompletedTasks.remove(incomingTask);
+      if(groupTasks.length == 1 && incomingTask == groupTasks.first) return;
+
+      idea.uncompletedTasks.remove(incomingTask);
 
       if(groupTasks.isNotEmpty){
         // Add one to the index of the last task in other for new task to be added below it.
@@ -147,8 +224,6 @@ class ReorderListController with ChangeNotifier{
         }
 
       }
-
-    }
   }
 
 }

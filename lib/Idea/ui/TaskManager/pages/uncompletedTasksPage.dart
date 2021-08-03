@@ -143,6 +143,8 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
                           scrollController: scrollController,
                           dragUpdateDetails: dragUpdateDetails,
                           context: context),
+
+                    onDragEnd: (_)=>  ReorderListController.instance.stopScrolling(),
                   data: groupTasks[index],
 
                   feedback: Material(
