@@ -110,8 +110,30 @@ abstract class TaskList with ChangeNotifier{
     }
 
   void addNewTask(Task task){
-  uncompletedTasks.add(task);
-  notifyListeners();
+    getListForPriorityGroup(task.priority!).add(task);
+    notifyListeners();
+  }
+
+  /// return the corresponding list for the priority group.
+  List<Task> getListForPriorityGroup(priorityGroup){
+    switch(priorityGroup){
+      case Priority_High:
+        return highPriority;
+      case Priority_Medium:
+        return mediumPriority;
+      case Priority_Low:
+        return lowPriority;
+
+      default:
+        return[];
+    }
+  }
+
+
+  /// Removes the task from the previous priorityGroup when move across priorityGroups.
+  void deleteTaskFromGroup(Task incomingTask){
+    getListForPriorityGroup(incomingTask.priority!).remove(incomingTask);
+    notifyListeners();
   }
   
 }
