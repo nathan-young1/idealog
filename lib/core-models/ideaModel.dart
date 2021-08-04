@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/global/typedef.dart';
 
 
@@ -52,6 +53,9 @@ abstract class TaskList with ChangeNotifier{
   
   List<Task> completedTasks = [];
   List<Task> uncompletedTasks = [];
+  List<Task> highPriority = [];
+  List<Task> mediumPriority = [];
+  List<Task> lowPriority = [];
 
   List<Task> get allTasks => [...completedTasks,...uncompletedTasks];
   double get percentIndicator {
@@ -63,14 +67,27 @@ abstract class TaskList with ChangeNotifier{
   }
   
   TaskList.test();
-  TaskList({required List<String> tasksToCreate})
-    :this.uncompletedTasks = Task.createTasks(tasksToCreate);
+  TaskList({required List<String> tasksToCreate}){
+    this.uncompletedTasks = Task.createTasks(tasksToCreate);
+    putTasksInTheirPriorityList();
+  }
 
-  TaskList.fromDb({required this.completedTasks, required this.uncompletedTasks});
+  TaskList.fromDb({required this.completedTasks, required this.uncompletedTasks}){
+    putTasksInTheirPriorityList();
+  }
   
-  TaskList.fromJson({required List<Map<String, dynamic>> completedTasks, required List<Map<String, dynamic>> uncompletedTasks}):
-    this.completedTasks = completedTasks.map((e) => Task.fromJson(json: e)).toList(),
+  TaskList.fromJson({required List<Map<String, dynamic>> completedTasks, required List<Map<String, dynamic>> uncompletedTasks}){
+    this.completedTasks = completedTasks.map((e) => Task.fromJson(json: e)).toList();
     this.uncompletedTasks = uncompletedTasks.map((e) => Task.fromJson(json: e)).toList();
+    putTasksInTheirPriorityList();
+  }
+
+  /// Put the uncompleted tasks into their varying list based on their priority group.
+  void putTasksInTheirPriorityList(){
+    highPriority = this.uncompletedTasks.where((task) => task.priority == Priority_High).toList();
+    mediumPriority = this.uncompletedTasks.where((task) => task.priority == Priority_Medium).toList();
+    lowPriority = this.uncompletedTasks.where((task) => task.priority == Priority_Low).toList();
+  }
   
 
   void deleteTask(Task task){

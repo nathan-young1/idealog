@@ -10,8 +10,6 @@ class ReorderListController with ChangeNotifier{
   ReorderListController._();
   static ReorderListController instance = ReorderListController._();
 
-  static late ValueNotifier<double> currentPaddingNotifier;
-
   bool _draggableIsGoingUp = false;
   /// Use this to track high priority task.
   List<Task> highPriorityTasks = [];
@@ -130,20 +128,18 @@ class ReorderListController with ChangeNotifier{
     if(!scrollViewCanScroll){
       startScrolling();
     scrollTimer = Timer.periodic(Duration(milliseconds: 50), (timer) {
-      /// when scrolling remove the padding from the current drag target.
-      removePadding(currentPaddingNotifier);
       /// if the scroll view has been stopped from scrolling then cancel the timer.
       if (!scrollViewCanScroll) timer.cancel();
 
       switch(scrollViewDirection){
         case Direction.Up: 
           if (scrollController.position.extentBefore > 0) scrollController.position.pointerScroll(-scrollSpeed);
-          else timer.cancel();
+          else {timer.cancel(); stopScrolling();}
         break;
 
         case Direction.Down: 
           if (scrollController.position.extentAfter > 0)  scrollController.position.pointerScroll(scrollSpeed);
-          else timer.cancel();
+          else {timer.cancel(); stopScrolling();}
         break;
       }
 
@@ -155,7 +151,6 @@ class ReorderListController with ChangeNotifier{
 
   /// Increase padding if the incoming Task is not the same as the recieverTask.
   static void increasePadding({required ValueNotifier<double> notifier, required Task incomingTask, required Task recieverTask}){
-    currentPaddingNotifier = notifier;
     if(incomingTask != recieverTask){
       if(notifier.value == 0.0){
         notifier.value = 40;
