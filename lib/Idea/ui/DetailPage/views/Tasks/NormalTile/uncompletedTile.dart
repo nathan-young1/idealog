@@ -21,7 +21,7 @@ class UncompletedTaskTile extends StatelessWidget {
       child: ListTile(
     
       leading: Checkbox(value: false, onChanged: (bool? value) async =>
-       await IdeaManager.completeTask(idea, uncompletedTask,idea.completedTasks)),
+       await IdeaManager.completeTask(idea, uncompletedTask)),
     
       title: Text(uncompletedTask.task),
     

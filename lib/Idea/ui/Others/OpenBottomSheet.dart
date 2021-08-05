@@ -7,9 +7,13 @@ import 'package:idealog/design/textStyles.dart';
 
 class OpenBottomSheet extends StatelessWidget {
 
-  OpenBottomSheet(this.addBottomSheetTaskToList);
+  OpenBottomSheet(this.addBottomSheetTaskToList, {this.idea});
   final Function(Task task) addBottomSheetTaskToList;
   final TextEditingController taskField = TextEditingController();
+  // for the modal sheet text_form_field.
+  final GlobalKey<FormState> formKey = GlobalKey();
+  // optional idea used for getting the already existing tasks of the idea in lowercase.
+  final Idea? idea;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,10 @@ class OpenBottomSheet extends StatelessWidget {
                 isDismissible: false,
                 context: context,
                 builder: (BuildContext context) =>
-                          AddTaskBottomSheet(addBottomSheetTaskToList, taskField: taskField)
+                          AddTaskBottomSheet(
+                            addBottomSheetTaskToList, taskField: taskField,
+                            formKey: formKey,
+                            preExistingTasks_Lowercase: idea?.tasksStringInLowercase)
                 );
                 },
                 

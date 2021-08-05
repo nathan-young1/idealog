@@ -79,7 +79,7 @@ class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
                         ListOfTasksToAdd(tasks: allNewTasks),
                         SizedBox(height: 20),
 
-                        OpenBottomSheet(addBottomSheetTaskToList)
+                        OpenBottomSheet(addBottomSheetTaskToList, idea: widget.idea)
                       ],
                     ),
                   ),

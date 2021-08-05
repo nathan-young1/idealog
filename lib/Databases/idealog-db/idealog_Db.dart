@@ -84,30 +84,27 @@ class IdealogDb {
     );
   }
 
-  Future<void> completeTask({required Task taskRow, required int ideaPrimaryKey, required int lastCompletedOrderIndex}) async {
+  Future<void> completeTask({required Task taskRow, required int ideaPrimaryKey}) async {
         
       await dbInstance.transaction((txn) async { 
       var batch = txn.batch();
-      // get id that does not exist in completed table then use it for this task you are adding to the table
-      int uniqueIdForTask = await getUniqueId(txn,completedTable);
-
+      // First remove the task from the uncompleted table.
       batch.delete(uncompletedTable,where: '$Column_taskId = ?',whereArgs: [taskRow.primaryKey]);
-      // Add one to the last Order index before adding it to the completed table
-      batch.insert(completedTable, {Column_ideaId: '$ideaPrimaryKey',Column_task: '${taskRow.task}',Column_taskOrder: '${++lastCompletedOrderIndex}',Column_taskId: uniqueIdForTask});
-
+      // I am passing a list of one row to be able to use an already built _addTasksToTable() method.
+      _addTasksToTable(txn: txn, tasks: [taskRow], tableName: completedTable, ideaPrimaryKey: ideaPrimaryKey);
       await batch.commit(noResult: true);
       });
   }
 
-  Future<void> uncheckCompletedTask({required Task taskRow, required int ideaPrimaryKey, required int lastUncompletedOrderIndex}) async {
+  Future<void> uncheckCompletedTask({required Task taskRow, required int ideaPrimaryKey}) async {
     
     await dbInstance.transaction((txn) async { 
       var batch = txn.batch();
-      // get id that does not exist in uncompleted table then use it for this task you are adding to the table
-      int uniqueIdForTask = await getUniqueId(txn,uncompletedTable);
+      // First delete the task from the completed table.
       batch.delete(completedTable,where: '$Column_taskId = ?',whereArgs: [taskRow.primaryKey]);
-      // Add one to the last Order index before adding it to the uncompleted table
-      batch.insert(uncompletedTable, {Column_ideaId: '$ideaPrimaryKey',Column_task: '${taskRow.task}',Column_taskOrder: '${++lastUncompletedOrderIndex}',Column_taskId: uniqueIdForTask});
+
+      // I am passing a list of one row to be able to use an already built _addTasksToTable() method.
+      _addTasksToTable(txn: txn, tasks: [taskRow], tableName: uncompletedTable, ideaPrimaryKey: ideaPrimaryKey);
 
       await batch.commit(noResult: true);
     });
@@ -158,23 +155,15 @@ class IdealogDb {
 
           Map<String, DBTaskList> tasks = await getTasksForIdea(ideaId: ideaId, txn: txn);
 
-          // Idea test = Idea.readFromDb(
-          //  ideaTitle: idea[Column_ideaTitle].toString(),
-          //  completedTasks: tasks[completedTable]!,
-          //  ideaId: ideaId,
-          //  uncompletedTasks: tasks[uncompletedTable]!,
-          //  moreDetails: idea[Column_moreDetails].toString()
-          //  );
-
-          Idea test = Idea.test()
-              ..ideaTitle = idea[Column_ideaTitle].toString()
-              ..completedTasks = tasks[completedTable]!
-              ..ideaId = ideaId
-              ..uncompletedTasks = tasks[uncompletedTable]!
-              ..moreDetails = idea[Column_moreDetails].toString()
-              ..isFavorite = (idea[Column_favorite].toString() == 'true') ? true : false;
+          Idea ideaGottenFromDb = Idea.readFromDb(
+              ideaId: ideaId,
+              ideaTitle: idea[Column_ideaTitle].toString(),
+              isFavorite: (idea[Column_favorite].toString() == 'true') ? true : false,
+              completedTasks: tasks[completedTable]!,
+              uncompletedTasks: tasks[uncompletedTable]!,
+              moreDetails: idea[Column_moreDetails].toString());
           
-          allIdeasFromDb.add(test);
+          allIdeasFromDb.add(ideaGottenFromDb);
         }
       });
 
@@ -238,12 +227,12 @@ class IdealogDb {
       var orderIndex = e[Column_taskOrder] as int;
       var primaryKey = e[Column_taskId] as int;
       var priority = e[Column_taskPriority] as int;
-      // return Task(task: task, orderIndex: orderIndex,primaryKey: primaryKey);
-      return Task.test()
-                  ..task = task
-                  ..orderIndex = orderIndex
-                  ..primaryKey = primaryKey
-                  ..priority = priority;
+
+      return Task.fromDb(
+        task: task,
+        orderIndex: orderIndex,
+        primaryKey: primaryKey,
+        priority: priority);
   }
 
   /// Add tasks to the specified table.

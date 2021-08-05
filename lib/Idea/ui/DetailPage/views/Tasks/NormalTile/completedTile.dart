@@ -46,7 +46,7 @@ class CompletedTaskTile extends StatelessWidget {
         leading: Checkbox(
         value: true,
         onChanged: (bool? value) async =>
-        await IdeaManager.uncheckCompletedTask(idea, completedTask, idea.uncompletedTasks)
+        await IdeaManager.uncheckCompletedTask(idea, completedTask)
         ),
         
         title: Text(completedTask.task),

@@ -47,7 +47,9 @@ class ReorderListController with ChangeNotifier{
     _removeFromList_PromoteIfNeeded(incomingTask: incomingTask, priorityGroup: priorityGroup, idea: idea);
 
     int recieverIndex = idea.getListForPriorityGroup(priorityGroup).indexOf(recieverTask);
-    idea.getListForPriorityGroup(priorityGroup).insert(recieverIndex, incomingTask);
+    // The recieverIndex will be -1(does not exist), if the task was dropped on it's 'ChildWhenDragging Widget'.
+    if (recieverIndex == -1)  idea.getListForPriorityGroup(priorityGroup).insert(0, incomingTask);
+    else  idea.getListForPriorityGroup(priorityGroup).insert(recieverIndex, incomingTask);
 
     // notify changes made.
     idea.notifyListeners();
@@ -157,6 +159,8 @@ class ReorderListController with ChangeNotifier{
           });
     }
   }
+
+
 
 //============================================================================================================================================//
 

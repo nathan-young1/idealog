@@ -1,6 +1,7 @@
  import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
+import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
@@ -8,7 +9,8 @@ import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
 class ReorderableGroupedList extends StatelessWidget{
-   ReorderableGroupedList({required this.idea, required this.priorityGroup, required this.scrollController});
+  ReorderableGroupedList({required this.idea, required this.priorityGroup, required this.scrollController});
+  
   final Idea idea;
   final int priorityGroup;
   final ScrollController scrollController;
@@ -94,8 +96,7 @@ class ReorderableGroupedList extends StatelessWidget{
                             duration: Duration(milliseconds: 200),
                             child: ListTile(
                             key: UniqueKey(),
-                            leading: Text('List index : '+idea.uncompletedTasks.indexOf(groupTasks[index]).toString()),
-                            // leading: Checkbox(value: false, onChanged: (bool? value) {}),
+                            leading: Checkbox(value: false, onChanged: (bool? value) async {if (value!) await IdeaManager.completeTask(idea, groupTasks[index]);}),
                             title: Text(groupTasks[index].task),
                             trailing: Text('order index : '+groupTasks[index].orderIndex.toString()),
                             // trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})

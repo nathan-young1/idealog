@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
+import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/Prefs&Data/backupJson.dart';
 import 'package:idealog/auth/code/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
@@ -16,28 +17,22 @@ class IdeaManager{
 
     // ignore: unawaited_futures
     showDialog(context: context, builder: (context) => progressAlertDialog);
-    // sort the list by their priority.
-    allNewTasks.sort((a,b)=> a.priority!.compareTo(b.priority!));
-
-    // set the order index for all the tasks.
-    for(var i = 0; i < allNewTasks.length; i++) {allNewTasks[i].orderIndex = i;}
     
-    // Give the idea a title and description
-    Idea newIdea = Idea.test()
-                    ..ideaTitle = ideaTitle
-                    ..moreDetails = moreDetails
-                    ..uncompletedTasks = allNewTasks;
+    // Create a new instance of idea.
+    Idea newIdea = Idea(ideaTitle: ideaTitle, moreDetails: moreDetails, tasksToCreate: allNewTasks);
 
     await IdealogDb.instance.writeToDb(idea: newIdea);
     Navigator.popUntil(context, ModalRoute.withName(menuPageView));
   }
 
-  static Future<void> changeMoreDetail({required Idea idea, required String newMoreDetail}) async {
+  static Future<void> changeMoreDetail({required Idea idea, required String newMoreDetail}) async 
+  {
     idea.changeMoreDetail(newMoreDetail);
     await IdealogDb.instance.changeMoreDetail(ideaId: idea.ideaId!,newMoreDetail: newMoreDetail);
   }
 
-  static Future<void> setFavorite({required Idea idea}) async {
+  static Future<void> setFavorite({required Idea idea}) async 
+  {
     // If the idea is favorite, unfavorite it else make it favorite.
     (idea.isFavorite)
     ?idea.unFavorite()
@@ -46,41 +41,26 @@ class IdeaManager{
     await IdealogDb.instance.setFavorite(idea: idea);
   }
 
-  static Future<void> completeTask(Idea idea,Task uncompletedTask,List<Task> allcompletedTasks) async {
-    // Get the last completed task order index which is the maximum order index
-    int lastCompletedOrderIndex = allcompletedTasks.map((e) => e.orderIndex).fold(0, (previousValue, currentValue) => max(previousValue, currentValue));
-      
+  static Future<void> completeTask(Idea idea,Task uncompletedTask) async 
+  {
     idea.completeTask(uncompletedTask);
-    await IdealogDb.instance.completeTask(taskRow: uncompletedTask, ideaPrimaryKey: idea.ideaId!, lastCompletedOrderIndex: lastCompletedOrderIndex);
+    await IdealogDb.instance.completeTask(taskRow: uncompletedTask, ideaPrimaryKey: idea.ideaId!);
     await AnalyticDB.instance.writeOrUpdate(uncompletedTask);
   }
 
-  static Future<void> uncheckCompletedTask(Idea idea,Task completedTask,List<Task> allUncompletedTasks) async {
-    // Get the last Uncompleted task order index which is the maximum order index
-    int lastUncompletedOrderIndex = allUncompletedTasks.map((e) => e.orderIndex).fold(0, (previousValue, currentValue) => max(previousValue, currentValue));
-    
+  static Future<void> uncheckCompletedTask(Idea idea,Task completedTask) async 
+  {
       idea.uncheckCompletedTask(completedTask);
-      await IdealogDb.instance.uncheckCompletedTask(taskRow: completedTask, ideaPrimaryKey: idea.ideaId!, lastUncompletedOrderIndex: lastUncompletedOrderIndex);
+      await IdealogDb.instance.uncheckCompletedTask(taskRow: completedTask, ideaPrimaryKey: idea.ideaId!);
       await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
   }
 
-  static Future<void> addNewTasksToExistingIdea({required Idea idea, required List<Task> newTasks}) async {
+  static Future<void> addNewTasksToExistingIdea({required Idea idea, required List<Task> newTasks}) async 
+  {
     
-    List<Task> taskList = [];
-      
-    // Get the last orderIndex in the uncompletedTasks table(if any exists else -1 so that orderindex can start from 0)
-    //, add one to it then increment from there.
-    int lastOrderIndex = (idea.uncompletedTasks.isNotEmpty)
-    ?idea.uncompletedTasks.map((e) => e.orderIndex).fold<int>(0, (previousValue, currentValue) => max(previousValue, currentValue))
-    :-1;
-    
-    for(Task task in newTasks) { 
-      task.orderIndex = ++lastOrderIndex;
-      idea.addNewTask(task);
-      taskList.add(task);
-    }
+    List<Task> modifiedTaskList = idea.putTasksInPriorityList_SetOrderIndex(tasksList: newTasks);
 
-    await IdealogDb.instance.addNewTasks(taskList: taskList, ideaId: idea.ideaId!);
+    await IdealogDb.instance.addNewTasks(taskList: modifiedTaskList, ideaId: idea.ideaId!);
   }
 
   static Future<void> deleteTask(Idea idea,Task taskRow) async {

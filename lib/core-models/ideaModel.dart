@@ -10,12 +10,11 @@ class Idea extends TaskList{
   String? moreDetails;
   bool isFavorite = false;
 
-  Idea.test():super.test();
+  Idea({required this.ideaTitle,this.moreDetails,required List<Task> tasksToCreate})
+      :super(tasksToCreate: tasksToCreate);
 
-  
-  Idea({required this.ideaTitle,this.moreDetails,required List<String> tasksToCreate}):super(tasksToCreate: tasksToCreate);
-
-  Idea.readFromDb({required this.ideaTitle,this.moreDetails,required DBTaskList completedTasks,required this.ideaId,required DBTaskList uncompletedTasks}):super.fromDb(completedTasks: completedTasks,uncompletedTasks: uncompletedTasks);
+  Idea.readFromDb({required this.ideaId, required this.ideaTitle, required this.moreDetails,required this.isFavorite, required DBTaskList completedTasks,required DBTaskList uncompletedTasks})
+      :super.fromDb(completedTasks: completedTasks,uncompletedTasks: uncompletedTasks);
 
   Idea.fromJson({required Map<String, dynamic> json}):
   ideaId = json['ideaId'],
@@ -52,12 +51,15 @@ class Idea extends TaskList{
 abstract class TaskList with ChangeNotifier{
   
   List<Task> completedTasks = [];
-  List<Task> uncompletedTasks = [];
   List<Task> highPriority = [];
   List<Task> mediumPriority = [];
   List<Task> lowPriority = [];
 
   List<Task> get allTasks => [...completedTasks,...uncompletedTasks];
+  List<Task> get uncompletedTasks => [...highPriority,...mediumPriority,...lowPriority];
+  /// Get the string of all tasks.
+  List<String> get tasksStringInLowercase => allTasks.map((taskObj)=> taskObj.task.trim().toLowerCase()).toList();
+
   double get percentIndicator {
         final totalNumberOfTasks = allTasks.length;
         //first check that the total number of tasks is not zero, so as not to have division by zero error
@@ -66,56 +68,74 @@ abstract class TaskList with ChangeNotifier{
         return percent;
   }
   
-  TaskList.test();
-  TaskList({required List<String> tasksToCreate}){
-    this.uncompletedTasks = Task.createTasks(tasksToCreate);
-    putTasksInTheirPriorityList();
+  TaskList({required List<Task> tasksToCreate})
+  {
+    putTasksInPriorityList_SetOrderIndex(tasksList: tasksToCreate);
   }
 
-  TaskList.fromDb({required this.completedTasks, required this.uncompletedTasks}){
-    putTasksInTheirPriorityList();
+  TaskList.fromDb({required this.completedTasks, required List<Task> uncompletedTasks})
+  {
+    putTasksInPriorityList_WithoutOrderIndex(tasksList: uncompletedTasks);
   }
   
-  TaskList.fromJson({required List<Map<String, dynamic>> completedTasks, required List<Map<String, dynamic>> uncompletedTasks}){
+  TaskList.fromJson({required List<Map<String, dynamic>> completedTasks, required List<Map<String, dynamic>> uncompletedTasks})
+  {
     this.completedTasks = completedTasks.map((e) => Task.fromJson(json: e)).toList();
-    this.uncompletedTasks = uncompletedTasks.map((e) => Task.fromJson(json: e)).toList();
-    putTasksInTheirPriorityList();
+    List<Task> uncompletedTasksFromJson = uncompletedTasks.map((e) => Task.fromJson(json: e)).toList();
+    putTasksInPriorityList_WithoutOrderIndex(tasksList: uncompletedTasksFromJson);
   }
 
-  /// Put the uncompleted tasks into their varying list based on their priority group.
-  void putTasksInTheirPriorityList(){
-    highPriority = this.uncompletedTasks.where((task) => task.priority == Priority_High).toList();
-    mediumPriority = this.uncompletedTasks.where((task) => task.priority == Priority_Medium).toList();
-    lowPriority = this.uncompletedTasks.where((task) => task.priority == Priority_Low).toList();
-  }
-  
+  /// Put the uncompleted tasks into their varying list based on their priority group, it also sets their order index
+  /// and returns the modified list of tasks that now has an order index.
+  List<Task> putTasksInPriorityList_SetOrderIndex({required List<Task> tasksList})
+  {
+    for(var task in tasksList){
+      var priorityListObjRef = getListForPriorityGroup(task.priority);
+      // The order index of the task should be the length of the objectRefList, because it increases every time a task is added.
+      task.orderIndex = priorityListObjRef.length;
+      priorityListObjRef.add(task);
+    }
 
-  void deleteTask(Task task){
+    // Returns the tasksList of items that now have an order index, incase you need it.
+    return tasksList;
+  }
+
+  /// Use this method when reading task with the order index already set.
+  void putTasksInPriorityList_WithoutOrderIndex({required List<Task> tasksList}) => 
+          tasksList.forEach((task) => getListForPriorityGroup(task.priority).add(task));     
+
+
+  void deleteTask(Task task)
+  {
     (uncompletedTasks.contains(task))
-    ?uncompletedTasks.remove(task)
+    ?getListForPriorityGroup(task.priority).remove(task)
     :completedTasks.remove(task);
     notifyListeners();
   }
 
-  void uncheckCompletedTask(Task task){
+  void uncheckCompletedTask(Task task)
+  {
     completedTasks.remove(task);
-    uncompletedTasks.add(task);
+    getListForPriorityGroup(task.priority).add(task);
     notifyListeners();
   }
 
-  void completeTask(Task task){
-    uncompletedTasks.remove(task);
+  void completeTask(Task task)
+  {
+    getListForPriorityGroup(task.priority).remove(task);
     completedTasks.add(task);
     notifyListeners();
-    }
+  }
 
-  void addNewTask(Task task){
+  void addNewTask(Task task)
+  {
     getListForPriorityGroup(task.priority!).add(task);
     notifyListeners();
   }
 
   /// return the corresponding list for the priority group.
-  List<Task> getListForPriorityGroup(priorityGroup){
+  List<Task> getListForPriorityGroup(priorityGroup)
+  {
     switch(priorityGroup){
       case Priority_High:
         return highPriority;
@@ -131,7 +151,8 @@ abstract class TaskList with ChangeNotifier{
 
 
   /// Removes the task from the previous priorityGroup when move across priorityGroups.
-  void deleteTaskFromGroup(Task incomingTask){
+  void deleteTaskFromGroup(Task incomingTask)
+  {
     getListForPriorityGroup(incomingTask.priority!).remove(incomingTask);
     notifyListeners();
   }
@@ -142,29 +163,17 @@ abstract class TaskList with ChangeNotifier{
 class Task {
   late String task;
   late int orderIndex;
-  int? primaryKey;
+  late final int? primaryKey;
   int? priority;
 
-  Task.test();
-
-  Task.fromDb({required this.task, required this.orderIndex, required this.primaryKey});
-  Task.jj({required this.task, required this.orderIndex,this.primaryKey, required this.priority});
-  Task({required this.task, required this.orderIndex,this.primaryKey});
+  /// Default constructor for Task.
+  Task();
+  Task.fromDb({required this.task, required this.orderIndex, required this.primaryKey, required this.priority});
   Task.fromJson({required Map<String, dynamic> json}):
     this.task = json['task'],
     this.orderIndex = json['orderIndex'],
     this.primaryKey = json['primaryKey'],
     this.priority = json['priority'];
-
-  static DBTaskList createTasks(List<String> allTask){
-    DBTaskList taskList = [];
-
-    for(int i = 0; i< allTask.length; i++){
-      // Task newTask = Task(task: allTask[i], orderIndex: i);
-      // taskList.add(newTask);
-    }
-    return taskList;
-  }
 
   Map toMap(){
     return {

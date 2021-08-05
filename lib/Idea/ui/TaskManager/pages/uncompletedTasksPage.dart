@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
-import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reorderableGroupedList.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/tasksAppBar.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
@@ -11,53 +10,25 @@ import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
 
-class UncompletedTasksPage extends StatefulWidget {
-  const UncompletedTasksPage({Key? key, required this.idea}) : super(key: key);
+class UncompletedTasksPage extends StatelessWidget {
+  
+  UncompletedTasksPage({Key? key, required this.idea}) : super(key: key);
   final Idea idea;
 
-  @override
-  _UncompletedTasksPageState createState() => _UncompletedTasksPageState();
-}
-
-class _UncompletedTasksPageState extends State<UncompletedTasksPage> with SingleTickerProviderStateMixin{
-  ScrollController scrollController = ScrollController();
-
-  @override
-  void initState() {
-    widget.idea.putTasksInTheirPriorityList();
-    super.initState();
-  }
+  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
 
     return MultiProvider(
-      providers: [ChangeNotifierProvider<Idea>.value(value: widget.idea)],
+      providers: [ChangeNotifierProvider<Idea>.value(value: idea)],
       child: SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight * 1.2),
-            child: Container(
-              color: uncompletedTasksColor,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: AppBar(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  toolbarHeight: kToolbarHeight * 1.2,
-                  title: Text("Uncompleted Tasks", style: overpass.copyWith(fontSize: 25, color: Colors.white)),
-                  automaticallyImplyLeading: false,
-                  actions: [
-                    Container(
-                      child: IconButton(onPressed: ()=> Navigator.of(context).pop(),
-                      icon: Icon(FeatherIcons.chevronDown, size: 30, color: Colors.white)),
-                    )
-                  ],
-                ),
-              ),
+            child: TasksAppBar(pageName: "Uncompleted Tasks", pageColor: uncompletedTasksColor)
             ),
-          ),
           body: Container(
             color: uncompletedTasksColor,
             child: SingleChildScrollView(
@@ -77,9 +48,9 @@ class _UncompletedTasksPageState extends State<UncompletedTasksPage> with Single
                         child: UncompletedTaskMenu(),
                       ),
               
-                    ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_High, scrollController: scrollController),
-                    ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_Medium, scrollController: scrollController),
-                    ReorderableGroupedList(idea: widget.idea, priorityGroup: Priority_Low, scrollController: scrollController)
+                      ReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
+                      ReorderableGroupedList(idea: idea, priorityGroup: Priority_Medium, scrollController: scrollController),
+                      ReorderableGroupedList(idea: idea, priorityGroup: Priority_Low, scrollController: scrollController)
                     ],
                   ),
                 )
