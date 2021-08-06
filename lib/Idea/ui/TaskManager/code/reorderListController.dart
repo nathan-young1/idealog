@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
+import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 
 enum Direction {Up, Down}
@@ -7,6 +9,13 @@ enum Direction {Up, Down}
 class ReorderListController with ChangeNotifier{
   ReorderListController._();
   static ReorderListController instance = ReorderListController._();
+
+  /// Checks if the page tasks is in reordering mode.
+  bool reOrderIsActive = false;
+  /// Changes the states of the reorderable to true thereby starting reordering mode.
+  void enableReordering(){reOrderIsActive = true; notifyListeners();}
+  /// Changes the states of the reorderable to false thereby stoping reordering mode.
+  void disableReordering(){reOrderIsActive = false; notifyListeners();}
 
   bool _draggableIsGoingUp = false;
   /// Use this to track high priority task.
@@ -31,10 +40,29 @@ class ReorderListController with ChangeNotifier{
   }
 
   /// Make sure the orderIndex of every task, match their list index.
-  void updateTasksOrderIndex(Idea idea){
+  Future<void> updateAndSaveTaskOrderIndex(Idea idea, ReorderListController reorderListController) async {
+    
     for(var i = 0; i < idea.uncompletedTasks.length; i++){
-      if(idea.uncompletedTasks[i].orderIndex != i)
-        idea.uncompletedTasks[i].orderIndex = i;
+      Task currentTaskInIteration = idea.uncompletedTasks[i];
+      // Get the object reference to the Priority Group of this task.
+      List<Task> listObjRef = idea.getListForPriorityGroup(currentTaskInIteration);
+      // Get this task index in it's priority group.
+      int indexInListObjRef = listObjRef.indexOf(currentTaskInIteration);
+
+      // If the order index of this task is not equal to it's index in the priority group list, then update it's order index.
+      if(currentTaskInIteration.orderIndex != indexInListObjRef){
+        currentTaskInIteration.orderIndex = indexInListObjRef;
+      }
+
+      // Save the new index in the database.
+      await IdealogDb.instance.updateOrderIndexAndPriorityForTaskInDb(
+        taskRowWithNewIndex: currentTaskInIteration,
+        ideaPrimaryKey: idea.ideaId!);
+
+      // Then off the reordering state.
+      reorderListController.disableReordering();
+      // Then sort all list's by their order index.
+      idea.sortAllListByOrderIndex();
     }
   }
 
@@ -57,7 +85,7 @@ class ReorderListController with ChangeNotifier{
 
   /// Change the task priority if it was dragged into another priority group, and delete the task from the previous priority group if there was any.
   static void _removeFromList_PromoteIfNeeded({required Task incomingTask, required int priorityGroup, required Idea idea}){
-    idea.deleteTaskFromGroup(incomingTask);/* note this will delete in the current priority group because it deletes based on task.priority.*/
+    idea.deleteTaskFromGroup(incomingTask); /* note this will delete in the current priority group because it deletes based on task.priority.*/
     if(incomingTask.priority != priorityGroup){
       incomingTask.priority = priorityGroup;
     }

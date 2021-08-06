@@ -111,6 +111,30 @@ class IdealogDb {
 
   }
 
+  /// Updates the order index for a particular task in the uncompletedTable of the database.
+  Future<void> updateOrderIndexAndPriorityForTaskInDb({required Task taskRowWithNewIndex, required int ideaPrimaryKey}) async {
+    await dbInstance.transaction((txn) async{
+        await txn.update(
+          uncompletedTable,
+          {
+            Column_taskOrder: taskRowWithNewIndex.orderIndex,
+            Column_taskPriority: taskRowWithNewIndex.priority
+          },
+          where: '$Column_taskId = ?', whereArgs: [taskRowWithNewIndex.primaryKey]);
+
+    });
+  }
+
+  // Future<void> updatePriorityForTaskInDb({required Task taskRowWithNewIndex, required int ideaPrimaryKey}) async {
+  //   await dbInstance.transaction((txn) async{
+  //       await txn.update(
+  //         uncompletedTable,
+  //         {Column_taskPriority: taskRowWithNewIndex.priority},
+  //         where: '$Column_taskId = ?', whereArgs: [taskRowWithNewIndex.primaryKey]);
+
+  //   });
+  // }
+
   Future<void> changeMoreDetail({required int ideaId, required String newMoreDetail}) async {
       await dbInstance.transaction((txn) async {
         await txn.update(ideaTable,

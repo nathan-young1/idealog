@@ -136,6 +136,7 @@ abstract class TaskList with ChangeNotifier{
   /// return the corresponding list for the priority group.
   List<Task> getListForPriorityGroup(priorityGroup)
   {
+    
     switch(priorityGroup){
       case Priority_High:
         return highPriority;
@@ -147,6 +148,14 @@ abstract class TaskList with ChangeNotifier{
       default:
         return[];
     }
+  }
+
+  /// Sort the list by their orderIndex.
+  void sortAllListByOrderIndex(){
+    int Function(Task a,Task b) sortByOrderIndex = (a,b)=> a.orderIndex.compareTo(b.orderIndex);
+    highPriority.sort(sortByOrderIndex);
+    mediumPriority.sort(sortByOrderIndex);
+    lowPriority.sort(sortByOrderIndex);
   }
 
 

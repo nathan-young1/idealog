@@ -8,8 +8,9 @@ import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
-class ReorderableGroupedList extends StatelessWidget{
-  ReorderableGroupedList({required this.idea, required this.priorityGroup, required this.scrollController});
+// A reorderable list view for task in a particular priority group.
+class _ReorderableGroupedList extends StatelessWidget{
+  _ReorderableGroupedList({required this.idea, required this.priorityGroup, required this.scrollController});
   
   final Idea idea;
   final int priorityGroup;
@@ -96,8 +97,10 @@ class ReorderableGroupedList extends StatelessWidget{
                             duration: Duration(milliseconds: 200),
                             child: ListTile(
                             key: UniqueKey(),
-                            leading: Checkbox(value: false, onChanged: (bool? value) async {if (value!) await IdeaManager.completeTask(idea, groupTasks[index]);}),
-                            title: Text(groupTasks[index].task),
+                            title: Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: Text(groupTasks[index].task),
+                            ),
                             trailing: Text('order index : '+groupTasks[index].orderIndex.toString()),
                             // trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
                               ),
@@ -126,4 +129,23 @@ class ReorderableGroupedList extends StatelessWidget{
       }
     );
   }         
+}
+
+
+/// The list when the page is in reordering mode.
+class ReorderableListForAllPriorityGroups extends StatelessWidget {
+  const ReorderableListForAllPriorityGroups({Key? key, required this.idea, required this.scrollController}) : super(key: key);
+  final Idea idea;
+  final ScrollController scrollController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _ReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
+        _ReorderableGroupedList(idea: idea, priorityGroup: Priority_Medium, scrollController: scrollController),
+        _ReorderableGroupedList(idea: idea, priorityGroup: Priority_Low, scrollController: scrollController)
+      ],
+    );
+  }
 }
