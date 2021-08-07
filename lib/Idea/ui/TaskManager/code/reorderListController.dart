@@ -45,7 +45,7 @@ class ReorderListController with ChangeNotifier{
     for(var i = 0; i < idea.uncompletedTasks.length; i++){
       Task currentTaskInIteration = idea.uncompletedTasks[i];
       // Get the object reference to the Priority Group of this task.
-      List<Task> listObjRef = idea.getListForPriorityGroup(currentTaskInIteration);
+      List<Task> listObjRef = idea.getListForPriorityGroup(currentTaskInIteration.priority);
       // Get this task index in it's priority group.
       int indexInListObjRef = listObjRef.indexOf(currentTaskInIteration);
 
@@ -55,24 +55,24 @@ class ReorderListController with ChangeNotifier{
       }
 
       // Save the new index in the database.
-      await IdealogDb.instance.updateOrderIndexAndPriorityForTaskInDb(
+      await IdealogDb.instance.updateOrderIndexForTaskInDb(
         taskRowWithNewIndex: currentTaskInIteration,
         ideaPrimaryKey: idea.ideaId!);
-
-      // Then off the reordering state.
-      reorderListController.disableReordering();
-      // Then sort all list's by their order index.
-      idea.sortAllListByOrderIndex();
     }
+
+    // Then off the reordering state.
+    reorderListController.disableReordering();
+    // Then sort all list's by their order index.
+    idea.sortAllListByOrderIndex();
   }
 
   /// Reorganize the list of tasks.
-  void reorderList({required Task incomingTask, required Idea idea, required Task recieverTask, required int priorityGroup, required ValueNotifier<double> notifier}){
+  Future<void> reorderList({required Task incomingTask, required Idea idea, required Task recieverTask, required int priorityGroup, required ValueNotifier<double> notifier}) async {
     // if the user release a draggable while scrolling do not do anything.
     if(scrollViewCanScroll) return;
     
     removePadding(notifier);
-    _removeFromList_PromoteIfNeeded(incomingTask: incomingTask, priorityGroup: priorityGroup, idea: idea);
+    await _removeFromList_PromoteIfNeeded(incomingTask: incomingTask, priorityGroup: priorityGroup, idea: idea);
 
     int recieverIndex = idea.getListForPriorityGroup(priorityGroup).indexOf(recieverTask);
     // The recieverIndex will be -1(does not exist), if the task was dropped on it's 'ChildWhenDragging Widget'.
@@ -84,21 +84,23 @@ class ReorderListController with ChangeNotifier{
   }
 
   /// Change the task priority if it was dragged into another priority group, and delete the task from the previous priority group if there was any.
-  static void _removeFromList_PromoteIfNeeded({required Task incomingTask, required int priorityGroup, required Idea idea}){
+  static Future<void> _removeFromList_PromoteIfNeeded({required Task incomingTask, required int priorityGroup, required Idea idea}) async {
     idea.deleteTaskFromGroup(incomingTask); /* note this will delete in the current priority group because it deletes based on task.priority.*/
     if(incomingTask.priority != priorityGroup){
       incomingTask.priority = priorityGroup;
+      await IdealogDb.instance.updatePriorityForTaskInDb(taskRowWithNewIndex: incomingTask, ideaPrimaryKey: idea.ideaId!);
     }
   }
 
     /// Add a task from a different priority group to the bottom of the current priority group.
-  void addTaskToBottomOfNewPriorityGroup(int priorityGroup, Task incomingTask, Idea idea){
+  Future<void> addTaskToBottomOfNewPriorityGroup(int priorityGroup, Task incomingTask, Idea idea) async {
     // Note: we can only add task from other priority group to the current priority group. if it is in the same priority group , the calling
     // code will bounce it back by calling (return;).
     if (incomingTask.priority != priorityGroup) {
       // Note: this will always be true because task are added to bottom are only allowed from other priority groups.
       idea.deleteTaskFromGroup(incomingTask);
       incomingTask.priority = priorityGroup;
+      await IdealogDb.instance.updatePriorityForTaskInDb(taskRowWithNewIndex: incomingTask, ideaPrimaryKey: idea.ideaId!);
     }
 
     idea.getListForPriorityGroup(priorityGroup).add(incomingTask);
@@ -222,12 +224,12 @@ class ReorderListController with ChangeNotifier{
   }
 
   /// Add a task to the bottom of a priorityGroup.
-  void addTaskToBottomOfPriorityGroup({required Task incomingTask, required int priorityGroup, required Idea idea, required List<Task> groupTasks}){
+  Future<void> addTaskToBottomOfPriorityGroup({required Task incomingTask, required int priorityGroup, required Idea idea, required List<Task> groupTasks}) async {
 
       // if task is already in the priority group, and it was droped in the container do not do anything.
       if(incomingTask.priority == priorityGroup) return;
 
-      addTaskToBottomOfNewPriorityGroup(priorityGroup, incomingTask, idea);
+      await addTaskToBottomOfNewPriorityGroup(priorityGroup, incomingTask, idea);
   }
 
 }

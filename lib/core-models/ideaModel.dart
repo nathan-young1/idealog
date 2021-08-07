@@ -134,10 +134,10 @@ abstract class TaskList with ChangeNotifier{
   }
 
   /// return the corresponding list for the priority group.
-  List<Task> getListForPriorityGroup(priorityGroup)
+  List<Task> getListForPriorityGroup(int? priorityGroup)
   {
     
-    switch(priorityGroup){
+    switch(priorityGroup!){
       case Priority_High:
         return highPriority;
       case Priority_Medium:

@@ -60,7 +60,7 @@ class UncompletedTasksPage extends StatelessWidget {
                         (reorderListController.reOrderIsActive)
                           ?ReorderableListForAllPriorityGroups(idea: idea, scrollController: scrollController)
                           :GroupedList()
-                        )
+                        ) 
                     ],
                   ),
                 )

@@ -115,8 +115,8 @@ class _ReorderableGroupedList extends StatelessWidget{
           Container(
             height: 70,
             child: DragTarget<Task>(
-              onAccept: (incomingTask)=>
-                ReorderListController.instance.addTaskToBottomOfPriorityGroup(
+              onAccept: (incomingTask) async =>
+                await ReorderListController.instance.addTaskToBottomOfPriorityGroup(
                  incomingTask: incomingTask,
                  priorityGroup: priorityGroup,
                  idea: idea,
