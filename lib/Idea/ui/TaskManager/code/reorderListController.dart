@@ -92,23 +92,6 @@ class ReorderListController with ChangeNotifier{
     }
   }
 
-    /// Add a task from a different priority group to the bottom of the current priority group.
-  Future<void> addTaskToBottomOfNewPriorityGroup(int priorityGroup, Task incomingTask, Idea idea) async {
-    // Note: we can only add task from other priority group to the current priority group. if it is in the same priority group , the calling
-    // code will bounce it back by calling (return;).
-    if (incomingTask.priority != priorityGroup) {
-      // Note: this will always be true because task are added to bottom are only allowed from other priority groups.
-      idea.deleteTaskFromGroup(incomingTask);
-      incomingTask.priority = priorityGroup;
-      await IdealogDb.instance.updatePriorityForTaskInDb(taskRowWithNewIndex: incomingTask, ideaPrimaryKey: idea.ideaId!);
-    }
-
-    idea.getListForPriorityGroup(priorityGroup).add(incomingTask);
-
-      // notify all listeners of change.
-      idea.notifyListeners();
-  }
-
 // =============================================================SCROLL CONTROLLER==================================================//
   /// Scroll the page in sync with the draggable.
   void scrollPageWithDraggable({required ScrollController scrollController, required DragUpdateDetails dragUpdateDetails, required BuildContext context}){
@@ -226,10 +209,21 @@ class ReorderListController with ChangeNotifier{
   /// Add a task to the bottom of a priorityGroup.
   Future<void> addTaskToBottomOfPriorityGroup({required Task incomingTask, required int priorityGroup, required Idea idea, required List<Task> groupTasks}) async {
 
-      // if task is already in the priority group, and it was droped in the container do not do anything.
-      if(incomingTask.priority == priorityGroup) return;
+    // if task is the only task in the priority group , and it drop in the container do not do anything.
+    if(groupTasks.length == 1 && incomingTask == groupTasks.first) return;
 
-      await addTaskToBottomOfNewPriorityGroup(priorityGroup, incomingTask, idea);
+    // Note: First delete the task from it's current priority group.
+    idea.deleteTaskFromGroup(incomingTask);
+    // if the task priority is not equal to the current priority group, then promote it.
+    if (incomingTask.priority != priorityGroup) {
+      incomingTask.priority = priorityGroup;
+      await IdealogDb.instance.updatePriorityForTaskInDb(taskRowWithNewIndex: incomingTask, ideaPrimaryKey: idea.ideaId!);
+    }
+
+    idea.getListForPriorityGroup(priorityGroup).add(incomingTask);
+
+      // notify all listeners of change.
+      idea.notifyListeners();
   }
 
 }

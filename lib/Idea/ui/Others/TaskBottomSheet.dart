@@ -133,7 +133,7 @@ class AddTaskBottomSheet extends StatelessWidget {
                     focusNode: taskFieldFocus,
                     keyboardType: TextInputType.text,
                      inputFormatters:[
-                      LengthLimitingTextInputFormatter(350),
+                      LengthLimitingTextInputFormatter(500),
                     ],
                     validator: (value){
                       if(alreadyAddedTasks.contains(value!.trim().toLowerCase())) return 'Task already exists';

@@ -1,7 +1,6 @@
  import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
-import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
@@ -9,8 +8,8 @@ import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
 // A reorderable list view for task in a particular priority group.
-class _ReorderableGroupedList extends StatelessWidget{
-  _ReorderableGroupedList({required this.idea, required this.priorityGroup, required this.scrollController});
+class SingleReorderableGroupedList extends StatelessWidget{
+  SingleReorderableGroupedList({required this.idea, required this.priorityGroup, required this.scrollController});
   
   final Idea idea;
   final int priorityGroup;
@@ -142,9 +141,9 @@ class ReorderableListForAllPriorityGroups extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _ReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
-        _ReorderableGroupedList(idea: idea, priorityGroup: Priority_Medium, scrollController: scrollController),
-        _ReorderableGroupedList(idea: idea, priorityGroup: Priority_Low, scrollController: scrollController)
+        SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
+        SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_Medium, scrollController: scrollController),
+        SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_Low, scrollController: scrollController)
       ],
     );
   }
