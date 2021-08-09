@@ -59,8 +59,8 @@ class SearchBar_MultiSelectPopup extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 35, top: 10),
-      child: Consumer<MultiSelectController>(
-        builder: (context, multiSelectController, _)=>
+      child: Consumer2<MultiSelectController, Idea>(
+        builder: (context,MultiSelectController multiSelectController, Idea idea, _)=>
         // Show this menu on top if the list is not in multi-selection mode.
         (!multiSelectController.state)
         ?Container(
@@ -78,7 +78,7 @@ class SearchBar_MultiSelectPopup extends StatelessWidget {
             padding: const EdgeInsets.only(right: 20),
             child: IconButton(
               icon: Icon(Icons.delete),
-              onPressed: (){},
+              onPressed: ()=> multiSelectController.multiDelete(idea),
             ),
           ),
         ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/global/typedef.dart';
 
-class MultiSelectController with ChangeNotifier{
+class MultiSelectController with ChangeNotifier{ 
+
   MultiSelectController._();
   static final MultiSelectController instance = MultiSelectController._();
   DBTaskList _multiSelectedTasks = [];
@@ -13,14 +15,12 @@ class MultiSelectController with ChangeNotifier{
   /// Enable multi-selection mode for completed tasks page.
   startMultiSelect(){
     _state = true;
-    notifyListeners();
     }
   
   /// Disable multi-selection mode for completed tasks page.
   stopMultiSelect(){ 
     clearSelectedTasks();
     _state = false;
-    notifyListeners();
   }
 
   /// Get multi-selection state.
@@ -50,5 +50,14 @@ class MultiSelectController with ChangeNotifier{
   void removeTaskFromMultiSelect(Task task){
     _multiSelectedTasks.remove(task);
     notifyListeners();
+  }
+
+  /// Delete all the selected list tile and disable multi-select.
+  Future<void> multiDelete(Idea idea) async {
+    for(var task in selectedTasks){
+      await IdeaManager.deleteTask(idea, task);
+    }
+
+    stopMultiSelect();
   }
 }

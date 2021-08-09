@@ -71,9 +71,6 @@ class IdeaManager{
       await AnalyticDB.instance.removeTaskFromAnalytics(taskRow);
   }
 
-  static multiDelete(Idea idea,List<Task> selectedTasks) => 
-          selectedTasks.forEach((task) => deleteTask(idea, task));
-
   static Future<void> deleteIdeaFromDb(Idea idea) async { 
     await IdealogDb.instance.deleteIdea(ideaId: idea.ideaId!);
     // Delete all the completed tasks of this idea from analytics data

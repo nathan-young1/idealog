@@ -29,30 +29,29 @@ class UncompletedTasksPage extends StatelessWidget {
        ],
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: uncompletedTasksColor,
           resizeToAvoidBottomInset: false,
           appBar: TasksAppBar(pageName: "Uncompleted Tasks", pageColor: uncompletedTasksColor, context: context),
-          body: Container(
-            color: uncompletedTasksColor,
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              controller: scrollController,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(40))
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Column(
-                    children: [
-                      SearchBar_ReorderPopup(idea: idea),
-                      PageReactiveToReorderState(
-                        isEnabled: ReorderableListForAllPriorityGroups(idea: idea, scrollController: scrollController),
-                        isDisabled: GroupedList()) 
-                    ],
-                  ),
-                )
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            controller: scrollController,
+            child: Container(
+              constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(40))
               ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Column(
+                  children: [
+                    SearchBar_ReorderPopup(idea: idea),
+                    PageReactiveToReorderState(
+                      isEnabled: ReorderableListForAllPriorityGroups(idea: idea, scrollController: scrollController),
+                      isDisabled: GroupedList()) 
+                  ],
+                ),
+              )
             ),
           ),
         ),

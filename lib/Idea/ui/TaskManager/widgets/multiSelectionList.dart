@@ -15,19 +15,20 @@ class MultiSelectionList extends StatelessWidget {
       Column(
       children: idea.completedTasks.map((completedTask) {
         bool tileIsSelected = multiSelectObj.containsTask(completedTask);
-        
-        return CheckboxListTile(
-        controlAffinity: ListTileControlAffinity.leading,
-        selected: tileIsSelected,
-        selectedTileColor: Colors.blueGrey,
-        value: tileIsSelected,
-        
-        onChanged: (bool? value)=>
-        (value == true)
-        ?multiSelectObj.addTaskToMultiSelect(completedTask)
-        :multiSelectObj.removeTaskFromMultiSelect(completedTask),
-        title: Text(completedTask.task),
-          );}
+
+        return Container(
+          color: tileIsSelected?Colors.blueGrey:null,
+          child: CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          value: tileIsSelected,
+          
+          onChanged: (bool? value)=>
+          (value == true)
+          ?multiSelectObj.addTaskToMultiSelect(completedTask)
+          :multiSelectObj.removeTaskFromMultiSelect(completedTask),
+          title: Text(completedTask.task),
+            ),
+        );}
         ).toList()
       ,)
     );

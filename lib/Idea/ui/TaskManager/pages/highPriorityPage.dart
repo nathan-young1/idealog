@@ -23,28 +23,27 @@ class HighPriorityTaskPage extends StatelessWidget {
        ],
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: HighPriorityColor,
           resizeToAvoidBottomInset: false,
           appBar: TasksAppBar(pageName: "High Priority Tasks", pageColor: HighPriorityColor, context: context),
-          body: Container(
-            color: HighPriorityColor,
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              controller: scrollController,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(40))
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Column(
-                    children: [
-                      SearchBar_ReorderPopup(idea: idea),
-                      PageReactiveToReorderState(
-                        isEnabled: SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
-                        isDisabled: ColumnViewHighPriorityTasks()),      
-                    ],
-                  ),
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            controller: scrollController,
+            child: Container(
+              constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(40))
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Column(
+                  children: [
+                    SearchBar_ReorderPopup(idea: idea),
+                    PageReactiveToReorderState(
+                      isEnabled: SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
+                      isDisabled: ColumnViewHighPriorityTasks()),      
+                  ],
                 ),
               ),
             ),

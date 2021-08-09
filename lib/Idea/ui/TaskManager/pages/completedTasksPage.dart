@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/multiSelectionList.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reactivePage.dart';
@@ -24,38 +25,30 @@ class CompletedTasksPage extends StatelessWidget {
        ],
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: completedTasksColor,
           resizeToAvoidBottomInset: false,
           appBar: TasksAppBar(pageName: "Completed Tasks", pageColor: completedTasksColor, context: context), 
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-                Container(
-                  color: completedTasksColor,
-                  child: Expanded(
-                    child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(40))
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Column(
-                            children: [
-                              SearchBar_MultiSelectPopup(),
-                              PageReactiveToMultiSelectionState(
-                                isEnabled: MultiSelectionList(),
-                                isDisabled: ColumnViewCompletedTasks())
-                            ],
-                          ),
-                        )
-                      ),
-                    ),
-                  ),
-                )
-            ],
-          ),
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Container(
+              constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(40))
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Column(
+                children: [
+                  SearchBar_MultiSelectPopup(),
+                  PageReactiveToMultiSelectionState(
+                    isEnabled: MultiSelectionList(),
+                    isDisabled: ColumnViewCompletedTasks())
+                ],
+              ),
+              ),
+            ),
+          )
         ),
       ),
     );
@@ -68,17 +61,19 @@ class ColumnViewCompletedTasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ...Provider.of<Idea>(context).completedTasks.map((completedTask) => 
-            ListTile(
-          leading: Checkbox(value: false, onChanged: (bool? value) {}),
-          title: Text(completedTask.task),
-          trailing: IconButton(icon: Icon(Icons.close), onPressed: (){})
-          
-            ),
-      ).toList()
-      ],
+    return Consumer<Idea>(
+      builder: (context, idea, _)=> Column(
+        children: [
+          ...idea.completedTasks.map((completedTask) => 
+              ListTile(
+            leading: Checkbox(value: true, onChanged: (bool? value) async => await IdeaManager.uncheckCompletedTask(idea, completedTask)),
+            title: Text(completedTask.task),
+            trailing: IconButton(icon: Icon(Icons.close), onPressed: (){})
+            
+              ),
+        ).toList()
+        ],
+      ),
     );
   }
 }
