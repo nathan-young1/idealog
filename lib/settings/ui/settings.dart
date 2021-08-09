@@ -51,10 +51,7 @@ class Settings extends StatelessWidget {
         
                     ListTile(leading: Icon(PhosphorIcons.caret_double_up,size: 30,color: _listTileIconColor),
                     title: Text('Upgrade to premium',style: poppins.copyWith(fontSize: 20)),
-                    onTap: ()=> Navigator.pushNamed(context,'UpgradeToPremium')),
-        
-                    ListTile(leading: Icon(CommunityMaterialIcons.help,size: 30,color: _listTileIconColor), 
-                    title: Text('About Idealog',style: poppins.copyWith(fontSize: 20))),
+                    onTap: ()=> Navigator.pushNamed(context,'UpgradeToPremium'))
                   ],
                 ),
               )

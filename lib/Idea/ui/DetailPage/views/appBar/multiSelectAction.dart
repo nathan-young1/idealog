@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
-import 'package:idealog/Idea/ui/DetailPage/views/Tasks/MultiSelectTile/Notifier.dart';
+import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:provider/provider.dart';
 import 'package:idealog/global/typedef.dart';
@@ -20,7 +20,7 @@ class MultiSelectAction extends StatelessWidget {
     return IconButton(
       onPressed: () async {
         await IdeaManager.multiDelete(idea, selectedTasks);
-        Provider.of<MultiSelect>(context,listen: false).stopMultiSelect();
+        Provider.of<MultiSelectController>(context,listen: false).stopMultiSelect();
       },
       iconSize: 32,
       icon: Icon(Icons.delete)

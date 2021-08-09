@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/multiSelectionList.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/reactivePage.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/taskBar.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/tasksAppBar.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:provider/provider.dart';
 
 class CompletedTasksPage extends StatelessWidget {
   const CompletedTasksPage({ Key? key , required this.idea}) : super(key: key);
@@ -11,55 +17,45 @@ class CompletedTasksPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: completedTasksColor, 
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Text("Completed Tasks", style: overpass.copyWith(fontSize: 25, color: Colors.white))),
-                    Expanded(
-                      flex: 1,
-                      child: IconButton(onPressed: ()=> Navigator.of(context).pop(),
-                      icon: Icon(FeatherIcons.chevronDown, size: 30, color: Colors.white)),
-                    ),
-                ]),
-              ),
-
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: LightGray,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(40))
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 15.0),
-                          child: CompletedTasksMenu(),
+    return MultiProvider(
+      providers: [
+       ChangeNotifierProvider<Idea>.value(value: idea),
+       ChangeNotifierProvider<MultiSelectController>.value(value: MultiSelectController.instance)
+       ],
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: TasksAppBar(pageName: "Completed Tasks", pageColor: completedTasksColor, context: context), 
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+                Container(
+                  color: completedTasksColor,
+                  child: Expanded(
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(40))
                         ),
-                        ...idea.completedTasks.map((uncompletedTask) => 
-                             ListTile(
-                            leading: Checkbox(value: false, onChanged: (bool? value) {}),
-                            title: Text(uncompletedTask.task),
-                            trailing: IconButton(icon: Icon(Icons.close), onPressed: (){})
-                            
-                              ),
-                        ).toList()
-                      ],
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Column(
+                            children: [
+                              SearchBar_MultiSelectPopup(),
+                              PageReactiveToMultiSelectionState(
+                                isEnabled: MultiSelectionList(),
+                                isDisabled: ColumnViewCompletedTasks())
+                            ],
+                          ),
+                        )
+                      ),
                     ),
-                  )
-                ),
-              )
-          ],
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );
@@ -67,39 +63,22 @@ class CompletedTasksPage extends StatelessWidget {
 }
 
 
-enum _Menu{MultiSelect}
-
-class CompletedTasksMenu extends StatelessWidget {
-  const CompletedTasksMenu({
-    Key? key,
-  }) : super(key: key);
+class ColumnViewCompletedTasks extends StatelessWidget {
+  const ColumnViewCompletedTasks({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30),
-              child: TextField(),
-            )),
-          Spacer(flex: 1),
-          Expanded(
-            flex: 1,
-            child: PopupMenuButton<_Menu>(
-              itemBuilder: (BuildContext context) => [
-                PopupMenuItem(child: TextButton.icon(
-                 onPressed: (){},
-                 icon: Icon(FontAwesomeIcons.tasks),
-                 label: Text('Multi-Selection', style: TextStyle(fontSize: 16))),
-                value: _Menu.MultiSelect)
-              ]),
-          )
-        ]
-      ),
+    return Column(
+      children: [
+        ...Provider.of<Idea>(context).completedTasks.map((completedTask) => 
+            ListTile(
+          leading: Checkbox(value: false, onChanged: (bool? value) {}),
+          title: Text(completedTask.task),
+          trailing: IconButton(icon: Icon(Icons.close), onPressed: (){})
+          
+            ),
+      ).toList()
+      ],
     );
   }
 }
-

@@ -6,8 +6,8 @@ import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:provider/provider.dart';
-import 'views/Tasks/MultiSelectTile/Notifier.dart';
-import 'views/Tasks/TaskList.dart';
+import '../TaskManager/code/MultiSelectController.dart';
+import '../TaskManager/TaskManager.dart';
 import 'views/appBar/appBar.dart';
 
 class IdeaDetail extends StatelessWidget {
@@ -33,7 +33,7 @@ class IdeaDetail extends StatelessWidget {
         body: MultiProvider(
           providers: [
           ChangeNotifierProvider<Idea>.value(value: idea),
-          ChangeNotifierProvider<MultiSelect>.value(value: MultiSelect.instance),
+          ChangeNotifierProvider<MultiSelectController>.value(value: MultiSelectController.instance),
           ],
           child: Column(
             children: [

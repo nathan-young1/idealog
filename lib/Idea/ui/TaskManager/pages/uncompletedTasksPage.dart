@@ -48,7 +48,7 @@ class UncompletedTasksPage extends StatelessWidget {
                       SearchBar_ReorderPopup(idea: idea),
                       PageReactiveToReorderState(
                         isEnabled: ReorderableListForAllPriorityGroups(idea: idea, scrollController: scrollController),
-                        isDisabled: GroupedList())
+                        isDisabled: GroupedList()) 
                     ],
                   ),
                 )

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:idealog/Idea/ui/DetailPage/views/Tasks/MultiSelectTile/Notifier.dart';
+import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:provider/provider.dart';
@@ -13,12 +13,12 @@ class IdeaAppBarButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MultiSelect multiSelectObj = Provider.of<MultiSelect>(context);
+    MultiSelectController multiSelectObj = Provider.of<MultiSelectController>(context);
     return WillPopScope(
       onWillPop: ()async{
         (!multiSelectObj.state)
         ?Navigator.pop(context)
-        :Provider.of<MultiSelect>(context,listen: false).stopMultiSelect();
+        :Provider.of<MultiSelectController>(context,listen: false).stopMultiSelect();
         // if the state is false, navigator pops the page not willPopScope
         // else the multiselect function changes the state to false, so the page do not pop
         return multiSelectObj.state;
@@ -30,7 +30,7 @@ class IdeaAppBarButtons extends StatelessWidget {
        iconSize: 35,
        onPressed: ()=> (!multiSelectObj.state)
        ?Navigator.pop(context)
-       :Provider.of<MultiSelect>(context,listen: false).stopMultiSelect()
+       :Provider.of<MultiSelectController>(context,listen: false).stopMultiSelect()
        ),
     
        (!multiSelectObj.state)

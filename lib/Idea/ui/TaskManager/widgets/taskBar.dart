@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/popupMenu.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/taskSearcher.dart';
@@ -48,4 +49,41 @@ class SearchBar_ReorderPopup extends StatelessWidget {
       ),
     );
   }
+}
+
+
+class SearchBar_MultiSelectPopup extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 35, top: 10),
+      child: Consumer<MultiSelectController>(
+        builder: (context, multiSelectController, _)=>
+        // Show this menu on top if the list is not in multi-selection mode.
+        (!multiSelectController.state)
+        ?Container(
+          child: Row(
+            children: [
+              TaskSearchField(flex: 4),
+              PopupMenu_MultiSelect(flex: 1)
+            ]
+          ),
+        )
+        // Show this menu if the list is in multi-selection mode.
+        :Align(
+          alignment: Alignment(1, 0),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: (){},
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 }
