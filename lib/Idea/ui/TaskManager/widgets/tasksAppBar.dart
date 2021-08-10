@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
+import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
 import 'package:idealog/design/textStyles.dart';
 
 // ignore: non_constant_identifier_names
@@ -19,7 +21,18 @@ PreferredSizeWidget TasksAppBar ({required String pageName, required Color pageC
             automaticallyImplyLeading: false,
             actions: [
               Container(
-                child: IconButton(onPressed: ()=> Navigator.of(context).pop(),
+                child: IconButton(
+                  onPressed: () async { 
+                    Navigator.pop(context);
+                    // wait for the page to close finish before stoping the state.
+                    await Future.delayed(Duration(milliseconds: 200),(){
+                      // Stop the states if the page was popped.
+                      if (ReorderListController.instance.reOrderIsActive)
+                          ReorderListController.instance.disableReordering();
+                      else if (MultiSelectController.instance.state)
+                          MultiSelectController.instance.stopMultiSelect();
+                    });
+                  },
                 icon: Icon(FeatherIcons.chevronDown, size: 30, color: Colors.white)),
               )
             ],

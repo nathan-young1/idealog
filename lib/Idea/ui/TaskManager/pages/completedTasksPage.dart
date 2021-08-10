@@ -9,7 +9,6 @@ import 'package:idealog/Idea/ui/TaskManager/widgets/taskBar.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/tasksAppBar.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
-import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
 class CompletedTasksPage extends StatelessWidget {

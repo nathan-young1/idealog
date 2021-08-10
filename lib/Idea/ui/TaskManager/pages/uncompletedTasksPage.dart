@@ -19,8 +19,6 @@ class UncompletedTasksPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sort the list by orderIndex on enter.
-    idea.sortAllListByOrderIndex();
 
     return MultiProvider(
       providers: [

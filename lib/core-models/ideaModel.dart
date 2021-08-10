@@ -70,24 +70,25 @@ abstract class TaskList with ChangeNotifier{
   
   TaskList({required List<Task> tasksToCreate})
   {
-    putTasksInPriorityList_SetOrderIndex(tasksList: tasksToCreate);
+    SetOrderIndex_AddTaskToIdea(tasksList: tasksToCreate);
   }
 
   TaskList.fromDb({required this.completedTasks, required List<Task> uncompletedTasks})
   {
-    putTasksInPriorityList_WithoutOrderIndex(tasksList: uncompletedTasks);
+    insertTaskFromStorageToIdea(tasksList: uncompletedTasks);
   }
   
   TaskList.fromJson({required List<Map<String, dynamic>> completedTasks, required List<Map<String, dynamic>> uncompletedTasks})
   {
     this.completedTasks = completedTasks.map((e) => Task.fromJson(json: e)).toList();
     List<Task> uncompletedTasksFromJson = uncompletedTasks.map((e) => Task.fromJson(json: e)).toList();
-    putTasksInPriorityList_WithoutOrderIndex(tasksList: uncompletedTasksFromJson);
+    insertTaskFromStorageToIdea(tasksList: uncompletedTasksFromJson);
   }
 
   /// Put the uncompleted tasks into their varying list based on their priority group, it also sets their order index
   /// and returns the modified list of tasks that now has an order index.
-  List<Task> putTasksInPriorityList_SetOrderIndex({required List<Task> tasksList})
+  // ignore: non_constant_identifier_names
+  List<Task> SetOrderIndex_AddTaskToIdea({required List<Task> tasksList})
   {
     for(var task in tasksList){
       var priorityListObjRef = getListForPriorityGroup(task.priority);
@@ -100,9 +101,11 @@ abstract class TaskList with ChangeNotifier{
     return tasksList;
   }
 
-  /// Use this method when reading task with the order index already set.
-  void putTasksInPriorityList_WithoutOrderIndex({required List<Task> tasksList}) => 
-          tasksList.forEach((task) => getListForPriorityGroup(task.priority).add(task));     
+  /// Use this method when reading task from external storage (Db or json).
+  void insertTaskFromStorageToIdea({required List<Task> tasksList}) {
+      tasksList.forEach((task) => getListForPriorityGroup(task.priority).add(task)); 
+      sortAllListByOrderIndex();
+  }    
 
 
   void deleteTask(Task task)

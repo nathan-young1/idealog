@@ -58,6 +58,13 @@ class SingleReorderableGroupedList extends StatelessWidget{
                   onLeave: (_)=> ReorderListController.removePadding(notifier),
                   builder: (_,__,___)=> 
                   LongPressDraggable<Task>(
+                    dragAnchorStrategy: (draggable, context , position){
+                      // I am adding position(dx) gotten from the child because without it the drag will be anchored to
+                      // the pointer's dx offset, Then i am adding 20 to dy offset so that the pointer can be at the center of the drag
+                      // since the feedback size is 40;
+                      Offset toBeReturned = Offset(position.dx, Offset.zero.dy + 20);
+                      return toBeReturned;
+                    },
                     maxSimultaneousDrags: 1,
                     axis: Axis.vertical,
                     childWhenDragging: Container(
@@ -75,11 +82,12 @@ class SingleReorderableGroupedList extends StatelessWidget{
     
                     feedback: Material(
                       child: Container(
+                        height: 40,
                         decoration: elevatedBoxDecoration.copyWith(color: Colors.white),
                         width: MediaQuery.of(context).size.width,
                         child: ListTile(
                         leading: Checkbox(value: false, onChanged: (bool? value) {}),
-                        title: Text(groupTasks[index].task),
+                        title: Text(groupTasks[index].task,overflow: TextOverflow.ellipsis),
                         trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
                           ),
                       ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:idealog/nativeCode/bridge.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 
@@ -26,6 +27,9 @@ class Premium with ChangeNotifier{
 
   DateTime? get premiumPurchaseDate => _transactionDate;
   DateTime? get premiumExpirationDate => _expirationDate;
+
+  /// we are going to use this value to check the user's subscription status when networkConnectivity is not available.
+  bool? userIsPremiumWhenOffline;
   
 
   /// Initialize In-app purchases plugin.
@@ -36,6 +40,7 @@ class Premium with ChangeNotifier{
     if (!available) {
       debugPrint('In-app purchase plugin is not available');
     }else{
+      await updateUserSubcriptionStatus();
       final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream; 
 
       _subscription = purchaseUpdated.listen((purchase) async {
@@ -98,7 +103,7 @@ class Premium with ChangeNotifier{
   bool get isPremiumUser => (_hasPurchased() != null) ? true : false;
   
   /// Completed all the purchases in user purchase list and then add it to the _purchases list.
-  static Future<void> _getPastPurchases(List<PurchaseDetails> purchaseDetailsList) async { 
+  Future<void> _getPastPurchases(List<PurchaseDetails> purchaseDetailsList) async { 
 
     for (PurchaseDetails purchase in purchaseDetailsList) {
       final pending = purchase.pendingCompletePurchase;
@@ -121,6 +126,11 @@ class Premium with ChangeNotifier{
           _expirationDate = _transactionDate!.add(Duration(days: 372));
         }
 
+        /// After all the process above has been performed then call the native code to set the expirationDate of the subscription.
+        await NativeCodeCaller.instance.setPremiumExpirationDate(premiumExpirationDateInMillis: _expirationDate!.millisecondsSinceEpoch);
+        /// Then update the user subscription status.
+        await updateUserSubcriptionStatus();
+
         debugPrint("TranscationDate: $_transactionDate \n ExpirationDate: $_expirationDate");
       }
 
@@ -132,4 +142,8 @@ class Premium with ChangeNotifier{
     }
   }
 
+  /// This is done by recalling the getUserIsPremium method of the native code.
+  Future<void> updateUserSubcriptionStatus() async {
+    userIsPremiumWhenOffline = await NativeCodeCaller.instance.getUserIsPremium();
+  }
 }

@@ -7,10 +7,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import databaseModels.IdeaModel;
 import databaseModels.Task;
@@ -34,6 +41,9 @@ public class IdealogDatabase extends SQLiteOpenHelper {
 //  SharedPreferences variables
     public static final String LAST_SYNC_SHARED_PREFERENCES_PAGE = "Backup";
     public static final String LAST_SYNC_STRING_KEY = "LastSync";
+    public static final String USER_IS_PREMIUM_SHARED_PREFERENCES_PAGE_ENCRYPTED = "IsPremiumUserEncryptedPage";
+    public static final String USER_IS_PREMIUM_SHARED_PREFERENCES_PAGE_NORMAL = "IsPremiumUserNormalPage";
+    public static final String PREMIUM_EXPIRATION_DATE_KEY = "PremiumExpirationDate";
 
 
 
@@ -131,8 +141,6 @@ public class IdealogDatabase extends SQLiteOpenHelper {
         editor.putString(LAST_SYNC_STRING_KEY,lastSyncTime);
         editor.apply();
 
-        System.out.println("This is the last sync time given to be written: " + lastSyncTime);
-
         return "Success";
     }
 
@@ -143,5 +151,70 @@ public class IdealogDatabase extends SQLiteOpenHelper {
     public static String GetLastBackUpTime(Context applicationContext){
         SharedPreferences pref = applicationContext.getSharedPreferences(LAST_SYNC_SHARED_PREFERENCES_PAGE,Context.MODE_PRIVATE);
         return pref.getString(LAST_SYNC_STRING_KEY,"0");
+    }
+
+    /**
+     This returns an instance of the encrypted shared preference if possible but if there was an error it returns the normal shared pref.
+     * @param applicationContext - The context of the application.
+     * @return SharedPreferences - An instance of shared preference either encrypted or not.
+     */
+    private static SharedPreferences getEncryptedSharedPreferencesInstance(Context applicationContext){
+        try {
+            String masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC);
+
+            SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
+                    USER_IS_PREMIUM_SHARED_PREFERENCES_PAGE_ENCRYPTED,
+                    masterKeyAlias,
+                    applicationContext,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            );
+
+            return sharedPreferences;
+
+        } catch (GeneralSecurityException | IOException e){
+            return applicationContext.getSharedPreferences(USER_IS_PREMIUM_SHARED_PREFERENCES_PAGE_NORMAL,Context.MODE_PRIVATE);
+        }
+    }
+
+
+    /**
+     * This sets the expirationDate of the user subscription in both encrypted sharedPref and normal sharedPreference so that incase there
+     * is an error you can get the expirationDate from normal sharedPref, but if there is no error it is gotten from encrypted sharedPref
+     * @param millisecondsSinceEpoch
+     * @param applicationContext
+     */
+    public static String setExpirationDateForPremiumSubscription(String millisecondsSinceEpoch, Context applicationContext) {
+
+        SharedPreferences.Editor encryptedEditor = getEncryptedSharedPreferencesInstance(applicationContext).edit();
+        SharedPreferences.Editor normalEditor = applicationContext.getSharedPreferences(USER_IS_PREMIUM_SHARED_PREFERENCES_PAGE_NORMAL,Context.MODE_PRIVATE).edit();
+
+        normalEditor.putLong(PREMIUM_EXPIRATION_DATE_KEY, Long.parseLong(millisecondsSinceEpoch));
+        encryptedEditor.putLong(PREMIUM_EXPIRATION_DATE_KEY, Long.parseLong(millisecondsSinceEpoch));
+        encryptedEditor.apply();
+        normalEditor.apply();
+
+        return "success";
+    }
+
+    /**
+     * Check if the user has a premium subscription.
+     * @param applicationContext
+     * @return
+     */
+    public static boolean UserIsSubscribedToPremium(Context applicationContext){
+
+        SharedPreferences sharedPreferencesInstance = getEncryptedSharedPreferencesInstance(applicationContext);
+        long expirationDateInMilliseconds = sharedPreferencesInstance.getLong(PREMIUM_EXPIRATION_DATE_KEY,0);
+
+        // if the expirationDate is not set , return false meaning the user is not subscribed.
+        if(expirationDateInMilliseconds == 0) return false;
+
+        Calendar premiumExpirationDate = Calendar.getInstance();
+        // set the premium expiration date calender object.
+        premiumExpirationDate.setTimeInMillis(expirationDateInMilliseconds);
+
+        // if the current time is before the expirationDate return true meaning user is still subscribed, else return false.
+        return Calendar.getInstance().before(premiumExpirationDate);
     }
 }

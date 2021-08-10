@@ -89,7 +89,7 @@ class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
           ),
           bottomNavigationBar: GestureDetector(
               onTap: () async {
-                await IdeaManager.addNewTasksToExistingIdea(idea: widget.idea, newTasks: allNewTasks);
+                await IdeaManager.addNewTasksToExistingIdea(idea: widget.idea, newTasks: allNewTasks); 
                 await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> IdeaDetail(idea: widget.idea)));
                 },
               child: Container(

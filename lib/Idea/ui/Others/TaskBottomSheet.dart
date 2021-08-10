@@ -61,93 +61,95 @@ class AddTaskBottomSheet extends StatelessWidget {
         child: Form(
           key: formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                  GestureDetector(
-                    onTap: ()=> closeBottomSheet(context),
-                    child: Container(
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: DarkRed, width: 2),
-                        borderRadius: BorderRadius.circular(5)
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    GestureDetector(
+                      onTap: ()=> closeBottomSheet(context),
+                      child: Container(
+                        padding: EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: DarkRed, width: 2),
+                          borderRadius: BorderRadius.circular(5)
+                        ),
+                        child: Icon(Icons.close, size: 24, color: DarkRed),
                       ),
-                      child: Icon(Icons.close, size: 24, color: DarkRed),
                     ),
-                  ),
+                      
+                    Text('New Task',style: overpass.copyWith(fontSize: 25)),
+                      
+                    ElevatedButton.icon(onPressed: ()=> _addTaskToList(),
+                     icon: Icon(Icons.add), label: Text('Add',style: TextStyle(fontSize: 20)),
+                     style: ButtonStyle(
+                       backgroundColor: MaterialStateProperty.resolveWith((states) => DarkBlue)
+                     ),
+                     )
+                  ],),
+                ),
+            
+                Text('Set Priority', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
+                SizedBox(height: 10),
+                StatefulBuilder(
+                  builder: (context, _setState) {
                     
-                  Text('New Task',style: overpass.copyWith(fontSize: 25)),
-                    
-                  ElevatedButton.icon(onPressed: ()=> _addTaskToList(),
-                   icon: Icon(Icons.add), label: Text('Add',style: TextStyle(fontSize: 20)),
-                   style: ButtonStyle(
-                     backgroundColor: MaterialStateProperty.resolveWith((states) => DarkBlue)
-                   ),
-                   )
-                ],),
-              ),
-          
-              Text('Set Priority', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
-              SizedBox(height: 10),
-              StatefulBuilder(
-                builder: (context, _setState) {
-                  
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    decoration: elevatedBoxDecoration.copyWith(color: Colors.white, borderRadius: BorderRadius.circular(5)),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<int>(
-                        value: dropDownPriority,
-                        items: [
-                          DropdownMenuItem(child: Text("High"),value: Priority_High),
-                          DropdownMenuItem(child: Text("Medium"),value: Priority_Medium),
-                          DropdownMenuItem(child: Text("Low"),value: Priority_Low)
-                        ],
-                        onChanged: (int? value)=> _setState(()=> dropDownPriority = value!)),
-                    ),
-                  );
-                }
-              ),
-              
-              SizedBox(height: 30),
-              Text('Task:', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
-              SizedBox(height: 10),
-              Container(
-                decoration: elevatedBoxDecoration,
-                child: Focus(
-                  onFocusChange: (hasFocus){
-                    // if keyboard is open and textfield does not have focus give it focus,
-                    // so that dropmenu does not close the keyboard.
-                    if(!hasFocus && MediaQuery.of(context).viewInsets.bottom > 0)
-                    taskFieldFocus.requestFocus();
-                    
-                  },
-                  child: TextFormField(
-                    controller: taskField,
-                    focusNode: taskFieldFocus,
-                    keyboardType: TextInputType.text,
-                     inputFormatters:[
-                      LengthLimitingTextInputFormatter(500),
-                    ],
-                    validator: (value){
-                      if(alreadyAddedTasks.contains(value!.trim().toLowerCase())) return 'Task already exists';
-                      return null;
+                    return Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      decoration: elevatedBoxDecoration.copyWith(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<int>(
+                          value: dropDownPriority,
+                          items: [
+                            DropdownMenuItem(child: Text("High"),value: Priority_High),
+                            DropdownMenuItem(child: Text("Medium"),value: Priority_Medium),
+                            DropdownMenuItem(child: Text("Low"),value: Priority_Low)
+                          ],
+                          onChanged: (int? value)=> _setState(()=> dropDownPriority = value!)),
+                      ),
+                    );
+                  }
+                ),
+                
+                SizedBox(height: 30),
+                Text('Task:', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
+                SizedBox(height: 10),
+                Container(
+                  decoration: elevatedBoxDecoration,
+                  child: Focus(
+                    onFocusChange: (hasFocus){
+                      // if keyboard is open and textfield does not have focus give it focus,
+                      // so that dropmenu does not close the keyboard.
+                      if(!hasFocus && MediaQuery.of(context).viewInsets.bottom > 0)
+                      taskFieldFocus.requestFocus();
+                      
                     },
-                    minLines: 3,
-                    maxLines: null,
-                    style: TextStyle(fontSize: 18),
-                    decoration: formTextField.copyWith(hintText: 'Task')
+                    child: TextFormField(
+                      controller: taskField,
+                      focusNode: taskFieldFocus,
+                      keyboardType: TextInputType.text,
+                       inputFormatters:[
+                        LengthLimitingTextInputFormatter(350),
+                      ],
+                      validator: (value){
+                        if(alreadyAddedTasks.contains(value!.trim().toLowerCase())) return 'Task already exists';
+                        return null;
+                      },
+                      minLines: 3,
+                      maxLines: null,
+                      style: TextStyle(fontSize: 18),
+                      decoration: formTextField.copyWith(hintText: 'Task')
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 30)
-            ],
+                SizedBox(height: 30)
+              ],
+            ),
           ),
         ),
       ),

@@ -261,7 +261,7 @@ class IdealogDb {
 
   /// Add tasks to the specified table.
   Future<void> _addTasksToTable({required Transaction txn,required DBTaskList tasks,required String tableName,required int ideaPrimaryKey}) async {
-        for(var row in tasks){
+        for(Task row in tasks){
           int uniqueIdForTask = await getUniqueId(txn,tableName);
           await txn.insert(tableName, {
             Column_task: '${row.task}',
@@ -270,6 +270,11 @@ class IdealogDb {
             Column_taskId: uniqueIdForTask,
             Column_taskPriority: '${row.priority}'
             });
+
+          /// set the primaryKey for the task now that it has been added to the database these will reflect in
+          /// the idea task list because Task is being passed by reference.
+          row.primaryKey = uniqueIdForTask;
+
         }
   }
 

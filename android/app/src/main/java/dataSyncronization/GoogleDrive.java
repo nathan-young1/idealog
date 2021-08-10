@@ -50,14 +50,17 @@ public class GoogleDrive extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        try {
-            _getLastBackupFileIfExists();
-            uploadToDrive(applicationContext);
-            return Result.success();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Result.failure();
-        }
+        /// Only auto sync when the user is subscribedToPremium
+        if(IdealogDatabase.UserIsSubscribedToPremium(applicationContext)) {
+            try {
+                _getLastBackupFileIfExists();
+                uploadToDrive(applicationContext);
+                return Result.success();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return Result.failure();
+            }
+        } else return Result.success();
     }
 
 

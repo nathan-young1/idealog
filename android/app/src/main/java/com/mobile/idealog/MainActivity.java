@@ -27,6 +27,8 @@ public class MainActivity extends FlutterFragmentActivity {
     final private String cancelAutoSyncMethod = "cancelAutoSync";
     final private String GET_LAST_SYNC_TIME_METHOD = "get_last_sync_time";
     final private String UPDATE_LAST_SYNC_TIME_METHOD = "update_last_sync_time";
+    final private String SET_PREMIUM_EXPIRE_DATE = "set_premium_expire_date";
+    final private String GET_USER_IS_PREMIUM = "get_user_is_premium";
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
 
@@ -53,31 +55,19 @@ public class MainActivity extends FlutterFragmentActivity {
                 case UPDATE_LAST_SYNC_TIME_METHOD:
                     result.success(IdealogDatabase.WriteLastSyncTime(getApplicationContext()));
                     break;
+
+                case SET_PREMIUM_EXPIRE_DATE:
+                    // The expiration date gotten from dart code in string format.
+                    String expirationDateInMilliseconds = call.argument("set_premium_expire_date");
+                    result.success(IdealogDatabase.setExpirationDateForPremiumSubscription(expirationDateInMilliseconds, applicationContext));
+                    break;
+
+                case GET_USER_IS_PREMIUM:
+                    result.success(IdealogDatabase.UserIsSubscribedToPremium(applicationContext));
+                    break;
+
             }
         });
     }
-
-
-
-
-    public static ArrayList<IdeaModel> allIdeasFromJson(String JsonString) throws JSONException {
-        JSONArray jj = new JSONArray(JsonString);
-        ArrayList<IdeaModel> allIdeas = new ArrayList<>();
-        for(int i = 0; i < jj.length(); i++){
-
-            JSONObject obj = jj.getJSONObject(i);
-            IdeaModel idea = new IdeaModel(obj.getInt("ideaId"),obj.getString("ideaTitle"),obj.getString("moreDetails"), obj.getString("isFavorite"),TaskList.FromJsonArray(obj.getJSONArray("uncompletedTasks")),TaskList.FromJsonArray(obj.getJSONArray("completedTasks")));
-            System.out.println("ID: "+idea.ideaId);
-            System.out.println("Title: "+idea.ideaTitle);
-            System.out.println("MoreDetails: "+idea.moreDetails);
-            System.out.println("Favorite: "+ idea.isFavorite);
-            System.out.println("CompletedTasks: "+idea.completedTasks.stream().map(Task::toMap).collect(Collectors.toList()));
-            System.out.println("unCompletedTasks:  "+idea.uncompletedTasks.stream().map(Task::toMap).collect(Collectors.toList()));
-            allIdeas.add(idea);
-        }
-
-        return allIdeas;
-    }
-
 
 }

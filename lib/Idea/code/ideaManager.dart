@@ -58,7 +58,7 @@ class IdeaManager{
   static Future<void> addNewTasksToExistingIdea({required Idea idea, required List<Task> newTasks}) async 
   {
     
-    List<Task> modifiedTaskList = idea.putTasksInPriorityList_SetOrderIndex(tasksList: newTasks);
+    List<Task> modifiedTaskList = idea.SetOrderIndex_AddTaskToIdea(tasksList: newTasks); 
 
     await IdealogDb.instance.addNewTasks(taskList: modifiedTaskList, ideaId: idea.ideaId!);
   }
