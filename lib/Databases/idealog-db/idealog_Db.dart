@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:sqflite/sqflite.dart';
@@ -271,9 +272,13 @@ class IdealogDb {
             Column_taskPriority: '${row.priority}'
             });
 
+          /// only set this primary key if it is not already set , e.g add tasks to existing idea.
+          if(row.primaryKey == null){
+            debugPrint('i am setting the primary key to $uniqueIdForTask');
           /// set the primaryKey for the task now that it has been added to the database these will reflect in
           /// the idea task list because Task is being passed by reference.
           row.primaryKey = uniqueIdForTask;
+          }
 
         }
   }

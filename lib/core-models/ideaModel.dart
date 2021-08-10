@@ -175,7 +175,7 @@ abstract class TaskList with ChangeNotifier{
 class Task {
   late String task;
   late int orderIndex;
-  late final int? primaryKey;
+  int? primaryKey;
   int? priority;
 
   /// Default constructor for Task.

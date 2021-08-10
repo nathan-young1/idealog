@@ -5,11 +5,12 @@ import 'package:provider/provider.dart';
 class ProductivityManager{
 
     final BuildContext context;
-// Intialize the buildcontext for all methods of the class
+    /// Intialize the buildcontext for all methods of the class
     ProductivityManager({required this.context});
 
     List<Idea> getFavoriteTasks(){
-      var allIdeas = Provider.of<List<Idea>>(context);
+      /// only take the ideas that are favorites into the list.
+      var allIdeas = Provider.of<List<Idea>>(context).where((idea) => idea.isFavorite).toList();
       //sort the ideas by their completeTasks Length in descending order
       allIdeas.sort((a,b) => b.completedTasks.length.compareTo(a.completedTasks.length));
       // only take four of the ideas with the biggest task length

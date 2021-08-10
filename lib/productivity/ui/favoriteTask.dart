@@ -24,7 +24,7 @@ class FavoriteTasks extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 20,horizontal: 20),
         child: Column(
           children: [
-            Text('Favorite Tasks',
+            Text('Most Favorite Ideas',
             style: rhodiumLibre.copyWith(fontSize: 25)),
             if(favorites.isNotEmpty)
             for(int index = 0; index < favorites.length; index++)
@@ -40,7 +40,7 @@ class FavoriteTasks extends StatelessWidget {
               trailing: Icon(Icons.arrow_forward_ios)),
             )
             else
-            Text('No tasks available',
+            Text('No favorite ideas available',
             style: lato.copyWith(fontSize: 19))
             ],
         ),
