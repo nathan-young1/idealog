@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
+import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:idealog/global/paths.dart';
 import 'package:idealog/global/routes.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:velocity_x/velocity_x.dart';
+
 
 
 class SplashScreen extends StatefulWidget {
@@ -31,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
         } else
           // fingerprint authentication is not enabled
           changeRoute();
+          
         
         });
       });
@@ -44,6 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
       
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(bottom: 50.h),
@@ -54,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: GestureDetector(
                 // create a login with fingerprint screen so that they can touch the center to authenticate again after 5 seconds
               // onTap: ()=> auth(useBiometric),
-              child: Image.asset(Provider.of<Prefrences>(context).appLogoPath,height: 240.h,width: 230.w))
+              child: Image.asset(Provider.of<Paths>(context).pathToLogo,height: 240.h,width: 230.w))
               ),
             ),
             Text('Idealog v1.2',
@@ -63,5 +69,26 @@ class _SplashScreenState extends State<SplashScreen> {
           ],
         ),
       ),);
+  }
+}
+
+class TabletTest extends StatelessWidget {
+  const TabletTest({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+  
+    return Scaffold(
+      drawer: Container(
+          height: MediaQuery.of(context).size.height,
+          color: Color.fromRGBO(112, 112, 112, 1),
+          width: 250
+          ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: context.screenWidth,
+        child: MenuPageView(),
+      ),
+    );
   }
 }

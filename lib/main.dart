@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
@@ -13,17 +14,17 @@ import 'Databases/idealog-db/idealog_Db.dart';
 import 'Idea/ui/Others/CreateIdea.dart';
 import 'Prefs&Data/GoogleUserData.dart';
 import 'SearchBar/SearchNotifier.dart';
-import 'auth/ui/authUi.dart';
 import 'bottomNav/notifier.dart';
 import 'config.dart';
 import 'core-models/ideaModel.dart';
-import 'settings/ui/syncronization.dart';
+import 'global/paths.dart';
+import 'settings/ui/dataBackup.dart';
 
 Future<void> main() async { 
   WidgetsFlutterBinding.ensureInitialized();
 
   await InitializeAppConfig();
-
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(Idealog());
   }
 
@@ -45,7 +46,8 @@ class Idealog extends StatelessWidget {
                             ChangeNotifierProvider<Prefrences>.value(value: Prefrences.instance),
                             ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance),
                             ChangeNotifierProvider<SearchController>.value(value: SearchController.instance),
-                            ChangeNotifierProvider<Premium>.value(value: Premium.instance)
+                            ChangeNotifierProvider<Premium>.value(value: Premium.instance),
+                            ChangeNotifierProvider<Paths>.value(value: Paths.instance)
                           ],
                           child: Builder(
                             builder: (BuildContext context) => MaterialApp(
@@ -60,7 +62,6 @@ class Idealog extends StatelessWidget {
                               darkTheme: CustomTheme.darkTheme,
                               routes: {
                                 homePage: (context) => SplashScreen(),
-                                authenticationPage: (context) => Login(),
                                 menuPageView: (context) => MenuPageView(),
                                 addNewIdeaPage: (context) => NewIdea(),
                                 manageAccountPage: (context) => ManageAccount(),

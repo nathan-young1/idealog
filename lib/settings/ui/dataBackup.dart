@@ -3,10 +3,10 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
-import 'package:idealog/auth/code/authHandler.dart';
+import 'package:idealog/auth/authHandler.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/global/strings.dart';
+import 'package:idealog/global/paths.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +33,7 @@ class Syncronization extends StatelessWidget {
                     borderRadius: BorderRadius.only(bottomRight: Radius.circular(20)),
                     image: DecorationImage(
                     colorFilter: ColorFilter.mode(LightGray.withOpacity(0.4), BlendMode.dstATop),
-                    image: ExactAssetImage(pathToDataSyncIllustration),
+                    image: ExactAssetImage(Provider.of<Paths>(context).pathToDataBackupPic),
                     fit: BoxFit.cover)
                   ),
                   child: Stack(

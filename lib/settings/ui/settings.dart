@@ -1,4 +1,3 @@
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
@@ -7,6 +6,7 @@ import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/customWidget/profilePicWidget.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:idealog/global/paths.dart';
 import 'package:provider/provider.dart';
 
 class Settings extends StatelessWidget {
@@ -26,7 +26,7 @@ class Settings extends StatelessWidget {
                 width: 170,
                 child: Opacity(
                   opacity: 0.7,
-                  child: Image.asset(Provider.of<Prefrences>(context).appLogoPath,
+                  child: Image.asset(Provider.of<Paths>(context).pathToLogo,
                   excludeFromSemantics: true,
                   fit: BoxFit.contain),
                 )),

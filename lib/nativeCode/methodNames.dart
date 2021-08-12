@@ -1,3 +1,6 @@
+// The method channel name.
+const String javaToFlutterMethodChannelName = 'com.idealog.alarmServiceCaller'; 
+
 // Calling native autoBackup methods.
 const String startAutoSyncMethod = 'startAutoSync';
 const String cancelAutoSyncMethod = 'cancelAutoSync';

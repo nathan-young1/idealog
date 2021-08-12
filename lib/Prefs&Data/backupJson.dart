@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
-import 'package:idealog/auth/code/authHandler.dart';
+import 'package:idealog/auth/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:path_provider/path_provider.dart';

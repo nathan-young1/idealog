@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
-import 'package:idealog/auth/code/authHandler.dart';
+import 'package:idealog/auth/authHandler.dart';
+import 'package:idealog/global/paths.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
@@ -46,6 +47,8 @@ class Prefrences with ChangeNotifier{
     await pref.setBool('DarkMode', onDarkMode);
     _darkMode = onDarkMode;
     notifyListeners();
+    /// Notify the paths class of the change in theme.
+    Paths.instance.notifyClassOnThemeChanged();
   }
 
   Future<void> setAutoSync(bool onAutoSync) async {
@@ -70,7 +73,6 @@ class Prefrences with ChangeNotifier{
   bool get isDarkMode => _darkMode ?? false;
   bool get fingerprintEnabled => _fingerprintAuth ?? false;
   bool get autoSyncEnabled => _autoSync ?? false;
-  String get appLogoPath => !isDarkMode ?'assets/images/logo.png' :'assets/images/logo_Dark.png';
 
 }
 
