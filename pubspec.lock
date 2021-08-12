@@ -64,6 +64,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  auto_start_flutter:
+    dependency: "direct main"
+    description:
+      name: auto_start_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   boolean_selector:
     dependency: transitive
     description:
@@ -380,6 +387,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  internet_connection_checker:
+    dependency: "direct main"
+    description:
+      name: internet_connection_checker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+2"
   intl:
     dependency: transitive
     description:
@@ -798,13 +812,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
-  virtual_keyboard:
-    dependency: "direct main"
-    description:
-      name: virtual_keyboard
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   vm_service:
     dependency: transitive
     description:

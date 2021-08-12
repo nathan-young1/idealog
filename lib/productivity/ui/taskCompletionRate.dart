@@ -20,13 +20,17 @@ class CompletionRateModel{
 class TaskCompletionRate extends StatelessWidget {
 
   late final List<CompletionRateModel> rates;
+  final double completedTaskPercent;
+  int get percentageCompletion { 
+    return (completedTaskPercent * 100).round();
+  }
 
-  TaskCompletionRate(double completedTaskPercent){
+  TaskCompletionRate(this.completedTaskPercent){
     // 100% is 1 , so uncompleted tasks will be (1-completedTaskPercent)
-    var uncompletedTaskPercent = 1 - completedTaskPercent;
+    var uncompletedTaskPercent = 1 - this.completedTaskPercent;
     rates = [
-    CompletionRateModel(percent: uncompletedTaskPercent, type: RateType.UNCOMPLETED),
-    CompletionRateModel(percent: completedTaskPercent, type: RateType.COMPLETED)
+    CompletionRateModel(percent: completedTaskPercent, type: RateType.COMPLETED),
+    CompletionRateModel(percent: uncompletedTaskPercent, type: RateType.UNCOMPLETED)
     ];
   }
 
@@ -35,10 +39,6 @@ class TaskCompletionRate extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: LightGray,
-        ),
         padding: EdgeInsets.symmetric(vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -53,23 +53,31 @@ class TaskCompletionRate extends StatelessWidget {
                   height: 100,
                   width: 100,
                   child: SfCircularChart(
-                    
+                    annotations: [
+                      CircularChartAnnotation(
+                        horizontalAlignment: ChartAlignment.center,
+                        verticalAlignment: ChartAlignment.center,
+                         widget: Container( child: Text('$percentageCompletion%',style: TextStyle(fontSize: 20),),))
+                    ],
                     series: <CircularSeries>[
-                      PieSeries<CompletionRateModel,String>(
-                        animationDuration: 0,
+                      DoughnutSeries<CompletionRateModel,String>(
+                        cornerStyle: (percentageCompletion > 0 && percentageCompletion < 90)
+                          ?CornerStyle.bothCurve
+                          :CornerStyle.bothFlat,
+                        animationDuration: 1000,
                         dataSource: rates,
                         pointColorMapper: (CompletionRateModel r,_)=> r.color,
                         xValueMapper: (CompletionRateModel r,_)=> r.completionRateType,
                         yValueMapper: (CompletionRateModel r,_)=> r.percent,
                         // Radius of pie
                         radius: '100%',
-                        dataLabelSettings: DataLabelSettings(
-                          isVisible: true
-                        ),
-                        // i have to times the percent by 100 because percent is btw 0-1
-                        dataLabelMapper: (CompletionRateModel r,__)=> '${(r.percent*100).round()}%',
+                        // Radius of doughnut's inner circle
+                        innerRadius: '70%',
                         explode: true,
-                        explodeGesture: ActivationMode.singleTap
+                        explodeIndex: 0,
+                        explodeOffset: '10%',
+                        explodeAll: true,
+                        explodeGesture: ActivationMode.none,
                       )
                     ],
                   ),

@@ -49,7 +49,8 @@ dependencies:
   googleapis: ^3.0.0
   path_provider: ^2.0.2
   grouped_list: ^4.1.0
-  virtual_keyboard: ^0.1.4
+  auto_start_flutter: ^0.0.6
+  internet_connection_checker: ^0.0.1+2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -65,7 +66,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/logo.png"
+  image_path: "assets/images/logo/Logo_Light.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -79,7 +80,14 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - assets/images/
+    - assets/images/
+    - assets/images/logo/
+    - assets/images/dataBackup/
+    - assets/images/idea/
+    - assets/images/intro/
+    - assets/images/productivity/
+    - assets/images/settings/
+    - assets/images/task/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -66,6 +66,11 @@ class SingleReorderableGroupedList extends StatelessWidget{
                       return toBeReturned;
                     },
                     maxSimultaneousDrags: 1,
+                    onDragStarted: (){
+                      var box = _.findRenderObject();
+                      final size = _.size;
+                      debugPrint("The drag started while i was at height ${size?.height}");
+                    },
                     axis: Axis.vertical,
                     childWhenDragging: Container(
                       height: 50,
@@ -77,12 +82,11 @@ class SingleReorderableGroupedList extends StatelessWidget{
                             dragUpdateDetails: dragUpdateDetails,
                             context: context),
     
-                      onDragEnd: (_)=>  ReorderListController.instance.stopScrolling(),
+                    onDragEnd: (_)=>  ReorderListController.instance.stopScrolling(),
                     data: groupTasks[index],
     
                     feedback: Material(
                       child: Container(
-                        height: 40,
                         decoration: elevatedBoxDecoration.copyWith(color: Colors.white),
                         width: MediaQuery.of(context).size.width,
                         child: ListTile(
