@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/core-models/ideaModel.dart';
 
 class SearchController extends ChangeNotifier{
 
@@ -36,3 +37,9 @@ class SearchController extends ChangeNotifier{
   void searchFor(String? term)=> searchTerm = term!;
 
 }
+
+/// check if the search term exists in a taskRow
+bool searchTermExistsInTask(Task taskRow)=> taskRow.task.contains(SearchController.instance.searchTerm);
+
+/// check if the search term exists in the list of ideas.
+bool searchTermExistsInIdea(Idea idea)=> idea.ideaTitle.contains(SearchController.instance.searchTerm);

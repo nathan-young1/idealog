@@ -63,7 +63,7 @@ public class IdealogDatabase extends SQLiteOpenHelper {
 
 
     private ArrayList<Task> _GetTasksForIdea(String tableName,int IdeaId,SQLiteDatabase db){
-        Cursor tableCursor = db.query(tableName, new String[]{Column_taskId, Column_taskOrder, Column_task},COLUMN_Idea_ID+" = ?",new String[]{String.valueOf(IdeaId)},null,null,null);
+        Cursor tableCursor = db.query(tableName, new String[]{Column_taskId, Column_taskOrder, Column_task, Column_taskPriority},COLUMN_Idea_ID+" = ?",new String[]{String.valueOf(IdeaId)},null,null,null);
         ArrayList<Task> ListOfTasks = new ArrayList<>();
 
         if(tableCursor.moveToFirst()){
@@ -122,7 +122,7 @@ public class IdealogDatabase extends SQLiteOpenHelper {
             return ListOfIdeas;
 
         } catch (Exception e){
-            System.out.println("An error occurred");
+            System.out.println("An error occurred" + e);
             return ListOfIdeas;
         }
     }

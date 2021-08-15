@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:idealog/SearchBar/SearchBar.dart';
-import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:provider/provider.dart';
 import 'appBarButtons.dart';
 
 class DetailAppBar extends StatelessWidget {
@@ -15,8 +12,6 @@ class DetailAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    SearchController searchController = Provider.of<SearchController>(context);
 
     return Container(
       height: 250,
@@ -24,9 +19,7 @@ class DetailAppBar extends StatelessWidget {
       padding: EdgeInsets.only(top: 15,left: 20,right: 10),
       child: Column(
         children: [
-          (searchController.searchIsActive)
-          ?SearchAppBar()
-          :IdeaAppBarButtons(idea: idea),
+          IdeaAppBarButtons(idea: idea),
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(left: 15,right: 15),

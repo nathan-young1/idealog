@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/groupedList.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reactivePage.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reorderableGroupedList.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/taskBar.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/DoesNotExist.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/tasksAppBar.dart';
+import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +16,7 @@ class HighPriorityTaskPage extends StatelessWidget {
   HighPriorityTaskPage({ Key? key, required this.idea}) : super(key: key);
   final Idea idea;
   final ScrollController scrollController = ScrollController();
+    TextEditingController searchFieldController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +43,16 @@ class HighPriorityTaskPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 20),
                 child: Column(
                   children: [
-                    SearchBar_ReorderPopup(idea: idea),
+                    SearchBar_ReorderPopup(idea: idea, searchFieldController: searchFieldController),
                     PageReactiveToReorderState(
                       isEnabled: SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
-                      isDisabled: ColumnViewHighPriorityTasks()),      
+                      isDisabled: Consumer<SearchController>(
+                        builder: (_, searchController, __){
+                          List<Task> highPriorityTasks = idea.highPriority.where(searchTermExistsInTask).toList();
+                          
+                          if(highPriorityTasks.isEmpty) return DoesNotExistIllustration();
+                          return PriorityTasksInColumnView(idea: idea);
+                        })),      
                   ],
                 ),
               ),
@@ -50,26 +60,6 @@ class HighPriorityTaskPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class ColumnViewHighPriorityTasks extends StatelessWidget {
-  const ColumnViewHighPriorityTasks({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ...Provider.of<Idea>(context).highPriority.map((taskRow) => 
-            ListTile(
-          leading: Checkbox(value: false, onChanged: (bool? value) {}),
-          title: Text(taskRow.task),
-          trailing: IconButton(icon: Icon(Icons.close), onPressed: (){})
-          
-            ),
-      ).toList()
-      ],
     );
   }
 }

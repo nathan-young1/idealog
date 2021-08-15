@@ -42,11 +42,13 @@ public class MainActivity extends FlutterFragmentActivity {
 
             switch (call.method) {
                 case startAutoSyncMethod:
-                    SynchronizationHandler.START_AUTO_SYNC(applicationContext,result);
+                    SynchronizationHandler.START_AUTO_SYNC(applicationContext);
+                    result.success("Auto Sync Start Was Called");
                     break;
 
                 case cancelAutoSyncMethod:
-                    SynchronizationHandler.CANCEL_AUTO_SYNC(applicationContext,result);
+                    SynchronizationHandler.CANCEL_AUTO_SYNC(applicationContext);
+                    result.success("Auto Sync Stop was called");
                     break;
 
                 case GET_LAST_SYNC_TIME_METHOD:

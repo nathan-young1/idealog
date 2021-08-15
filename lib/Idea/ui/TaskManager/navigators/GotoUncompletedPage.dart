@@ -39,7 +39,10 @@ class GotoUncompletedPage extends StatelessWidget {
               child: Icon(FeatherIcons.list,color: Colors.white,size: 18)
             ),
             Flexible(child: Text('Uncompleted Tasks',style: overpass.copyWith(fontSize: 16, color: Colors.white))),
-            LinearProgressIndicator(value: 60,backgroundColor: Black242424.withOpacity(0.2),color: Colors.white,),
+            Container(
+              height: 6,
+              // i am dividing the percent by 100 because LinearProgressIndicator is from 0-1.
+              child: LinearProgressIndicator(value: Provider.of<Idea>(context).percentIndicator/100,backgroundColor: Black242424.withOpacity(0.2),color: Colors.white,)),
           ],),
         ),),
       ),

@@ -20,7 +20,7 @@ class Idea extends TaskList{
   ideaId = json['ideaId'],
   ideaTitle = json['ideaTitle'],
   moreDetails = json['moreDetails'],
-  isFavorite = json['favorite'],
+  isFavorite = json['favorite'].toString().trim() == "true",
   super.fromDb(completedTasks: _jsonObject_To_Task(json['completedTasks']),uncompletedTasks: _jsonObject_To_Task(json['uncompletedTasks']));
 
   String? changeMoreDetail(String? newDetails)=> moreDetails= newDetails;

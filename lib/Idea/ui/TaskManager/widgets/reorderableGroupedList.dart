@@ -4,6 +4,7 @@ import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
+import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
@@ -66,11 +67,6 @@ class SingleReorderableGroupedList extends StatelessWidget{
                       return toBeReturned;
                     },
                     maxSimultaneousDrags: 1,
-                    onDragStarted: (){
-                      var box = _.findRenderObject();
-                      final size = _.size;
-                      debugPrint("The drag started while i was at height ${size?.height}");
-                    },
                     axis: Axis.vertical,
                     childWhenDragging: Container(
                       height: 50,
@@ -112,8 +108,7 @@ class SingleReorderableGroupedList extends StatelessWidget{
                               padding: const EdgeInsets.only(left: 15),
                               child: Text(groupTasks[index].task),
                             ),
-                            trailing: Text('order index : '+groupTasks[index].orderIndex.toString()),
-                            // trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
+                            trailing: Icon(FontAwesomeIcons.gripLines)
                               ),
                           );
                         }
@@ -125,6 +120,7 @@ class SingleReorderableGroupedList extends StatelessWidget{
     
           Container(
             height: 70,
+            padding: idea.getListForPriorityGroup(priorityGroup).isEmpty? EdgeInsets.symmetric(vertical: 10): null,
             child: DragTarget<Task>(
               onAccept: (incomingTask) async =>
                 await ReorderListController.instance.addTaskToBottomOfPriorityGroup(
@@ -133,8 +129,17 @@ class SingleReorderableGroupedList extends StatelessWidget{
                  idea: idea,
                  groupTasks: groupTasks),
                  
-              builder: (context,_,__)=> Container()),
+              builder: (context,_,__){ 
+                bool thereIsTasksInThisPriorityGroup = idea.getListForPriorityGroup(priorityGroup).isNotEmpty;
+                return Container(
+                color: (!thereIsTasksInThisPriorityGroup)? LightGray : null,
+                child: (!thereIsTasksInThisPriorityGroup)
+                ? Center(child: Text("Drag a task here to add to these group"))
+                : null
+              );}),
           ),
+
+          
         ],
       );
       }

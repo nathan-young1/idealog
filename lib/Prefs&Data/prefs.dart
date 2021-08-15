@@ -59,7 +59,7 @@ class Prefrences with ChangeNotifier{
           await signInWithGoogle();
         }
 
-      await NativeCodeCaller.startAutoSync();
+      await NativeCodeCaller.instance.startAutoSync();
     }else{
       // if auto sync is set to false then stop the auto sync feature
       await NativeCodeCaller.stopAutoSync();

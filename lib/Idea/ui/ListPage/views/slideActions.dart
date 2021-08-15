@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/Others/AddTasks.dart';
 import 'package:idealog/core-models/ideaModel.dart';
+import 'package:idealog/customWidget/alertDialog.dart';
 import 'package:idealog/design/colors.dart';
 
 class TaskAdderSlideAction extends StatelessWidget {
@@ -55,7 +56,9 @@ class DeleteSlideAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async => await IdeaManager.deleteIdeaFromDb(idea),
+      onTap: () async {
+        if (await showDeleteDialog(context: context)) await IdeaManager.deleteIdeaFromDb(idea);
+        },
       child: Container(
         decoration: BoxDecoration(
           color: LightPink,

@@ -183,7 +183,7 @@ class IdealogDb {
           Idea ideaGottenFromDb = Idea.readFromDb(
               ideaId: ideaId,
               ideaTitle: idea[Column_ideaTitle].toString(),
-              isFavorite: (idea[Column_favorite].toString() == 'true') ? true : false,
+              isFavorite: (idea[Column_favorite].toString().trim() == 'true'),
               completedTasks: tasks[completedTable]!,
               uncompletedTasks: tasks[uncompletedTable]!,
               moreDetails: idea[Column_moreDetails].toString());

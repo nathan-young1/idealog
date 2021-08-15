@@ -3,12 +3,7 @@ import 'package:idealog/Idea/ui/TaskManager/navigators/GotoAddTasksPage.dart';
 import 'package:idealog/Idea/ui/TaskManager/navigators/GotoCompletedPage.dart';
 import 'package:idealog/Idea/ui/TaskManager/navigators/GotoHighPriorityPage.dart';
 import 'package:idealog/Idea/ui/TaskManager/navigators/GotoUncompletedPage.dart';
-import 'package:idealog/SearchBar/SearchNotifier.dart';
-import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/textStyles.dart';
-
-// check if the search term exists in the list
-bool _searchTermExists(Task taskRow)=> taskRow.task.contains(SearchController.instance.searchTerm);
 
 class TaskManager extends StatelessWidget {
 

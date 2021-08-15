@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/Idea/ui/ListPage/ListPage.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/taskSearcher.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/bottomNav/bottomNav.dart';
 import 'package:idealog/bottomNav/notifier.dart';
@@ -17,6 +18,7 @@ class MenuPageView extends StatelessWidget {
   Widget build(BuildContext context) {
 
     var userPref = Provider.of<Prefrences>(context);
+    final TextEditingController searchFieldController = new TextEditingController();
     
     return MultiProvider(
       providers: [
@@ -37,7 +39,7 @@ class MenuPageView extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     controller: Provider.of<BottomNavController>(context,listen: false).controller,
                     children: [
-                      IdeaListPage(),
+                      IdeaListPage(searchFieldController: searchFieldController),
                       Productivity(),
                       Settings()
                     ],
@@ -48,7 +50,12 @@ class MenuPageView extends StatelessWidget {
                           tooltip: "Add a new idea",
                           elevation: 10,
                           backgroundColor: !userPref.isDarkMode ?DarkBlue :ActiveTabLight,
-                          onPressed: ()=> Navigator.pushNamed(context, addNewIdeaPage),
+                          onPressed: () async { 
+                            // Close the keyboard.
+                            FocusScope.of(context).unfocus();
+                            Navigator.pushNamed(context, addNewIdeaPage);
+                            await Future.delayed(Duration(milliseconds: 500),()=> clearSearch(searchFieldController, context));
+                            },
                           child: Icon(Icons.add,size: 32,color: Colors.white)
                         ),
                       ),

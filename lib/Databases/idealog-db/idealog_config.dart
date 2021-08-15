@@ -15,8 +15,8 @@ const String Column_taskId = 'taskId';
 const String Column_taskPriority = 'taskPriority';
 
 // IsFavorite idea
-const String Favorite_Yes = 'Yes'; 
-const String Favorite_No = 'No';
+const String Favorite_Yes = 'true'; 
+const String Favorite_No = 'false';
 
 // Task Priority
 const int Priority_High = 1;

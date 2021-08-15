@@ -18,6 +18,7 @@ static const String _LogoPicFolderPath = '$_PathToAssetImageFolder/logo';
 static const String _ProductivityPicFolderPath = '$_PathToAssetImageFolder/productivity';
 static const String _SettingsPicFolderPath = '$_PathToAssetImageFolder/settings';
 static const String _TaskPicFolderPath = '$_PathToAssetImageFolder/task';
+static const String _SearchPicFolderPath = '$_PathToAssetImageFolder/search';
 
 /// path to the logo
 static const String _Logo_Light = '$_LogoPicFolderPath/Logo_Light.png';
@@ -28,8 +29,7 @@ static const String _No_Idea_Light = '$_IdeaPicFolderPath/No_Idea_Light.png';
 static const String _No_Idea_Dark = '$_IdeaPicFolderPath/No_Idea_Dark.png';
 
 /// path to task pictures
-static const String _No_Tasks_Light = '$_TaskPicFolderPath/No_Tasks_Light.png';
-static const String _No_Tasks_Dark = '$_TaskPicFolderPath/No_Tasks_Dark.png';
+static const String No_Tasks_Pic = '$_TaskPicFolderPath/No_Tasks_Dark.png';
 
 /// path to productivity pictures
 static const String _Favorite_Pic_Light = '$_ProductivityPicFolderPath/Favorite_Pic_Light.png';
@@ -41,6 +41,9 @@ static const String _Setting_Pic =  '$_SettingsPicFolderPath/Setting_Pic.png';
 /// path to data backup pictures
 static const String _Data_Backup_Light = '$_DataBackupPicFolderPath/Data_Backup_Light.png';
 static const String _Data_Backup_Dark = '$_DataBackupPicFolderPath/Data_Backup_Dark.png';
+
+/// path to search not found pictures
+static const String Search_Grey = '$_SearchPicFolderPath/search_not_found.png';
 
 /// path to intro pictures
 static const String Welcome_Intro_Pic = '$_IntroPicFolderPath/Welcome_Intro_Pic.png';
@@ -59,11 +62,6 @@ static const String Intro_Pic_3 = '$_IntroPicFolderPath/Intro_Pic_3.png';
   String get pathToNoIdeaPic{
     if (Prefrences.instance.isDarkMode) return _No_Idea_Dark;
       return _No_Idea_Light;
-  }
-
-  String get pathToNoTasksPic{
-    if (Prefrences.instance.isDarkMode) return _No_Tasks_Dark;
-      return _No_Tasks_Light;
   }
 
   String get pathToFavoritePic{

@@ -11,13 +11,15 @@ import 'package:provider/provider.dart';
 
 // ignore: camel_case_types
 class SearchBar_ReorderPopup extends StatelessWidget {
-  SearchBar_ReorderPopup({required this.idea});
+  SearchBar_ReorderPopup({required this.idea, required this.searchFieldController});
   final Idea idea;
+  final TextEditingController searchFieldController;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: ()async{
+        clearSearch(searchFieldController, context);
         if (ReorderListController.instance.reOrderIsActive){
             ReorderListController.instance.disableReordering();
             return false;
@@ -34,7 +36,7 @@ class SearchBar_ReorderPopup extends StatelessWidget {
           ?Container(
             child: Row(
               children: [
-                TaskSearchField(flex: 4),
+                TaskSearchField(flex: 4, context: context, searchFieldController: searchFieldController),
                 PopupMenu_reorder(flex: 1)
               ]
             ),
@@ -48,8 +50,10 @@ class SearchBar_ReorderPopup extends StatelessWidget {
                 width: 250,
                 decoration: elevatedBoxDecoration.copyWith(color: Colors.white),
                 child: TextButton.icon(
-                  onPressed: () async => 
-                        await reorderListController.updateAndSaveTaskOrderIndex(idea, reorderListController),
+                  onPressed: () async {
+                        clearSearch(searchFieldController, context);
+                        await reorderListController.updateAndSaveTaskOrderIndex(idea, reorderListController);
+                        },
                   icon: Icon(FeatherIcons.check),
                   label: Text('Save tasks order', style: overpass.copyWith(fontSize: 22))),
               ),
@@ -63,12 +67,15 @@ class SearchBar_ReorderPopup extends StatelessWidget {
 
 
 class SearchBar_MultiSelectPopup extends StatelessWidget {
+  SearchBar_MultiSelectPopup({required this.searchFieldController});
+  final TextEditingController searchFieldController;
 
   @override
   Widget build(BuildContext context) {
 
     return WillPopScope(
       onWillPop: ()async{
+        clearSearch(searchFieldController, context);
         if (MultiSelectController.instance.state){
             MultiSelectController.instance.stopMultiSelect();
             return false;
@@ -85,7 +92,7 @@ class SearchBar_MultiSelectPopup extends StatelessWidget {
           ?Container(
             child: Row(
               children: [
-                TaskSearchField(flex: 4),
+                TaskSearchField(flex: 4, context: context, searchFieldController: searchFieldController),
                 PopupMenu_MultiSelect(flex: 1)
               ]
             ),
@@ -97,7 +104,10 @@ class SearchBar_MultiSelectPopup extends StatelessWidget {
               padding: const EdgeInsets.only(right: 20),
               child: IconButton(
                 icon: Icon(Icons.delete),
-                onPressed: ()=> multiSelectController.multiDelete(idea),
+                onPressed: (){ 
+                  clearSearch(searchFieldController, context);
+                  multiSelectController.multiDelete(idea);
+                  },
               ),
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
+import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/design/textStyles.dart';
 
 // ignore: non_constant_identifier_names
@@ -23,6 +24,8 @@ PreferredSizeWidget TasksAppBar ({required String pageName, required Color pageC
               Container(
                 child: IconButton(
                   onPressed: () async { 
+                    FocusScope.of(context).unfocus();
+                    SearchController.instance.stopSearch();
                     Navigator.pop(context);
                     // wait for the page to close finish before stoping the state.
                     await Future.delayed(Duration(milliseconds: 200),(){

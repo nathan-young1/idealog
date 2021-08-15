@@ -5,7 +5,6 @@ import android.content.Context;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -23,8 +22,7 @@ public class SynchronizationHandler {
     /**
      * This method gives the auto sync task to the work manager.
      */
-    public static void START_AUTO_SYNC(Context context, MethodChannel.Result result){
-        try {
+    public static void START_AUTO_SYNC(Context context){
 
 ///        In case of error the backoff criteria for result.retry has been set to try again in the next 10 minutes
 
@@ -38,21 +36,14 @@ public class SynchronizationHandler {
             WorkManager
                     .getInstance(context)
                     .enqueue(autoSyncWorkRequest);
-        } finally {
-            result.success("Auto Sync Start Was Called");
-        }
     }
 
 
     /**
      * This method cancels the auto sync task in the work manager.
      */
-    public static void CANCEL_AUTO_SYNC(Context context,MethodChannel.Result result){
-        try {
+    public static void CANCEL_AUTO_SYNC(Context context){
             WorkManager.getInstance(context).cancelAllWorkByTag(AutoSyncWorkRequestTag);
-        } finally {
-            result.success("Auto Sync Stop was called");
-        }
     }
 
 }

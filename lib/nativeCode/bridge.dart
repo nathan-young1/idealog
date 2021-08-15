@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:idealog/global/strings.dart';
 import 'package:idealog/nativeCode/methodNames.dart';
 
 const platform = MethodChannel(javaToFlutterMethodChannelName);
@@ -12,13 +11,13 @@ class NativeCodeCaller with ChangeNotifier{
 
   String? lastBackupTime;
 
-  static Future<void> startAutoSync() async {
+  Future<void> startAutoSync() async {
     try{
       String result = await platform.invokeMethod(startAutoSyncMethod);
-      debugPrint(result);
+      debugPrint("result from auto sync: " + result);
       
-      // Notify the app to get the updated time whether worker is a success or not.
-      instance.notifyListeners();
+      // Notify the app that work has been enqueued then wait 10 seconds before notifyListeners so that if work was a success the new time can be seen without leaving and reentering the page.
+      Future.delayed(Duration(seconds: 10), ()=> notifyListeners());
       
     } catch (e,s){
       debugPrint('$e \n\n $s');

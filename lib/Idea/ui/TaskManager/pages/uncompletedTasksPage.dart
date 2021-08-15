@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/NoTaskYet.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/groupedList.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reactivePage.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reorderableGroupedList.dart';
@@ -16,6 +17,7 @@ class UncompletedTasksPage extends StatelessWidget {
   final Idea idea;
 
   final ScrollController scrollController = ScrollController();
+  TextEditingController searchFieldController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +44,14 @@ class UncompletedTasksPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: Column(
-                  children: [
-                    SearchBar_ReorderPopup(idea: idea),
-                    PageReactiveToReorderState(
-                      isEnabled: ReorderableListForAllPriorityGroups(idea: idea, scrollController: scrollController),
-                      isDisabled: GroupedList()) 
-                  ],
-                ),
+                        children: [
+                          Consumer<Idea>(
+                            builder: (_,idea, __)=> (idea.uncompletedTasks.isNotEmpty) ? SearchBar_ReorderPopup(idea: idea, searchFieldController: searchFieldController) : Container()),
+                          PageReactiveToReorderState(
+                            isEnabled: ReorderableListForAllPriorityGroups(idea: idea, scrollController: scrollController),
+                            isDisabled: GroupedList(idea: idea))
+                        ],
+                      ),
               )
             ),
           ),

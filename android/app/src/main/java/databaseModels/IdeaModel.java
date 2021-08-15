@@ -27,7 +27,7 @@ public class IdeaModel extends TaskList{
         json.put("ideaId", ideaId);
         json.put("ideaTitle", ideaTitle);
         json.put("moreDetails",moreDetails);
-        json.put("isFavorite", isFavorite);
+        json.put("favorite", isFavorite);
         json.put("uncompletedTasks",uncompletedTasks.stream().map(Task::toMap).collect(Collectors.toList()));
         json.put("completedTasks",completedTasks.stream().map(Task::toMap).collect(Collectors.toList()));
         return json;

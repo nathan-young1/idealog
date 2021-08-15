@@ -105,7 +105,6 @@ public class GoogleDrive extends Worker {
         }
 
         IdealogDatabase.WriteLastSyncTime(context);
-
     }
 
 
