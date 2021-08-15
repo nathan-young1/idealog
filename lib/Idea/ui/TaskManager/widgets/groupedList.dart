@@ -73,14 +73,14 @@ class PriorityTasksInColumnView extends StatelessWidget{
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             initialItemCount: (priorityGroup!= null)
-            ?idea.getListForPriorityGroup(priorityGroup).length
-            :idea.completedTasks.length,
+            ?idea.getListForPriorityGroup(priorityGroup).where(searchTermExistsInTask).toList().length
+            :idea.completedTasks.where(searchTermExistsInTask).toList().length,
             key:  _listKey,
             itemBuilder: (context, index, animation){
               return AnimatedListTile(
               taskRow: (priorityGroup!= null)
-              ?idea.getListForPriorityGroup(priorityGroup)[index]
-              :idea.completedTasks[index],
+              ?idea.getListForPriorityGroup(priorityGroup).where(searchTermExistsInTask).toList()[index]
+              :idea.completedTasks.where(searchTermExistsInTask).toList()[index],
               idea: idea,
               index: index,
               animation: animation,
@@ -186,9 +186,7 @@ void _notifyUserOfChange({required bool taskWasCompleted,required BuildContext c
     AnimatedList.of(context).removeItem(index, removedItemBuilder,duration: Duration(milliseconds: 400));
     _notifyUserOfChange(taskWasCompleted: checkboxWasClicked, context: context, pageCalledFrom: pageCalledFrom);
 
-    /// Manually calls the grouped list to rebuild.
-    await Future.delayed(Duration(milliseconds: 400));
-
-    /// if the search controller is active notifyListeners(), so that it can recheck if the term is in the list of tasks.
-    if(SearchController.instance.searchIsActive) SearchController.instance.notifyListeners();
+    /// Manually calls the grouped list to rebuild since it listens to the search controller.
+    await Future.delayed(Duration(milliseconds: 400), ()=> SearchController.instance.notifyListeners());
+     
   }
