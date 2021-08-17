@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/NoTaskYet.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/animatedListTile.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/groupedList.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reactivePage.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reorderableGroupedList.dart';
@@ -43,15 +45,20 @@ class HighPriorityTaskPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 20),
                 child: Column(
                   children: [
-                    SearchBar_ReorderPopup(idea: idea, searchFieldController: searchFieldController),
+                    Consumer<Idea>(
+                            builder: (_,idea, __)=> (idea.highPriority.isNotEmpty) ? SearchBar_ReorderPopup(idea: idea, searchFieldController: searchFieldController) : Container()),
                     PageReactiveToReorderState(
                       isEnabled: SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
                       isDisabled: Consumer<SearchController>(
                         builder: (_, searchController, __){
                           List<Task> highPriorityTasks = idea.highPriority.where(searchTermExistsInTask).toList();
                           
-                          if(highPriorityTasks.isEmpty) return DoesNotExistIllustration();
-                          return PriorityTasksInColumnView(idea: idea);
+                          /// illustration for when there is no longer any high priority task.
+                          if(idea.highPriority.isEmpty) return NoTaskYet();
+                          /// illustrastion for when no search result was found.
+                          else if(highPriorityTasks.isEmpty) return DoesNotExistIllustration();
+
+                          return PriorityTasksInColumnView(idea: idea, priorityGroup: Priority_High, pageCalledFrom: TaskPage.HIGH_PRIORITY);
                         })),      
                   ],
                 ),

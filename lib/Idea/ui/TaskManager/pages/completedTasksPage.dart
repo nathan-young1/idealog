@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/NoTaskYet.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/animatedListTile.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/groupedList.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/multiSelectionList.dart';
@@ -42,14 +43,18 @@ class CompletedTasksPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 20),
                 child: Column(
                 children: [
-                  SearchBar_MultiSelectPopup(searchFieldController: searchFieldController),
+                  Consumer<Idea>(
+                        builder: (_,idea, __)=> (idea.completedTasks.isNotEmpty) ? SearchBar_MultiSelectPopup(searchFieldController: searchFieldController) : Container()),
                   PageReactiveToMultiSelectionState(
                     isEnabled: MultiSelectionList(),
                     isDisabled: Consumer<SearchController>(
                       builder: (_, searchController, __){
                         List<Task> completedTasks = idea.completedTasks.where(searchTermExistsInTask).toList();
                         
-                         if (completedTasks.isEmpty) return DoesNotExistIllustration();
+                          /// illustration for when there is no longer any completed task.
+                          if(idea.completedTasks.isEmpty) return NoTaskYet();
+                         /// illustrastion for when no search result was found.
+                         else if (completedTasks.isEmpty) return DoesNotExistIllustration();
                          return PriorityTasksInColumnView(idea: idea, pageCalledFrom: TaskPage.COMPLETED);
                          }))
                 ],

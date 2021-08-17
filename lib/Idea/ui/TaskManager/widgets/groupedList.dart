@@ -60,7 +60,9 @@ class PriorityTasksInColumnView extends StatelessWidget{
   Widget build(BuildContext context) {
     return Column(
         children: [
-          if(priorityGroup != null)Padding(
+          /// only show the animated list title if the priority group was given and the page called from
+          /// is not the high priority page(Because the page is for high priority tasks so we do not need to show a title on top of the tasks again).
+          if(priorityGroup != null && pageCalledFrom != TaskPage.HIGH_PRIORITY)Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Text((priorityGroup == Priority_High)
             ?'High Priority'
