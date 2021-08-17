@@ -61,7 +61,7 @@ class TaskCompletionRate extends StatelessWidget {
                     ],
                     series: <CircularSeries>[
                       DoughnutSeries<CompletionRateModel,String>(
-                        cornerStyle: (percentageCompletion > 0 && percentageCompletion < 90)
+                        cornerStyle: (percentageCompletion > 10 && percentageCompletion < 90)
                           ?CornerStyle.bothCurve
                           :CornerStyle.bothFlat,
                         animationDuration: 1000,
@@ -73,7 +73,8 @@ class TaskCompletionRate extends StatelessWidget {
                         radius: '100%',
                         // Radius of doughnut's inner circle
                         innerRadius: '70%',
-                        explode: true,
+                        // only explode the pie chart if the completionRate is within 10 and 90
+                        explode: (percentageCompletion > 10 && percentageCompletion < 90),
                         explodeIndex: 0,
                         explodeOffset: '10%',
                         explodeAll: true,

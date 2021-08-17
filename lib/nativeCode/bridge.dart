@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:idealog/global/top_level_methods.dart';
 import 'package:idealog/nativeCode/methodNames.dart';
 
 const platform = MethodChannel(javaToFlutterMethodChannelName);
@@ -11,6 +12,7 @@ class NativeCodeCaller with ChangeNotifier{
 
   String? lastBackupTime;
 
+  /// Start auto sync in native code by enqueuing a periodic work to work manager.
   Future<void> startAutoSync() async {
     try{
       String result = await platform.invokeMethod(startAutoSyncMethod);
@@ -24,6 +26,7 @@ class NativeCodeCaller with ChangeNotifier{
     }
   }
 
+  /// Stop the work manager from executing the auto sync periodic work.
   static Future<void> stopAutoSync() async {
     try{
       String result = await platform.invokeMethod(cancelAutoSyncMethod);
@@ -70,9 +73,32 @@ class NativeCodeCaller with ChangeNotifier{
     } catch(e, s) {
       debugPrint('$e \n\n $s');
     }
-    debugPrint('The result gotten from native code by setting the expire date $result');
+    
     notifyListeners();
     return result;
+  }
+
+  /// Ask the native code to return the expiration date of the premium plan subscription stored in the shared pref , if there is any.
+  Future<DateTime?> getPremiumExpirationDate() async {
+    int result = 0;
+    try{
+
+      result = await platform.invokeMethod(getPremiumExpireDateMethod);
+    } catch(e, s) {
+      debugPrint('$e \n\n $s');
+    }
+
+    // if the expire date in milliseconds is 0 return null;
+    if (result == 0) return null;
+    return DateTime.fromMillisecondsSinceEpoch(result);
+  }
+
+  /// Calls the convertDateTimeObjToAFormattedString() method on the expiration date gotten from the native code to a string.
+  Future<String> getPremiumExpirationDateAsFormattedString() async {
+    final DateTime? premiumPlanExpireDate = await getPremiumExpirationDate();
+    /// if the dateTime obj is null then return a empty string ("");
+    if (premiumPlanExpireDate == null) return "";
+    return convertDateTimeObjToAFormattedString(premiumPlanExpireDate);
   }
 
   /// Check if the user is a premium user, this is done by the native code.
@@ -83,7 +109,7 @@ class NativeCodeCaller with ChangeNotifier{
     } catch(e,s) {
       debugPrint('$e \n\n $s');
     }
-    debugPrint('The result for status gotten by native code caller $result');
+
     return result;
   }
 

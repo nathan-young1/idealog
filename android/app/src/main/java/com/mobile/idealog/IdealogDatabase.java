@@ -217,4 +217,19 @@ public class IdealogDatabase extends SQLiteOpenHelper {
         // if the current time is before the expirationDate return true meaning user is still subscribed, else return false.
         return Calendar.getInstance().before(premiumExpirationDate);
     }
+
+    /**
+     * This method get the expiration date of the user's premium plan in shared pref as <long>, we will only ask for this date if the user is
+     * subscribed to premium plan.
+     * @param applicationContext
+     * @return
+     */
+    public static long getExpirationDateForPremiumSubscription(Context applicationContext){
+        SharedPreferences sharedPreferencesInstance = getEncryptedSharedPreferencesInstance(applicationContext);
+        long expirationDateInMilliseconds = sharedPreferencesInstance.getLong(PREMIUM_EXPIRATION_DATE_KEY,0);
+
+        // if the expirationDate is not set , return false meaning the user is not subscribed.
+        if(expirationDateInMilliseconds == 0) return 0;
+        return expirationDateInMilliseconds;
+    }
 }

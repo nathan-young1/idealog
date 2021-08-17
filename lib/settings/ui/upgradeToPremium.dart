@@ -116,7 +116,7 @@ class _PurchaseButton extends StatelessWidget {
             child: Text('Purchased', style: poppins.copyWith(fontSize: 18)),
           )
           :ElevatedButton.icon(
-          onPressed: () async => await Premium.buyProduct(),
+          onPressed: () async => await Premium.instance.buyProduct(),
           style: ButtonStyle(
             backgroundColor: MaterialStateColor.resolveWith((states) => Colors.teal[800]!),
             shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))

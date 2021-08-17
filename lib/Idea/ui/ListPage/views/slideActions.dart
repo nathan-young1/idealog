@@ -57,7 +57,8 @@ class DeleteSlideAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        if (await showDeleteDialog(context: context)) await IdeaManager.deleteIdeaFromDb(idea);
+        // if (await showDeleteDialog(context: context)) 
+        await IdeaManager.deleteIdeaFromDb(idea);
         },
       child: Container(
         decoration: BoxDecoration(

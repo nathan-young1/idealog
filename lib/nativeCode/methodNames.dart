@@ -12,4 +12,5 @@ const String updateLastBackupTimeMethod = 'update_last_sync_time';
 
 // Calling native subscription sharedPref methods.
 const String setPremiumExpireDateMethod = "set_premium_expire_date";
+const String getPremiumExpireDateMethod = "get_premium_expire_date";
 const String getUserIsPremiumMethod = "get_user_is_premium";

@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:isolate';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:idealog/global/internetConnectionChecker.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 
 const playStoreId = 'premium_plan';
@@ -29,38 +33,66 @@ class Premium with ChangeNotifier{
   DateTime? get premiumExpirationDate => _expirationDate;
 
   /// we are going to use this value to check the user's subscription status when networkConnectivity is not available.
-  bool? userIsPremiumWhenOffline;
+  late bool userIsPremiumWhenOffline;
+
+  /// check if this plugin has been initialized with the internet because if not i want to reintialize it when the user turn on his internet connection.
+  bool pluginHasBeenInitializedWithInternet = false;
   
 
-  /// Initialize In-app purchases plugin.
-  Future<void> initializePlugin() async {
+  /// Initialize In-app purchases plugin, if there is internet connection.
+  Future<void> initializePlugin({bool? calledFromBuyProductMethod}) async {
+    /// if the user does not have an internet connection execute the following method as the intializer.
+    if(!UserInternetConnectionChecker.userHasInternetConnection) return (await intializePluginWithoutInternetConnection());
+      
+    try{
+        /// Enable the parent plugin.
+        InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
 
-    // check if the plugin is available
-    final bool available = await _inAppPurchase.isAvailable();
-    if (!available) {
-      debugPrint('In-app purchase plugin is not available');
-    }else{
-      await updateUserSubcriptionStatus();
-      final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream; 
+        // check if the plugin is available
+        final bool available = await _inAppPurchase.isAvailable();
+        if (!available) {
+          debugPrint('In-app purchase plugin is not available');
+        }else{
+          final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream; 
 
-      _subscription = purchaseUpdated.listen((purchase) async {
-        purchase.forEach((element) {debugPrint(element.verificationData.localVerificationData);});
-        await _getPastPurchases(purchase);
-        await _completePurchase();
+          _subscription = purchaseUpdated.listen((purchase) async {
+            purchase.forEach((element) {debugPrint(element.verificationData.localVerificationData);});
+            await _getPastPurchases(purchase);
+            await _completePurchase();
 
-        // Notify the listeners about update to stream.
-        notifyListeners();
-      },
-      onDone: ()=> _subscription!.cancel(),
-      onError: (e)=> debugPrint(e)
-      );
+            // Notify the listeners about update to stream.
+            notifyListeners();
+          },
+          onDone: ()=> _subscription!.cancel(),
+          onError: (e)=> debugPrint(e)
+          );
 
-      await Future.wait([
-      _getProducts(),
-      _inAppPurchase.restorePurchases()
-      ]);
+          await Future.wait([
+          _getProducts(),
+          _inAppPurchase.restorePurchases()
+          ]);
 
+          pluginHasBeenInitializedWithInternet = true;
+      }
+
+    } catch (e) {
+      // if(calledFromBuyProductMethod != null) show a flushbar that there is no internet connection so the premium plan can't be purchased
+      await intializePluginWithoutInternetConnection();
+      debugPrint(e.toString());
     }
+
+  }
+
+  /// use this method when there is no internet connection.
+  Future<void> intializePluginWithoutInternetConnection() async {
+       userIsPremiumWhenOffline = await NativeCodeCaller.instance.getUserIsPremium();
+
+      _expirationDate = await NativeCodeCaller.instance.getPremiumExpirationDate();
+      /// The transaction date will now be the expiration date minus 372 days(because of the grace period).
+      /// but if the expiration date is null then the transaction date will be set to null.
+
+      _transactionDate = (_expirationDate != null)? _expirationDate!.subtract(Duration(days: 372)): null;
+
   }
   
   /// Check if the user has purchased the premium_plan, if purchased return the product details.
@@ -72,11 +104,18 @@ class Premium with ChangeNotifier{
   }
 
   /// Subcribe to the premium plan through google play store.
-  static Future<void> buyProduct() async {
-    ProductDetails? product = _products.firstWhere((product) => product.id == playStoreId);
+  Future<void> buyProduct() async {
+    if(UserInternetConnectionChecker.userHasInternetConnection){
+      // if the plugin has not been initialized yet, then intialize it.
+      if(!pluginHasBeenInitializedWithInternet) await initializePlugin(calledFromBuyProductMethod: true);
+      
+      ProductDetails? product = _products.firstWhere((product) => product.id == playStoreId);
 
-    final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
-    await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+      final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
+      await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+    } else {
+      // show flush bar talking about the internet connection status here.
+    }
   }
 
   /// Get the product details for the premium_plan and add it to the _products list.
@@ -100,7 +139,14 @@ class Premium with ChangeNotifier{
   }
 
   /// Check if the user has purchased the premium_plan, this returns True if has purchased does not return null.
-  bool get isPremiumUser => (_hasPurchased() != null) ? true : false;
+  bool get isPremiumUser { 
+    // when the user does not have internet connection.
+    if(!UserInternetConnectionChecker.userHasInternetConnection) return userIsPremiumWhenOffline;
+    
+    // when the user has internet connection.
+    if (_hasPurchased() != null) return true;
+    else return false;
+    }
   
   /// Completed all the purchases in user purchase list and then add it to the _purchases list.
   Future<void> _getPastPurchases(List<PurchaseDetails> purchaseDetailsList) async { 
@@ -128,8 +174,6 @@ class Premium with ChangeNotifier{
 
         /// After all the process above has been performed then call the native code to set the expirationDate of the subscription.
         await NativeCodeCaller.instance.setPremiumExpirationDate(premiumExpirationDateInMillis: _expirationDate!.millisecondsSinceEpoch);
-        /// Then update the user subscription status.
-        await updateUserSubcriptionStatus();
 
         debugPrint("TranscationDate: $_transactionDate \n ExpirationDate: $_expirationDate");
       }
@@ -142,8 +186,4 @@ class Premium with ChangeNotifier{
     }
   }
 
-  /// This is done by recalling the getUserIsPremium method of the native code.
-  Future<void> updateUserSubcriptionStatus() async {
-    userIsPremiumWhenOffline = await NativeCodeCaller.instance.getUserIsPremium();
-  }
 }

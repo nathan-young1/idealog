@@ -29,6 +29,7 @@ public class MainActivity extends FlutterFragmentActivity {
     final private String UPDATE_LAST_SYNC_TIME_METHOD = "update_last_sync_time";
     final private String SET_PREMIUM_EXPIRE_DATE = "set_premium_expire_date";
     final private String GET_USER_IS_PREMIUM = "get_user_is_premium";
+    final private String GET_PREMIUM_EXPIRE_DATE = "get_premium_expire_date";
     private static final String CHANNEL = "com.idealog.alarmServiceCaller";
 
 
@@ -62,6 +63,10 @@ public class MainActivity extends FlutterFragmentActivity {
                     // The expiration date gotten from dart code in string format.
                     String expirationDateInMilliseconds = call.argument("set_premium_expire_date");
                     result.success(IdealogDatabase.setExpirationDateForPremiumSubscription(expirationDateInMilliseconds, applicationContext));
+                    break;
+
+                case GET_PREMIUM_EXPIRE_DATE:
+                    result.success(IdealogDatabase.getExpirationDateForPremiumSubscription(applicationContext));
                     break;
 
                 case GET_USER_IS_PREMIUM:
