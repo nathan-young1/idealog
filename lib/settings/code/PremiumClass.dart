@@ -138,7 +138,6 @@ class Premium with ChangeNotifier{
     }
   }
 
-  /// Check if the user has purchased the premium_plan, this returns True if has purchased does not return null.
   bool get isPremiumUser { 
     // when the user does not have internet connection.
     if(!UserInternetConnectionChecker.userHasInternetConnection) return userIsPremiumWhenOffline;

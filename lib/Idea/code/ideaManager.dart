@@ -1,8 +1,6 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
-import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/Prefs&Data/backupJson.dart';
 import 'package:idealog/auth/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
@@ -74,13 +72,14 @@ class IdeaManager{
   static Future<void> deleteIdeaFromDb(Idea idea) async { 
     await IdealogDb.instance.deleteIdea(ideaId: idea.ideaId!);
     // Delete all the completed tasks of this idea from analytics data
-    idea.completedTasks.forEach((completedTask) async => await AnalyticDB.instance.removeTaskFromAnalytics(completedTask));
+    await AnalyticDB.instance.removeIdeaFromAnalytics(idea.completedTasks);
     }
 
-
+  /// Backup all the ideas to google drive.
   static Future<void> backupIdeasNow() async{
     
     await signInWithGoogle();
+    await BackupJson.instance.initialize();
     
     // upload to google drive
     await BackupJson.instance.uploadToDrive();

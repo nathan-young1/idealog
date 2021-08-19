@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
+import 'package:idealog/design/colors.dart';
 
 // ignore: non_constant_identifier_names
 Widget TaskSearchField({required int flex, required BuildContext context, required TextEditingController searchFieldController}){
@@ -38,7 +39,7 @@ Widget IdeaSearchField({required BuildContext context, required TextEditingContr
         controller: searchFieldController,
         decoration: formTextField.copyWith(
           labelText: 'Search for an idea',
-          fillColor: Colors.grey.shade300,
+          fillColor: LightGray,
           suffixIcon: IconButton(
             icon: Icon(Icons.clear),
             onPressed: ()=> clearSearch(searchFieldController, context))

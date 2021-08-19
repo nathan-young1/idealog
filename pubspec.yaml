@@ -52,6 +52,7 @@ dependencies:
   auto_start_flutter: ^0.0.6
   internet_connection_checker: ^0.0.1+2
   intl: ^0.17.0
+  flutter_svg: ^0.22.0
 
 
   # The following adds the Cupertino Icons font to your application.

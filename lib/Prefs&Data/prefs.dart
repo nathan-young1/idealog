@@ -6,6 +6,7 @@ import 'package:idealog/nativeCode/bridge.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:auto_start_flutter/auto_start_flutter.dart' as autoStart;
 
 class Prefrences with ChangeNotifier{
 
@@ -55,11 +56,20 @@ class Prefrences with ChangeNotifier{
     if (onAutoSync){
       // if auto sync is set to true and the user is not signed in , then sign the user in before it start auto sync
       // if the user is already signed in , there will be no need to sign in again
-        if (GoogleUserData.instance.userEmail == null) {
-          await signInWithGoogle();
+        if (GoogleUserData.instance.userEmail == null) await signInWithGoogle();
+        
+        bool phoneNeedsAutoStartPermission = await autoStart.isAutoStartAvailable;
+  
+        /// if the phone needs auto start permission then show the user the alertDialog. if the user
+        /// dismisses the dialog then the guard statement (return;)will end this method.
+        if (phoneNeedsAutoStartPermission) {
+          if(true /*Get the result from the alertDialog*/) await autoStart.getAutoStartPermission();
+          else return;
         }
+        debugPrint('Back form setting auto start');
 
-      await NativeCodeCaller.instance.startAutoSync();
+        await NativeCodeCaller.instance.startAutoSync();
+
     }else{
       // if auto sync is set to false then stop the auto sync feature
       await NativeCodeCaller.stopAutoSync();

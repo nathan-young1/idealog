@@ -9,7 +9,7 @@ class CustomTheme {
                                 scrollbarTheme: ScrollbarThemeData(
                                 radius: Radius.circular(10),
                                 thickness: MaterialStateProperty.all(5),
-                                thumbColor: MaterialStateProperty.all(AddToExistingLight),
+                                thumbColor: MaterialStateProperty.all(LightBlue),
                                 mainAxisMargin: 10,
                                 ),
                                 scaffoldBackgroundColor: Colors.white,

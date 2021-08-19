@@ -29,6 +29,11 @@ class IdealogDb {
   
   static Function notifyListeners = ()=> _controller.add(null);
 
+  /// Collects a list of ideas and iteratively add them to the database.
+  Future<void> writeListOfIdeasToDB({required List<Idea> listOfIdeas}) async {
+      for(var idea in listOfIdeas) await IdealogDb.instance.writeToDb(idea: idea);
+  }
+
   Future<void> writeToDb({required Idea idea}) async {
 
     await dbInstance.transactionAndTrigger((txn) async {

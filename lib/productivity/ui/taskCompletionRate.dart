@@ -37,7 +37,7 @@ class TaskCompletionRate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20),
         child: Column(
@@ -47,7 +47,7 @@ class TaskCompletionRate extends StatelessWidget {
             style: rhodiumLibre.copyWith(fontSize: 22)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   height: 100,

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
+import 'package:idealog/Prefs&Data/backupJson.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/auth/authHandler.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:idealog/global/internetConnectionChecker.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:provider/provider.dart';
@@ -111,18 +113,36 @@ class Syncronization extends StatelessWidget {
                             width: 60,
                             child: Switch(value: Provider.of<Prefrences>(context).autoSyncEnabled,
                             onChanged: (bool enabledAutoSync) async =>
-                              await Prefrences.instance.setAutoSync(enabledAutoSync)
+                              await Prefrences.instance.setAutoSync(enabledAutoSync) 
                             ))
                         ]),
             
                         SizedBox(height: 10),
                         ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-                        title: Text('Backup Account',style: overpass.copyWith(fontSize: 20)),
+                        title: Text('Change Backup Account',style: overpass.copyWith(fontSize: 20)),
                         subtitle: Text(Provider.of<GoogleUserData>(context).userEmail ?? 'None',style: overpass.copyWith(fontSize: 15)),
                         onTap: () async {
-                          await signOutFromGoogle();
-                          await signInWithGoogle();
+                          // all this will be done if the user has internet connectivity/
+                          if(UserInternetConnectionChecker.userHasInternetConnection){
+                              String? formerEmail = GoogleUserData.instance.userEmail;
+                              await signOutFromGoogle();
+                              if(await signInWithGoogle()){
+                                String? newEmail = GoogleUserData.instance.userEmail;
+                                /// we only download the new data if the user re-signed into another google account.
+                                if(formerEmail != newEmail){
+                                    // if sign-up was successful.
+                                  await BackupJson.instance.initialize();
+                                  if (BackupJson.instance.lastBackupFileIfExists != null){
+                                    // then show alert dialog some data exist in this account should it be downloaded
+                                    if(true/* if the user wants it to be downloaded then download it and write to database*/) await BackupJson.instance.downloadFromDrive();
+                                  }
+                                }
+                              }
+
+                          } else {
+                            // show flushbar no internet connection.
+                          }
                         })
                       ],
                     ),

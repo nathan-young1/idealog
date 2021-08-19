@@ -23,12 +23,6 @@ class MenuPageView extends StatelessWidget {
     return MultiProvider(
       providers: [
       Provider<ProductivityManager>.value(value: ProductivityManager(context: context)),
-      
-      FutureProvider<List<AnalyticChartData>>.value(
-      initialData: <AnalyticChartData>[],
-      value: AnalyticDB.instance.readAnalytics(),
-      catchError: (_,__)=>[]),
-
       ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance)
       ],
       child: Builder(

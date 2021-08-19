@@ -9,22 +9,33 @@ class AnalyticChartData{
   AnalyticChartData({required this.date,required this.numberOfTasksCompleted});
 }
 
-class AnalyticDB{
+class AnalyticDB {
 
-  AnalyticDB._();
+  AnalyticDB._(){
+    notifyListeners();
+  }
   static final AnalyticDB instance = new AnalyticDB._();
-
+  /// This uses the IdealogDb instance.
   late final Database dbInstance = IdealogDb.instance.dbInstance;
 
   Future<void> close() async {
     await dbInstance.close();
   }
 
+  List<AnalyticChartData> analyticsChartData = [];
+
+  /// updates the list containing the analytics data everytime this method is called.
+  Future<void> notifyListeners() async {
+    analyticsChartData = await _readAnalytics();
+    /// sort the list by Date in ascending order.
+    analyticsChartData.sort((a,b)=> a.date.compareTo(b.date));
+  }
+
   /// Record a task in the analytics table.
   Future<void> writeOrUpdate(Task taskRow) async {
 
     var now = DateTime.now();
-    dbInstance.transaction((txn) async {
+    await dbInstance.transaction((txn) async {
       await _createTableIfNotExist(txn);
       var uniqueKey = await getUniqueId(txn, analyticsTable);
       // first get the unique id for the primary key
@@ -36,6 +47,8 @@ class AnalyticDB{
         Column_completedTasks : taskRow.task
       });
     });
+
+    notifyListeners();
   }
 
     /// Get the last primary key in the table ,then increment it by one for a new unique key.
@@ -50,19 +63,19 @@ class AnalyticDB{
     return newKey;
   }
 
-
-  Future<List<AnalyticChartData>> readAnalytics() async {
+  /// Fetch all the analytics data from the database.
+  Future<List<AnalyticChartData>> _readAnalytics() async {
 
     var now = DateTime.now();
     var dbResult = await dbInstance.transaction((txn) async {
         await _createTableIfNotExist(txn);
-        await txn.query(analyticsTable,where: '$Column_year == ? and $Column_month == ?',whereArgs: [now.year,now.month]);
+        return await txn.query(analyticsTable,where: '$Column_year == ? and $Column_month == ?',whereArgs: [now.year,now.month]);
       });
 
     //create a list of all the days recorded in the database
     var recordedDaysInDb = <int>[];
     
-    dbResult?.forEach((row) => recordedDaysInDb.add(row.day));
+    dbResult.forEach((row) => recordedDaysInDb.add(int.parse(row["$Column_day"].toString())));
     //create a set to remove duplicate dates
 
     var activeDays = Set<int>.from(recordedDaysInDb);
@@ -95,11 +108,20 @@ class AnalyticDB{
   }
 
   /// Remove a particular task from the analytics table.
-  Future<void> removeTaskFromAnalytics(Task taskRow) async =>
+  Future<void> removeTaskFromAnalytics(Task taskRow,{bool calledByRemoveIdeaFromAnalytics = false}) async =>
     await dbInstance.transaction((txn) async {
         await _createTableIfNotExist(txn);
         await txn.delete(analyticsTable,where: '$Column_completedTasks == ?',whereArgs: [taskRow.task]);
+        /// only notify listeners when this was called by ideaManager, this is because i don't want 
+        /// it to be calling notify listeners() for every task deleted when we delete an idea.
+        if(!calledByRemoveIdeaFromAnalytics) notifyListeners();
     });
+
+  /// remove all the completed tasks in the idea from the analytics table.
+  Future<void> removeIdeaFromAnalytics(List<Task> allCompletedTasks) async {
+    for(var task in allCompletedTasks) await removeTaskFromAnalytics(task, calledByRemoveIdeaFromAnalytics: true);
+    notifyListeners();
+  }
 
   Future<void> _createTableIfNotExist(Transaction txn) async =>
       await txn.execute(createAnalyticsTable);

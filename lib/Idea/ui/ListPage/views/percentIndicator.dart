@@ -33,7 +33,7 @@ class PercentageIncidator extends StatelessWidget {
             ),
             customColors: CustomSliderColors(
               dotColor: Colors.transparent,
-              progressBarColor: AddToExistingLight,
+              progressBarColor: LightBlue,
               trackColor: LightGray
             )
           ),

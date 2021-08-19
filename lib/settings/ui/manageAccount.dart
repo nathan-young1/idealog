@@ -43,13 +43,7 @@ class ManageAccount extends StatelessWidget {
                    onChanged: (bool fingerprintEnabled) async =>
                     await Prefrences.instance.setFingerPrintAuth(fingerprintEnabled)
                   ))
-            ),
-
-            
-            SizedBox(height: 20),
-            ListTile(leading: Text('Dark Mode',style: poppins.copyWith(fontSize: 20)),
-            trailing: Switch(value: Provider.of<Prefrences>(context).isDarkMode,
-            onChanged: (bool isDarkMode) async => await Prefrences.instance.setDarkMode(isDarkMode))),
+            )
           ],
         ),
       ),

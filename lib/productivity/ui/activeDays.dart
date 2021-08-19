@@ -2,89 +2,98 @@ import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ActiveDaysChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var listOfAnalyticsData = Provider.of<List<AnalyticChartData>>(context);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 30),
-      child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: LightGray,
-          ),
-          padding: EdgeInsets.symmetric(vertical: 20),
-
-        child: (listOfAnalyticsData.length >= 3)?SfCartesianChart(
-          
-          enableAxisAnimation: true,
-              title: ChartTitle(
-                text: 'Active Days',
-                textStyle: rhodiumLibre.copyWith(fontSize: 25)
+    var listOfAnalyticsData = AnalyticDB.instance.analyticsChartData;
+    debugPrint("the number of days is ${listOfAnalyticsData.length}");
+    return (listOfAnalyticsData.length >= 3)
+    ?Container(
+      height: 270,
+      child: SfCartesianChart(
+        enableAxisAnimation: true,
+            title: ChartTitle(
+              text: 'Efficiency chart',
+              textStyle: rhodiumLibre.copyWith(fontSize: 25)
+            ),
+            zoomPanBehavior: ZoomPanBehavior(
+              enablePanning: true,
+              zoomMode: ZoomMode.x),
+            tooltipBehavior: TooltipBehavior(
+              shouldAlwaysShow: true,
+              enable: true,
+              canShowMarker: false,
+              format: 'point.x:\npoint.y tasks completed',
+              header: 'Productivity',
+              color: Colors.grey,
+              animationDuration: 500,
+              textStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w500)
               ),
-              zoomPanBehavior: ZoomPanBehavior(
-                enablePanning: true
+            plotAreaBorderColor: Colors.transparent,
+            primaryYAxis: NumericAxis(
+              axisLine: AxisLine(width: 2,dashArray: [5,5], color: DarkGray),
+              edgeLabelPlacement: EdgeLabelPlacement.shift,
+              majorTickLines: MajorTickLines(size: 10,width: 0),
+              majorGridLines: MajorGridLines(width: 0),
+              labelStyle: TextStyle(fontWeight: FontWeight.w400, color: DarkGray)
               ),
-              tooltipBehavior: TooltipBehavior(
-                shouldAlwaysShow: true,
-                enable: true,
-                canShowMarker: false,
-                format: 'point.x:\npoint.y tasks completed',
-                header: 'Productivity',
-                color: Colors.grey,
-                animationDuration: 500,
-                textStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w500)
+            primaryXAxis: DateTimeCategoryAxis(
+              axisLine: AxisLine(width: 2,dashArray: [5,5], color: DarkGray),
+              zoomFactor: (listOfAnalyticsData.length>5)?0.5:1,
+              // zoom position is 1 so that the date can show from current
+              zoomPosition: 1,
+              autoScrollingDeltaType: DateTimeIntervalType.days,
+              intervalType: DateTimeIntervalType.days,
+              edgeLabelPlacement: EdgeLabelPlacement.shift,
+              majorTickLines: MajorTickLines(size: 10,width: 0),
+              majorGridLines: MajorGridLines(width: 0),
+              labelStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w400, color: DarkGray),
+              /// since least is the list is sorted by date the minium Date will be the first date.
+              minimum: listOfAnalyticsData.first.date
+            ),
+            series: <ChartSeries>[
+                SplineAreaSeries<AnalyticChartData,DateTime>(
+                markerSettings: MarkerSettings(
+                  borderWidth: 0,
+                  borderColor: Colors.transparent,
+                  isVisible: true,
+                  color: LightPink,
+                  height: 14,
+                  width: 14
                 ),
-              plotAreaBorderColor: Colors.transparent,
-              primaryYAxis: NumericAxis(
-                isVisible: false
-              ),
-              primaryXAxis: DateTimeCategoryAxis(
-                axisLine: AxisLine(width: 2,dashArray: [5,5]),
-                zoomFactor: (listOfAnalyticsData.length>5)?0.5:1,
-                // zoom position is 1 so that the date can show from current
-                zoomPosition: 1,
-                autoScrollingDeltaType: DateTimeIntervalType.days,
-                intervalType: DateTimeIntervalType.days,
-                edgeLabelPlacement: EdgeLabelPlacement.shift,
-                majorTickLines: MajorTickLines(size: 10,width: 0),
-                majorGridLines: MajorGridLines(width: 0),
-                labelStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w400),
-              ),
-              series: <ChartSeries>[
-                  SplineSeries<AnalyticChartData,DateTime>(
-                  width: 4,
-                  markerSettings: MarkerSettings(
-                    isVisible: true,
-                    color: LightPink,
-                    height: 12,
-                    width: 12
-                  ),
-                  color: Color.fromRGBO(50, 101, 141, 1),
-                   dataSource: listOfAnalyticsData,
-                   xValueMapper: (AnalyticChartData analytic,_)=>analytic.date,
-                   yValueMapper: (AnalyticChartData analytic,_)=>analytic.numberOfTasksCompleted
-                  )
-              ],
-        )
-        :Container(
+                color: DarkBlue,
+                // gradient: LinearGradient(
+                //   colors: (!Prefrences.instance.isDarkMode)
+                //   ?[DarkBlue.withOpacity(0.6), LightPink.withOpacity(0.6)]
+                //   :[DarkRed, DarkRed.withOpacity(0.8)],
+                  // begin: Alignment.topLeft,
+                  // end: Alignment.bottomRight),
+                 dataSource: listOfAnalyticsData,
+                 xValueMapper: (AnalyticChartData analytic,_)=>analytic.date,
+                 yValueMapper: (AnalyticChartData analytic,_)=>analytic.numberOfTasksCompleted
+                )
+            ],
+      )
+    )
+    :Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Container(
+          height: 200,
+          color: LightBlue.withOpacity(0.2),
+          padding: EdgeInsets.only(top: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('Active Days',
-              style: rhodiumLibre.copyWith(fontSize: 25)),
-              Icon(Icons.lock_outlined,size: 60,color: Colors.black45,),
-              SizedBox(height: 6),
-              Text('Complete tasks for 3 days this month',
-              style: lato.copyWith(fontSize: 17))
+              Text('Efficiency chart',style: rhodiumLibre.copyWith(fontSize: 25)),
+              SizedBox(height: 10),
+              Icon(Icons.lock_clock,size: 60,color: Colors.black45),
+              SizedBox(height: 10),
+              Text('Complete tasks for at least 3 days this month',style: lato.copyWith(fontSize: 17))
             ]),
         ),
-      ),
     );
   }
 }

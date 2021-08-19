@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/productivity/code/productivityManager.dart';
 import 'package:idealog/productivity/ui/activeDays.dart';
@@ -16,30 +17,27 @@ class _ProductivityState extends State<Productivity> {
   @override
   Widget build(BuildContext context) {
     var completionRate = Provider.of<ProductivityManager>(context).getCompletionRate();
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 25,left: 20,right: 10,bottom: 20),
-            child: Text('Productivity',
-            style: poppins.copyWith(fontSize: 30)),
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 25,left: 20,right: 10),
+          child: Text('Productivity',
+          style: poppins.copyWith(fontSize: 30)),
+        ),
+        Expanded(
+          child: ListView(
+            children: [
+              TaskCompletionRate(completionRate),
+              SizedBox(height: 10),
+              FavoriteTasks(),
+              SizedBox(height: 10),
+              ActiveDaysChart()
+            ],
           ),
-          Expanded(
-            child: ListView(
-              children: [
-                TaskCompletionRate(completionRate),
-                SizedBox(height: 25),
-                FavoriteTasks(),
-                SizedBox(height: 25),
-                ActiveDaysChart()
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

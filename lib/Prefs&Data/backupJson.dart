@@ -20,7 +20,7 @@ class BackupJson{
   late final drive.DriveApi _driveApi;
   static const String _DRIVE_SPACE =  "appDataFolder";
   static const String _FILE_NAME = 'Idealog.json';
-  drive.File? _lastBackupFileIfExists;
+  drive.File? lastBackupFileIfExists;
 
   
 
@@ -46,10 +46,10 @@ class BackupJson{
     bool Function(drive.File) equalsFileName = (e) => e.name!.trim() == _FILE_NAME;
 
     List<drive.File> filesInAppScope = (await _driveApi.files.list(spaces: _DRIVE_SPACE)).files!;
-    _lastBackupFileIfExists = filesInAppScope.any(equalsFileName)?filesInAppScope.lastWhere(equalsFileName):null;
+    lastBackupFileIfExists = filesInAppScope.any(equalsFileName)?filesInAppScope.lastWhere(equalsFileName):null;
 
-     if (_lastBackupFileIfExists != null){
-       _setGoogleJsonFileId(_lastBackupFileIfExists!);
+     if (lastBackupFileIfExists != null){
+       _setGoogleJsonFileId(lastBackupFileIfExists!);
       }
   }
 
@@ -130,7 +130,8 @@ class BackupJson{
         await jsonFile.delete();
 
         //Write all ideas from json to the database.
-        fileResult.forEach((idea) async => await IdealogDb.instance.writeToDb(idea: idea));
+        await IdealogDb.instance.writeListOfIdeasToDB(listOfIdeas: fileResult);
+        
     } else {
         try {
           throw _DriveBackupDoesNotExist();

@@ -13,10 +13,7 @@ class BottomNavBar extends StatelessWidget {
     
     return Container(
       height: Provider.of<BottomNavController>(context,listen: false).bottomNavHeight,
-      decoration: BoxDecoration( 
-        color: LightGray,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))
-      ),
+      color: LightGray,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 30),
         child: Row(

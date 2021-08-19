@@ -12,13 +12,21 @@ const Color completedTasksColor = Color.fromRGBO(110, 183,131,1);
 
 // Idea Card Colors
 const Color IdeaCardLight = Color.fromRGBO(239, 238, 238, 1);
-const Color AddToExistingLight = Color.fromRGBO(102, 133, 157, 1);
+const Color LightBlue = Color.fromRGBO(102, 133, 157, 1);
 
 const Color Black242424 = Color.fromRGBO(36, 36, 36, 1);
 
 // Task Completion rate colors
 const Color PieChartCompletedColor = Color.fromRGBO(102, 133, 157, 1);
 const Color PieChartUncompletedColor = Color.fromRGBO(156, 92, 92, 1);
+
+// Productivity color
+const Color ProductivityPink =  Color.fromRGBO(255, 227, 227, 0.5);
+
+// Favorite colors
+const Color MostFavorite1Color = Color.fromRGBO(195, 97, 97, 1);
+const Color MostFavorite2Color = Color.fromRGBO(43, 91, 129, 1);
+const Color MostFavorite3Color = Color.fromRGBO(216, 215, 215, 1);
 
 // Bottom navigation bar colors
 const Color DarkGray = Color.fromRGBO(134, 134, 134, 1);

@@ -32,8 +32,8 @@ static const String _No_Idea_Dark = '$_IdeaPicFolderPath/No_Idea_Dark.png';
 static const String No_Tasks_Pic = '$_TaskPicFolderPath/No_Tasks_Dark.png';
 
 /// path to productivity pictures
-static const String _Favorite_Pic_Light = '$_ProductivityPicFolderPath/Favorite_Pic_Light.png';
-static const String _Favorite_Pic_Dark = '$_ProductivityPicFolderPath/Favorite_Pic_Dark.png';
+static const String _Favorite_Pic_Light = '$_ProductivityPicFolderPath/Favorite_Pic_Light.svg';
+static const String _Favorite_Pic_Dark = '$_ProductivityPicFolderPath/Favorite_Pic_Dark.svg';
 
 /// path to settings pictures
 static const String _Setting_Pic =  '$_SettingsPicFolderPath/Setting_Pic.png';
@@ -49,6 +49,9 @@ static const String Search_Grey = '$_SearchPicFolderPath/search_not_found.png';
 static const String Welcome_Intro_Pic = '$_IntroPicFolderPath/Welcome_Intro_Pic.png';
 static const String Intro_Pic_2 = '$_IntroPicFolderPath/Intro_Pic_2.png';
 static const String Intro_Pic_3 = '$_IntroPicFolderPath/Intro_Pic_3.png';
+
+/// path to svg Icons
+static const String more_settings_icon = '$_SettingsPicFolderPath/moreSettings.svg';
 
 
 
