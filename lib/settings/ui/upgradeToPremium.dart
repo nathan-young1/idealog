@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:idealog/global/paths.dart';
 import 'package:idealog/settings/code/PremiumClass.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
@@ -37,19 +38,29 @@ class _UpgradeToPremiumState extends State<UpgradeToPremium> {
                 ],
               ),
 
-              SizedBox(height: 50),
+              Center(
+                child: Container(
+                child: Image.asset(
+                Provider.of<Paths>(context).pathToPremiumAccessPic,
+                height: 250,
+                width: 250,
+                fit: BoxFit.contain)
+                ),
+              ),
+
+              SizedBox(height: 10),
               Padding(
-                padding: EdgeInsets.only(left: 40),
+                padding: EdgeInsets.only(left: 25),
                 child: Text('Features',style: overpass.copyWith(fontWeight: FontWeight.w200,fontSize: 30),),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 50,top: 10),
+                padding: EdgeInsets.only(left: 30,top: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _Features('Backup Data'),
+                    PremiumFeatureTile('Backup Data'),
                     SizedBox(height: 10),
-                    _Features('Biometric Authentication')
+                    PremiumFeatureTile('Biometric Authentication')
                   ],
                 ),
               ),
@@ -82,15 +93,15 @@ class _UpgradeToPremiumState extends State<UpgradeToPremium> {
   }
 }
 
-class _Features extends StatelessWidget {
+class PremiumFeatureTile extends StatelessWidget {
   final String _feature;
-  _Features(this._feature);
+  PremiumFeatureTile(this._feature);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-      Icon(Icons.circle,size: 17,color: DarkBlue),
+      Icon(Icons.circle,size: 17),
       SizedBox(width: 10),
       Text(_feature,style: poppins.copyWith(fontSize: 19))
     ]
@@ -108,23 +119,16 @@ class _PurchaseButton extends StatelessWidget {
         Container(
           height: 55,
           width: 220,
-          child: Provider.of<Premium>(context).isPremiumUser
-          ?Container(
-            height: 55,
-            width: 220,
-            color: LightGray,
-            child: Text('Purchased', style: poppins.copyWith(fontSize: 18)),
-          )
-          :ElevatedButton.icon(
+          child: ElevatedButton.icon(
           onPressed: () async => await Premium.instance.buyProduct(),
           style: ButtonStyle(
-            backgroundColor: MaterialStateColor.resolveWith((states) => Colors.teal[800]!),
+            backgroundColor: MaterialStateColor.resolveWith((states) => Provider.of<Premium>(context).isPremiumUser?LightGray:DarkBlue),
             shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))
           ),
-           icon: Icon(FontAwesomeIcons.solidCreditCard,size: 30),
+           icon: Icon(FontAwesomeIcons.solidCreditCard,size: 30,color: Provider.of<Premium>(context).isPremiumUser?Colors.black:Colors.white),
            label: Padding(
              padding: EdgeInsets.only(left: 12),
-             child: Text('Get Access',style: poppins.copyWith(fontSize: 20)),
+             child: Text(Provider.of<Premium>(context).isPremiumUser?'Purchased':'Get Access',style: poppins.copyWith(fontSize: 20,color: Provider.of<Premium>(context).isPremiumUser?Colors.black:Colors.white)),
            )),
         ),
       ],

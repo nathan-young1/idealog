@@ -7,7 +7,8 @@ import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/design/theme.dart';
 import 'package:idealog/global/routes.dart';
 import 'package:idealog/settings/code/PremiumClass.dart';
-import 'package:idealog/settings/ui/manageAccount.dart';
+import 'package:idealog/settings/ui/accountSettings.dart';
+import 'package:idealog/settings/ui/moreSettings.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:provider/provider.dart';
 import 'Databases/idealog-db/idealog_Db.dart';
@@ -64,9 +65,10 @@ class Idealog extends StatelessWidget {
                                 homePage: (context) => SplashScreen(),
                                 menuPageView: (context) => MenuPageView(),
                                 addNewIdeaPage: (context) => NewIdea(),
-                                manageAccountPage: (context) => ManageAccount(),
+                                manageAccountPage: (context) => MoreSettings(),
                                 syncronizationPage: (context) => Syncronization(),
-                                upgradeToPremiumPage: (context) => UpgradeToPremium()
+                                upgradeToPremiumPage: (context) => UpgradeToPremium(),
+                                accountSettingsPage: (context) => AccountSettings()
                               },
                             ),
                           ),

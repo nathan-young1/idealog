@@ -116,34 +116,6 @@ class Syncronization extends StatelessWidget {
                               await Prefrences.instance.setAutoSync(enabledAutoSync) 
                             ))
                         ]),
-            
-                        SizedBox(height: 10),
-                        ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-                        title: Text('Change Backup Account',style: overpass.copyWith(fontSize: 20)),
-                        subtitle: Text(Provider.of<GoogleUserData>(context).userEmail ?? 'None',style: overpass.copyWith(fontSize: 15)),
-                        onTap: () async {
-                          // all this will be done if the user has internet connectivity/
-                          if(UserInternetConnectionChecker.userHasInternetConnection){
-                              String? formerEmail = GoogleUserData.instance.userEmail;
-                              await signOutFromGoogle();
-                              if(await signInWithGoogle()){
-                                String? newEmail = GoogleUserData.instance.userEmail;
-                                /// we only download the new data if the user re-signed into another google account.
-                                if(formerEmail != newEmail){
-                                    // if sign-up was successful.
-                                  await BackupJson.instance.initialize();
-                                  if (BackupJson.instance.lastBackupFileIfExists != null){
-                                    // then show alert dialog some data exist in this account should it be downloaded
-                                    if(true/* if the user wants it to be downloaded then download it and write to database*/) await BackupJson.instance.downloadFromDrive();
-                                  }
-                                }
-                              }
-
-                          } else {
-                            // show flushbar no internet connection.
-                          }
-                        })
                       ],
                     ),
                   )

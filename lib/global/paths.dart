@@ -53,6 +53,10 @@ static const String Intro_Pic_3 = '$_IntroPicFolderPath/Intro_Pic_3.png';
 /// path to svg Icons
 static const String more_settings_icon = '$_SettingsPicFolderPath/moreSettings.svg';
 
+/// path to get Premium access pictures
+static const String _Premium_Access_Light = '$_SettingsPicFolderPath/Premium_Light.png';
+static const String _Premium_Access_Dark = '$_SettingsPicFolderPath/Premium_Dark.png';
+
 
 
 // ===================================Getters For the pictures============================= //
@@ -78,5 +82,10 @@ static const String more_settings_icon = '$_SettingsPicFolderPath/moreSettings.s
   }
 
   static String get pathToSettingsPic => _Setting_Pic;
+
+  String get pathToPremiumAccessPic{
+    if (Prefrences.instance.isDarkMode) return _Premium_Access_Dark;
+      return _Premium_Access_Light;
+  }
 
 }
