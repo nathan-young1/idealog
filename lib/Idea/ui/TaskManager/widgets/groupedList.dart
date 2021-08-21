@@ -28,7 +28,7 @@ class GroupedList extends StatelessWidget {
 
         if(highPriorityTasks.isEmpty && mediumPriorityTasks.isEmpty && lowPriorityTasks.isEmpty)
         // because grouped list is called by uncompletedTasks if it is empty show no tasks yet.
-          return (idea.uncompletedTasks.isEmpty)? NoTaskYet(): DoesNotExistIllustration();
+          return (idea.uncompletedTasks.isEmpty)? NoTaskYet(): SearchNotFoundIllustration();
           
         return Column(
           children: [
@@ -67,7 +67,7 @@ class PriorityTasksInColumnView extends StatelessWidget{
             child: Text((priorityGroup == Priority_High)
             ?'High Priority'
             :(priorityGroup == Priority_Medium) ? 'Medium Priority' : 'Low Priority',
-              style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
+              style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
           ),
 
           /// if the priority group is not given then this was called from completed tasks page.
@@ -146,7 +146,7 @@ void _notifyUserOfChange({required bool taskWasCompleted,required BuildContext c
             (taskWasCompleted)
               ? (pageCalledFrom == TaskPage.COMPLETED) ?"1 task was unchecked" :"1 task was completed"
               : "1 task was removed",
-            style: overpass.copyWith(fontSize: 22)),
+            style: dosis.copyWith(fontSize: 22)),
             duration: Duration(seconds: 2),
             forwardAnimationCurve: Curves.linearToEaseOut,
             reverseAnimationCurve: Curves.linear,

@@ -30,7 +30,7 @@ class SingleReorderableGroupedList extends StatelessWidget{
             child: Text((priorityGroup == Priority_High)
             ?'High Priority'
             :(priorityGroup == Priority_Medium) ? 'Medium Priority' : 'Low Priority',
-             style: overpass.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
+             style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
           ),
     
           ListView.builder(

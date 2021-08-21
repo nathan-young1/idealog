@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
+import 'package:idealog/Idea/ui/ListPage/ListPage.dart';
 import 'package:idealog/Idea/ui/Others/AddTasks.dart';
 import 'package:idealog/core-models/ideaModel.dart';
-import 'package:idealog/customWidget/alertDialog.dart';
 import 'package:idealog/design/colors.dart';
 
 class TaskAdderSlideAction extends StatelessWidget {
@@ -48,7 +48,7 @@ class TaskAdderSlideAction extends StatelessWidget {
 class DeleteSlideAction extends StatelessWidget {
   const DeleteSlideAction({
     Key? key,
-    required this.idea,
+    required this.idea
   }) : super(key: key);
 
   final Idea idea;
@@ -57,8 +57,13 @@ class DeleteSlideAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
+        /// close the slidable before showing the alertDialog on whether the user want's to delete.
+        Slidable.of(context)!.close();
         // if (await showDeleteDialog(context: context)) 
-        await IdeaManager.deleteIdeaFromDb(idea);
+        await Future.delayed(Duration(milliseconds: 200),
+                  () async => await IdeaManager.deleteIdeaFromDb(idea));
+                  // show idea has been deleted flushbar.
+        
         },
       child: Container(
         decoration: BoxDecoration(

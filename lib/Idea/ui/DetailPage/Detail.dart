@@ -22,7 +22,7 @@ class IdeaDetail extends StatelessWidget {
 
   Future<void> submitDescriptionForChange() async {
       descriptionEnabled.value = false;
-      await IdeaManager.changeMoreDetail(idea: idea, newMoreDetail: description!.text);
+      await IdeaManager.changeIdeaDetail(idea: idea, newMoreDetail: description!.text);
   }
 
   @override

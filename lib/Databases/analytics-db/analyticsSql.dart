@@ -3,32 +3,29 @@ import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/core-models/ideaModel.dart' show Task;
 import 'package:sqflite/sqflite.dart';
 
-class AnalyticChartData{
+class EfficiencyChartData{
   DateTime date;
   int numberOfTasksCompleted;
-  AnalyticChartData({required this.date,required this.numberOfTasksCompleted});
+  EfficiencyChartData({required this.date,required this.numberOfTasksCompleted});
 }
 
 class AnalyticDB {
 
-  AnalyticDB._(){
-    notifyListeners();
-  }
+  AnalyticDB._(){notifyListeners();}
   static final AnalyticDB instance = new AnalyticDB._();
   /// This uses the IdealogDb instance.
   late final Database dbInstance = IdealogDb.instance.dbInstance;
 
-  Future<void> close() async {
-    await dbInstance.close();
-  }
+  Future<void> close() async => await dbInstance.close();
+  
 
-  List<AnalyticChartData> analyticsChartData = [];
+  List<EfficiencyChartData> efficiencyChartData = [];
 
-  /// updates the list containing the analytics data everytime this method is called.
+  /// updates the list containing the chart data everytime this method is called.
   Future<void> notifyListeners() async {
-    analyticsChartData = await _readAnalytics();
+    efficiencyChartData = await _readAnalytics();
     /// sort the list by Date in ascending order.
-    analyticsChartData.sort((a,b)=> a.date.compareTo(b.date));
+    efficiencyChartData.sort((a,b)=> a.date.compareTo(b.date));
   }
 
   /// Record a task in the analytics table.
@@ -58,68 +55,68 @@ class AnalyticDB {
 
     List<int> keysInDb = queryResult.map((e) => e[Column_key] as int).toList();
 
-    int newKey = (keysInDb.isEmpty)?0:++keysInDb.last;
+    int newKey = (keysInDb.isEmpty) ?0 :++keysInDb.last;
 
     return newKey;
   }
 
   /// Fetch all the analytics data from the database.
-  Future<List<AnalyticChartData>> _readAnalytics() async {
+  Future<List<EfficiencyChartData>> _readAnalytics() async {
 
-    var now = DateTime.now();
+    var currentTime = DateTime.now();
     var dbResult = await dbInstance.transaction((txn) async {
         await _createTableIfNotExist(txn);
-        return await txn.query(analyticsTable,where: '$Column_year == ? and $Column_month == ?',whereArgs: [now.year,now.month]);
+        return await txn.query(analyticsTable,where: '$Column_year == ? and $Column_month == ?',whereArgs: [currentTime.year,currentTime.month]);
       });
 
     //create a list of all the days recorded in the database
-    var recordedDaysInDb = <int>[];
+    var daysRecordedInDb = <int>[];
     
-    dbResult.forEach((row) => recordedDaysInDb.add(int.parse(row["$Column_day"].toString())));
+    dbResult.forEach((row) => daysRecordedInDb.add(int.parse(row["$Column_day"].toString())));
     //create a set to remove duplicate dates
 
-    var activeDays = Set<int>.from(recordedDaysInDb);
+    var activeDays = Set<int>.from(daysRecordedInDb);
 
-    // To store the AnalyticChartData
-    var fullChartData = <AnalyticChartData>[];
+    // To store the EfficiencyChartData
+    var efficiencyDataList = <EfficiencyChartData>[];
 
-    // The number of times a day repeats is equilavent to the number of tasks completed that day
-
+    // The number of times a day repeats is equilavent to the number of tasks completed that day.
     activeDays.forEach((activeDay) { 
-      var numberOfTasksCompleted = recordedDaysInDb.where((day) => day == activeDay).length;
+      var numberOfTasksCompleted = daysRecordedInDb.where((day) => day == activeDay).length;
 
-      var newData = AnalyticChartData(
-        date: DateTime(now.year,now.month,activeDay),
+      var chartData = EfficiencyChartData(
+        date: DateTime(currentTime.year, currentTime.month, activeDay),
         numberOfTasksCompleted: numberOfTasksCompleted);
 
-      fullChartData.add(newData);
+      efficiencyDataList.add(chartData);
       });
-      return fullChartData;
+
+      return efficiencyDataList;
 
   }
 
   /// Clear the data of all months that is not the current month.
   Future<void> clearObsoluteData() async {
-    var now = DateTime.now();
+    var currentTime = DateTime.now();
     await dbInstance.transaction((txn) async {
         await _createTableIfNotExist(txn);
-        await txn.delete(analyticsTable,where: '$Column_month != ?',whereArgs: [now.month]);
+        await txn.delete(analyticsTable,where: '$Column_month != ?',whereArgs: [currentTime.month]);
     });
   }
 
   /// Remove a particular task from the analytics table.
-  Future<void> removeTaskFromAnalytics(Task taskRow,{bool calledByRemoveIdeaFromAnalytics = false}) async =>
+  Future<void> removeTaskFromAnalytics(Task taskRow,{bool removeIdeaFromAnalytics = false}) async =>
     await dbInstance.transaction((txn) async {
         await _createTableIfNotExist(txn);
         await txn.delete(analyticsTable,where: '$Column_completedTasks == ?',whereArgs: [taskRow.task]);
         /// only notify listeners when this was called by ideaManager, this is because i don't want 
-        /// it to be calling notify listeners() for every task deleted when we delete an idea.
-        if(!calledByRemoveIdeaFromAnalytics) notifyListeners();
+        /// it to call notify listeners() for every task deleted when we delete an idea.
+        if(!removeIdeaFromAnalytics) notifyListeners();
     });
 
   /// remove all the completed tasks in the idea from the analytics table.
   Future<void> removeIdeaFromAnalytics(List<Task> allCompletedTasks) async {
-    for(var task in allCompletedTasks) await removeTaskFromAnalytics(task, calledByRemoveIdeaFromAnalytics: true);
+    for(var task in allCompletedTasks) await removeTaskFromAnalytics(task, removeIdeaFromAnalytics: true);
     notifyListeners();
   }
 

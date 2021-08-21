@@ -1,3 +1,4 @@
+/// Routes used in this application.
 const homePage = '/';
 const String addNewIdeaPage = 'AddNewIdea';
 const String menuPageView = 'MenuPageView';

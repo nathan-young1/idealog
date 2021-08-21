@@ -3,19 +3,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
-import 'package:idealog/application-ui/splashScreen.dart';
 import 'package:idealog/design/theme.dart';
 import 'package:idealog/global/routes.dart';
 import 'package:idealog/settings/code/PremiumClass.dart';
 import 'package:idealog/settings/ui/accountSettings.dart';
 import 'package:idealog/settings/ui/moreSettings.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
+import 'package:idealog/splashScreen/splashScreen.dart';
 import 'package:provider/provider.dart';
 import 'Databases/idealog-db/idealog_Db.dart';
 import 'Idea/ui/Others/CreateIdea.dart';
 import 'Prefs&Data/GoogleUserData.dart';
 import 'SearchBar/SearchNotifier.dart';
-import 'bottomNav/notifier.dart';
+import 'application-menu/controllers/bottomNavController.dart';
 import 'config.dart';
 import 'core-models/ideaModel.dart';
 import 'global/paths.dart';
@@ -58,9 +58,9 @@ class Idealog extends StatelessWidget {
                               ? ThemeMode.dark
                               : ThemeMode.light,
                               // The light theme
-                              theme: CustomTheme.lightTheme,
+                              theme: AppTheme.lightTheme,
                               // The Dark theme
-                              darkTheme: CustomTheme.darkTheme,
+                              darkTheme: AppTheme.darkTheme,
                               routes: {
                                 homePage: (context) => SplashScreen(),
                                 menuPageView: (context) => MenuPageView(),

@@ -13,19 +13,14 @@ class BottomNavController with ChangeNotifier{
 
   ActiveNavTab? get currentPage{ 
         switch(_currentPage){
-          case 0:
-            return ActiveNavTab.Ideas;
-
-          case 1: 
-            return ActiveNavTab.Productivity;
-
-          case 2: 
-            return ActiveNavTab.Settings;
+          case 0: return ActiveNavTab.Ideas;
+          case 1: return ActiveNavTab.Productivity;
+          case 2: return ActiveNavTab.Settings;
         }
   }
 
   set currentPage(ActiveNavTab? activeTab){
-    // if the index of the active tab in the enum is not equals to the current page index the change the page
+    // if the index of the active tab in the enum is not equals to the current page index then change the page
     if(activeTab!.index != _currentPage){
       _currentPage = activeTab.index;
 
@@ -46,19 +41,13 @@ class BottomNavController with ChangeNotifier{
     super.dispose();
   }
 
-  // Icon alignment because i used expanded to capture gesture detector within that area, so i have to align them well
+  // Icon alignment because i used expanded widget to capture gesture detection within that area, so i have to align them well
   // within the expanded widget
-  Alignment? navTabAlignment(ActiveNavTab tab){
+  Alignment? navIconAlignment(ActiveNavTab tab){
     switch(tab){
-      
-      case ActiveNavTab.Ideas:
-        return Alignment.centerLeft;
-        
-      case ActiveNavTab.Productivity:
-        return Alignment.center;
-
-      case ActiveNavTab.Settings:
-        return Alignment.centerRight;
+      case ActiveNavTab.Ideas: return Alignment.centerLeft;
+      case ActiveNavTab.Productivity: return Alignment.center;
+      case ActiveNavTab.Settings: return Alignment.centerRight;
     }
   }
 }

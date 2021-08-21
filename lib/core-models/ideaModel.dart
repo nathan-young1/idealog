@@ -5,7 +5,6 @@ import 'package:idealog/global/typedef.dart';
 
 class Idea extends TaskList{
   int? ideaId;
-  // Made ideaTitle nullable
   late String ideaTitle;
   String? moreDetails;
   bool isFavorite = false;
@@ -23,7 +22,7 @@ class Idea extends TaskList{
   isFavorite = json['favorite'].toString().trim() == "true",
   super.fromDb(completedTasks: _jsonObject_To_Task(json['completedTasks']),uncompletedTasks: _jsonObject_To_Task(json['uncompletedTasks']));
 
-  String? changeMoreDetail(String? newDetails)=> moreDetails= newDetails;
+  String? changeIdeaDetail(String? newDetails)=> moreDetails= newDetails;
 
   void makeFavorite()=> isFavorite = true;
   void unFavorite()=> isFavorite = false;
@@ -62,9 +61,8 @@ abstract class TaskList with ChangeNotifier{
 
   double get percentIndicator {
         final totalNumberOfTasks = allTasks.length;
-        //first check that the total number of tasks is not zero, so as not to have division by zero error
-        // ignore: omit_local_variable_types
-        final double percent = (totalNumberOfTasks != 0)?(completedTasks.length/totalNumberOfTasks)*100:0;
+        //first check that the total number of tasks is not zero, so as not to have a division by zero error.
+        final double percent = (totalNumberOfTasks != 0) ?(completedTasks.length/totalNumberOfTasks)*100 :0;
         return percent;
   }
   
@@ -80,8 +78,10 @@ abstract class TaskList with ChangeNotifier{
   
   TaskList.fromJson({required List<Map<String, dynamic>> completedTasks, required List<Map<String, dynamic>> uncompletedTasks})
   {
-    this.completedTasks = completedTasks.map((e) => Task.fromJson(json: e)).toList();
-    List<Task> uncompletedTasksFromJson = uncompletedTasks.map((e) => Task.fromJson(json: e)).toList();
+    Task Function(Map<String, dynamic> taskObj) createTaskFromJson = (taskObj) => Task.fromJson(json: taskObj);
+
+    this.completedTasks = completedTasks.map(createTaskFromJson).toList();
+    List<Task> uncompletedTasksFromJson = uncompletedTasks.map(createTaskFromJson).toList();
     insertTaskFromStorageToIdea(tasksList: uncompletedTasksFromJson);
   }
 
@@ -139,17 +139,11 @@ abstract class TaskList with ChangeNotifier{
   /// return the corresponding list for the priority group.
   List<Task> getListForPriorityGroup(int? priorityGroup)
   {
-    
     switch(priorityGroup!){
-      case Priority_High:
-        return highPriority;
-      case Priority_Medium:
-        return mediumPriority;
-      case Priority_Low:
-        return lowPriority;
-
-      default:
-        return[];
+      case Priority_High: return highPriority;
+      case Priority_Medium: return mediumPriority;
+      case Priority_Low: return lowPriority;
+      default: return[];
     }
   }
 
@@ -162,7 +156,7 @@ abstract class TaskList with ChangeNotifier{
   }
 
 
-  /// Removes the task from the previous priorityGroup when move across priorityGroups.
+  /// Removes the task from the previous priorityGroup when it is being dragged across priorities.
   void deleteTaskFromGroup(Task incomingTask)
   {
     getListForPriorityGroup(incomingTask.priority!).remove(incomingTask);

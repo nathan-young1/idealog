@@ -8,7 +8,7 @@ class ActiveDaysChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var listOfAnalyticsData = AnalyticDB.instance.analyticsChartData;
+    var listOfAnalyticsData = AnalyticDB.instance.efficiencyChartData;
     debugPrint("the number of days is ${listOfAnalyticsData.length}");
     return (listOfAnalyticsData.length >= 3)
     ?Container(
@@ -17,7 +17,7 @@ class ActiveDaysChart extends StatelessWidget {
         enableAxisAnimation: true,
             title: ChartTitle(
               text: 'Efficiency chart',
-              textStyle: rhodiumLibre.copyWith(fontSize: 25)
+              textStyle: dosis.copyWith(fontSize: 25)
             ),
             zoomPanBehavior: ZoomPanBehavior(
               enablePanning: true,
@@ -55,7 +55,7 @@ class ActiveDaysChart extends StatelessWidget {
               minimum: listOfAnalyticsData.first.date
             ),
             series: <ChartSeries>[
-                SplineAreaSeries<AnalyticChartData,DateTime>(
+                SplineAreaSeries<EfficiencyChartData,DateTime>(
                 markerSettings: MarkerSettings(
                   borderWidth: 0,
                   borderColor: Colors.transparent,
@@ -72,8 +72,8 @@ class ActiveDaysChart extends StatelessWidget {
                   // begin: Alignment.topLeft,
                   // end: Alignment.bottomRight),
                  dataSource: listOfAnalyticsData,
-                 xValueMapper: (AnalyticChartData analytic,_)=>analytic.date,
-                 yValueMapper: (AnalyticChartData analytic,_)=>analytic.numberOfTasksCompleted
+                 xValueMapper: (EfficiencyChartData analytic,_)=>analytic.date,
+                 yValueMapper: (EfficiencyChartData analytic,_)=>analytic.numberOfTasksCompleted
                 )
             ],
       )
@@ -87,11 +87,11 @@ class ActiveDaysChart extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('Efficiency chart',style: rhodiumLibre.copyWith(fontSize: 25)),
+              Text('Efficiency chart',style: dosis.copyWith(fontSize: 25)),
               SizedBox(height: 10),
               Icon(Icons.lock_clock,size: 60,color: Colors.black45),
               SizedBox(height: 10),
-              Text('Complete tasks for at least 3 days this month',style: lato.copyWith(fontSize: 17))
+              Text('Complete tasks for at least 3 days this month',style: dosis.copyWith(fontSize: 17))
             ]),
         ),
     );

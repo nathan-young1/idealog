@@ -46,7 +46,7 @@ class UncompletedTasksPage extends StatelessWidget {
                 child: Column(
                         children: [
                           Consumer<Idea>(
-                            builder: (_,idea, __)=> (idea.uncompletedTasks.isNotEmpty) ? SearchBar_ReorderPopup(idea: idea, searchFieldController: searchFieldController) : Container()),
+                            builder: (_,idea, __)=> (idea.uncompletedTasks.isNotEmpty) ? SearchBar_ReorderPopup(idea: idea, searchFieldController: searchFieldController) : Container(height: 108)),
                           PageReactiveToReorderState(
                             isEnabled: ReorderableListForAllPriorityGroups(idea: idea, scrollController: scrollController),
                             isDisabled: GroupedList(idea: idea))

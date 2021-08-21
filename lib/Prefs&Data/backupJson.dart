@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
-import 'package:idealog/auth/authHandler.dart';
+import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:path_provider/path_provider.dart';
@@ -59,8 +59,6 @@ class BackupJson{
   void _setGoogleJsonFileId(drive.File driveFile) => _googleJsonFileId = driveFile.id;
 
 
-
-
   /// upload the file to the drive.
   Future<void> uploadToDrive() async {
     // if the file id exists it means we just need to update the file in google drive not create a new one.
@@ -75,7 +73,7 @@ class BackupJson{
     // Encode to json on a different isolate.
     try {
       File jsonFile = new File(filePath);
-      String jsonString = await compute(_convertToJson,await IdealogDb.instance.allIdeasForJson);
+      String jsonString = await compute(_convertToJson,await IdealogDb.instance.allIdeasInJsonFormat);
       jsonFile.writeAsStringSync(jsonString);
 
       drive.Media driveMedia = drive.Media(jsonFile.openRead(),jsonFile.lengthSync(),contentType: 'application/json');

@@ -83,7 +83,7 @@ class AddTaskBottomSheet extends StatelessWidget {
                       ),
                     ),
                       
-                    Text('New Task',style: overpass.copyWith(fontSize: 25)),
+                    Text('New Task',style: dosis.copyWith(fontSize: 25)),
                       
                     ElevatedButton.icon(onPressed: ()=> _addTaskToList(),
                      icon: Icon(Icons.add), label: Text('Add',style: TextStyle(fontSize: 20)),

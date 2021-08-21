@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/backupJson.dart';
-import 'package:idealog/auth/authHandler.dart';
+import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customWidget/alertDialog.dart';
 import 'package:idealog/global/routes.dart';
@@ -19,14 +19,14 @@ class IdeaManager{
     // Create a new instance of idea.
     Idea newIdea = Idea(ideaTitle: ideaTitle, moreDetails: moreDetails, tasksToCreate: allNewTasks);
 
-    await IdealogDb.instance.writeToDb(idea: newIdea);
+    await IdealogDb.instance.writeIdeaToDb(idea: newIdea);
     Navigator.popUntil(context, ModalRoute.withName(menuPageView));
   }
 
-  static Future<void> changeMoreDetail({required Idea idea, required String newMoreDetail}) async 
+  static Future<void> changeIdeaDetail({required Idea idea, required String newMoreDetail}) async 
   {
-    idea.changeMoreDetail(newMoreDetail);
-    await IdealogDb.instance.changeMoreDetail(ideaId: idea.ideaId!,newMoreDetail: newMoreDetail);
+    idea.changeIdeaDetail(newMoreDetail);
+    await IdealogDb.instance.changeIdeaDetailInDb(ideaId: idea.ideaId!,newMoreDetail: newMoreDetail);
   }
 
   static Future<void> setFavorite({required Idea idea}) async 
@@ -36,20 +36,20 @@ class IdeaManager{
     ?idea.unFavorite()
     :idea.makeFavorite();
 
-    await IdealogDb.instance.setFavorite(idea: idea);
+    await IdealogDb.instance.setFavoriteInDb(idea: idea);
   }
 
   static Future<void> completeTask(Idea idea,Task uncompletedTask) async 
   {
     idea.completeTask(uncompletedTask);
-    await IdealogDb.instance.completeTask(taskRow: uncompletedTask, ideaPrimaryKey: idea.ideaId!);
+    await IdealogDb.instance.completeTaskInDb(taskRow: uncompletedTask, ideaPrimaryKey: idea.ideaId!);
     await AnalyticDB.instance.writeOrUpdate(uncompletedTask);
   }
 
   static Future<void> uncheckCompletedTask(Idea idea,Task completedTask) async 
   {
       idea.uncheckCompletedTask(completedTask);
-      await IdealogDb.instance.uncheckCompletedTask(taskRow: completedTask, ideaPrimaryKey: idea.ideaId!);
+      await IdealogDb.instance.uncheckCompletedTaskInDb(taskRow: completedTask, ideaPrimaryKey: idea.ideaId!);
       await AnalyticDB.instance.removeTaskFromAnalytics(completedTask);
   }
 
@@ -58,19 +58,19 @@ class IdeaManager{
     
     List<Task> modifiedTaskList = idea.SetOrderIndex_AddTaskToIdea(tasksList: newTasks); 
 
-    await IdealogDb.instance.addNewTasks(taskList: modifiedTaskList, ideaId: idea.ideaId!);
+    await IdealogDb.instance.addNewTasksToDb(taskList: modifiedTaskList, ideaId: idea.ideaId!);
   }
 
   static Future<void> deleteTask(Idea idea,Task taskRow) async {
     // I am using delete task because analytics will not throw an error 
     // if you try to delete a non-existent uncompleted task
       idea.deleteTask(taskRow);
-      await IdealogDb.instance.deleteTask(task: taskRow);
+      await IdealogDb.instance.deleteTaskFromDb(task: taskRow);
       await AnalyticDB.instance.removeTaskFromAnalytics(taskRow);
   }
 
   static Future<void> deleteIdeaFromDb(Idea idea) async { 
-    await IdealogDb.instance.deleteIdea(ideaId: idea.ideaId!);
+    await IdealogDb.instance.deleteIdeaFromDb(ideaId: idea.ideaId!);
     // Delete all the completed tasks of this idea from analytics data
     await AnalyticDB.instance.removeIdeaFromAnalytics(idea.completedTasks);
     }
@@ -86,7 +86,7 @@ class IdeaManager{
    
     await NativeCodeCaller.instance.updateLastBackupTime();
     
-    print('sync now clicked');
+    debugPrint('show alertDialog');
   }
 
 }

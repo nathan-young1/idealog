@@ -34,7 +34,7 @@ class _UpgradeToPremiumState extends State<UpgradeToPremium> {
                   iconSize: 35,
                   onPressed: ()=>Navigator.pop(context)),
                   SizedBox(width: 10),
-                  Text('Premium Access',style: poppins.copyWith(fontSize: 28))
+                  Text('Premium Access',style: dosis.copyWith(fontSize: 28))
                 ],
               ),
 
@@ -51,7 +51,7 @@ class _UpgradeToPremiumState extends State<UpgradeToPremium> {
               SizedBox(height: 10),
               Padding(
                 padding: EdgeInsets.only(left: 25),
-                child: Text('Features',style: overpass.copyWith(fontWeight: FontWeight.w200,fontSize: 30),),
+                child: Text('Features',style: dosis.copyWith(fontWeight: FontWeight.w200,fontSize: 30),),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 30,top: 10),
@@ -74,10 +74,10 @@ class _UpgradeToPremiumState extends State<UpgradeToPremium> {
                       text: TextSpan(children: [
                         TextSpan(
                           text: 'Duration: ',
-                          style: poppins.copyWith(color: Colors.black,fontSize: 22,fontWeight: FontWeight.w600)
+                          style: dosis.copyWith(color: Colors.black,fontSize: 22,fontWeight: FontWeight.w600)
                         ),
                         TextSpan(text: '1 year',
-                        style: overpass.copyWith(color: Colors.black,fontSize: 25)
+                        style: dosis.copyWith(color: Colors.black,fontSize: 25)
                         )
                       ]
                       )
@@ -103,7 +103,7 @@ class PremiumFeatureTile extends StatelessWidget {
       children: [
       Icon(Icons.circle,size: 17),
       SizedBox(width: 10),
-      Text(_feature,style: poppins.copyWith(fontSize: 19))
+      Text(_feature,style: dosis.copyWith(fontSize: 19))
     ]
     );
   }
@@ -128,7 +128,7 @@ class _PurchaseButton extends StatelessWidget {
            icon: Icon(FontAwesomeIcons.solidCreditCard,size: 30,color: Provider.of<Premium>(context).isPremiumUser?Colors.black:Colors.white),
            label: Padding(
              padding: EdgeInsets.only(left: 12),
-             child: Text(Provider.of<Premium>(context).isPremiumUser?'Purchased':'Get Access',style: poppins.copyWith(fontSize: 20,color: Provider.of<Premium>(context).isPremiumUser?Colors.black:Colors.white)),
+             child: Text(Provider.of<Premium>(context).isPremiumUser?'Purchased':'Get Access',style: dosis.copyWith(fontSize: 20,color: Provider.of<Premium>(context).isPremiumUser?Colors.black:Colors.white)),
            )),
         ),
       ],

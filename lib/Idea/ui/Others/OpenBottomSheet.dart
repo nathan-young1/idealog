@@ -47,7 +47,7 @@ class OpenBottomSheet extends StatelessWidget {
                 color: Colors.white,
                 child: Align(
                   alignment: Alignment(-1, 0),
-                  child: Text('New Task', style: poppins.copyWith(fontSize: 20)))
+                  child: Text('New Task', style: dosis.copyWith(fontSize: 20)))
               ),
             ),
             Expanded(

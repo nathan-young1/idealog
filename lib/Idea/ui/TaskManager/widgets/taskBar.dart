@@ -55,7 +55,7 @@ class SearchBar_ReorderPopup extends StatelessWidget {
                         await reorderListController.updateAndSaveTaskOrderIndex(idea, reorderListController);
                         },
                   icon: Icon(FeatherIcons.check),
-                  label: Text('Save tasks order', style: overpass.copyWith(fontSize: 22))),
+                  label: Text('Save tasks order', style: dosis.copyWith(fontSize: 22))),
               ),
             ),
           ),

@@ -40,9 +40,9 @@ class Premium with ChangeNotifier{
   
 
   /// Initialize In-app purchases plugin, if there is internet connection.
-  Future<void> initializePlugin({bool? calledFromBuyProductMethod}) async {
+  Future<void> intializePlugin({bool? calledFromBuyProductMethod}) async {
     /// if the user does not have an internet connection execute the following method as the intializer.
-    if(!UserInternetConnectionChecker.userHasInternetConnection) return (await intializePluginWithoutInternetConnection());
+    if(!UserInternetConnectionChecker.userHasInternetConnection) return (await initializePluginWithoutInternetConnection());
       
     try{
         /// Enable the parent plugin.
@@ -77,14 +77,14 @@ class Premium with ChangeNotifier{
 
     } catch (e) {
       // if(calledFromBuyProductMethod != null) show a flushbar that there is no internet connection so the premium plan can't be purchased
-      await intializePluginWithoutInternetConnection();
+      await initializePluginWithoutInternetConnection();
       debugPrint(e.toString());
     }
 
   }
 
   /// use this method when there is no internet connection.
-  Future<void> intializePluginWithoutInternetConnection() async {
+  Future<void> initializePluginWithoutInternetConnection() async {
        userIsPremiumWhenOffline = await NativeCodeCaller.instance.getUserIsPremium();
 
       _expirationDate = await NativeCodeCaller.instance.getPremiumExpirationDate();
@@ -107,7 +107,7 @@ class Premium with ChangeNotifier{
   Future<void> buyProduct() async {
     if(UserInternetConnectionChecker.userHasInternetConnection){
       // if the plugin has not been initialized yet, then intialize it.
-      if(!pluginHasBeenInitializedWithInternet) await initializePlugin(calledFromBuyProductMethod: true);
+      if(!pluginHasBeenInitializedWithInternet) await intializePlugin(calledFromBuyProductMethod: true);
       
       ProductDetails? product = _products.firstWhere((product) => product.id == playStoreId);
 

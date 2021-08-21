@@ -7,5 +7,6 @@ BoxDecoration lightModeBackgroundColor = BoxDecoration(
             Color.fromRGBO(117, 71, 74, 0.65)
             ],
             begin: Alignment.topLeft,
-            end: Alignment.bottomRight)
+            end: Alignment.bottomRight
+            )
         );

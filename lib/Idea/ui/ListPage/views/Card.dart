@@ -10,7 +10,7 @@ import 'mainTile.dart';
 
 class IdeaCard extends StatelessWidget{
 
-  IdeaCard({required this.idea, Key? key}):super(key: key);
+  IdeaCard({required this.idea,Key? key}):super(key: key);
   final Idea idea;
 
   @override
@@ -24,7 +24,7 @@ class IdeaCard extends StatelessWidget{
             await Navigator.push(context, MaterialPageRoute(builder: (context)=> IdeaDetail(idea: idea)));
             SearchController.instance.stopSearch();
            }, 
-    
+        
           child: Slidable(
             key: UniqueKey(),
             movementDuration: Duration(milliseconds: 400),
@@ -39,6 +39,6 @@ class IdeaCard extends StatelessWidget{
           ),
         ),
       ),
-    );
+        );
   }
 }

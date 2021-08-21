@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:idealog/bottomNav/notifier.dart';
+import 'package:idealog/application-menu/controllers/bottomNavController.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
-class BottomNavBar extends StatelessWidget {
-  const BottomNavBar({ Key? key}) : super(key: key);
+class MenuBottomNav extends StatelessWidget {
+  const MenuBottomNav({ Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,12 +48,13 @@ class ActiveTab extends StatefulWidget {
 }
 
 class _ActiveTabState extends State<ActiveTab> with SingleTickerProviderStateMixin{
-  final TextStyle navDescriptionStyle = poppins.copyWith(fontSize: 16,fontWeight: FontWeight.w300,color: DarkBlue);
+  final TextStyle navDescriptionStyle = dosis.copyWith(fontSize: 16,fontWeight: FontWeight.w300,color: DarkBlue);
   late AnimationController tabAnimationController;
   late Animation<Color?> colorChangeAnimation;
   late Animation<double?> translateAnimation;
   late BottomNavController listenableBottomNavController;
   late BottomNavController nonListenableBottomNavController;
+  
   @override
   void initState() {
     tabAnimationController = AnimationController(
@@ -88,7 +89,7 @@ class _ActiveTabState extends State<ActiveTab> with SingleTickerProviderStateMix
       onTap: ()=> nonListenableBottomNavController.currentPage = widget.typeOfTab,
 
       child: Container(
-        alignment: nonListenableBottomNavController.navTabAlignment(widget.typeOfTab),
+        alignment: nonListenableBottomNavController.navIconAlignment(widget.typeOfTab),
         height: nonListenableBottomNavController.bottomNavHeight * 0.8,
         color: Colors.transparent,
 

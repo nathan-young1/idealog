@@ -18,7 +18,7 @@ PreferredSizeWidget TasksAppBar ({required String pageName, required Color pageC
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             toolbarHeight: kToolbarHeight * 1.2,
-            title: Text(pageName, style: overpass.copyWith(fontSize: 25, color: Colors.white)),
+            title: Text(pageName, style: dosis.copyWith(fontSize: 25, color: Colors.white)),
             automaticallyImplyLeading: false,
             actions: [
               Container(

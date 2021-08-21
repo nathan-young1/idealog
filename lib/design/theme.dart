@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'colors.dart';
 
-class CustomTheme {
+class AppTheme {
   
   static final ThemeData lightTheme = ThemeData(
                                 brightness: Brightness.light,

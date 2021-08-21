@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:idealog/global/typedef.dart';
 import 'idealog_config.dart';
 
-class IdealogDb {
+class IdealogDb{
 
   IdealogDb._();
 
@@ -26,15 +26,14 @@ class IdealogDb {
     notifyListeners();
   }
 
-  
   static Function notifyListeners = ()=> _controller.add(null);
 
   /// Collects a list of ideas and iteratively add them to the database.
   Future<void> writeListOfIdeasToDB({required List<Idea> listOfIdeas}) async {
-      for(var idea in listOfIdeas) await IdealogDb.instance.writeToDb(idea: idea);
+      for(var idea in listOfIdeas) await IdealogDb.instance.writeIdeaToDb(idea: idea);
   }
 
-  Future<void> writeToDb({required Idea idea}) async {
+  Future<void> writeIdeaToDb({required Idea idea}) async {
 
     await dbInstance.transactionAndTrigger((txn) async {
 
@@ -44,7 +43,7 @@ class IdealogDb {
       List<Task> uncompletedTasks = idea.uncompletedTasks;
 
       // Insert the idea into the database
-      int uniqueIdForIdea = await getUniqueId(txn,ideaTable);
+      int uniqueIdForIdea = await _getUniqueId(txn,ideaTable);
       await txn.insert(ideaTable, {
         Column_ideaTitle: idea.ideaTitle,
         Column_moreDetails: idea.moreDetails??'',
@@ -57,7 +56,7 @@ class IdealogDb {
       });
   }
 
-  Future<void> deleteIdea({required int ideaId}) async {
+  Future<void> deleteIdeaFromDb({required int ideaId}) async {
 
     await dbInstance.transactionAndTrigger((txn) async { 
       var batch = txn.batch();
@@ -71,7 +70,7 @@ class IdealogDb {
       });
   }
 
-  Future<void> deleteTask({required Task task}) async {
+  Future<void> deleteTaskFromDb({required Task task}) async {
 
     await dbInstance.transaction((txn) async { 
       var batch = txn.batch();
@@ -84,14 +83,15 @@ class IdealogDb {
       });
   }
 
-  Future<void> addNewTasks({required DBTaskList taskList, required int ideaId}) async {
+  Future<void> addNewTasksToDb({required DBTaskList taskList, required int ideaId}) async 
+  {
     await dbInstance.transaction((txn) async =>
       await _addTasksToTable(txn: txn, tasks: taskList, tableName: uncompletedTable, ideaPrimaryKey: ideaId)
     );
   }
 
-  Future<void> completeTask({required Task taskRow, required int ideaPrimaryKey}) async {
-        
+  Future<void> completeTaskInDb({required Task taskRow, required int ideaPrimaryKey}) async 
+  {
       await dbInstance.transaction((txn) async { 
       var batch = txn.batch();
       // First remove the task from the uncompleted table.
@@ -102,7 +102,8 @@ class IdealogDb {
       });
   }
 
-  Future<void> uncheckCompletedTask({required Task taskRow, required int ideaPrimaryKey}) async {
+  Future<void> uncheckCompletedTaskInDb({required Task taskRow, required int ideaPrimaryKey}) async 
+  {
     
     await dbInstance.transaction((txn) async { 
       var batch = txn.batch();
@@ -118,7 +119,8 @@ class IdealogDb {
   }
 
   /// Updates the order index for a particular task in the uncompletedTable of the database.
-  Future<void> updateOrderIndexForTaskInDb({required Task taskRowWithNewIndex, required int ideaPrimaryKey}) async {
+  Future<void> updateOrderIndexForTaskInDb({required Task taskRowWithNewIndex, required int ideaPrimaryKey}) async 
+  {
     await dbInstance.transaction((txn) async{
         await txn.update(
           uncompletedTable,
@@ -131,7 +133,8 @@ class IdealogDb {
     });
   }
 
-  Future<void> updatePriorityForTaskInDb({required Task taskRowWithNewIndex, required int ideaPrimaryKey}) async {
+  Future<void> updatePriorityForTaskInDb({required Task taskRowWithNewIndex, required int ideaPrimaryKey}) async 
+  {
     await dbInstance.transaction((txn) async{
         await txn.update(
           uncompletedTable,
@@ -141,7 +144,8 @@ class IdealogDb {
     });
   }
 
-  Future<void> changeMoreDetail({required int ideaId, required String newMoreDetail}) async {
+  Future<void> changeIdeaDetailInDb({required int ideaId, required String newMoreDetail}) async 
+  {
       await dbInstance.transaction((txn) async {
         await txn.update(ideaTable,
           {Column_moreDetails : newMoreDetail},
@@ -150,7 +154,8 @@ class IdealogDb {
       });
   }
 
-  Future<void> setFavorite({required Idea idea}) async {
+  Future<void> setFavoriteInDb({required Idea idea}) async 
+  {
       await dbInstance.transaction((txn) async {
         await txn.update(ideaTable,
           {Column_favorite : idea.isFavorite.toString()},
@@ -164,16 +169,16 @@ class IdealogDb {
 
       // await for every new event in the stream then yield the current dbstate
       await for (var _ in _updateStream){
-       yield await _dbIdeasGetter();
+       yield await _fetchIdeasFromDb();
       }  
   }
 
-  Future<List<Map<String, dynamic>>> get allIdeasForJson async => (await _dbIdeasGetter())
+  Future<List<Map<String, dynamic>>> get allIdeasInJsonFormat async => (await _fetchIdeasFromDb())
   .map((e) => e.toMap())
   .toList();
 
   /// The function that actually reads the Database for ideas.
-  Future<List<Idea>> _dbIdeasGetter() async {
+  Future<List<Idea>> _fetchIdeasFromDb() async {
     List<Idea> allIdeasFromDb = [];
       await dbInstance.transaction((txn) async {
         await _createTablesIfNotExist(txn);
@@ -211,7 +216,7 @@ class IdealogDb {
 
   
   /// Get the last primary key in the table ,then increment it by one for a new unique key.
-  Future<int> getUniqueId(Transaction txn,String tableName) async {
+  Future<int> _getUniqueId(Transaction txn,String tableName) async {
     String idColumn = (tableName == ideaTable)?Column_ideaId:Column_taskId;
 
     var queryResult = await txn.query(tableName,orderBy: '$idColumn DESC LIMIT 1',columns: [idColumn]);
@@ -268,7 +273,7 @@ class IdealogDb {
   /// Add tasks to the specified table.
   Future<void> _addTasksToTable({required Transaction txn,required DBTaskList tasks,required String tableName,required int ideaPrimaryKey}) async {
         for(Task row in tasks){
-          int uniqueIdForTask = await getUniqueId(txn,tableName);
+          int uniqueIdForTask = await _getUniqueId(txn,tableName);
           await txn.insert(tableName, {
             Column_task: '${row.task}',
             Column_taskOrder: '${row.orderIndex}',

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
-import 'package:idealog/auth/authHandler.dart';
+import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:local_auth/auth_strings.dart';

@@ -56,7 +56,7 @@ class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
                     Expanded(
                       child: Center(
                         child: Container(
-                          child: Text(widget.idea.ideaTitle,style: overpass.copyWith(fontSize: 35,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis),
+                          child: Text(widget.idea.ideaTitle,style: dosis.copyWith(fontSize: 35,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis),
                         ),
                       ),
                     ),
@@ -96,7 +96,7 @@ class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
                 height: 65,
                 color: DarkBlue,
                 child: Center(
-                  child: Text('Save',style: overpass.copyWith(fontSize: 32,color: Colors.white))
+                  child: Text('Save',style: dosis.copyWith(fontSize: 32,color: Colors.white))
                   ),
               ),
             ),

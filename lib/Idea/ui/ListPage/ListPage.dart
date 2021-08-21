@@ -34,12 +34,13 @@ class IdeaListPage extends StatelessWidget {
             
             // check if there is data in the idealogDb after initialization, in other to know whether to show idea is not available or not.
             FutureBuilder<List<Map< String, dynamic>>>(
-              future: IdealogDb.instance.allIdeasForJson,
+              future: IdealogDb.instance.allIdeasInJsonFormat,
               builder: (context, snapshot){
               // show this illustration if there is no idea in the database.
               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isEmpty) return IdeaDoesNotExistIllustration();
               // toggle between the widget depending on if the search term exists in the list.
-              else if(listOfIdeas.isEmpty && SearchController.instance.searchIsActive) return DoesNotExistIllustration(); 
+              else if(listOfIdeas.isEmpty && SearchController.instance.searchIsActive) return SearchNotFoundIllustration(); 
+              
               else return Expanded(
                   child: Scrollbar(
                     child: ListView.builder(
@@ -77,7 +78,7 @@ class IdeasAppBar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('IDEAS',style: poppins.copyWith(fontSize: 30)),
+          Text('IDEAS',style: dosis.copyWith(fontSize: 30)),
     
           Consumer<List<Idea>>(
             builder:(_, listOfIdeas, __)=>

@@ -44,7 +44,7 @@ class CompletedTasksPage extends StatelessWidget {
                 child: Column(
                 children: [
                   Consumer<Idea>(
-                        builder: (_,idea, __)=> (idea.completedTasks.isNotEmpty) ? SearchBar_MultiSelectPopup(searchFieldController: searchFieldController) : Container()),
+                        builder: (_,idea, __)=> (idea.completedTasks.isNotEmpty) ? SearchBar_MultiSelectPopup(searchFieldController: searchFieldController) : Container(height: 108)),
                   PageReactiveToMultiSelectionState(
                     isEnabled: MultiSelectionList(),
                     isDisabled: Consumer<SearchController>(
@@ -54,7 +54,7 @@ class CompletedTasksPage extends StatelessWidget {
                           /// illustration for when there is no longer any completed task.
                           if(idea.completedTasks.isEmpty) return NoTaskYet();
                          /// illustrastion for when no search result was found.
-                         else if (completedTasks.isEmpty) return DoesNotExistIllustration();
+                         else if (completedTasks.isEmpty) return SearchNotFoundIllustration();
                          return PriorityTasksInColumnView(idea: idea, pageCalledFrom: TaskPage.COMPLETED);
                          }))
                 ],

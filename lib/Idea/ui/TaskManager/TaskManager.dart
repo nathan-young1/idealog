@@ -13,7 +13,7 @@ class TaskManager extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('Task Manager',style: overpass.copyWith(fontSize: 25)),
+        Text('Task Manager',style: dosis.copyWith(fontSize: 25)),
         SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

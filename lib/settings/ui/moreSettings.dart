@@ -24,7 +24,7 @@ class MoreSettings extends StatelessWidget {
                 iconSize: 35,
                 onPressed: ()=>Navigator.pop(context)),
                 SizedBox(width: 10),
-                Text('More Settings',style: poppins.copyWith(fontSize: 28))
+                Text('More Settings',style: dosis.copyWith(fontSize: 28))
               ],
             ),
 
@@ -43,7 +43,7 @@ class MoreSettings extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: Icon(Icons.alarm_rounded,color: Colors.teal[800],size: 35),
-                    title: Text('Account settings',style: poppins.copyWith(fontSize: 20),),
+                    title: Text('Account settings',style: dosis.copyWith(fontSize: 20),),
                     trailing: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Container(
@@ -71,7 +71,7 @@ class MoreSettings extends StatelessWidget {
               children: [
                 ListTile(
                   leading: Icon(Icons.fingerprint,color: DarkBlue,size: 35),
-                  title: Text('Fingerprint Lock',style: poppins.copyWith(fontSize: 20)),
+                  title: Text('Fingerprint Lock',style: dosis.copyWith(fontSize: 20)),
                   trailing: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Switch(value: Provider.of<Prefrences>(context).fingerprintEnabled,

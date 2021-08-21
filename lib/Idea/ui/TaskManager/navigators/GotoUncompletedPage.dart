@@ -38,7 +38,7 @@ class GotoUncompletedPage extends StatelessWidget {
               decoration: BoxDecoration(shape: BoxShape.circle, color: Black242424.withOpacity(0.2)),
               child: Icon(FeatherIcons.list,color: Colors.white,size: 18)
             ),
-            Flexible(child: Text('Uncompleted Tasks',style: overpass.copyWith(fontSize: 16, color: Colors.white))),
+            Flexible(child: Text('Uncompleted Tasks',style: dosis.copyWith(fontSize: 16, color: Colors.white))),
             Container(
               height: 6,
               // i am dividing the percent by 100 because LinearProgressIndicator is from 0-1.

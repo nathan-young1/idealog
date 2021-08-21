@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
-import 'package:idealog/Prefs&Data/GoogleUserData.dart';
-import 'package:idealog/Prefs&Data/backupJson.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
-import 'package:idealog/auth/authHandler.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/global/internetConnectionChecker.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:provider/provider.dart';
@@ -54,7 +50,7 @@ class Syncronization extends StatelessWidget {
                               iconSize: 35,
                               onPressed: ()=>Navigator.pop(context)),
                             SizedBox(width: 12),
-                            Text('Data Backup',style: poppins.copyWith(fontSize: 24))
+                            Text('Data Backup',style: dosis.copyWith(fontSize: 24))
                           ],
                         ),
                       ),
@@ -71,7 +67,7 @@ class Syncronization extends StatelessWidget {
                               bottomRight: Radius.circular(20)),
                           ),
                           child: Center(child: Text('Last backup at: ${nativeCodeCaller.lastBackupTime ?? ""}',
-                          style: overpass.copyWith(fontSize: 18,color: Colors.white),)),
+                          style: dosis.copyWith(fontSize: 18,color: Colors.white),)),
                         ),
                       )
                     ],),
@@ -84,7 +80,7 @@ class Syncronization extends StatelessWidget {
                       Icon(Icons.info_outline,color: Colors.teal.withOpacity(0.5),size: 30),
                       SizedBox(width: 10),
                       Text('Your data will be backed up every 24 hours.',
-                      style: overpass.copyWith(fontSize: 15,fontWeight: FontWeight.w300))
+                      style: dosis.copyWith(fontSize: 15,fontWeight: FontWeight.w300))
                     ],
                   ),
                   SizedBox(height: 40),
@@ -97,7 +93,7 @@ class Syncronization extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                            Text('Backup Now',style: overpass.copyWith(fontSize: 20)),
+                            Text('Backup Now',style: dosis.copyWith(fontSize: 20)),
                             Container(
                               width: 60,
                               child: Icon(FeatherIcons.uploadCloud,size: 30,color: Colors.teal))
@@ -108,7 +104,7 @@ class Syncronization extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                          Text('Auto Backup',style: overpass.copyWith(fontSize: 20)),
+                          Text('Auto Backup',style: dosis.copyWith(fontSize: 20)),
                           Container(
                             width: 60,
                             child: Switch(value: Provider.of<Prefrences>(context).autoSyncEnabled,

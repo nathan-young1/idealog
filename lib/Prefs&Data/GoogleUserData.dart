@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:idealog/auth/authHandler.dart';
+import 'package:idealog/authentication/authHandler.dart';
 
 class GoogleUserData with ChangeNotifier{
   static String? _email = googleSignIn.currentUser?.email;

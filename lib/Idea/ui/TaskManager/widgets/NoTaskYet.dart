@@ -11,16 +11,15 @@ class NoTaskYet extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: Align(
-        alignment: Alignment(0, -0.3),
+        alignment: Alignment(0, -0.8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 height: 230,
                 width: 250,
                 child: Image.asset(Paths.No_Tasks_Pic, fit: BoxFit.contain)),
-              Text("No tasks available.", style: overpass.copyWith(fontSize: 22))
+              Text("No tasks available.", style: dosis.copyWith(fontSize: 22))
           ]),
       ),
     );

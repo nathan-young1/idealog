@@ -25,7 +25,7 @@ Widget PopupMenu_reorder({required int flex}){
                     children: [
                       Icon(FeatherIcons.move),
                       SizedBox(width: 12),
-                      Text('Reorder Tasks', style: overpass.copyWith(fontSize: 16))
+                      Text('Reorder Tasks', style: dosis.copyWith(fontSize: 16))
                     ],
                   ),
                   value: _Menu.ReorderTasks)
@@ -51,7 +51,7 @@ Widget PopupMenu_MultiSelect({required int flex}){
                     children: [
                       Icon(FontAwesomeIcons.tasks),
                       SizedBox(width: 12),
-                      Text('Multi-Selection', style: overpass.copyWith(fontSize: 16))
+                      Text('Multi-Selection', style: dosis.copyWith(fontSize: 16))
                     ],
                   ),
                   value: _Menu.MultiSelect)

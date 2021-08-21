@@ -46,7 +46,7 @@ class HighPriorityTaskPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Consumer<Idea>(
-                            builder: (_,idea, __)=> (idea.highPriority.isNotEmpty) ? SearchBar_ReorderPopup(idea: idea, searchFieldController: searchFieldController) : Container()),
+                            builder: (_,idea, __)=> (idea.highPriority.isNotEmpty) ? SearchBar_ReorderPopup(idea: idea, searchFieldController: searchFieldController) : Container(height: 108)),
                     PageReactiveToReorderState(
                       isEnabled: SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
                       isDisabled: Consumer<SearchController>(
@@ -56,7 +56,7 @@ class HighPriorityTaskPage extends StatelessWidget {
                           /// illustration for when there is no longer any high priority task.
                           if(idea.highPriority.isEmpty) return NoTaskYet();
                           /// illustrastion for when no search result was found.
-                          else if(highPriorityTasks.isEmpty) return DoesNotExistIllustration();
+                          else if(highPriorityTasks.isEmpty) return SearchNotFoundIllustration();
 
                           return PriorityTasksInColumnView(idea: idea, priorityGroup: Priority_High, pageCalledFrom: TaskPage.HIGH_PRIORITY);
                         })),      

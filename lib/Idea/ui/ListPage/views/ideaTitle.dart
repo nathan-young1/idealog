@@ -12,7 +12,7 @@ class IdeaTitle extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 10),
         child: Center(child: Text(idea.ideaTitle,
-        style: reemKufi.copyWith(fontSize: 30),
+        style: dosis.copyWith(fontSize: 30),
         overflow: TextOverflow.ellipsis)),
       ));
   }
