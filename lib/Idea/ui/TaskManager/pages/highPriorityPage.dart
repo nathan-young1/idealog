@@ -6,9 +6,9 @@ import 'package:idealog/Idea/ui/TaskManager/widgets/animatedListTile.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/groupedList.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reactivePage.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reorderableGroupedList.dart';
-import 'package:idealog/Idea/ui/TaskManager/widgets/taskBar.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/taskPageMenu.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/DoesNotExist.dart';
-import 'package:idealog/Idea/ui/TaskManager/widgets/tasksAppBar.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/taskPageAppBar.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
@@ -18,7 +18,7 @@ class HighPriorityTaskPage extends StatelessWidget {
   HighPriorityTaskPage({ Key? key, required this.idea}) : super(key: key);
   final Idea idea;
   final ScrollController scrollController = ScrollController();
-    TextEditingController searchFieldController = new TextEditingController();
+  final TextEditingController searchFieldController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class HighPriorityTaskPage extends StatelessWidget {
         child: Scaffold(
           backgroundColor: HighPriorityColor,
           resizeToAvoidBottomInset: false,
-          appBar: TasksAppBar(pageName: "High Priority Tasks", pageColor: HighPriorityColor, context: context),
+          appBar: TaskPageAppBar(pageName: "High Priority Tasks", pageColor: HighPriorityColor, context: context),
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             controller: scrollController,
@@ -47,8 +47,8 @@ class HighPriorityTaskPage extends StatelessWidget {
                   children: [
                     Consumer<Idea>(
                             builder: (_,idea, __)=> (idea.highPriority.isNotEmpty) ? SearchBar_ReorderPopup(idea: idea, searchFieldController: searchFieldController) : Container(height: 108)),
-                    PageReactiveToReorderState(
-                      isEnabled: SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
+                    ReactToReorderState(
+                      isEnabled: SingleReorderableList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
                       isDisabled: Consumer<SearchController>(
                         builder: (_, searchController, __){
                           List<Task> highPriorityTasks = idea.highPriority.where(searchTermExistsInTask).toList();
@@ -58,7 +58,7 @@ class HighPriorityTaskPage extends StatelessWidget {
                           /// illustrastion for when no search result was found.
                           else if(highPriorityTasks.isEmpty) return SearchNotFoundIllustration();
 
-                          return PriorityTasksInColumnView(idea: idea, priorityGroup: Priority_High, pageCalledFrom: TaskPage.HIGH_PRIORITY);
+                          return TasksInColumnView(idea: idea, priorityGroup: Priority_High, pageCalledFrom: TaskPage.HIGH_PRIORITY);
                         })),      
                   ],
                 ),

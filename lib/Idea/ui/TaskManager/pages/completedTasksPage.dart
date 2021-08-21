@@ -5,9 +5,9 @@ import 'package:idealog/Idea/ui/TaskManager/widgets/animatedListTile.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/groupedList.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/multiSelectionList.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/reactivePage.dart';
-import 'package:idealog/Idea/ui/TaskManager/widgets/taskBar.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/taskPageMenu.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/DoesNotExist.dart';
-import 'package:idealog/Idea/ui/TaskManager/widgets/tasksAppBar.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/taskPageAppBar.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 class CompletedTasksPage extends StatelessWidget {
   
   CompletedTasksPage({ Key? key , required this.idea}) : super(key: key);
-  TextEditingController searchFieldController = new TextEditingController();
+  final TextEditingController searchFieldController = new TextEditingController();
   final Idea idea;
 
   @override
@@ -30,7 +30,7 @@ class CompletedTasksPage extends StatelessWidget {
         child: Scaffold(
           backgroundColor: completedTasksColor,
           resizeToAvoidBottomInset: false,
-          appBar: TasksAppBar(pageName: "Completed Tasks", pageColor: completedTasksColor, context: context), 
+          appBar: TaskPageAppBar(pageName: "Completed Tasks", pageColor: completedTasksColor, context: context), 
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Container(
@@ -45,7 +45,7 @@ class CompletedTasksPage extends StatelessWidget {
                 children: [
                   Consumer<Idea>(
                         builder: (_,idea, __)=> (idea.completedTasks.isNotEmpty) ? SearchBar_MultiSelectPopup(searchFieldController: searchFieldController) : Container(height: 108)),
-                  PageReactiveToMultiSelectionState(
+                  ReactToMultiSelection(
                     isEnabled: MultiSelectionList(),
                     isDisabled: Consumer<SearchController>(
                       builder: (_, searchController, __){
@@ -55,7 +55,7 @@ class CompletedTasksPage extends StatelessWidget {
                           if(idea.completedTasks.isEmpty) return NoTaskYet();
                          /// illustrastion for when no search result was found.
                          else if (completedTasks.isEmpty) return SearchNotFoundIllustration();
-                         return PriorityTasksInColumnView(idea: idea, pageCalledFrom: TaskPage.COMPLETED);
+                         return TasksInColumnView(idea: idea, pageCalledFrom: TaskPage.COMPLETED);
                          }))
                 ],
               ),

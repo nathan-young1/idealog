@@ -6,6 +6,7 @@ import 'package:idealog/nativeCode/bridge.dart';
 import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:auto_start_flutter/auto_start_flutter.dart' as autoStart;
 
 class Prefrences with ChangeNotifier{

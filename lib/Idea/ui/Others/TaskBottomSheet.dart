@@ -12,6 +12,7 @@ int dropDownPriority = Priority_Medium;
 // ignore: must_be_immutable
 class AddTaskBottomSheet extends StatelessWidget {
 
+  // ignore: non_constant_identifier_names
   AddTaskBottomSheet(this.addBottomSheetTaskToList,{required this.taskField, required this.formKey, List<String>? preExistingTasks_Lowercase}){
     // if the preExistingTasks were given, then add to alreadyAddedTasks list tracker.
       alreadyAddedTasks = preExistingTasks_Lowercase ?? [];
@@ -26,7 +27,7 @@ class AddTaskBottomSheet extends StatelessWidget {
   final FocusNode taskFieldFocus = FocusNode();
 
   void _addTaskToList(){
-    if(taskField.text != '' && formKey.currentState!.validate()){
+    if(taskField.text.isNotEmpty && formKey.currentState!.validate()){
       
       Task newTask = Task()
                       ..priority = dropDownPriority

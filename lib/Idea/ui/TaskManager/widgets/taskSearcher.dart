@@ -20,7 +20,7 @@ Widget TaskSearchField({required int flex, required BuildContext context, requir
                         icon: Icon(Icons.clear),
                         onPressed: ()=> clearSearch(searchFieldController, context))
                     ),
-                    onChanged: onChanged,
+                    onChanged: onSearchFieldChanged,
                   ),
                 ),
               ));
@@ -44,7 +44,7 @@ Widget IdeaSearchField({required BuildContext context, required TextEditingContr
             icon: Icon(Icons.clear),
             onPressed: ()=> clearSearch(searchFieldController, context))
         ),
-        onChanged: onChanged
+        onChanged: onSearchFieldChanged
       ),
     ),
   );
@@ -59,7 +59,7 @@ void clearSearch(TextEditingController searchFieldController, BuildContext conte
 }
 
 /// Update the search controller as the user is typing.
-void onChanged(String? value){
+void onSearchFieldChanged(String? value){
   // if the search controller is not on turn it on.
   if (!SearchController.instance.searchIsActive) SearchController.instance.startSearch();
   SearchController.instance.searchFor(value);

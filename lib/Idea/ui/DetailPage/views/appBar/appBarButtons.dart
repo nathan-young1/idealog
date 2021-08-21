@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
-import 'normalActions.dart';
+import 'actionButtons.dart';
 
-class IdeaAppBarButtons extends StatelessWidget {
+class DetailAppBar extends StatelessWidget {
   final Idea idea;
-  const IdeaAppBarButtons({required this.idea});
+  const DetailAppBar({required this.idea});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class IdeaAppBarButtons extends StatelessWidget {
      onPressed: ()=> Navigator.pop(context)
      ),
     
-     NormalActions(idea: idea)
+     ActionButtons(idea: idea)
     ]);
   }
 }

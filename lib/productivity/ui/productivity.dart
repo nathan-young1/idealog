@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/productivity/code/productivityManager.dart';
-import 'package:idealog/productivity/ui/activeDays.dart';
-import 'package:idealog/productivity/ui/favoriteTask.dart';
+import 'package:idealog/productivity/ui/efficiencyChart.dart';
+import 'package:idealog/productivity/ui/featuredIdeas.dart';
 import 'package:idealog/productivity/ui/taskCompletionRate.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +32,7 @@ class _ProductivityState extends State<Productivity> {
               SizedBox(height: 10),
               FavoriteTasks(),
               SizedBox(height: 10),
-              ActiveDaysChart()
+              EfficiencyChart()
             ],
           ),
         ),

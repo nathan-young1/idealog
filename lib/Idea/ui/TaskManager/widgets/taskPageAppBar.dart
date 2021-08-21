@@ -6,7 +6,7 @@ import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/design/textStyles.dart';
 
 // ignore: non_constant_identifier_names
-PreferredSizeWidget TasksAppBar ({required String pageName, required Color pageColor, required BuildContext context}) {
+PreferredSizeWidget TaskPageAppBar ({required String pageName, required Color pageColor, required BuildContext context}) {
 
     return PreferredSize(
       preferredSize: Size.fromHeight(kToolbarHeight * 1.2),

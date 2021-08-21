@@ -25,6 +25,7 @@ class MultiSelectController with ChangeNotifier{
 
   /// Get multi-selection state.
   bool get state => _multiSelectState;
+  
   /// Set multi-selection state.
   set _state(bool updateState){
     _multiSelectState = updateState;

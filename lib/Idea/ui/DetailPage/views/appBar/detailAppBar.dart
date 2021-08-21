@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'appBarButtons.dart';
 
 class DetailAppBar extends StatelessWidget {
   
@@ -19,7 +18,7 @@ class DetailAppBar extends StatelessWidget {
       padding: EdgeInsets.only(top: 15,left: 20,right: 10),
       child: Column(
         children: [
-          IdeaAppBarButtons(idea: idea),
+          DetailAppBar(idea: idea),
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(left: 15,right: 15),

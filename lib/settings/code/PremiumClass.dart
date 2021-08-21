@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/global/internetConnectionChecker.dart';
@@ -24,6 +23,7 @@ class Premium with ChangeNotifier{
   //Past purchases
   static List<PurchaseDetails> _purchases = [];
   //Updates to purchase
+  // ignore: cancel_subscriptions
   static StreamSubscription? _subscription;
 
   static DateTime? _transactionDate;

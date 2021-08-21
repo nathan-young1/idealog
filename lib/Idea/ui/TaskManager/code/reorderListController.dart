@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
-import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 
-enum Direction {Up, Down}
+enum DragDirection {Up, Down}
 
 class ReorderListController with ChangeNotifier{
   ReorderListController._();
@@ -84,6 +83,7 @@ class ReorderListController with ChangeNotifier{
   }
 
   /// Change the task priority if it was dragged into another priority group, and delete the task from the previous priority group if there was any.
+  // ignore: non_constant_identifier_names
   static Future<void> _removeFromList_PromoteIfNeeded({required Task incomingTask, required int priorityGroup, required Idea idea}) async {
     idea.deleteTaskFromGroup(incomingTask); /* note this will delete in the current priority group because it deletes based on task.priority.*/
     if(incomingTask.priority != priorityGroup){
@@ -103,13 +103,13 @@ class ReorderListController with ChangeNotifier{
 
     // Start scrolling down when the draggable is held at 75% of the screen.
     if (!userIsDraggingTaskUp && dragScreenPositionInPercent > 75){
-      startScrollTimer(scrollViewDirection: Direction.Down, scrollController: scrollController);
-      autoAdjustScrollSpeed(scrollViewDirection: Direction.Down, dragScreenPositionInPercent: dragScreenPositionInPercent);
+      startScrollTimer(scrollViewDirection: DragDirection.Down, scrollController: scrollController);
+      autoAdjustScrollSpeed(scrollViewDirection: DragDirection.Down, dragScreenPositionInPercent: dragScreenPositionInPercent);
 
     } else if (userIsDraggingTaskUp && dragScreenPositionInPercent < 25){
       // Start scrolling up when the draggable is held at 25% of the screen.
-      startScrollTimer(scrollViewDirection: Direction.Up, scrollController: scrollController);
-      autoAdjustScrollSpeed(scrollViewDirection: Direction.Up, dragScreenPositionInPercent: dragScreenPositionInPercent);
+      startScrollTimer(scrollViewDirection: DragDirection.Up, scrollController: scrollController);
+      autoAdjustScrollSpeed(scrollViewDirection: DragDirection.Up, dragScreenPositionInPercent: dragScreenPositionInPercent);
 
     } else if (scrollViewCanScroll) stopScrolling();
     
@@ -127,10 +127,10 @@ class ReorderListController with ChangeNotifier{
   void startScrolling()=> scrollViewCanScroll = true;
 
   /// Adjust the scroll speed based on the user's position on the screen while scrolling.
-  void autoAdjustScrollSpeed({required Direction scrollViewDirection, required double dragScreenPositionInPercent}){
+  void autoAdjustScrollSpeed({required DragDirection scrollViewDirection, required double dragScreenPositionInPercent}){
     switch (scrollViewDirection){
       
-      case Direction.Up:
+      case DragDirection.Up:
         if(dragScreenPositionInPercent < 20)
           scrollSpeed = 20;
         else if (dragScreenPositionInPercent < 10)
@@ -138,7 +138,7 @@ class ReorderListController with ChangeNotifier{
         else scrollSpeed = 15;
       break;
 
-      case Direction.Down:
+      case DragDirection.Down:
         if(dragScreenPositionInPercent > 80)
           scrollSpeed = 20;
         else if (dragScreenPositionInPercent > 90)
@@ -149,7 +149,7 @@ class ReorderListController with ChangeNotifier{
   }
 
   /// Automatically scroll the scroll view over a specified interval.
-  void startScrollTimer({required Direction scrollViewDirection, required ScrollController scrollController}) {
+  void startScrollTimer({required DragDirection scrollViewDirection, required ScrollController scrollController}) {
 
     if(!scrollViewCanScroll){
       startScrolling();
@@ -158,12 +158,12 @@ class ReorderListController with ChangeNotifier{
       if (!scrollViewCanScroll) timer.cancel();
 
       switch(scrollViewDirection){
-        case Direction.Up: 
+        case DragDirection.Up: 
           if (scrollController.position.extentBefore > 0) scrollController.position.pointerScroll(-scrollSpeed);
           else {timer.cancel(); stopScrolling();}
         break;
 
-        case Direction.Down: 
+        case DragDirection.Down: 
           if (scrollController.position.extentAfter > 0)  scrollController.position.pointerScroll(scrollSpeed);
           else {timer.cancel(); stopScrolling();}
         break;

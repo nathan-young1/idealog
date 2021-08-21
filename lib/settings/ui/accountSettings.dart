@@ -1,19 +1,13 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/customWidget/profilePicWidget.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/global/paths.dart';
 import 'package:idealog/global/routes.dart';
-import 'package:idealog/global/top_level_methods.dart';
-import 'package:idealog/nativeCode/bridge.dart';
 import 'package:idealog/settings/code/PremiumClass.dart';
-import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:provider/provider.dart';
 
 class AccountSettings extends StatelessWidget {

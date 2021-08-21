@@ -6,7 +6,6 @@ import 'package:idealog/Idea/ui/TaskManager/widgets/taskSearcher.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/main.dart';
 import 'package:provider/provider.dart';
 import 'code/SlidableList.dart';
 
@@ -29,7 +28,7 @@ class IdeaListPage extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(top: 25,left: 20,right: 10,bottom: 10),
-              child: IdeasAppBar(searchFieldController: searchFieldController),
+              child: _AppBar(searchFieldController: searchFieldController),
             ),
             
             // check if there is data in the idealogDb after initialization, in other to know whether to show idea is not available or not.
@@ -40,7 +39,7 @@ class IdeaListPage extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isEmpty) return IdeaDoesNotExistIllustration();
               // toggle between the widget depending on if the search term exists in the list.
               else if(listOfIdeas.isEmpty && SearchController.instance.searchIsActive) return SearchNotFoundIllustration(); 
-              
+
               else return Expanded(
                   child: Scrollbar(
                     child: ListView.builder(
@@ -59,8 +58,10 @@ class IdeaListPage extends StatelessWidget {
   }
 }
 
-class IdeasAppBar extends StatelessWidget {
-  IdeasAppBar({required this.searchFieldController});
+
+
+class _AppBar extends StatelessWidget {
+  _AppBar({required this.searchFieldController});
   final TextEditingController searchFieldController;
 
   @override

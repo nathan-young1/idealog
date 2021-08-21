@@ -6,11 +6,11 @@ import 'package:idealog/Idea/ui/ListPage/views/slideActions.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:provider/provider.dart';
-import 'mainTile.dart';
+import 'cardContent.dart';
 
 class IdeaCard extends StatelessWidget{
 
-  IdeaCard({required this.idea,Key? key}):super(key: key);
+  IdeaCard({required this.idea, Key? key}):super(key: key);
   final Idea idea;
 
   @override
@@ -31,11 +31,8 @@ class IdeaCard extends StatelessWidget{
             actionPane: SlidableBehindActionPane(),
             actionExtentRatio: 0.3,
             controller: SlidableList.instance.controller,
-            secondaryActions: [
-                      TaskAdderSlideAction(idea: idea),
-                      DeleteSlideAction(idea: idea)
-                      ],
-            child: MainTile()
+            secondaryActions: [TaskAdderSlideAction(idea: idea), DeleteSlideAction(idea: idea)],
+            child: CardContent()
           ),
         ),
       ),

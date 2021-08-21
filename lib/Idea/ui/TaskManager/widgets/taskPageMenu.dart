@@ -66,6 +66,7 @@ class SearchBar_ReorderPopup extends StatelessWidget {
 }
 
 
+// ignore: camel_case_types
 class SearchBar_MultiSelectPopup extends StatelessWidget {
   SearchBar_MultiSelectPopup({required this.searchFieldController});
   final TextEditingController searchFieldController;

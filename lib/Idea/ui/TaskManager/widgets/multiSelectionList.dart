@@ -23,9 +23,9 @@ class MultiSelectionList extends StatelessWidget {
           value: tileIsSelected,
           
           onChanged: (bool? value)=>
-          (value == true)
-          ?multiSelectObj.addTaskToMultiSelect(completedTask)
-          :multiSelectObj.removeTaskFromMultiSelect(completedTask),
+            (value == true)
+            ?multiSelectObj.addTaskToMultiSelect(completedTask)
+            :multiSelectObj.removeTaskFromMultiSelect(completedTask),
           title: Text(completedTask.task),
             ),
         );}

@@ -8,7 +8,7 @@ import 'package:idealog/global/paths.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:provider/provider.dart';
 
-class Syncronization extends StatelessWidget {
+class DataBackup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {

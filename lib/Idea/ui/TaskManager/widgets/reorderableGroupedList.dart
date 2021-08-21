@@ -9,8 +9,8 @@ import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
 // A reorderable list view for task in a particular priority group.
-class SingleReorderableGroupedList extends StatelessWidget{
-  SingleReorderableGroupedList({required this.idea, required this.priorityGroup, required this.scrollController});
+class SingleReorderableList extends StatelessWidget{
+  SingleReorderableList({required this.idea, required this.priorityGroup, required this.scrollController});
   
   final Idea idea;
   final int priorityGroup;
@@ -63,8 +63,7 @@ class SingleReorderableGroupedList extends StatelessWidget{
                       // I am adding position(dx) gotten from the child because without it the drag will be anchored to
                       // the pointer's dx offset, Then i am adding 20 to dy offset so that the pointer can be at the center of the drag
                       // since the feedback size is 40;
-                      Offset toBeReturned = Offset(position.dx, Offset.zero.dy + 20);
-                      return toBeReturned;
+                      return Offset(position.dx, Offset.zero.dy + 20);
                     },
                     maxSimultaneousDrags: 1,
                     axis: Axis.vertical,
@@ -149,8 +148,8 @@ class SingleReorderableGroupedList extends StatelessWidget{
 
 
 /// The list when the page is in reordering mode.
-class ReorderableListForAllPriorityGroups extends StatelessWidget {
-  const ReorderableListForAllPriorityGroups({Key? key, required this.idea, required this.scrollController}) : super(key: key);
+class FullReorderableList extends StatelessWidget {
+  const FullReorderableList({Key? key, required this.idea, required this.scrollController}) : super(key: key);
   final Idea idea;
   final ScrollController scrollController;
 
@@ -158,9 +157,9 @@ class ReorderableListForAllPriorityGroups extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
-        SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_Medium, scrollController: scrollController),
-        SingleReorderableGroupedList(idea: idea, priorityGroup: Priority_Low, scrollController: scrollController)
+        SingleReorderableList(idea: idea, priorityGroup: Priority_High, scrollController: scrollController),
+        SingleReorderableList(idea: idea, priorityGroup: Priority_Medium, scrollController: scrollController),
+        SingleReorderableList(idea: idea, priorityGroup: Priority_Low, scrollController: scrollController)
       ],
     );
   }

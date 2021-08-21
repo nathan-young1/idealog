@@ -24,7 +24,7 @@ class FavoriteTasks extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 20,horizontal: 30),
       child: Column(
         children: [
-          Text('Most Favorite Ideas',
+          Text('Featured Ideas',
           style: dosis.copyWith(fontSize: 25)),
           if(favorites.isNotEmpty)
           Container(
@@ -49,6 +49,7 @@ class FavoriteTasks extends StatelessWidget {
   }
 }
 
+// ignore: camel_case_types
 class Favorite_Idea_Tile extends StatelessWidget {
   const Favorite_Idea_Tile({
     Key? key,
@@ -79,6 +80,7 @@ class Favorite_Idea_Tile extends StatelessWidget {
   }
 }
 
+// ignore: camel_case_types
 class Favorite_Illustration extends StatelessWidget {
   const Favorite_Illustration({
     Key? key,

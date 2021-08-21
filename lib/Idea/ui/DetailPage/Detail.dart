@@ -8,7 +8,7 @@ import 'package:idealog/design/colors.dart';
 import 'package:provider/provider.dart';
 import '../TaskManager/code/MultiSelectController.dart';
 import '../TaskManager/TaskManager.dart';
-import 'views/appBar/appBar.dart';
+import 'views/appBar/detailAppBar.dart';
 
 class IdeaDetail extends StatelessWidget {
 

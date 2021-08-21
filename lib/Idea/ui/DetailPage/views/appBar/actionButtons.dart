@@ -3,8 +3,8 @@ import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 
-class NormalActions extends StatelessWidget {
-  const NormalActions({
+class ActionButtons extends StatelessWidget {
+  const ActionButtons({
     Key? key,
     required this.idea,
   }) : super(key: key);
@@ -106,7 +106,6 @@ class _FavoriteIconWidgetState extends State<FavoriteIconWidget> with SingleTick
           : _controller.forward();
 
         await IdeaManager.setFavorite(idea: widget.idea);
-        print('favorite: ${widget.idea.isFavorite}');
       }
         ),
     );

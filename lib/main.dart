@@ -66,7 +66,7 @@ class Idealog extends StatelessWidget {
                                 menuPageView: (context) => MenuPageView(),
                                 addNewIdeaPage: (context) => NewIdea(),
                                 manageAccountPage: (context) => MoreSettings(),
-                                syncronizationPage: (context) => Syncronization(),
+                                syncronizationPage: (context) => DataBackup(),
                                 upgradeToPremiumPage: (context) => UpgradeToPremium(),
                                 accountSettingsPage: (context) => AccountSettings()
                               },

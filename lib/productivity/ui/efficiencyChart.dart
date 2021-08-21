@@ -4,7 +4,7 @@ import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class ActiveDaysChart extends StatelessWidget {
+class EfficiencyChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
