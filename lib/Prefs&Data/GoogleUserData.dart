@@ -48,5 +48,6 @@ class GoogleUserData with ChangeNotifier{
     // clear all the data on user signout
     userEmail = null;
     userPhotoUrl = null;
+    googleSignInAccount = null;
   }
 }
