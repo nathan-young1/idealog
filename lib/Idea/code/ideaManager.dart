@@ -4,7 +4,7 @@ import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/backupJson.dart';
 import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
-import 'package:idealog/customWidget/alertDialog.dart';
+import 'package:idealog/customWidget/alertDialog/alertDialogComponents.dart';
 import 'package:idealog/global/routes.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 

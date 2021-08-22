@@ -101,30 +101,27 @@ class _SubscriptionStatusContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-      Padding(
-        padding: const EdgeInsets.only(top: 30),
-        child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-            SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.only(left: 25),
-              child: Text('Your Account Features',style: dosis.copyWith(fontWeight: FontWeight.w200,fontSize: 30),),
+      Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+          SizedBox(height: 30),
+          Padding(
+            padding: EdgeInsets.only(left: 25),
+            child: Text('Your Account Features',style: dosis.copyWith(fontWeight: FontWeight.w200,fontSize: 30),),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 30,top: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PremiumFeatureTile('Backup Data'),
+                SizedBox(height: 10),
+                PremiumFeatureTile('Biometric Authentication')
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 30,top: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PremiumFeatureTile('Backup Data'),
-                  SizedBox(height: 10),
-                  PremiumFeatureTile('Biometric Authentication')
-                ],
-              ),
-            ),
-        ],
+          ),
+      ],
     ),
-      ),
         
       SizedBox(height: 20),
       Padding(
@@ -187,7 +184,7 @@ class _SignOutFromGoogleContainer extends StatelessWidget {
       onTap: ()async => await signOutFromGoogle(),
       child: Column(
         children: [
-          SizedBox(height: 10),
+          SizedBox(height: 15),
     
           ListTile(
             title: Text('Log out',style: dosis.copyWith(fontSize: 20)),
@@ -223,10 +220,10 @@ class _GetPremiumAccessContainer extends StatelessWidget {
         onTap: ()=> Navigator.pushNamed(context, upgradeToPremiumPage),
         child: Column(
           children: [
-            DottedLine(),
+            SizedBox(height: 30),
 
             ListTile(
-              title: Text('Get premium',style: dosis.copyWith(fontSize: 20),),
+              title: Text('Get premium',style: dosis.copyWith(fontSize: 20)),
               trailing: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Container(
@@ -262,7 +259,7 @@ class _SignInWithGoogleContainer extends StatelessWidget {
     return GestureDetector(
       onTap: ()async => await signInWithGoogle(),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 40,vertical: 30),
+        padding: EdgeInsets.only(left: 40,top: 30, right: 40),
         child: Container(
           padding: EdgeInsets.all(20),
           height: 80,

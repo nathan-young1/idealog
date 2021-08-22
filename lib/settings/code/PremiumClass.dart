@@ -99,8 +99,7 @@ class Premium with ChangeNotifier{
   static PurchaseDetails? _hasPurchased(){
     if(_purchases.isNotEmpty)
     return _purchases.firstWhere((purchase) => purchase.productID == playStoreId);
-    else
-    return null;
+    else return null;
   }
 
   /// Subcribe to the premium plan through google play store.
@@ -114,6 +113,7 @@ class Premium with ChangeNotifier{
       final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
       await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
     } else {
+      debugPrint('an error occured');
       // show flush bar talking about the internet connection status here.
     }
   }
