@@ -2,15 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:idealog/Prefs&Data/applicationInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
-import 'package:idealog/customWidget/alertDialog/accountHasDataDialog.dart';
-import 'package:idealog/customWidget/alertDialog/deleteDialog.dart';
-import 'package:idealog/customWidget/alertDialog/multiTaskDeleteDialog.dart';
-import 'package:idealog/customWidget/alertDialog/syncNowDialog.dart';
+import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/paths.dart';
-import 'package:idealog/global/routes.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 
@@ -23,28 +20,22 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   Timer? timer;
-  Future<dynamic> changeRoute() => Navigator.pushReplacementNamed(context,menuPageView);
+  Future<dynamic> changeRoute() => Navigator.pushReplacement(context, PageTransition(child: MenuPageView(), type: PageTransitionType.fade));
 
   @override
     void initState() {
       super.initState(); 
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-        // await showAutoStartDialog(context: context);
-        // await showDeleteDialog(context: context, titleOfIdeaToDelete: "Taskito");
-        // await showMultiDeleteDialog(context: context, numberOfTasksToDelete: 1);
-        // await showAccountHasDataDialog(context: context, email: "jonathangamer202002@gmail.com");
-        await showSyncNowDialog(context: context);
-        await Future.delayed(Duration(seconds: 5), ()=> Navigator.pop(context));
 
-        // timer = Timer(Duration(milliseconds: 800),() async {
-        //   if(Prefrences.instance.fingerprintEnabled){
-        //     // fingerprint authentication is enabled
-        //       if(await authenticateWithBiometrics(calledFromLogin: true))
-        //         changeRoute();
-        //   }else
-        //     // fingerprint authentication is not enabled
-        //     changeRoute();
-        // });
+        timer = Timer(Duration(milliseconds: 800),() async {
+          if(Prefrences.instance.fingerprintEnabled){
+            // fingerprint authentication is enabled
+              if(await authenticateWithBiometrics(calledFromLogin: true))
+                changeRoute();
+          }else
+            // fingerprint authentication is not enabled
+            changeRoute();
+        });
       });
     }
 

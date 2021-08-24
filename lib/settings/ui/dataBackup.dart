@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
+import 'package:idealog/customWidget/alertDialog/syncNowDialog.dart';
+import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/paths.dart';
+import 'package:idealog/global/routes.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:provider/provider.dart';
 
@@ -89,7 +92,15 @@ class DataBackup extends StatelessWidget {
                     child: Column(
                       children: [
                         GestureDetector(
-                          onTap: () async => await IdeaManager.backupIdeasNow(),
+                          onTap: () async { 
+                            /// if this operation was not a success.
+                            if(!(await IdeaManager.backupIdeasNow(context: context))){
+                              // remove sync now dialog.
+                              await Future.delayed(Duration(seconds: 2), ()=> Navigator.pop(context));
+                              phoneCannotCheckBiometricFlushBar(context: context);
+                            } else await Future.delayed(Duration(seconds: 2), ()=> Navigator.pop(context));
+                            
+                            },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -109,7 +120,7 @@ class DataBackup extends StatelessWidget {
                             width: 60,
                             child: Switch(value: Provider.of<Prefrences>(context).autoSyncEnabled,
                             onChanged: (bool enabledAutoSync) async =>
-                              await Prefrences.instance.setAutoSync(enabledAutoSync) 
+                              await Prefrences.instance.setAutoSync(enabledAutoSync, context: context) 
                             ))
                         ]),
                       ],

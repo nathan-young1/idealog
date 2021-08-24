@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
+import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/design/colors.dart';
-import 'package:idealog/design/textStyles.dart';
 
 enum TaskPage{UNCOMPLETED,COMPLETED,HIGH_PRIORITY}
 
@@ -31,7 +31,7 @@ Widget AnimatedListTile({
             scale: 1.3,
             child: Checkbox(
               checkColor: Colors.white,
-              fillColor: MaterialStateProperty.resolveWith((states) => DarkBlue),
+              fillColor: MaterialStateProperty.resolveWith((states) => (pageCalledFrom == TaskPage.COMPLETED) ?completedTasksColor :DarkBlue),
               value: checkboxValue,
              onChanged: (bool? value) async {
                  setState(()=> checkboxValue = value!);
@@ -52,20 +52,6 @@ Widget AnimatedListTile({
   );
 }
 
-
-/// Shows a snack bar to notify user of change in task list.
-void _notifyUserOfChange({required bool taskWasCompleted,required BuildContext context, TaskPage? pageCalledFrom})=> Flushbar(
-            messageText: Text(
-            /// check the page this was called from to determine the message to show.
-            (taskWasCompleted)
-              ? (pageCalledFrom == TaskPage.COMPLETED) ?"1 task was unchecked" :"1 task was completed"
-              : "1 task was removed",
-            style: dosis.copyWith(fontSize: 22)),
-            duration: Duration(seconds: 2),
-            forwardAnimationCurve: Curves.linearToEaseOut,
-            reverseAnimationCurve: Curves.linear,
-            isDismissible: false,
-          )..show(context);
 
 
 /// Remove the task from the idea while animating it out of the list.
@@ -100,7 +86,7 @@ void _notifyUserOfChange({required bool taskWasCompleted,required BuildContext c
 
     /// call the animated list to start the animation.
     AnimatedList.of(context).removeItem(index, removedItemBuilder,duration: Duration(milliseconds: 400));
-    _notifyUserOfChange(taskWasCompleted: checkboxWasClicked, context: context, pageCalledFrom: pageCalledFrom);
+    notifyUserOfChangeInTaskList(taskWasCompleted: checkboxWasClicked, context: context, pageCalledFrom: pageCalledFrom);
 
     /// Manually calls the grouped list to rebuild since it listens to the search controller.
     await Future.delayed(Duration(milliseconds: 400), ()=> SearchController.instance.notifyListeners());

@@ -5,6 +5,7 @@ import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:page_transition/page_transition.dart';
 import 'CreateIdea.dart';
 import 'ListOfTasksToAdd.dart';
 import 'OpenBottomSheet.dart';
@@ -52,7 +53,7 @@ class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
                  children: [
                    IconButton(icon: Icon(FeatherIcons.arrowLeft),
                    iconSize: 37,
-                   onPressed: ()=>Navigator.pop(context)),
+                   onPressed: ()=> Navigator.pop(context)),
                     Expanded(
                       child: Center(
                         child: Container(
@@ -90,7 +91,7 @@ class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
           bottomNavigationBar: GestureDetector(
               onTap: () async {
                 await IdeaManager.addNewTasksToExistingIdea(idea: widget.idea, newTasks: allNewTasks); 
-                await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> IdeaDetail(idea: widget.idea)));
+                await Navigator.of(context).pushReplacement(PageTransition(child: IdeaDetail(idea: widget.idea), type: PageTransitionType.leftToRightWithFade));
                 },
               child: Container(
                 height: 65,

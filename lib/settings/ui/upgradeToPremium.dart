@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/paths.dart';
@@ -112,20 +113,27 @@ class _PurchaseButton extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          height: 55,
-          width: 220,
-          child: ElevatedButton.icon(
-          onPressed: () async => await Premium.instance.buyProduct(),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateColor.resolveWith((states) => Provider.of<Premium>(context).isPremiumUser?LightGray:DarkBlue),
-            shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))
+        IgnorePointer(
+          ignoring: Provider.of<Premium>(context).isPremiumUser,
+          child: Container(
+            height: 55,
+            width: 220,
+            child: ElevatedButton.icon(
+            
+            onPressed: () async { 
+              if(!await Premium.instance.buyProduct()) phoneCannotCheckBiometricFlushBar(context: context);
+              },
+            style: ButtonStyle(
+              elevation: MaterialStateProperty.resolveWith((states) => Provider.of<Premium>(context).isPremiumUser ?0 :null),
+              backgroundColor: MaterialStateColor.resolveWith((states) => Provider.of<Premium>(context).isPremiumUser?LightGray:DarkBlue),
+              shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))
+            ),
+             icon: Icon(FontAwesomeIcons.solidCreditCard,size: 30,color: Provider.of<Premium>(context).isPremiumUser?DarkBlue:Colors.white),
+             label: Padding(
+               padding: EdgeInsets.only(left: 12),
+               child: Text(Provider.of<Premium>(context).isPremiumUser?'Purchased':'Get Access',style: dosis.copyWith(fontSize: 20,color: Provider.of<Premium>(context).isPremiumUser?Colors.black:Colors.white)),
+             )),
           ),
-           icon: Icon(FontAwesomeIcons.solidCreditCard,size: 30,color: Provider.of<Premium>(context).isPremiumUser?Colors.black:Colors.white),
-           label: Padding(
-             padding: EdgeInsets.only(left: 12),
-             child: Text(Provider.of<Premium>(context).isPremiumUser?'Purchased':'Get Access',style: dosis.copyWith(fontSize: 20,color: Provider.of<Premium>(context).isPremiumUser?Colors.black:Colors.white)),
-           )),
         ),
       ],
     );

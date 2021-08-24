@@ -21,6 +21,7 @@ class BackupJson{
   static const String _DRIVE_SPACE =  "appDataFolder";
   static const String _FILE_NAME = 'Idealog.json';
   drive.File? lastBackupFileIfExists;
+  bool pluginHasBeenInitialized = false;
 
   
 
@@ -35,8 +36,11 @@ class BackupJson{
 
 
   Future<void> initialize() async {
-    await _authenticateDriveUser();
-    await _getLastBackupFileIfExists();
+    if(!pluginHasBeenInitialized){
+      await _authenticateDriveUser();
+      await _getLastBackupFileIfExists();
+      pluginHasBeenInitialized = true;
+    }
   }
 
 

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/authentication/authHandler.dart';
+import 'package:idealog/customWidget/alertDialog/autoStartDialog.dart';
+import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:local_auth/auth_strings.dart';
@@ -32,17 +34,17 @@ class Prefrences with ChangeNotifier{
   }
 
   Future<void> setFingerPrintAuth(bool allowFingerAuth) async {
-    // Is the user authenticated to either ON or OFF biometric authentication
-    var userIsAuthenticated = await authenticateWithBiometrics();
+      // Is the user authenticated to either ON or OFF biometric authentication
+      var userIsAuthenticated = await authenticateWithBiometrics();
 
-    if (userIsAuthenticated == true){
-    // if user is authenticated make the change to his/her prefrences
-    await pref.setBool('FingerprintAuth', allowFingerAuth);
-    _fingerprintAuth = allowFingerAuth;
+      if (userIsAuthenticated == true){
+      // if user is authenticated make the change to his/her prefrences
+      await pref.setBool('FingerprintAuth', allowFingerAuth);
+      _fingerprintAuth = allowFingerAuth;
 
-    }
+      }
 
-    notifyListeners();
+      notifyListeners();
   }
 
   Future<void> setDarkMode(bool onDarkMode) async {
@@ -53,21 +55,22 @@ class Prefrences with ChangeNotifier{
     Paths.instance.notifyClassOnThemeChanged();
   }
 
-  Future<void> setAutoSync(bool onAutoSync) async {
+  Future<void> setAutoSync(bool onAutoSync, {BuildContext? context}) async {
     if (onAutoSync){
-      // if auto sync is set to true and the user is not signed in , then sign the user in before it start auto sync
-      // if the user is already signed in , there will be no need to sign in again
-        if (GoogleUserData.instance.userEmail == null) await signInWithGoogle();
-        
+
         bool phoneNeedsAutoStartPermission = await autoStart.isAutoStartAvailable;
   
         /// if the phone needs auto start permission then show the user the alertDialog. if the user
         /// dismisses the dialog then the guard statement (return;)will end this method.
         if (phoneNeedsAutoStartPermission) {
-          if(true /*Get the result from the alertDialog*/) await autoStart.getAutoStartPermission();
+          bool userClickedEnableAutoStartNow = (await showAutoStartDialog(context: context!))!;
+          if(userClickedEnableAutoStartNow) await autoStart.getAutoStartPermission();
           else return;
         }
-        debugPrint('Back form setting auto start');
+
+      // if auto sync is set to true and the user is not signed in , then sign the user in before it start auto sync
+      // if the user is already signed in , there will be no need to sign in again
+        if (GoogleUserData.instance.userEmail == null) await signInWithGoogle();
 
         await NativeCodeCaller.instance.startAutoSync();
 
@@ -106,13 +109,7 @@ Future<bool> authenticateWithBiometrics({bool calledFromLogin = false}) async {
       );
       return userIsAuthenticated;
       
-    }on Exception{
-      // show dialog an error occured
-      print('An exception occured');
-      return false;
-    }
-  }else{
-    // show dialog , phone cannot check biometric
-    return false;
-  }
+    }on Exception{throw Exception("Phone cannot check exception");}
+  }else throw Exception("Phone cannot check exception");
+  
 }

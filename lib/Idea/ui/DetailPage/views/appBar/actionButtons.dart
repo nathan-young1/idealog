@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/core-models/ideaModel.dart';
+import 'package:idealog/customWidget/alertDialog/deleteDialog.dart';
 import 'package:idealog/design/colors.dart';
+import 'package:idealog/global/routes.dart';
 
 class ActionButtons extends StatelessWidget {
   const ActionButtons({
@@ -19,17 +21,20 @@ class ActionButtons extends StatelessWidget {
         FavoriteIconWidget(idea: idea),
         SizedBox(width: 5),
 
-        PopupMenuButton(
+        PopupMenuButton<dynamic>(
             iconSize: 30,
             padding: EdgeInsets.zero,
             onSelected: (_) async{ 
-              await IdeaManager.deleteIdeaFromDb(idea);
-              Navigator.pop(context);
+              if((await showDeleteDialog(context: context, titleOfIdeaToDelete: idea.ideaTitle))!){
+                await IdeaManager.deleteIdeaFromDb(idea);
+                await Navigator.pushReplacementNamed(context, menuPageView);
+              }
             },
 
             itemBuilder: (BuildContext context) => [
                 PopupMenuItem( 
-                  child:  Container(
+                  value: 0,
+                  child: Container(
                     child: Row(
                       children: [
                       Icon(Icons.delete_sweep,size: 30,color: Black242424),

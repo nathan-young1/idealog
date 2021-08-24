@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:http/http.dart' as http;
@@ -35,9 +36,7 @@ Future<bool> signInWithGoogle() async {
 
       return true;
 
-    } on _GoogleSignInException{
-    // show flushbar error occured during google sign-in.
-    // then rethrow the exception.
+    } on Exception{
     return false;
   }
 }
@@ -48,6 +47,8 @@ Future<void> signOutFromGoogle() async {
   GoogleUserData.instance.clearData();
   await googleSignIn.signOut();
   await auth.signOut();
+  // delete all the data attached to this google account.
+  await IdealogDb.instance.dropAllTablesInDb();
 }
 
 

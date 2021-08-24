@@ -37,7 +37,7 @@ Widget AlertDialogHeader
                   alignment: Alignment.centerRight,
                   child: IconButton(
                     icon: Icon(Icons.close),
-                    onPressed: ()=> Navigator.pop(context),
+                    onPressed: ()=> Navigator.pop(context, false),
                     iconSize: 30, color: LightPink))),
               ],
             ),
@@ -62,7 +62,7 @@ Widget AlertDialogActionButtons
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: (){},
+                TextButton(onPressed: ()=> Navigator.pop(context, false),
                  child: Container(
                    height: actionButtonsHeight,
                    width: actionButtonsWidth,
@@ -73,7 +73,7 @@ Widget AlertDialogActionButtons
                    child: Center(child: Text(secondaryActionText, 
                     style: dosis.copyWith(fontSize: 17, color: secondaryActionTextColor ?? DarkBlue, fontWeight: FontWeight.w600))))),
                 SizedBox(width: 10),
-                TextButton(onPressed: (){},
+                TextButton(onPressed: ()=> Navigator.pop(context, true),
                  child: Container(
                    height: actionButtonsHeight,
                    width: actionButtonsWidth,

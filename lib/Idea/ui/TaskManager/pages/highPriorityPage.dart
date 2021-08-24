@@ -54,7 +54,7 @@ class HighPriorityTaskPage extends StatelessWidget {
                           List<Task> highPriorityTasks = idea.highPriority.where(searchTermExistsInTask).toList();
                           
                           /// illustration for when there is no longer any high priority task.
-                          if(idea.highPriority.isEmpty) return NoTaskYet();
+                          if(idea.highPriority.isEmpty) return NoTaskYet(page: TaskPage.HIGH_PRIORITY);
                           /// illustrastion for when no search result was found.
                           else if(highPriorityTasks.isEmpty) return SearchNotFoundIllustration();
 

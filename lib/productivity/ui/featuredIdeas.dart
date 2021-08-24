@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
+import 'package:idealog/application-menu/controllers/bottomNavController.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:idealog/productivity/code/productivityManager.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-class FavoriteTasks extends StatelessWidget {
-  const FavoriteTasks({
+class FeaturedIdeas extends StatelessWidget {
+  const FeaturedIdeas({
     Key? key,
   }) : super(key: key);
 
@@ -63,7 +65,11 @@ class Favorite_Idea_Tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>IdeaDetail(idea: favorites[index]))),
+      onTap: () async {
+        await Navigator.pushReplacement(context, PageTransition(child: IdeaDetail(idea: favorites[index]), type: PageTransitionType.rightToLeftWithFade));
+        // reset the bottom nav controller.
+        BottomNavController.instance.resetPageWithoutAnimating(ActiveNavTab.Ideas);
+        },
       child: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Row(

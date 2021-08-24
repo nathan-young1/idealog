@@ -13,7 +13,7 @@ class SearchNotFoundIllustration extends StatelessWidget {
           Container(
             height: 230,
             width: 250,
-            child: Image.asset(Paths.Search_Grey, fit: BoxFit.contain)),
+            child: Image.asset(Paths.Search_Pic, fit: BoxFit.contain)),
           Text("Search not found", style: dosis.copyWith(fontSize: 22))
       ]);
   }

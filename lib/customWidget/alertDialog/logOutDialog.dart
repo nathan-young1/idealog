@@ -5,16 +5,15 @@ import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'alertDialogComponents.dart';
 
-Future<bool?> showDeleteDialog({required BuildContext context, required String titleOfIdeaToDelete}) async {  
+Future<bool?> showLogOutDialog({required BuildContext context}) async {
 
-  return showDialog<bool>(
-  context: context, 
+  return showDialog<bool>(context: context, 
   builder: (context)=> AlertDialog(
     contentPadding: EdgeInsets.zero,
     elevation: 5,
     content: Container(
       width: MediaQuery.of(context).size.width * 0.8,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -22,9 +21,9 @@ Future<bool?> showDeleteDialog({required BuildContext context, required String t
             headerIconColor: LightPink,
             headerTextColor: LightPink,
             context: context,
-            headerIcon: FeatherIcons.trash,
+            headerIcon: FeatherIcons.logOut,
             hasCloseButton: false,
-            headerText: 'Delete'),
+            headerText: "Log Out"),
 
           DottedLine(lineThickness: 3, dashColor: LightPink),
           Padding(
@@ -32,27 +31,26 @@ Future<bool?> showDeleteDialog({required BuildContext context, required String t
             child: RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(text: 'Do you want to really want to delete ',
+                  TextSpan(text: 'If your data is not',
                     style: dosis.copyWith(fontSize: 22, color: Colors.black)),
-                  TextSpan(text: titleOfIdeaToDelete +" ?",
-                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black))
+                  TextSpan(text: ' Backed up,',
+                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black)),
+                  TextSpan(text: ' it will be lost after you sign out!.',
+                    style: dosis.copyWith(fontSize: 22, color: Colors.black))
                 ]
               )),
           ),
 
           AlertDialogActionButtons(
-            context: context, 
-            primaryActionText: "Delete", 
-            secondaryActionText: "No", 
-            secondaryActionTextColor: Black242424,
+            context: context,
+            primaryActionText: "Log out", 
+            secondaryActionText: "Backup", 
             primaryActionButtonColor: LightPink, 
             secondaryButtonOutlineColor: Black242424, 
+            secondaryActionTextColor: Black242424,
             actionButtonsHeight: 40, 
             actionButtonsWidth: 110)
-        ],
-      )
+      ]),
     ),
-    
-  ), 
-  barrierDismissible: false);
+  ), barrierDismissible: true);
 }

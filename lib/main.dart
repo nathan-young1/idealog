@@ -10,6 +10,7 @@ import 'package:idealog/settings/ui/accountSettings.dart';
 import 'package:idealog/settings/ui/moreSettings.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:idealog/splashScreen/splashScreen.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'Databases/idealog-db/idealog_Db.dart';
 import 'Idea/ui/Others/CreateIdea.dart';
@@ -62,13 +63,23 @@ class Idealog extends StatelessWidget {
                               // The Dark theme
                               darkTheme: AppTheme.darkTheme,
                               routes: {
-                                homePage: (context) => SplashScreen(),
-                                menuPageView: (context) => MenuPageView(),
-                                addNewIdeaPage: (context) => NewIdea(),
-                                manageAccountPage: (context) => MoreSettings(),
-                                syncronizationPage: (context) => DataBackup(),
-                                upgradeToPremiumPage: (context) => UpgradeToPremium(),
-                                accountSettingsPage: (context) => AccountSettings()
+                                homePage: (context) => SplashScreen()
+                              },
+                              onGenerateRoute: (settings){
+                                switch (settings.name){
+                                  case menuPageView: 
+                                    return PageTransition(child: MenuPageView(), type: PageTransitionType.leftToRightWithFade);
+                                  case moreSettingsPage: 
+                                    return PageTransition(child: MoreSettings(), type: PageTransitionType.rightToLeftWithFade);
+                                  case backupPage: 
+                                    return PageTransition(child: DataBackup(), type: PageTransitionType.rightToLeftWithFade);
+                                  case upgradeToPremiumPage: 
+                                    return PageTransition(child: UpgradeToPremium(), type: PageTransitionType.rightToLeftWithFade);
+                                  case accountSettingsPage: 
+                                    return PageTransition(child: AccountSettings(), type: PageTransitionType.rightToLeftWithFade);
+                                  case addNewIdeaPage: 
+                                    return PageTransition(child: NewIdea(), type: PageTransitionType.scale, alignment: Alignment.bottomRight);
+                                }
                               },
                             ),
                           ),

@@ -23,11 +23,13 @@ class BottomNavController with ChangeNotifier{
     // if the index of the active tab in the enum is not equals to the current page index then change the page
     if(activeTab!.index != _currentPage){
       _currentPage = activeTab.index;
-
+      
       controller.animateToPage(_currentPage, duration: Duration(milliseconds: 400), curve: Curves.linear);
       notifyListeners();
     }
   }
+
+  void resetPageWithoutAnimating(ActiveNavTab page) => _currentPage = page.index;
 
   void controlAnimation({required AnimationController animationController,required bool tabIsActive}) =>
         (tabIsActive)

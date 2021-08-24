@@ -17,7 +17,7 @@ class MenuPageView extends StatelessWidget {
     return Consumer<Prefrences>(
       builder: (_, userPref,__){
         final TextEditingController searchFieldController = new TextEditingController();
-
+    
         return MultiProvider(
         providers: [
           Provider<ProductivityManager>.value(value: ProductivityManager(context: context)),

@@ -29,7 +29,9 @@ static const String _No_Idea_Light = '$_IdeaPicFolderPath/No_Idea_Light.png';
 static const String _No_Idea_Dark = '$_IdeaPicFolderPath/No_Idea_Dark.png';
 
 /// path to task pictures
-static const String No_Tasks_Pic = '$_TaskPicFolderPath/No_Tasks_Dark.png';
+static const String No_Tasks_Pic_CompletedPage = '$_TaskPicFolderPath/No_Tasks_CompletedPage.png';
+static const String No_Tasks_Pic_UncompletedPage = '$_TaskPicFolderPath/No_Tasks_UncompletedPage.png';
+static const String No_Tasks_Pic_HighPriorityPage = '$_TaskPicFolderPath/No_Tasks_HighPriorityPage.png';
 
 /// path to productivity pictures
 static const String _Favorite_Pic_Light = '$_ProductivityPicFolderPath/Favorite_Pic_Light.svg';
@@ -43,7 +45,7 @@ static const String _Data_Backup_Light = '$_DataBackupPicFolderPath/Data_Backup_
 static const String _Data_Backup_Dark = '$_DataBackupPicFolderPath/Data_Backup_Dark.png';
 
 /// path to search not found pictures
-static const String Search_Grey = '$_SearchPicFolderPath/search_not_found.png';
+static const String Search_Pic = '$_SearchPicFolderPath/search_not_found.png';
 
 /// path to intro pictures
 static const String Welcome_Intro_Pic = '$_IntroPicFolderPath/Welcome_Intro_Pic.png';

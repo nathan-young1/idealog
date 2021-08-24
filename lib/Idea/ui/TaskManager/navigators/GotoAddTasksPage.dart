@@ -3,6 +3,7 @@ import 'package:idealog/Idea/ui/Others/AddTasks.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class GotoAddTasksPage extends StatelessWidget {
@@ -19,7 +20,7 @@ class GotoAddTasksPage extends StatelessWidget {
     return Consumer<Idea>(
       builder: (context, Idea idea,_) =>
       GestureDetector(
-        onTap: ()=> Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> AddTasksToExistingIdea(idea: idea))),
+        onTap: ()=> Navigator.of(context).push(PageTransition(child: AddTasksToExistingIdea(idea: idea), type: PageTransitionType.rightToLeftWithFade)),
         child: Container(height: 100, width: 130,
         decoration: BoxDecoration(borderRadius: borderRadius,color: DarkBlue),
         child: Padding(

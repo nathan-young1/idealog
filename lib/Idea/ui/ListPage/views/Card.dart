@@ -5,6 +5,7 @@ import 'package:idealog/Idea/ui/ListPage/code/SlidableList.dart';
 import 'package:idealog/Idea/ui/ListPage/views/slideActions.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'cardContent.dart';
 
@@ -21,7 +22,7 @@ class IdeaCard extends StatelessWidget{
         padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 35),
         child:  GestureDetector(
           onTap: () async { 
-            await Navigator.push(context, MaterialPageRoute(builder: (context)=> IdeaDetail(idea: idea)));
+            await Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeftWithFade, child: IdeaDetail(idea: idea)));
             SearchController.instance.stopSearch();
            }, 
         

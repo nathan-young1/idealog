@@ -5,9 +5,10 @@ import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'alertDialogComponents.dart';
 
-Future<bool> showMultiDeleteDialog({required BuildContext context, required int numberOfTasksToDelete}) async {
+Future<bool?> showMultiDeleteDialog({required BuildContext context, required int numberOfTasksToDelete}) async {
 
-  AlertDialog alertDialog = AlertDialog(
+  return showDialog<bool>(context: context,
+   builder: (context)=> AlertDialog(
     contentPadding: EdgeInsets.zero,
     elevation: 5,
     content: Container(
@@ -54,8 +55,5 @@ Future<bool> showMultiDeleteDialog({required BuildContext context, required int 
       )
     ),
     
-  );
-
-  await showDialog(context: context, builder: (context)=> alertDialog, barrierDismissible: false);
-  return false;
+  ), barrierDismissible: false);
 }

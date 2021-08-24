@@ -3,7 +3,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/Others/AddTasks.dart';
 import 'package:idealog/core-models/ideaModel.dart';
+import 'package:idealog/customWidget/alertDialog/deleteDialog.dart';
 import 'package:idealog/design/colors.dart';
+import 'package:page_transition/page_transition.dart';
 
 class TaskAdderSlideAction extends StatelessWidget {
   const TaskAdderSlideAction({
@@ -18,8 +20,8 @@ class TaskAdderSlideAction extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context)=>
-                      AddTasksToExistingIdea(idea: idea)));
+                      PageTransition(child: AddTasksToExistingIdea(idea: idea),
+                       type: PageTransitionType.rightToLeftWithFade));
         // close the slidable.
         Slidable.of(context)!.close();
       },
@@ -58,11 +60,10 @@ class DeleteSlideAction extends StatelessWidget {
       onTap: () async {
         /// close the slidable before showing the alertDialog on whether the user want's to delete.
         Slidable.of(context)!.close();
-        // if (await showDeleteDialog(context: context)) 
+
+        if ((await showDeleteDialog(context: context, titleOfIdeaToDelete: idea.ideaTitle))!)
         await Future.delayed(Duration(milliseconds: 200),
                   () async => await IdeaManager.deleteIdeaFromDb(idea));
-                  // show idea has been deleted flushbar.
-        
         },
       child: Container(
         decoration: BoxDecoration(

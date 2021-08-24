@@ -70,11 +70,8 @@ class _AppBar extends StatelessWidget {
     return WillPopScope(
       onWillPop: ()async{
         // if the user is searching just stop search, do not pop otherwise pop the screen.
-        if(SearchController.instance.searchIsActive){
-          clearSearch(searchFieldController, context);
-          return false;
-        }
-        return true;
+        if(SearchController.instance.searchIsActive) clearSearch(searchFieldController, context);        
+        return false;
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -5,9 +5,8 @@ import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'alertDialogComponents.dart';
 
-Future<bool?> showAutoStartDialog({required BuildContext context}) async {
-
-  return showDialog<bool>(context: context, builder: (context)=> AlertDialog(
+showPremiumDialog({required BuildContext context}) async {
+   AlertDialog alertDialog = AlertDialog(
     contentPadding: EdgeInsets.zero,
     elevation: 5,
     content: Container(
@@ -20,9 +19,9 @@ Future<bool?> showAutoStartDialog({required BuildContext context}) async {
             headerIconColor: DarkBlue,
             headerTextColor: DarkBlue,
             context: context,
-            headerIcon: FeatherIcons.uploadCloud,
+            headerIcon: FeatherIcons.creditCard,
             hasCloseButton: true,
-            headerText: "Data Backup"),
+            headerText: "Premium Access"),
 
           DottedLine(lineThickness: 3, dashColor: DarkBlue),
           Padding(
@@ -30,21 +29,19 @@ Future<bool?> showAutoStartDialog({required BuildContext context}) async {
             child: RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(text: 'In other to start auto-backup every 24-hours, you need to enable',
+                  TextSpan(text: 'You require',
                     style: dosis.copyWith(fontSize: 22, color: Colors.black)),
-                  TextSpan(text: ' AutoStart',
+                  TextSpan(text: ' Premium access',
                     style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black)),
-                  TextSpan(text: ' permission for ',
-                    style: dosis.copyWith(fontSize: 22, color: Colors.black)),
-                  TextSpan(text: 'Idealog.',
-                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black))
+                  TextSpan(text: ' to use this feature.',
+                    style: dosis.copyWith(fontSize: 22, color: Colors.black))
                 ]
               )),
           ),
 
           AlertDialogActionButtons(
             context: context,
-            primaryActionText: "Enable now", 
+            primaryActionText: "Get Access", 
             secondaryActionText: "Ignore", 
             primaryActionButtonColor: DarkBlue, 
             secondaryButtonOutlineColor: DarkBlue, 
@@ -52,5 +49,7 @@ Future<bool?> showAutoStartDialog({required BuildContext context}) async {
             actionButtonsWidth: 110)
       ]),
     ),
-  ), barrierDismissible: false);
+  );
+
+  await showDialog(context: context, builder: (context)=> alertDialog, barrierDismissible: false);
 }

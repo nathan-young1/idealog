@@ -76,9 +76,10 @@ class Premium with ChangeNotifier{
       }
 
     } catch (e) {
-      // if(calledFromBuyProductMethod != null) show a flushbar that there is no internet connection so the premium plan can't be purchased
       await initializePluginWithoutInternetConnection();
       debugPrint(e.toString());
+      /// if this was called from the buy method , then rethrow the exception.
+      if(calledFromBuyProductMethod != null) rethrow;
     }
 
   }
@@ -102,9 +103,10 @@ class Premium with ChangeNotifier{
     else return null;
   }
 
-  /// Subcribe to the premium plan through google play store.
-  Future<void> buyProduct() async {
+  /// Subcribe to the premium plan through google play store and return a boolean on the operation state.
+  Future<bool> buyProduct() async {
     if(UserInternetConnectionChecker.userHasInternetConnection){
+      try{
       // if the plugin has not been initialized yet, then intialize it.
       if(!pluginHasBeenInitializedWithInternet) await intializePlugin(calledFromBuyProductMethod: true);
       
@@ -112,10 +114,11 @@ class Premium with ChangeNotifier{
 
       final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
       await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
-    } else {
-      debugPrint('an error occured');
-      // show flush bar talking about the internet connection status here.
-    }
+      return true;
+
+      } on Exception {return false;}
+
+    } else return false;
   }
 
   /// Get the product details for the premium_plan and add it to the _products list.

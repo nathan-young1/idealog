@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/Idea/ui/TaskManager/widgets/animatedListTile.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/paths.dart';
 
 class NoTaskYet extends StatelessWidget {
-  const NoTaskYet({Key? key}) : super(key: key);
-
+  const NoTaskYet({Key? key, required this.page}) : super(key: key);
+  final TaskPage page;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,7 +19,12 @@ class NoTaskYet extends StatelessWidget {
               Container(
                 height: 230,
                 width: 250,
-                child: Image.asset(Paths.No_Tasks_Pic, fit: BoxFit.contain)),
+                child: Image.asset(
+                  (page == TaskPage.COMPLETED)
+                  ?Paths.No_Tasks_Pic_CompletedPage
+                  :(page == TaskPage.UNCOMPLETED)
+                    ?Paths.No_Tasks_Pic_UncompletedPage
+                    :Paths.No_Tasks_Pic_HighPriorityPage, fit: BoxFit.contain)),
               Text("No tasks available.", style: dosis.copyWith(fontSize: 22))
           ]),
       ),

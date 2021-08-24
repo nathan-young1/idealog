@@ -52,7 +52,7 @@ class CompletedTasksPage extends StatelessWidget {
                         List<Task> completedTasks = idea.completedTasks.where(searchTermExistsInTask).toList();
                         
                           /// illustration for when there is no longer any completed task.
-                          if(idea.completedTasks.isEmpty) return NoTaskYet();
+                          if(idea.completedTasks.isEmpty) return NoTaskYet(page: TaskPage.COMPLETED);
                          /// illustrastion for when no search result was found.
                          else if (completedTasks.isEmpty) return SearchNotFoundIllustration();
                          return TasksInColumnView(idea: idea, pageCalledFrom: TaskPage.COMPLETED);

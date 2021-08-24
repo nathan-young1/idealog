@@ -9,7 +9,6 @@ class EfficiencyChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var listOfAnalyticsData = AnalyticDB.instance.efficiencyChartData;
-    debugPrint("the number of days is ${listOfAnalyticsData.length}");
     return (listOfAnalyticsData.length >= 3)
     ?Container(
       height: 270,

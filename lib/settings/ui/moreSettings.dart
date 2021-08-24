@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
+import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/paths.dart';
@@ -75,8 +76,10 @@ class MoreSettings extends StatelessWidget {
                   trailing: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Switch(value: Provider.of<Prefrences>(context).fingerprintEnabled,
-                       onChanged: (bool fingerprintEnabled) async =>
-                        await Prefrences.instance.setFingerPrintAuth(fingerprintEnabled)
+                       onChanged: (bool fingerprintEnabled) async {
+                         try{await Prefrences.instance.setFingerPrintAuth(fingerprintEnabled);}
+                         on Exception {phoneCannotCheckBiometricFlushBar(context: context);}
+                       }
                       ))
                 ),
 

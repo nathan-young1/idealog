@@ -6,6 +6,7 @@ import 'package:idealog/Idea/ui/TaskManager/widgets/popupMenu.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/taskSearcher.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
+import 'package:idealog/customWidget/alertDialog/multiTaskDeleteDialog.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
@@ -47,15 +48,15 @@ class SearchBar_ReorderPopup extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 20),
               child: Container(
-                width: 250,
-                decoration: elevatedBoxDecoration.copyWith(color: Colors.white),
+                width: 170,
+                decoration: elevatedBoxDecoration.copyWith(color: Colors.white, borderRadius: BorderRadius.circular(10)),
                 child: TextButton.icon(
                   onPressed: () async {
                         clearSearch(searchFieldController, context);
                         await reorderListController.updateAndSaveTaskOrderIndex(idea, reorderListController);
                         },
                   icon: Icon(FeatherIcons.check),
-                  label: Text('Save tasks order', style: dosis.copyWith(fontSize: 22))),
+                  label: Text('Save order', style: dosis.copyWith(fontSize: 22))),
               ),
             ),
           ),
@@ -103,15 +104,25 @@ class SearchBar_MultiSelectPopup extends StatelessWidget {
             alignment: Alignment(1, 0),
             child: Padding(
               padding: const EdgeInsets.only(right: 20),
-              child: IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: (){ 
-                  clearSearch(searchFieldController, context);
-                  multiSelectController.multiDelete(idea);
+              child: Container(
+                width: 145,
+                decoration: elevatedBoxDecoration.copyWith(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                child: TextButton.icon(
+                  onPressed: () async { 
+                    clearSearch(searchFieldController, context);
+                    /// if there is no task selected just stop the multi-selection.
+                    if(multiSelectController.selectedTasks.length == 0) return multiSelectController.stopMultiSelect();
+
+                    if((await showMultiDeleteDialog(context: context, numberOfTasksToDelete: multiSelectController.selectedTasks.length))!)
+                      multiSelectController.multiDelete(idea);
+                    else multiSelectController.stopMultiSelect();
+                    
                   },
+                  icon: Icon(Icons.delete, size: 30),
+                  label: Text('Delete', style: dosis.copyWith(fontSize: 22))),
               ),
             ),
-          ),
+          )
         ),
       ),
     );

@@ -25,7 +25,7 @@ class GroupedList extends StatelessWidget {
 
         if(highPriorityTasks.isEmpty && mediumPriorityTasks.isEmpty && lowPriorityTasks.isEmpty)
         // because grouped list is called by uncompletedTasks if it is empty show no tasks yet.
-          return (idea.uncompletedTasks.isEmpty)? NoTaskYet(): SearchNotFoundIllustration();
+          return (idea.uncompletedTasks.isEmpty)? NoTaskYet(page: TaskPage.UNCOMPLETED): SearchNotFoundIllustration();
           
         return Column(
           children: [

@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
+import 'package:idealog/customWidget/alertDialog/logOutDialog.dart';
 import 'package:idealog/customWidget/profilePicWidget.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
@@ -181,7 +182,13 @@ class _SignOutFromGoogleContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()async => await signOutFromGoogle(),
+      onTap: ()async { 
+        bool? userWantsToLogout = await showLogOutDialog(context: context);
+        if (userWantsToLogout == null) /* navigator.pop occured without a value.*/return;
+
+        if(userWantsToLogout) await signOutFromGoogle();
+        else /* backup now was clicked.*/ Navigator.pushNamed(context, backupPage);
+        },
       child: Column(
         children: [
           SizedBox(height: 15),

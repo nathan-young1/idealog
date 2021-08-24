@@ -5,7 +5,7 @@ import 'package:idealog/Prefs&Data/backupJson.dart';
 import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customWidget/alertDialog/alertDialogComponents.dart';
-import 'package:idealog/global/routes.dart';
+import 'package:idealog/customWidget/alertDialog/syncNowDialog.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 
 
@@ -20,7 +20,12 @@ class IdeaManager{
     Idea newIdea = Idea(ideaTitle: ideaTitle, moreDetails: moreDetails, tasksToCreate: allNewTasks);
 
     await IdealogDb.instance.writeIdeaToDb(idea: newIdea);
-    Navigator.popUntil(context, ModalRoute.withName(menuPageView));
+    // delay so that saving data dialog will show.
+    await Future.delayed(Duration(milliseconds: 500));
+    // close the dialog.
+    Navigator.pop(context);
+    // go back to the appilcation menu page.
+    Navigator.pop(context);
   }
 
   static Future<void> changeIdeaDetail({required Idea idea, required String newMoreDetail}) async 
@@ -75,18 +80,25 @@ class IdeaManager{
     await AnalyticDB.instance.removeIdeaFromAnalytics(idea.completedTasks);
     }
 
-  /// Backup all the ideas to google drive.
-  static Future<void> backupIdeasNow() async{
+  /// Backup all the ideas to google drive and return a boolean on whether the operation was a success or not.
+  static Future<bool> backupIdeasNow({required BuildContext context}) async{
     
-    await signInWithGoogle();
-    await BackupJson.instance.initialize();
+    try{
+      showSyncNowDialog(context: context);
+
+      if(await signInWithGoogle()){
+        await BackupJson.instance.initialize();
+        
+        // upload to google drive
+        await BackupJson.instance.uploadToDrive();
+      
+        await NativeCodeCaller.instance.updateLastBackupTime();
+        return true;
+
+      } else return false;
+
+    } on Exception { return false;}
     
-    // upload to google drive
-    await BackupJson.instance.uploadToDrive();
-   
-    await NativeCodeCaller.instance.updateLastBackupTime();
-    
-    debugPrint('show alertDialog');
   }
 
 }
