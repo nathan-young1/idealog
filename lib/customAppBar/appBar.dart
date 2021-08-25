@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget {
             onPressed: ()=>Navigator.pop(context)),
             SizedBox(width: 8),
             Text(title!,
-            style: dosis.copyWith(fontSize: 28)),
+            style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28)),
           ],),
         );
   }

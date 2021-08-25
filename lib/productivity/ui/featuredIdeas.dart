@@ -27,7 +27,7 @@ class FeaturedIdeas extends StatelessWidget {
       child: Column(
         children: [
           Text('Featured Ideas',
-          style: dosis.copyWith(fontSize: 25)),
+          style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.medium)),
           if(favorites.isNotEmpty)
           Container(
             child: Stack(
@@ -44,7 +44,7 @@ class FeaturedIdeas extends StatelessWidget {
           )
           else
           Text('No favorite ideas available',
-          style: dosis.copyWith(fontSize: 19))
+          style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20))
           ],
       ),
     );
@@ -79,7 +79,7 @@ class Favorite_Idea_Tile extends StatelessWidget {
           :FaIcon(FontAwesomeIcons.solidHeart,color: MostFavorite3Color),
 
           SizedBox(width: 25),
-          Text( favorites[index].ideaTitle, style: dosis.copyWith(fontSize: 18), overflow: TextOverflow.ellipsis)
+          Text( favorites[index].ideaTitle, style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20), overflow: TextOverflow.ellipsis)
           ]),
       ),
     );

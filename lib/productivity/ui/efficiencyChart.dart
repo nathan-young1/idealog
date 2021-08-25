@@ -9,14 +9,14 @@ class EfficiencyChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var listOfAnalyticsData = AnalyticDB.instance.efficiencyChartData;
-    return (listOfAnalyticsData.length >= 3)
+    return (listOfAnalyticsData.length >= 2)
     ?Container(
       height: 270,
       child: SfCartesianChart(
         enableAxisAnimation: true,
             title: ChartTitle(
               text: 'Efficiency chart',
-              textStyle: dosis.copyWith(fontSize: 25)
+              textStyle: AppFontWeight.medium.copyWith(fontSize: AppFontSize.medium)
             ),
             zoomPanBehavior: ZoomPanBehavior(
               enablePanning: true,
@@ -29,7 +29,7 @@ class EfficiencyChart extends StatelessWidget {
               header: 'Productivity',
               color: Colors.grey,
               animationDuration: 500,
-              textStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w500)
+              textStyle: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.small),
               ),
             plotAreaBorderColor: Colors.transparent,
             primaryYAxis: NumericAxis(
@@ -37,7 +37,7 @@ class EfficiencyChart extends StatelessWidget {
               edgeLabelPlacement: EdgeLabelPlacement.shift,
               majorTickLines: MajorTickLines(size: 10,width: 0),
               majorGridLines: MajorGridLines(width: 0),
-              labelStyle: TextStyle(fontWeight: FontWeight.w400, color: DarkGray)
+              labelStyle: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.small, color: DarkGray),
               ),
             primaryXAxis: DateTimeCategoryAxis(
               axisLine: AxisLine(width: 2,dashArray: [5,5], color: DarkGray),
@@ -49,7 +49,7 @@ class EfficiencyChart extends StatelessWidget {
               edgeLabelPlacement: EdgeLabelPlacement.shift,
               majorTickLines: MajorTickLines(size: 10,width: 0),
               majorGridLines: MajorGridLines(width: 0),
-              labelStyle: TextStyle(fontSize: 17,fontWeight: FontWeight.w400, color: DarkGray),
+              labelStyle: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.small, color: DarkGray),
               /// since least is the list is sorted by date the minium Date will be the first date.
               minimum: listOfAnalyticsData.first.date
             ),
@@ -64,12 +64,6 @@ class EfficiencyChart extends StatelessWidget {
                   width: 14
                 ),
                 color: DarkBlue,
-                // gradient: LinearGradient(
-                //   colors: (!Prefrences.instance.isDarkMode)
-                //   ?[DarkBlue.withOpacity(0.6), LightPink.withOpacity(0.6)]
-                //   :[DarkRed, DarkRed.withOpacity(0.8)],
-                  // begin: Alignment.topLeft,
-                  // end: Alignment.bottomRight),
                  dataSource: listOfAnalyticsData,
                  xValueMapper: (EfficiencyChartData analytic,_)=>analytic.date,
                  yValueMapper: (EfficiencyChartData analytic,_)=>analytic.numberOfTasksCompleted
@@ -80,17 +74,17 @@ class EfficiencyChart extends StatelessWidget {
     :Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Container(
-          height: 200,
+          height: 180,
           color: LightBlue.withOpacity(0.2),
           padding: EdgeInsets.only(top: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('Efficiency chart',style: dosis.copyWith(fontSize: 25)),
+              Text('Efficiency chart',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.medium)),
               SizedBox(height: 10),
               Icon(Icons.lock_clock,size: 60,color: Colors.black45),
               SizedBox(height: 10),
-              Text('Complete tasks for at least 3 days this month',style: dosis.copyWith(fontSize: 17))
+              Text('Complete tasks for at least 2 days this month',style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20))
             ]),
         ),
     );

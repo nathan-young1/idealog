@@ -33,7 +33,7 @@ class IdeaDetail extends StatelessWidget {
         body: MultiProvider(
           providers: [
           ChangeNotifierProvider<Idea>.value(value: idea),
-          ChangeNotifierProvider<MultiSelectController>.value(value: MultiSelectController.instance),
+          ChangeNotifierProvider<MultiSelectController>.value(value: MultiSelectController.instance)
           ],
           child: Column(
             children: [

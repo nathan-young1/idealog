@@ -39,7 +39,7 @@ class SearchController extends ChangeNotifier{
 }
 
 /// check if the search term exists in a taskRow
-bool searchTermExistsInTask(Task taskRow)=> taskRow.task.contains(SearchController.instance.searchTerm);
+bool searchTermExistsInTask(Task taskRow)=> taskRow.task.toLowerCase().contains(SearchController.instance.searchTerm.toLowerCase());
 
 /// check if the search term exists in the list of ideas.
-bool searchTermExistsInIdea(Idea idea)=> idea.ideaTitle.contains(SearchController.instance.searchTerm);
+bool searchTermExistsInIdea(Idea idea)=> idea.ideaTitle.toLowerCase().contains(SearchController.instance.searchTerm.toLowerCase());

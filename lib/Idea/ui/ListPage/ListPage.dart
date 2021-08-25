@@ -76,7 +76,7 @@ class _AppBar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('IDEAS',style: dosis.copyWith(fontSize: 30)),
+          Text('IDEAS',style: AppFontWeight.semibold.copyWith(fontSize: AppFontSize.large)),
     
           Consumer<List<Idea>>(
             builder:(_, listOfIdeas, __)=>

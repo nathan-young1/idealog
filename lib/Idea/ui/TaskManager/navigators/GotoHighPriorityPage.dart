@@ -43,7 +43,7 @@ class GotoHighPriorityPage extends StatelessWidget {
               decoration: BoxDecoration(shape: BoxShape.circle, color: Black242424.withOpacity(0.2)),
               child: Icon(Icons.warning_amber_outlined,color: Colors.white,size: 18)
             ),
-            Flexible(child: Text('High Priority Tasks',style: dosis.copyWith(fontSize: 16, color: Colors.white))),
+            Flexible(child: Text('High Priority Tasks',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.small, color: Colors.white))),
             Align(
               alignment: Alignment.centerRight,
               child: Text('${idea.highPriority.length} urgent',style: dosis.copyWith(fontSize: 14,color: Colors.white))),

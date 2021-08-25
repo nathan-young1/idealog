@@ -45,7 +45,7 @@ class Settings extends StatelessWidget {
           
               SizedBox(height: 30),
                 Text('Idealog v1.2',
-                  style: dosis.copyWith(fontSize: 25,color: Color.fromRGBO(112, 112, 112, 1))
+                  style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.medium, color: Color.fromRGBO(112, 112, 112, 1))
                   ),
                   SizedBox(height: 70),
           
@@ -55,19 +55,19 @@ class Settings extends StatelessWidget {
                     children: [
                       ListTile(leading: SvgPicture.asset(Paths.more_settings_icon,height: 28, width: 28, color: _listTileIconColor),
                       // Icon(PhosphorIcons.faders_horizontal_bold,size: 30,color: _listTileIconColor),
-                      title: Text('More Settings',style: dosis.copyWith(fontSize: 20)),
+                      title: Text('More Settings',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
                       onTap: ()=>Navigator.pushNamed(context, moreSettingsPage),),
           
                       ListTile(leading: Icon(FeatherIcons.uploadCloud,size: 30,color: _listTileIconColor),
-                      title: Text('Data Backup',style: dosis.copyWith(fontSize: 20)),
+                      title: Text('Data Backup',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
                       onTap: ()=> Navigator.pushNamed(context, backupPage)),
           
                       ListTile(leading: Icon(PhosphorIcons.caret_double_up,size: 30,color: _listTileIconColor),
-                      title: Text('Upgrade to premium',style: dosis.copyWith(fontSize: 20)),
+                      title: Text('Upgrade to premium',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
                       onTap: ()=> Navigator.pushNamed(context, upgradeToPremiumPage)),
         
                       ListTile(leading: Icon(FeatherIcons.moon, size: 30, color: _listTileIconColor),
-                      title: Text('Dark Mode',style: dosis.copyWith(fontSize: 20)),
+                      title: Text('Dark Mode',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
                       trailing: Switch(value: Provider.of<Prefrences>(context).isDarkMode,
                       onChanged: (bool isDarkMode) async => await Prefrences.instance.setDarkMode(isDarkMode))),
                     ],

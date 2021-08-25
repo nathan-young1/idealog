@@ -5,6 +5,7 @@ import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/design/colors.dart';
+import 'package:idealog/design/textStyles.dart';
 
 enum TaskPage{UNCOMPLETED,COMPLETED,HIGH_PRIORITY}
 
@@ -41,7 +42,7 @@ Widget AnimatedListTile({
           );
         }
       ),
-      title: Text(taskRow.task),
+      title: Text(taskRow.task, style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.small)),
       trailing: IconButton(icon: Icon(Icons.close),
        color: LightPink,
       onPressed: () async { 

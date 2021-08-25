@@ -44,7 +44,7 @@ class TaskCompletionRate extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text('Tasks Completion Rate',
-            style: dosis.copyWith(fontSize: 22)),
+            style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.medium)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,10 +91,10 @@ class TaskCompletionRate extends StatelessWidget {
                   child: Center(
                     child: Row(
                     children: [
-                      Container(height: 25, width: 25, color: PieChartCompletedColor),
-                      SizedBox(width: 5),
+                      Container(height: 25, width: 25, decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: PieChartCompletedColor)),
+                      SizedBox(width: 6),
                       Text('Completed Tasks',
-                      style: dosis.copyWith(fontSize: 17)),
+                      style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20)),
                     ],)
                   ),
                 ),
@@ -103,10 +103,10 @@ class TaskCompletionRate extends StatelessWidget {
                   child: Center(
                     child: Row(
                     children: [
-                      Container(height: 25, width: 25, color: PieChartUncompletedColor),
-                      SizedBox(width: 5),
+                      Container(height: 25, width: 25, decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: PieChartUncompletedColor)),
+                      SizedBox(width: 6),
                       Text('Uncompleted Tasks',
-                      style: dosis.copyWith(fontSize: 17)),
+                      style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20)),
                     ],
                   ),),
                 ),

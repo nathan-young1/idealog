@@ -3,6 +3,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/global/routes.dart';
+import 'package:provider/provider.dart';
 import 'actionButtons.dart';
 
 class DetailAppBarButtons extends StatelessWidget {
@@ -11,6 +12,7 @@ class DetailAppBarButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: () async {
         await Navigator.pushReplacementNamed(context, menuPageView);

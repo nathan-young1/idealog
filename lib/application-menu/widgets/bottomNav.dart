@@ -48,7 +48,8 @@ class ActiveTab extends StatefulWidget {
 }
 
 class _ActiveTabState extends State<ActiveTab> with SingleTickerProviderStateMixin{
-  final TextStyle navDescriptionStyle = dosis.copyWith(fontSize: 16,fontWeight: FontWeight.w300,color: DarkBlue);
+  final TextStyle navDescriptionStyle = AppFontWeight.medium.copyWith(fontSize: AppFontSize.small, color: DarkBlue);
+  
   late AnimationController tabAnimationController;
   late Animation<Color?> colorChangeAnimation;
   late Animation<double?> translateAnimation;

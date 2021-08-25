@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text(ApplicationInfo.fullName_And_version,
-              style: dosis.copyWith(fontSize: 28,color: Color.fromRGBO(112, 112, 112, 1))
+              style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.large, color: Color.fromRGBO(112, 112, 112, 1))
               )
           ],
         ),

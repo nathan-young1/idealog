@@ -65,7 +65,7 @@ class _AccountSettingsAvatar extends StatelessWidget {
                   iconSize: 35,
                   onPressed: ()=>Navigator.pop(context)),
                   SizedBox(width: 10),
-                  Text('Account Settings',style: dosis.copyWith(fontSize: 28))
+                  Text('Account Settings',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28))
                 ],
               ),
           
@@ -81,9 +81,9 @@ class _AccountSettingsAvatar extends StatelessWidget {
                 child: Icon(Icons.person, size: 60, color: Colors.white)
               ),
               SizedBox(height: 5),
-              Text(GoogleUserData.instance.userEmail ?? 'Anonymous', style: TextStyle(fontSize: 20)),
+              Text(GoogleUserData.instance.userEmail ?? 'Anonymous', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20)),
               SizedBox(height: 5),
-              Text(Premium.instance.isPremiumUser?"Premium Account":"Basic Account",style: TextStyle(fontSize: 20,color:Premium.instance.isPremiumUser?Colors.teal[500]:DarkRed))
+              Text(Premium.instance.isPremiumUser?"Premium Account":"Basic Account",style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20, color:Premium.instance.isPremiumUser?Colors.teal[500]:DarkRed))
             ],
           ),
           SizedBox(height: 20),
@@ -108,7 +108,7 @@ class _SubscriptionStatusContainer extends StatelessWidget {
           SizedBox(height: 30),
           Padding(
             padding: EdgeInsets.only(left: 25),
-            child: Text('Your Account Features',style: dosis.copyWith(fontWeight: FontWeight.w200,fontSize: 30),),
+            child: Text('Your Account Features',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
           ),
           Padding(
             padding: EdgeInsets.only(left: 30,top: 10),
@@ -130,47 +130,65 @@ class _SubscriptionStatusContainer extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              height: 60,
-              width: 150,
-              color: LightGray,
-              child: Row(
-                children: [
-                  Icon(Icons.calendar_today_outlined),
-                  Column(
-                    children: [
-                      Text('Start Date:'),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text(convertDateTimeObjToAFormattedString(Premium.instance.premiumPurchaseDate!)),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Container(
-              height: 60,
-              width: 150,
-              color: LightPink,
-              child: Row(
-                children: [
-                  Icon(Icons.calendar_today_outlined),
-                  Column(
-                    children: [
-                      Text('Expiration Date:'),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text(convertDateTimeObjToAFormattedString(Premium.instance.premiumExpirationDate!)),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            )
+            PremiumDateContainer(isExpirationDateContainer: false),
+            PremiumDateContainer(isExpirationDateContainer: true)
         ],),
       ),
       ]);
+  }
+}
+
+class PremiumDateContainer extends StatelessWidget {
+  const PremiumDateContainer({
+    Key? key,
+    required this.isExpirationDateContainer
+  }) : super(key: key);
+
+  final bool isExpirationDateContainer;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 60,
+      width: 155,
+      decoration: BoxDecoration(
+      color: (isExpirationDateContainer) ?LightPink :LightGray,
+      borderRadius: BorderRadius.circular(5)
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          (isExpirationDateContainer)
+            ?Icon(FeatherIcons.flag, color: Colors.white)
+            :Icon(Icons.calendar_today_outlined, color: Colors.teal),
+
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              
+               Text(
+               (isExpirationDateContainer)
+                ?'Expiration Date:'
+                :'Start Date:', 
+                style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_16,
+                 color: (isExpirationDateContainer) ?Colors.white :null)),
+
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(
+                  convertDateTimeObjToAFormattedString(
+                  (isExpirationDateContainer)
+                    ?Premium.instance.premiumExpirationDate!
+                    :Premium.instance.premiumPurchaseDate!),
+                  style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_16,
+                    color: (isExpirationDateContainer) ?Colors.white :null))
+              )
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -194,7 +212,7 @@ class _SignOutFromGoogleContainer extends StatelessWidget {
           SizedBox(height: 15),
     
           ListTile(
-            title: Text('Log out',style: dosis.copyWith(fontSize: 20)),
+            title: Text('Log out',style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_23)),
             trailing: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Container(
@@ -205,7 +223,7 @@ class _SignOutFromGoogleContainer extends StatelessWidget {
     
           Padding(
                 padding: const EdgeInsets.only(left: 35, right: 35, top: 5),
-                child: Text('Note: if you have backed up your ideas to this google account, it will still be retained.'),
+                child: Text('Note: if you have backed up your ideas to this google account, it will still be retained.', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_15)),
           ),
     
           SizedBox(height: 15),
@@ -230,7 +248,7 @@ class _GetPremiumAccessContainer extends StatelessWidget {
             SizedBox(height: 30),
 
             ListTile(
-              title: Text('Get premium',style: dosis.copyWith(fontSize: 20)),
+              title: Text('Get premium',style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_23)),
               trailing: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Container(
@@ -245,7 +263,7 @@ class _GetPremiumAccessContainer extends StatelessWidget {
       
             Padding(
               padding: const EdgeInsets.only(left: 35, right: 35, top: 5),
-              child: Text('Note: Get premium access to enjoy special features.'),
+              child: Text('Note: Get premium access to enjoy special features.', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_15)),
             ),
 
             SizedBox(height: 20),
@@ -276,7 +294,7 @@ class _SignInWithGoogleContainer extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Sign in with Google',style: TextStyle(fontSize: 20)),
+              Text('Sign in with Google',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
               Icon(FontAwesomeIcons.google,size: 40, color: Colors.teal[500])
             ],
           ),

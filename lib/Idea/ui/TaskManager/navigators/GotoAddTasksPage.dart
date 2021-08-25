@@ -29,7 +29,7 @@ class GotoAddTasksPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
             Icon(Icons.add, size: 35, color: Colors.white),
-            Text('Add Task',style: dosis.copyWith(fontSize: 22,color: Colors.white))
+            Text('Add Task',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23, color: Colors.white))
           ]),
         )),
       ),

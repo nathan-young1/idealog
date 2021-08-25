@@ -25,7 +25,10 @@ class NoTaskYet extends StatelessWidget {
                   :(page == TaskPage.UNCOMPLETED)
                     ?Paths.No_Tasks_Pic_UncompletedPage
                     :Paths.No_Tasks_Pic_HighPriorityPage, fit: BoxFit.contain)),
-              Text("No tasks available.", style: dosis.copyWith(fontSize: 22))
+              Text(
+                (page == TaskPage.COMPLETED)
+                ?"No completed tasks available"
+                :"No tasks available.", style: dosis.copyWith(fontSize: 22))
           ]),
       ),
     );

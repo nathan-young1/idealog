@@ -25,10 +25,10 @@ class _ProductivityState extends State<Productivity> {
           Padding(
             padding: EdgeInsets.only(top: 25,left: 20,right: 10),
             child: Text('Productivity',
-            style: dosis.copyWith(fontSize: 30)),
+            style: AppFontWeight.semibold.copyWith(fontSize: AppFontSize.large)),
           ),
           Expanded(
-            child: ListView(
+            child: ListView( 
               children: [
                 TaskCompletionRate(completionRate),
                 SizedBox(height: 10),

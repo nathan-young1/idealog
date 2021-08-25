@@ -53,7 +53,7 @@ class DataBackup extends StatelessWidget {
                               iconSize: 35,
                               onPressed: ()=>Navigator.pop(context)),
                             SizedBox(width: 12),
-                            Text('Data Backup',style: dosis.copyWith(fontSize: 24))
+                            Text('Data Backup', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28))
                           ],
                         ),
                       ),
@@ -70,7 +70,7 @@ class DataBackup extends StatelessWidget {
                               bottomRight: Radius.circular(20)),
                           ),
                           child: Center(child: Text('Last backup at: ${nativeCodeCaller.lastBackupTime ?? ""}',
-                          style: dosis.copyWith(fontSize: 18,color: Colors.white),)),
+                          style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20, color: Colors.white))),
                         ),
                       )
                     ],),
@@ -83,7 +83,7 @@ class DataBackup extends StatelessWidget {
                       Icon(Icons.info_outline,color: Colors.teal.withOpacity(0.5),size: 30),
                       SizedBox(width: 10),
                       Text('Your data will be backed up every 24 hours.',
-                      style: dosis.copyWith(fontSize: 15,fontWeight: FontWeight.w300))
+                      style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.small))
                     ],
                   ),
                   SizedBox(height: 40),
@@ -104,7 +104,7 @@ class DataBackup extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                            Text('Backup Now',style: dosis.copyWith(fontSize: 20)),
+                            Text('Backup Now',style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_23)),
                             Container(
                               width: 60,
                               child: Icon(FeatherIcons.uploadCloud,size: 30,color: Colors.teal))
@@ -115,7 +115,7 @@ class DataBackup extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                          Text('Auto Backup',style: dosis.copyWith(fontSize: 20)),
+                          Text('Auto Backup',style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_23)),
                           Container(
                             width: 60,
                             child: Switch(value: Provider.of<Prefrences>(context).autoSyncEnabled,

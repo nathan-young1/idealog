@@ -19,8 +19,8 @@ class TaskAdderSlideAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await Navigator.of(context).push(
-                      PageTransition(child: AddTasksToExistingIdea(idea: idea),
+        await Navigator.of(context).pushReplacement( 
+                      PageTransition(child: AddTasksToExistingIdea(idea: idea, thisPageWasOpenedFromTheMainMenu: true),
                        type: PageTransitionType.rightToLeftWithFade));
         // close the slidable.
         Slidable.of(context)!.close();
@@ -60,8 +60,11 @@ class DeleteSlideAction extends StatelessWidget {
       onTap: () async {
         /// close the slidable before showing the alertDialog on whether the user want's to delete.
         Slidable.of(context)!.close();
+        bool? userWantsToDeleteIdea = await showDeleteDialog(context: context, titleOfIdeaToDelete: idea.ideaTitle);
+        
+        if (userWantsToDeleteIdea == null) /*The user pressed the phone back button causing the dialog to return without a value*/return;
 
-        if ((await showDeleteDialog(context: context, titleOfIdeaToDelete: idea.ideaTitle))!)
+        if (userWantsToDeleteIdea)
         await Future.delayed(Duration(milliseconds: 200),
                   () async => await IdeaManager.deleteIdeaFromDb(idea));
         },

@@ -42,7 +42,7 @@ class GotoCompletedPage extends StatelessWidget {
               decoration: BoxDecoration(shape: BoxShape.circle, color: Black242424.withOpacity(0.2)),
               child: Icon(Icons.flag,color: Colors.white,size: 18)
             ),
-            Flexible(child: Text('Completed Tasks',style: dosis.copyWith(fontSize: 16, color: Colors.white))),
+            Flexible(child: Text('Completed Tasks',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.small, color: Colors.white))),
             Align(
               alignment: Alignment.centerRight,
               child: Text('${idea.completedTasks.length}/${idea.completedTasks.length}',style: dosis.copyWith(fontSize: 14,color: Colors.white)))

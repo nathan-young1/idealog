@@ -31,7 +31,7 @@ class _UpgradeToPremiumState extends State<UpgradeToPremium> {
                   iconSize: 35,
                   onPressed: ()=>Navigator.pop(context)),
                   SizedBox(width: 10),
-                  Text('Premium Access',style: dosis.copyWith(fontSize: 28))
+                  Text('Premium Access',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28))
                 ],
               ),
 
@@ -48,7 +48,7 @@ class _UpgradeToPremiumState extends State<UpgradeToPremium> {
               SizedBox(height: 10),
               Padding(
                 padding: EdgeInsets.only(left: 25),
-                child: Text('Features',style: dosis.copyWith(fontWeight: FontWeight.w200,fontSize: 30),),
+                child: Text('Features',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28)),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 30,top: 10),
@@ -71,10 +71,10 @@ class _UpgradeToPremiumState extends State<UpgradeToPremium> {
                       text: TextSpan(children: [
                         TextSpan(
                           text: 'Duration: ',
-                          style: dosis.copyWith(color: Colors.black,fontSize: 22,fontWeight: FontWeight.w600)
+                          style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28, color: Black242424)
                         ),
                         TextSpan(text: '1 year',
-                        style: dosis.copyWith(color: Colors.black,fontSize: 25)
+                        style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.normal, color: Black242424)
                         )
                       ]
                       )
@@ -98,9 +98,9 @@ class PremiumFeatureTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-      Icon(Icons.circle,size: 17),
+      Icon(Icons.circle,size: 17, color: DarkBlue),
       SizedBox(width: 10),
-      Text(_feature,style: dosis.copyWith(fontSize: 19))
+      Text(_feature,style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20))
     ]
     );
   }

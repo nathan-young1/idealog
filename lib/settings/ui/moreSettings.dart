@@ -25,7 +25,7 @@ class MoreSettings extends StatelessWidget {
                 iconSize: 35,
                 onPressed: ()=>Navigator.pop(context)),
                 SizedBox(width: 10),
-                Text('More Settings',style: dosis.copyWith(fontSize: 28))
+                Text('More Settings',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28))
               ],
             ),
 
@@ -44,7 +44,7 @@ class MoreSettings extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: Icon(Icons.alarm_rounded,color: Colors.teal[800],size: 35),
-                    title: Text('Account settings',style: dosis.copyWith(fontSize: 20),),
+                    title: Text('Account settings',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
                     trailing: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Container(
@@ -59,7 +59,7 @@ class MoreSettings extends StatelessWidget {
             
                   Padding(
                     padding: const EdgeInsets.only(left: 35, right: 35, top: 5),
-                    child: Text('Check your account details, status of your premium subscription and amount of time left till expiration.'),
+                    child: Text('Check your account details, status of your premium subscription and amount of time left till expiration.', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_15)),
                   )
                 ],
               ),
@@ -72,7 +72,7 @@ class MoreSettings extends StatelessWidget {
               children: [
                 ListTile(
                   leading: Icon(Icons.fingerprint,color: DarkBlue,size: 35),
-                  title: Text('Fingerprint Lock',style: dosis.copyWith(fontSize: 20)),
+                  title: Text('Fingerprint Lock',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
                   trailing: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Switch(value: Provider.of<Prefrences>(context).fingerprintEnabled,
@@ -85,7 +85,7 @@ class MoreSettings extends StatelessWidget {
 
                 Padding(
                   padding: const EdgeInsets.only(left: 35, right: 35, top: 5),
-                  child: Text('Enable/Disable the biometric authentication (fingerprint, face ID e.t.c) before accessing this application.'),
+                  child: Text('Enable/Disable the biometric authentication (fingerprint, face ID e.t.c) before accessing this application.', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_15)),
                 )
               ],
             )
