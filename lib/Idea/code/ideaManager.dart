@@ -20,8 +20,10 @@ class IdeaManager{
     Idea newIdea = Idea(ideaTitle: ideaTitle, moreDetails: moreDetails, tasksToCreate: allNewTasks);
 
     await IdealogDb.instance.writeIdeaToDb(idea: newIdea);
+
     // delay so that saving data dialog will show.
     await Future.delayed(Duration(milliseconds: 500));
+
     // close the dialog.
     Navigator.pop(context);
     // go back to the appilcation menu page.

@@ -6,8 +6,11 @@ import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'alertDialogComponents.dart';
 
-showPremiumDialog({required BuildContext context}) async {
-   AlertDialog alertDialog = AlertDialog(
+Future<bool?> showPremiumDialog({required BuildContext context}) async {
+
+  return showDialog<bool>(
+  context: context, 
+  builder: (context)=> AlertDialog(
     contentPadding: EdgeInsets.zero,
     elevation: 5,
     content: Container(
@@ -51,7 +54,5 @@ showPremiumDialog({required BuildContext context}) async {
             actionButtonsWidth: 110)
       ]),
     ),
-  );
-
-  await showDialog(context: context, builder: (context)=> alertDialog, barrierDismissible: false);
+  ), barrierDismissible: true);
 }

@@ -114,6 +114,8 @@ class _NewIdeaState extends State<NewIdea> {
 
           bottomNavigationBar: GestureDetector(
             onTap: () async {
+                FocusScope.of(context).unfocus();
+
                 if(formKey.currentState!.validate())
                     await IdeaManager.addIdeaToDb(
                     context: context,

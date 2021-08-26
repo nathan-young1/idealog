@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
+import 'package:idealog/customWidget/alertDialog/premiumDialog.dart';
 import 'package:idealog/customWidget/alertDialog/syncNowDialog.dart';
 import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/design/colors.dart';
@@ -9,6 +10,7 @@ import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:idealog/global/routes.dart';
 import 'package:idealog/nativeCode/bridge.dart';
+import 'package:idealog/settings/code/PremiumClass.dart';
 import 'package:provider/provider.dart';
 
 class DataBackup extends StatelessWidget {
@@ -69,7 +71,7 @@ class DataBackup extends StatelessWidget {
                               topLeft: Radius.circular(20),
                               bottomRight: Radius.circular(20)),
                           ),
-                          child: Center(child: Text('Last backup at: ${nativeCodeCaller.lastBackupTime ?? ""}',
+                          child: Center(child: Text((nativeCodeCaller.lastBackupTime == "0") ?'No backup yet' :'Last backup at: ${nativeCodeCaller.lastBackupTime ?? ""}',
                           style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20, color: Colors.white))),
                         ),
                       )
@@ -93,6 +95,18 @@ class DataBackup extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () async { 
+                            // show purchase premium dialog if the user is not a premium user.
+                            if(!Premium.instance.isPremiumUser){
+                              bool? userWantsToUpgradeToPremium = await showPremiumDialog(context: context);
+                              if(userWantsToUpgradeToPremium == null) return;
+
+                              if(userWantsToUpgradeToPremium){
+                                 Navigator.of(context).pushNamed(upgradeToPremiumPage);
+                                 return;
+                              } else return;
+                              
+                            }
+
                             /// if this operation was not a success.
                             if(!(await IdeaManager.backupIdeasNow(context: context))){
                               // remove sync now dialog.
@@ -119,8 +133,20 @@ class DataBackup extends StatelessWidget {
                           Container(
                             width: 60,
                             child: Switch(value: Provider.of<Prefrences>(context).autoSyncEnabled,
-                            onChanged: (bool enabledAutoSync) async =>
-                              await Prefrences.instance.setAutoSync(enabledAutoSync, context: context) 
+                            onChanged: (bool enabledAutoSync) async {
+                              // show purchase premium dialog if the user is not a premium user.
+                              if(!Premium.instance.isPremiumUser){
+                                bool? userWantsToUpgradeToPremium = await showPremiumDialog(context: context);
+                                if(userWantsToUpgradeToPremium == null) return;
+
+                                if(userWantsToUpgradeToPremium){
+                                  Navigator.of(context).pushNamed(upgradeToPremiumPage);
+                                  return;
+                                } else return;
+                              }
+
+                              await Prefrences.instance.setAutoSync(enabledAutoSync, context: context);
+                            }
                             ))
                         ]),
                       ],
