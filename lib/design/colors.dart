@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Color LightGray = Color.fromRGBO(239, 238, 238, 1);
+const Color DarkerLightGray = Color.fromRGBO(230, 230, 230, 1);
 const Color ActiveTabLight = Color.fromRGBO(7, 58, 98, 0.85);
 const Color LightPink = Color.fromRGBO(215, 99, 99, 0.85);
 const Color DarkBlue = Color.fromRGBO(7, 58, 98, 1);

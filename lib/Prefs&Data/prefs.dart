@@ -34,6 +34,17 @@ class Prefrences with ChangeNotifier{
     notifyListeners();
   }
 
+  Future<bool> _isUserFirstTimeOpeningTheApp() async {
+    String key = "isUserFirstTimeOpeningTheApp";
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    // check if sharedPrefrences contains the key , if it does not contain the key it means it is the first time the user is opening the app.
+    bool isUserFirstTime = sharedPref.containsKey(key) ?sharedPref.getBool(key)! :true;
+    // then set preference to it's not the user first time.
+    sharedPref.setBool(key, false);
+
+    return isUserFirstTime;
+  } 
+
   Future<void> setFingerPrintAuth(bool allowFingerAuth) async {
       // Is the user authenticated to either ON or OFF biometric authentication
       var userIsAuthenticated = await authenticateWithBiometrics();
@@ -88,6 +99,7 @@ class Prefrences with ChangeNotifier{
   bool get isDarkMode => _darkMode ?? false;
   bool get fingerprintEnabled => _fingerprintAuth ?? false;
   bool get autoSyncEnabled => _autoSync ?? false;
+  Future<bool> get isUserFirstTimeOpeningTheApp async => await _isUserFirstTimeOpeningTheApp();
 
 }
 

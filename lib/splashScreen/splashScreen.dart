@@ -1,20 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/applicationInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
-import 'package:idealog/authentication/authHandler.dart';
-import 'package:idealog/customWidget/alertDialog/accountHasDataDialog.dart';
-import 'package:idealog/customWidget/alertDialog/autoStartDialog.dart';
-import 'package:idealog/customWidget/alertDialog/premiumDialog.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/global/internetConnectionChecker.dart';
 import 'package:idealog/global/paths.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:idealog/intro-pages/introPages.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -34,6 +30,13 @@ class _SplashScreenState extends State<SplashScreen> {
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
         
         timer = Timer(Duration(milliseconds: 800),() async {
+
+          if(await Prefrences.instance.isUserFirstTimeOpeningTheApp){
+            // navigate to the introPages on user first time opening the app.
+            Navigator.pushReplacement(context, PageTransition(child: IntroPages(), type: PageTransitionType.fade));
+            return;
+          }
+
           if(Prefrences.instance.fingerprintEnabled){
             // fingerprint authentication is enabled
               if(await authenticateWithBiometrics(calledFromLogin: true))
@@ -47,10 +50,11 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     @override
-      void dispose() {
-        timer!.cancel();
-        super.dispose();
-      }   
+    void dispose() {
+      timer!.cancel();
+      super.dispose();
+    }   
+
       
   @override
   Widget build(BuildContext context) {

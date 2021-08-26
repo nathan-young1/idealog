@@ -15,8 +15,10 @@ class AppFontSize{
   static final double medium = 25;
   static final double fontSize_15 = 15;
   static final double fontSize_16 = 16;
+  static final double fontSize_18 = 18;
   static final double fontSize_20 = 20;
   static final double fontSize_23 = 23;
+  static final double fontSize_26 = 26;
   static final double fontSize_28 = 28;
 
   // for the idea listPage or the productivity page.

@@ -21,6 +21,7 @@ import 'config.dart';
 import 'core-models/ideaModel.dart';
 import 'design/colors.dart';
 import 'global/paths.dart';
+import 'intro-pages/introPages.dart';
 import 'settings/ui/dataBackup.dart';
 
 Future<void> main() async { 
@@ -64,8 +65,10 @@ class Idealog extends StatelessWidget {
                               // The Dark theme
                               darkTheme: AppTheme.darkTheme,
                               routes: {
-                                homePage: (context) => SplashScreen()
+                                homePage: (context) => SplashScreen(),
+                                introPages: (context) => IntroPages()
                               },
+                              
                               onGenerateRoute: (settings){
                                 switch (settings.name){
                                   case menuPageView: 

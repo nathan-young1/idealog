@@ -1,5 +1,6 @@
 /// Routes used in this application.
-const homePage = '/';
+const String homePage = '/';
+const String introPages = "/IntroPages";
 const String addNewIdeaPage = '/AddNewIdea';
 const String menuPageView = '/MenuPageView';
 const String moreSettingsPage = '/MoreSettings';
