@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:idealog/Prefs&Data/applicationInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
+import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:idealog/global/internetConnectionChecker.dart';
 import 'package:idealog/global/paths.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,6 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
             // fingerprint authentication is not enabled
             changeRoute();
         });
+
       });
     }
 

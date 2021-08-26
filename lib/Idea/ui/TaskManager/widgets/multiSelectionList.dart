@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
 import 'package:idealog/core-models/ideaModel.dart';
+import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
 class MultiSelectionList extends StatelessWidget {
@@ -26,7 +27,7 @@ class MultiSelectionList extends StatelessWidget {
             (value == true)
             ?multiSelectObj.addTaskToMultiSelect(completedTask)
             :multiSelectObj.removeTaskFromMultiSelect(completedTask),
-          title: Text(completedTask.task),
+          title: Text(completedTask.task, style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20)),
             ),
         );}
         ).toList()

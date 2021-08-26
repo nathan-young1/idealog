@@ -36,9 +36,9 @@ void notifyUserOfChangeInTaskList({required bool taskWasCompleted,required Build
 
 void anErrorOccuredFlushBar({required BuildContext context})=> Flushbar(
             messageText: Text(
-            "An error occured, perhaps there is no internet connection.",
+            "An error occured, perhaps your internet connection is weak.",
             style: dosis.copyWith(fontSize: 22, color: Colors.white)),
-            icon: Icon(Icons.error, color: Colors.white),
+            icon: Icon(Icons.wifi_off, color: Colors.white),
             duration: Duration(seconds: 2),
             forwardAnimationCurve: Curves.linearToEaseOut,
             reverseAnimationCurve: Curves.linear,

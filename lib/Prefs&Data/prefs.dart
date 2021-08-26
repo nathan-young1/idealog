@@ -3,6 +3,7 @@ import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/customWidget/alertDialog/autoStartDialog.dart';
 import 'package:idealog/customWidget/flushbar.dart';
+import 'package:idealog/design/theme.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:idealog/nativeCode/bridge.dart';
 import 'package:local_auth/auth_strings.dart';
@@ -53,6 +54,8 @@ class Prefrences with ChangeNotifier{
     notifyListeners();
     /// Notify the paths class of the change in theme.
     Paths.instance.notifyClassOnThemeChanged();
+    /// Notify the AppTheme of change in theme.
+    AppTheme.instance.notifyListeners();
   }
 
   Future<void> setAutoSync(bool onAutoSync, {BuildContext? context}) async {

@@ -64,7 +64,7 @@ class TasksInColumnView extends StatelessWidget{
             child: Text((priorityGroup == Priority_High)
             ?'High Priority'
             :(priorityGroup == Priority_Medium) ? 'Medium Priority' : 'Low Priority',
-              style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w500)),
+              style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
           ),
 
           /// if the priority group is not given then this was called from completed tasks page.

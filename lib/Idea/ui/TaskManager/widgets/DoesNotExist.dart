@@ -14,7 +14,7 @@ class SearchNotFoundIllustration extends StatelessWidget {
             height: 230,
             width: 250,
             child: Image.asset(Paths.Search_Pic, fit: BoxFit.contain)),
-          Text("Search not found", style: dosis.copyWith(fontSize: 22))
+          Text("Search not found", style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23))
       ]);
   }
 }
@@ -34,7 +34,7 @@ class IdeaDoesNotExistIllustration extends StatelessWidget {
                 height: 300,
                 width: 300,
                 child: Image.asset(Provider.of<Paths>(context).pathToNoIdeaPic, fit: BoxFit.contain)),
-              Text("Press + to add idea", style: dosis.copyWith(fontSize: 22))
+              Text("Press + to add idea", style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23))
           ]),
       ),
     );

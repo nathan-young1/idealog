@@ -1,4 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/settings/code/PremiumClass.dart';
 import 'Databases/analytics-db/analyticsSql.dart';
 import 'Databases/idealog-db/idealog_Db.dart';
@@ -11,7 +13,6 @@ import 'nativeCode/bridge.dart';
 Future<void> InitializeAppConfig() async {
   
   await ApplicationInfo.initialize();
-  await UserInternetConnectionChecker.initialize();
   await IdealogDb.instance.initialize(); 
   // we will later intialize with internet when the user wants to buy a product.
   await Premium.instance.initializePluginWithoutInternetConnection();
@@ -22,7 +23,12 @@ Future<void> InitializeAppConfig() async {
       NativeCodeCaller.instance.initialize(),
       AnalyticDB.instance.clearObsoluteData()
       ]);
+
+  initializeUserGoogleData();
+  await UserInternetConnectionChecker.initialize();
   
 }
+
+
 
 

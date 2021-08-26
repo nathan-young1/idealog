@@ -20,7 +20,6 @@ class MenuFloatingActionButton extends StatelessWidget {
           child: FloatingActionButton(
             tooltip: "Add a new idea",
             elevation: 10,
-            backgroundColor: DarkBlue,
             onPressed: () async { 
               // Close the keyboard.
               FocusScope.of(context).unfocus();

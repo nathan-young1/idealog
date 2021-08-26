@@ -5,10 +5,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
+import 'package:idealog/customWidget/alertDialog/alertDialogComponents.dart';
 import 'package:idealog/customWidget/alertDialog/logOutDialog.dart';
+import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/customWidget/profilePicWidget.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:idealog/global/internetConnectionChecker.dart';
 import 'package:idealog/global/routes.dart';
 import 'package:idealog/global/top_level_methods.dart';
 import 'package:idealog/settings/code/PremiumClass.dart';
@@ -29,11 +32,11 @@ class AccountSettings extends StatelessWidget {
             physics: BouncingScrollPhysics(),
             child: Column(
               children: [
-              _AccountSettingsAvatar(userProfilePic: googleUserData.userPhotoUrl),
-              if (googleUserData.googleSignInAccount == null) _SignInWithGoogleContainer(),
-              if(premium.isPremiumUser) _SubscriptionStatusContainer(),
-              if(!premium.isPremiumUser) _GetPremiumAccessContainer(),
-              if(googleUserData.googleSignInAccount != null) _SignOutFromGoogleContainer(),
+                _AccountSettingsAvatar(userProfilePic: googleUserData.userPhotoUrl),
+                if (googleUserData.userEmail == null) _SignInWithGoogleContainer(),
+                if(premium.isPremiumUser) _SubscriptionStatusContainer(),
+                if(!premium.isPremiumUser) _GetPremiumAccessContainer(),
+                if(googleUserData.userEmail != null) _SignOutFromGoogleContainer()
               ],
             ),
           ),
@@ -282,7 +285,22 @@ class _SignInWithGoogleContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()async => await signInWithGoogle(),
+      onTap: ()async {
+        if(UserInternetConnectionChecker.userHasInternetConnection){
+          showSigningInAlertDialog(context: context);
+          if(await signInWithGoogle()){
+            // if google sign in was a success.
+            await downloadBackupFileIfAnyExistsThenWriteToDb();
+            // remove the dialog.
+            Navigator.of(context).pop();
+          } else {
+            // remove the dialog.
+            Navigator.of(context).pop();
+            anErrorOccuredFlushBar(context: context);
+          }
+
+        } else anErrorOccuredFlushBar(context: context);
+        },
       child: Padding(
         padding: EdgeInsets.only(left: 40,top: 30, right: 40),
         child: Container(

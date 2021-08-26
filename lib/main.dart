@@ -49,7 +49,8 @@ class Idealog extends StatelessWidget {
                             ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance),
                             ChangeNotifierProvider<SearchController>.value(value: SearchController.instance),
                             ChangeNotifierProvider<Premium>.value(value: Premium.instance),
-                            ChangeNotifierProvider<Paths>.value(value: Paths.instance)
+                            ChangeNotifierProvider<Paths>.value(value: Paths.instance),
+                            ChangeNotifierProvider<AppTheme>.value(value: AppTheme.instance)
                           ],
                           child: Builder(
                             builder: (BuildContext context) => MaterialApp(

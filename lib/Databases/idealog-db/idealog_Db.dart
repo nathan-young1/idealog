@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:idealog/Databases/analytics-db/analytics_config.dart';
 import 'package:idealog/global/extension.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:sqflite/sqflite.dart';
@@ -206,11 +207,12 @@ class IdealogDb{
   }
 
 
-  /// Drop all tables in the database
+  /// Drop all tables in the database including the analyticsTable.
   Future<void> dropAllTablesInDb() async {
     await dbInstance.execute('Drop Table $ideaTable');
     await dbInstance.execute('Drop Table $completedTable');
     await dbInstance.execute('Drop Table $uncompletedTable');
+    await dbInstance.execute('Drop Table $analyticsTable');
     notifyListeners();
   }
 

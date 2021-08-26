@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
+import 'package:idealog/Prefs&Data/backupJson.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,6 +16,19 @@ Future<OAuthCredential> getUserCredientials({required GoogleSignInAccount accoun
     return GoogleAuthProvider.credential(accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 }
 
+/// This will initialize the user's google data if he/she is signed in.
+initializeUserGoogleData(){
+  var googleUser = auth.currentUser;
+
+  if (googleUser!= null)
+    // initialize my custom googleUserData class with the user credientials.
+    GoogleUserData.instance.intialize(
+    userUid: googleUser.uid,
+    userEmail: googleUser.email,
+    userPhotoUrl: null,
+    googleSignInAccount: null);
+  
+}
 /// Initiate a sign in or sign up with google account. Returns true if it was a success and false if an error occured.
 Future<bool> signInWithGoogle() async {
 
@@ -36,9 +51,16 @@ Future<bool> signInWithGoogle() async {
 
       return true;
 
-    } on Exception{
+    } on Exception catch (e) {
+    debugPrint(e.toString());
     return false;
   }
+}
+
+Future<void> downloadBackupFileIfAnyExistsThenWriteToDb() async {
+  await BackupJson.instance.initialize();
+  // if the user has a file backed up then download it and write to db.
+  if(BackupJson.instance.lastBackupFileIfExists != null) await BackupJson.instance.downloadFromDrive();
 }
 
 

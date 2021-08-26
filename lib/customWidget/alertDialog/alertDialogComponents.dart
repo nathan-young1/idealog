@@ -8,9 +8,20 @@ AlertDialog progressAlertDialog = AlertDialog(
   title: Row(children: [
     CircularProgressIndicator(),
     SizedBox(width: 25),
-    Text('Saving Data')
+    Text('Saving Data', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.small))
   ],),
 );
+
+showSigningInAlertDialog({required BuildContext context}){
+  return showDialog(context: context, 
+  builder: (context)=> AlertDialog(
+  title: Row(children: [
+    CircularProgressIndicator(),
+    SizedBox(width: 25),
+    Text('Authenticating with google', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.small))
+  ],),
+), barrierDismissible: false);
+}
 
 
 // ignore: non_constant_identifier_names

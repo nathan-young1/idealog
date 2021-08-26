@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/controllers/bottomNavController.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:idealog/design/theme.dart';
 import 'package:provider/provider.dart';
 
 class MenuBottomNav extends StatelessWidget {
@@ -48,10 +50,10 @@ class ActiveTab extends StatefulWidget {
 }
 
 class _ActiveTabState extends State<ActiveTab> with SingleTickerProviderStateMixin{
-  final TextStyle navDescriptionStyle = AppFontWeight.medium.copyWith(fontSize: AppFontSize.small, color: DarkBlue);
   
   late AnimationController tabAnimationController;
-  late Animation<Color?> colorChangeAnimation;
+  late Animation<Color?> lightColorChangeAnimation;
+  late Animation<Color?> darkColorChangeAnimation;
   late Animation<double?> translateAnimation;
   late BottomNavController listenableBottomNavController;
   late BottomNavController nonListenableBottomNavController;
@@ -62,7 +64,10 @@ class _ActiveTabState extends State<ActiveTab> with SingleTickerProviderStateMix
       vsync: this,
       duration: Duration(milliseconds: 400));
 
-    colorChangeAnimation = ColorTween(begin: DarkGray,end: DarkBlue)
+    lightColorChangeAnimation = ColorTween(begin: DarkGray,end: DarkBlue)
+    .animate(tabAnimationController);
+
+    darkColorChangeAnimation = ColorTween(begin: DarkGray,end: DarkRed)
     .animate(tabAnimationController);
 
     translateAnimation = Tween<double>(begin: 0,end: BottomNavController.instance.bottomNavHeight * 0.18)
@@ -79,12 +84,13 @@ class _ActiveTabState extends State<ActiveTab> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    
+
     listenableBottomNavController = Provider.of<BottomNavController>(context);
     nonListenableBottomNavController = Provider.of<BottomNavController>(context,listen: false);
     
     bool tabIsActive = listenableBottomNavController.currentPage == (widget.typeOfTab);
     nonListenableBottomNavController.controlAnimation(animationController: tabAnimationController, tabIsActive: tabIsActive);
+
 
     return GestureDetector(
       onTap: ()=> nonListenableBottomNavController.currentPage = widget.typeOfTab,
@@ -96,21 +102,38 @@ class _ActiveTabState extends State<ActiveTab> with SingleTickerProviderStateMix
 
         child: AnimatedBuilder(
           animation: tabAnimationController,
-          builder: (context,_)=> Stack(
+          builder: (context,_){
+            /// use a different color animation depending on the application theme.
+            Color? currentColorForBottomNav = (Prefrences.instance.isDarkMode)
+                  ?darkColorChangeAnimation.value
+                  :lightColorChangeAnimation.value;
+
+          return Stack(
             alignment: Alignment.bottomCenter,
             children: [
               Transform.translate(
                 offset: Offset(0,-translateAnimation.value!),
-                child: Icon(widget.icon, size: 28,color: colorChangeAnimation.value)),
+                child: Icon(widget.icon, size: 28,
+                color: currentColorForBottomNav)),
             
             
-              Transform.translate(
-                offset: Offset(0,translateAnimation.value!),
-                child: Opacity(
-                  opacity: tabAnimationController.value,
-                  child: Text(widget.typeOfTab.toString().split('.').last,style: navDescriptionStyle))),
+              Opacity(
+                opacity: tabAnimationController.value,
+                // when the opacity is 0 the text painter throws an exception, so i am hiding the widget when
+                // the opacity is zero(but maintaining the size).
+                child: Visibility(
+                  visible: (tabAnimationController.value != 0),
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  child: Transform.translate(
+                    offset: Offset(0,translateAnimation.value!),
+                    child: Text(widget.typeOfTab.toString().split('.').last,
+                    style: Theme.of(context).bottomNavigationBarTheme.selectedLabelStyle!)),
+                ),
+              ),
             ],
-          ),
+          );}
         ),
       ),
     );
