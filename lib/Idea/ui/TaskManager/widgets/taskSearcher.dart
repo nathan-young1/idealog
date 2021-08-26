@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
@@ -15,6 +16,7 @@ Widget TaskSearchField({required int flex, required BuildContext context, requir
                   child: TextField(
                     controller: searchFieldController,
                     decoration: formTextField.copyWith(
+                      fillColor: (Prefrences.instance.isDarkMode) ?LightDark :Colors.white,
                       labelText: 'Search for a task',
                       suffixIcon: IconButton(
                         icon: Icon(Icons.clear),
@@ -39,7 +41,7 @@ Widget IdeaSearchField({required BuildContext context, required TextEditingContr
         controller: searchFieldController,
         decoration: formTextField.copyWith(
           labelText: 'Search for an idea',
-          fillColor: LightGray,
+          fillColor: Theme.of(context).inputDecorationTheme.fillColor,
           suffixIcon: IconButton(
             icon: Icon(Icons.clear),
             onPressed: ()=> clearSearch(searchFieldController, context))

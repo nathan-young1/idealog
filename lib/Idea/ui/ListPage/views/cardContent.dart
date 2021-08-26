@@ -13,7 +13,7 @@ class CardContent extends StatelessWidget {
         return Container(
           padding: EdgeInsets.symmetric(vertical: 15,horizontal: 15),
           decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).cardTheme.color,
                       borderRadius: BorderRadius.circular(SlidableList.isOpen(context) ?0 :10),
                       boxShadow: [BoxShadow(offset: Offset(0,0),blurRadius: 10,color: Colors.black.withOpacity(0.2))]
                     ),

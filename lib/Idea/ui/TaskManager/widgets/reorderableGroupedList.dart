@@ -2,6 +2,7 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Databases/idealog-db/idealog_config.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
@@ -82,11 +83,13 @@ class SingleReorderableList extends StatelessWidget{
     
                     feedback: Material(
                       child: Container(
-                        decoration: elevatedBoxDecoration.copyWith(color: Colors.white),
+                        decoration: elevatedBoxDecoration.copyWith(color: (Prefrences.instance.isDarkMode) ?LightDark :Colors.white),
                         width: MediaQuery.of(context).size.width,
                         child: ListTile(
-                        leading: Checkbox(value: false, onChanged: (bool? value) {}),
-                        title: Text(groupTasks[index].task,overflow: TextOverflow.ellipsis),
+                        title: Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Text(groupTasks[index].task,overflow: TextOverflow.ellipsis),
+                        ),
                         trailing: IconButton(icon: Icon(FontAwesomeIcons.gripLines), onPressed: (){})
                           ),
                       ),
@@ -131,7 +134,7 @@ class SingleReorderableList extends StatelessWidget{
               builder: (context,_,__){ 
                 bool thereIsTasksInThisPriorityGroup = idea.getListForPriorityGroup(priorityGroup).isNotEmpty;
                 return Container(
-                color: (!thereIsTasksInThisPriorityGroup)? LightGray : null,
+                color: (!thereIsTasksInThisPriorityGroup) ?(Prefrences.instance.isDarkMode) ?LightDark :LightGray :null,
                 child: (!thereIsTasksInThisPriorityGroup)
                 ? Center(child: Text("Drag a task here to add to these group"))
                 : null

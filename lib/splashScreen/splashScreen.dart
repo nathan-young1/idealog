@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Prefs&Data/applicationInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/authentication/authHandler.dart';
+import 'package:idealog/customWidget/alertDialog/accountHasDataDialog.dart';
+import 'package:idealog/customWidget/alertDialog/autoStartDialog.dart';
+import 'package:idealog/customWidget/alertDialog/premiumDialog.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/internetConnectionChecker.dart';
 import 'package:idealog/global/paths.dart';
@@ -28,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
     void initState() {
       super.initState(); 
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-
+        
         timer = Timer(Duration(milliseconds: 800),() async {
           if(Prefrences.instance.fingerprintEnabled){
             // fingerprint authentication is enabled

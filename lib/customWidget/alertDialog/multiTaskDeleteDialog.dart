@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'alertDialogComponents.dart';
@@ -32,12 +33,12 @@ Future<bool?> showMultiDeleteDialog({required BuildContext context, required int
               text: TextSpan(
                 children: [
                   TextSpan(text: 'Do you want to really want to delete ',
-                    style: dosis.copyWith(fontSize: 22, color: Colors.black)),
+                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(
                     text: (numberOfTasksToDelete == 1)
                     ?"this task ?"
                     :"all $numberOfTasksToDelete tasks ?",
-                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black))
+                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
                 ]
               )),
           ),
@@ -46,9 +47,9 @@ Future<bool?> showMultiDeleteDialog({required BuildContext context, required int
             context: context, 
             primaryActionText: "Delete", 
             secondaryActionText: "No", 
-            secondaryActionTextColor: Black242424,
+            secondaryActionTextColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424,
             primaryActionButtonColor: LightPink, 
-            secondaryButtonOutlineColor: Black242424, 
+            secondaryButtonOutlineColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424, 
             actionButtonsHeight: 40, 
             actionButtonsWidth: 110)
         ],

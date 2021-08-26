@@ -37,7 +37,7 @@ class ActionButtons extends StatelessWidget {
                   child: Container(
                     child: Row(
                       children: [
-                      Icon(Icons.delete_sweep,size: 30,color: Black242424),
+                      Icon(Icons.delete_sweep,size: 30),
                       SizedBox(width: 10),
                       Text('Delete',style: TextStyle(fontSize: 18))
                     ]),

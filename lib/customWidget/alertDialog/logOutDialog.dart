@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'alertDialogComponents.dart';
@@ -32,11 +33,11 @@ Future<bool?> showLogOutDialog({required BuildContext context}) async {
               text: TextSpan(
                 children: [
                   TextSpan(text: 'If your data is not',
-                    style: dosis.copyWith(fontSize: 22, color: Colors.black)),
+                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(text: ' Backed up,',
-                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black)),
+                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(text: ' it will be lost after you sign out!.',
-                    style: dosis.copyWith(fontSize: 22, color: Colors.black))
+                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
                 ]
               )),
           ),
@@ -46,8 +47,8 @@ Future<bool?> showLogOutDialog({required BuildContext context}) async {
             primaryActionText: "Log out", 
             secondaryActionText: "Backup", 
             primaryActionButtonColor: LightPink, 
-            secondaryButtonOutlineColor: Black242424, 
-            secondaryActionTextColor: Black242424,
+            secondaryButtonOutlineColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424, 
+            secondaryActionTextColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424,
             actionButtonsHeight: 40, 
             actionButtonsWidth: 110)
       ]),

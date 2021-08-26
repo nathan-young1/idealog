@@ -4,7 +4,6 @@ final InputDecoration formTextField = InputDecoration(
   filled: true,
   fillColor: Colors.white,
   hintStyle: TextStyle(fontSize: 15),
-  labelStyle: TextStyle(fontSize: 15),
   errorStyle: TextStyle(fontSize: 15),
   border: UnderlineInputBorder(
     borderSide: BorderSide.none,

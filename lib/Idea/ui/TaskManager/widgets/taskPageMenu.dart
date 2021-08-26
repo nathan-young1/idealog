@@ -4,9 +4,11 @@ import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/reorderListController.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/popupMenu.dart';
 import 'package:idealog/Idea/ui/TaskManager/widgets/taskSearcher.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/customWidget/alertDialog/multiTaskDeleteDialog.dart';
+import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
@@ -118,8 +120,8 @@ class SearchBar_MultiSelectPopup extends StatelessWidget {
                     else multiSelectController.stopMultiSelect();
                     
                   },
-                  icon: Icon(Icons.delete, size: 30),
-                  label: Text('Delete', style: dosis.copyWith(fontSize: 22))),
+                  icon: Icon(Icons.delete, size: 30, color: DarkRed),
+                  label: Text('Delete', style: dosis.copyWith(fontSize: 22, color: DarkRed))),
               ),
             ),
           )

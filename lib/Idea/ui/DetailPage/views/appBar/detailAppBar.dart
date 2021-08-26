@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
@@ -16,7 +17,7 @@ class DetailAppBar extends StatelessWidget {
 
     return Container(
       height: 250,
-      color: LightGray,
+      color: (Prefrences.instance.isDarkMode) ?LightDark :LightGray,
       padding: EdgeInsets.only(top: 15,left: 20,right: 10),
       child: Column(
         children: [

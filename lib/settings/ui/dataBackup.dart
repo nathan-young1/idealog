@@ -49,7 +49,7 @@ class DataBackup extends StatelessWidget {
                         child: Row(
                           children: [
                             SizedBox(width: 15),
-                            IconButton(icon: Icon(Icons.arrow_back,color: Colors.black87),
+                            IconButton(icon: Icon(Icons.arrow_back),
                               iconSize: 35,
                               onPressed: ()=>Navigator.pop(context)),
                             SizedBox(width: 12),

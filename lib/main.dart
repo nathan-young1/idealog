@@ -19,6 +19,7 @@ import 'SearchBar/SearchNotifier.dart';
 import 'application-menu/controllers/bottomNavController.dart';
 import 'config.dart';
 import 'core-models/ideaModel.dart';
+import 'design/colors.dart';
 import 'global/paths.dart';
 import 'settings/ui/dataBackup.dart';
 
@@ -49,8 +50,7 @@ class Idealog extends StatelessWidget {
                             ChangeNotifierProvider<BottomNavController>.value(value: BottomNavController.instance),
                             ChangeNotifierProvider<SearchController>.value(value: SearchController.instance),
                             ChangeNotifierProvider<Premium>.value(value: Premium.instance),
-                            ChangeNotifierProvider<Paths>.value(value: Paths.instance),
-                            ChangeNotifierProvider<AppTheme>.value(value: AppTheme.instance)
+                            ChangeNotifierProvider<Paths>.value(value: Paths.instance)
                           ],
                           child: Builder(
                             builder: (BuildContext context) => MaterialApp(

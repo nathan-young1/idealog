@@ -74,7 +74,7 @@ class _NewIdeaState extends State<NewIdea> {
                             
                           },
                           style: TextStyle(fontSize: 18),
-                          decoration: formTextField.copyWith(labelText: 'Idea title', prefixIcon: Icon(Icons.text_fields))
+                          decoration: formTextField.copyWith(labelText: 'Idea title', prefixIcon: Icon(Icons.text_fields), fillColor: Theme.of(context).cardTheme.color)
                         ),
                       ),
     
@@ -90,7 +90,7 @@ class _NewIdeaState extends State<NewIdea> {
                           minLines: 5,
                           style: TextStyle(fontSize: 18),
                           keyboardType: TextInputType.multiline,
-                          decoration: formTextField.copyWith(labelText: 'Idea Description...'),
+                          decoration: formTextField.copyWith(labelText: 'Idea Description...', fillColor: Theme.of(context).cardTheme.color),
                         ),
                       ),
     
@@ -123,9 +123,9 @@ class _NewIdeaState extends State<NewIdea> {
               },
             child: Container(
               height: 65,
-              color: DarkBlue,
+              color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
               child: Center(
-                child: Text('Save',style: dosis.copyWith(fontSize: 32,color: Colors.white)),
+                child: Text('Save',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.large,color: Colors.white)),
               )),
           ),
         ),

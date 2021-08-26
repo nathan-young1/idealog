@@ -31,7 +31,7 @@ Widget AnimatedListTile({
             scale: 1.3,
             child: Checkbox(
               checkColor: Colors.white,
-              fillColor: MaterialStateProperty.resolveWith((states) => (pageCalledFrom == TaskPage.COMPLETED) ?completedTasksColor :DarkBlue),
+              fillColor: MaterialStateProperty.resolveWith((states) => (pageCalledFrom == TaskPage.COMPLETED) ?completedTasksColor :Theme.of(context).bottomNavigationBarTheme.backgroundColor),
               value: checkboxValue,
              onChanged: (bool? value) async {
                  setState(()=> checkboxValue = value!);

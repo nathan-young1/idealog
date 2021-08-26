@@ -87,7 +87,7 @@ class AddTaskBottomSheet extends StatelessWidget {
                     Text('New Task',style: dosis.copyWith(fontSize: 25)),
                       
                     ElevatedButton.icon(onPressed: ()=> _addTaskToList(),
-                     icon: Icon(Icons.add), label: Text('Add',style: TextStyle(fontSize: 20)),
+                     icon: Icon(Icons.add, color: Colors.white), label: Text('Add',style: TextStyle(fontSize: 20, color: Colors.white)),
                      style: ButtonStyle(
                        backgroundColor: MaterialStateProperty.resolveWith((states) => DarkBlue)
                      ),
@@ -102,7 +102,7 @@ class AddTaskBottomSheet extends StatelessWidget {
                     
                     return Container(
                       padding: EdgeInsets.symmetric(horizontal: 15),
-                      decoration: elevatedBoxDecoration.copyWith(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                      decoration: elevatedBoxDecoration.copyWith(color: Theme.of(context).cardTheme.color, borderRadius: BorderRadius.circular(5)),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<int>(
                           value: dropDownPriority,
@@ -144,7 +144,7 @@ class AddTaskBottomSheet extends StatelessWidget {
                       minLines: 3,
                       maxLines: null,
                       style: TextStyle(fontSize: 18),
-                      decoration: formTextField.copyWith(hintText: 'Task')
+                      decoration: formTextField.copyWith(hintText: 'Task', fillColor: Theme.of(context).cardTheme.color)
                     ),
                   ),
                 ),

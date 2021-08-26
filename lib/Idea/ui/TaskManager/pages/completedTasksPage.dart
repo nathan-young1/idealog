@@ -36,7 +36,7 @@ class CompletedTasksPage extends StatelessWidget {
             child: Container(
               constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(40))
               ),
               child: Padding(

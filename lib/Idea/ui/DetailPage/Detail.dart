@@ -86,7 +86,7 @@ class IdeaDetail extends StatelessWidget {
                                     child: Flexible(
                                       flex: 1,
                                       child: IconButton(
-                                        icon: Icon(Icons.edit_outlined,color: Black242424),
+                                        icon: Icon(Icons.edit_outlined),
                                         onPressed: ()=> descriptionEnabled.value = true
                                         )
                                     ),

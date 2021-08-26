@@ -12,7 +12,7 @@ void tasksDoesNotExistForThisPageFlushBar({required BuildContext context,require
       (pageCalledFrom == TaskPage.HIGH_PRIORITY)
         ?"No high priority task exists."
         :"No task has been completed yet."
-        , style: TextStyle(fontSize: 16, color: Colors.white)),
+        , style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_16, color: Colors.white)),
     animationDuration: Duration(seconds: 1),
     duration: Duration(seconds: 2),
     isDismissible: true,
@@ -26,7 +26,7 @@ void notifyUserOfChangeInTaskList({required bool taskWasCompleted,required Build
             (taskWasCompleted)
               ? (pageCalledFrom == TaskPage.COMPLETED) ?"1 task was unchecked" :"1 task was completed"
               : "1 task was removed",
-            style: dosis.copyWith(fontSize: 22, color: Colors.white)),
+            style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20, color: Colors.white)),
             icon: Icon(Icons.info, color: Colors.white),
             duration: Duration(seconds: 2),
             forwardAnimationCurve: Curves.linearToEaseOut,
@@ -37,7 +37,7 @@ void notifyUserOfChangeInTaskList({required bool taskWasCompleted,required Build
 void anErrorOccuredFlushBar({required BuildContext context})=> Flushbar(
             messageText: Text(
             "An error occured, perhaps your internet connection is weak.",
-            style: dosis.copyWith(fontSize: 22, color: Colors.white)),
+            style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20, color: Colors.white)),
             icon: Icon(Icons.wifi_off, color: Colors.white),
             duration: Duration(seconds: 2),
             forwardAnimationCurve: Curves.linearToEaseOut,
@@ -48,7 +48,7 @@ void anErrorOccuredFlushBar({required BuildContext context})=> Flushbar(
 void phoneCannotCheckBiometricFlushBar({required BuildContext context})=> Flushbar(
             messageText: Text(
             "This phone does not have a biometric authenticator.",
-            style: dosis.copyWith(fontSize: 22, color: Colors.white)),
+            style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20, color: Colors.white)),
             icon: Icon(Icons.error, color: Colors.white),
             duration: Duration(seconds: 3),
             forwardAnimationCurve: Curves.linearToEaseOut,

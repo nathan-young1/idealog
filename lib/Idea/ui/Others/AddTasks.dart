@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
@@ -59,7 +60,7 @@ class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
                 Container(
                  height: 250,
                  padding: EdgeInsets.only(top: 15,left: 20,right: 10),
-                 color: LightGray,
+                 color: (Prefrences.instance.isDarkMode) ?LightDark :LightGray,
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
@@ -111,7 +112,7 @@ class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
                   },
                 child: Container(
                   height: 65,
-                  color: DarkBlue,
+                  color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
                   child: Center(
                     child: Text('Save',style: dosis.copyWith(fontSize: 32,color: Colors.white))
                     ),

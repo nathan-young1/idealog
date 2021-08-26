@@ -44,7 +44,7 @@ class OpenBottomSheet extends StatelessWidget {
               child: Container(  
                 padding: EdgeInsets.only(left: 20),
                 height: 50,
-                color: Colors.white,
+                color: Theme.of(context).cardTheme.color,
                 child: Align(
                   alignment: Alignment(-1, 0),
                   child: Text('New Task', style: dosis.copyWith(fontSize: 20)))

@@ -21,7 +21,7 @@ class DetailAppBarButtons extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-       IconButton(icon: Icon(FeatherIcons.arrowLeft,color: Black242424),
+       IconButton(icon: Icon(FeatherIcons.arrowLeft),
        iconSize: 35,
        onPressed: () async => await Navigator.pushReplacementNamed(context, menuPageView)
        ),

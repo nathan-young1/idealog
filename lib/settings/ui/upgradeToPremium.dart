@@ -27,7 +27,7 @@ class _UpgradeToPremiumState extends State<UpgradeToPremium> {
               Row(
                 children: [
                   SizedBox(width: 12),
-                  IconButton(icon: Icon(Icons.arrow_back,color: Colors.black87),
+                  IconButton(icon: Icon(Icons.arrow_back),
                   iconSize: 35,
                   onPressed: ()=>Navigator.pop(context)),
                   SizedBox(width: 10),
@@ -98,7 +98,7 @@ class PremiumFeatureTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-      Icon(Icons.circle,size: 17, color: DarkBlue),
+      Icon(Icons.circle,size: 17, color: Theme.of(context).bottomNavigationBarTheme.backgroundColor!),
       SizedBox(width: 10),
       Text(_feature,style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20))
     ]
@@ -125,7 +125,7 @@ class _PurchaseButton extends StatelessWidget {
               },
             style: ButtonStyle(
               elevation: MaterialStateProperty.resolveWith((states) => Provider.of<Premium>(context).isPremiumUser ?0 :null),
-              backgroundColor: MaterialStateColor.resolveWith((states) => Provider.of<Premium>(context).isPremiumUser?LightGray:DarkBlue),
+              backgroundColor: MaterialStateColor.resolveWith((states) => Provider.of<Premium>(context).isPremiumUser ?LightGray :Theme.of(context).bottomNavigationBarTheme.backgroundColor!),
               shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))
             ),
              icon: Icon(FontAwesomeIcons.solidCreditCard,size: 30,color: Provider.of<Premium>(context).isPremiumUser?DarkBlue:Colors.white),

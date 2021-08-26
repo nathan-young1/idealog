@@ -10,7 +10,7 @@ class CustomAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(top: 15,bottom: 15),
           child: Row(
             children: [
-            IconButton(icon: Icon(Icons.arrow_back,color: Colors.black87),
+            IconButton(icon: Icon(Icons.arrow_back),
             iconSize: 32,
             onPressed: ()=>Navigator.pop(context)),
             SizedBox(width: 8),

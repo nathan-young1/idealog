@@ -57,7 +57,7 @@ class TaskCompletionRate extends StatelessWidget {
                       CircularChartAnnotation(
                         horizontalAlignment: ChartAlignment.center,
                         verticalAlignment: ChartAlignment.center,
-                         widget: Container( child: Text('$percentageCompletion%',style: TextStyle(fontSize: 20),),))
+                         widget: Container( child: Text('$percentageCompletion%',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20))))
                     ],
                     series: <CircularSeries>[
                       DoughnutSeries<CompletionRateModel,String>(

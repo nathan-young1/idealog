@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/ui/TaskManager/code/MultiSelectController.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/core-models/ideaModel.dart';
+import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +20,7 @@ class MultiSelectionList extends StatelessWidget {
         bool tileIsSelected = multiSelectObj.containsTask(completedTask);
 
         return Container(
-          color: tileIsSelected?Colors.blueGrey:null,
+          color: tileIsSelected?(Prefrences.instance.isDarkMode) ?LightDark :DarkGray :null,
           child: CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
           value: tileIsSelected,

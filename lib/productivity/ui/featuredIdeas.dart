@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/controllers/bottomNavController.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
@@ -21,7 +22,7 @@ class FeaturedIdeas extends StatelessWidget {
     var favorites = Provider.of<ProductivityManager>(context).getFavoriteTasks();
     return Container(
         decoration: BoxDecoration(
-          color: ProductivityPink,
+          color: (Prefrences.instance.isDarkMode) ?ProductivityDarkPink :ProductivityPink,
         ),
         padding: EdgeInsets.symmetric(vertical: 20,horizontal: 30),
       child: Column(

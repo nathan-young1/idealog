@@ -66,7 +66,7 @@ class MoreSettings extends StatelessWidget {
             ),
 
             SizedBox(height: 25),
-            DottedLine(),
+            DottedLine(dashColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Colors.black87),
             SizedBox(height: 10),
             Column(
               children: [

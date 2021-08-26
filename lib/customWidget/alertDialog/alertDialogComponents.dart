@@ -42,7 +42,7 @@ Widget AlertDialogHeader
                 Icon(headerIcon, size: 30, color: headerIconColor),
                 SizedBox(width: 25),
 
-                Text(headerText, style: dosis.copyWith(fontSize: 25, color: headerTextColor, fontWeight: FontWeight.w600)),
+                Text(headerText, style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20, color: headerTextColor, fontWeight: FontWeight.w600)),
                 
                 if(hasCloseButton) Expanded(child: Align(
                   alignment: Alignment.centerRight,

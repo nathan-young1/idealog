@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/customWidget/alertDialog/alertDialogComponents.dart';
@@ -57,7 +58,7 @@ class _AccountSettingsAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: LightGray,
+      color: (Prefrences.instance.isDarkMode) ?LightDark :LightGray,
       child: Column(
         children: [
           SizedBox(height: 20),
@@ -86,7 +87,7 @@ class _AccountSettingsAvatar extends StatelessWidget {
               SizedBox(height: 5),
               Text(GoogleUserData.instance.userEmail ?? 'Anonymous', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20)),
               SizedBox(height: 5),
-              Text(Premium.instance.isPremiumUser?"Premium Account":"Basic Account",style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20, color:Premium.instance.isPremiumUser?Colors.teal[500]:DarkRed))
+              Text(Premium.instance.isPremiumUser?"Premium Account":"Basic Account",style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20, color:Premium.instance.isPremiumUser ?Colors.teal[500] :LightPink))
             ],
           ),
           SizedBox(height: 20),
@@ -230,7 +231,7 @@ class _SignOutFromGoogleContainer extends StatelessWidget {
           ),
     
           SizedBox(height: 15),
-          DottedLine()
+          DottedLine(dashColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Colors.black87),
         ],
       ),
     );
@@ -270,7 +271,7 @@ class _GetPremiumAccessContainer extends StatelessWidget {
             ),
 
             SizedBox(height: 20),
-            DottedLine()
+            DottedLine(dashColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Colors.black87),
           ],
         ),
       );
@@ -307,13 +308,13 @@ class _SignInWithGoogleContainer extends StatelessWidget {
           padding: EdgeInsets.all(20),
           height: 80,
           decoration: elevatedBoxDecoration.copyWith(
-            color: Colors.white,
+            color: (Prefrences.instance.isDarkMode) ?LightDark: Colors.white,
             borderRadius: BorderRadius.circular(10)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Sign in with Google',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
-              Icon(FontAwesomeIcons.google,size: 40, color: Colors.teal[500])
+              Icon(FontAwesomeIcons.google,size: 40, color: (Prefrences.instance.isDarkMode) ?DarkRed :Colors.teal[500])
             ],
           ),
         ),

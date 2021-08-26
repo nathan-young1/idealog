@@ -54,8 +54,6 @@ class Prefrences with ChangeNotifier{
     notifyListeners();
     /// Notify the paths class of the change in theme.
     Paths.instance.notifyClassOnThemeChanged();
-    /// Notify the AppTheme of change in theme.
-    AppTheme.instance.notifyListeners();
   }
 
   Future<void> setAutoSync(bool onAutoSync, {BuildContext? context}) async {
