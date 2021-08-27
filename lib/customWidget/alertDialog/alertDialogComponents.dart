@@ -48,7 +48,7 @@ Widget AlertDialogHeader
                   alignment: Alignment.centerRight,
                   child: IconButton(
                     icon: Icon(Icons.close),
-                    onPressed: ()=> Navigator.pop(context, false),
+                    onPressed: ()=> Navigator.pop(context),
                     iconSize: 30, color: LightPink))),
               ],
             ),

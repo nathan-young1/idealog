@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
@@ -121,17 +122,17 @@ class _PurchaseButton extends StatelessWidget {
             child: ElevatedButton.icon(
             
             onPressed: () async { 
-              if(!await Premium.instance.buyProduct()) phoneCannotCheckBiometricFlushBar(context: context);
+              if(!await Premium.instance.buyProduct()) anErrorOccuredFlushBar(context: context);
               },
             style: ButtonStyle(
               elevation: MaterialStateProperty.resolveWith((states) => Provider.of<Premium>(context).isPremiumUser ?0 :null),
-              backgroundColor: MaterialStateColor.resolveWith((states) => Provider.of<Premium>(context).isPremiumUser ?LightGray :Theme.of(context).bottomNavigationBarTheme.backgroundColor!),
+              backgroundColor: MaterialStateColor.resolveWith((states) => Provider.of<Premium>(context).isPremiumUser ?(Prefrences.instance.isDarkMode) ?LightDark :LightGray :Theme.of(context).bottomNavigationBarTheme.backgroundColor!),
               shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))
             ),
-             icon: Icon(FontAwesomeIcons.solidCreditCard,size: 30,color: Provider.of<Premium>(context).isPremiumUser?DarkBlue:Colors.white),
+             icon: Icon(FontAwesomeIcons.solidCreditCard,size: 30,color: Provider.of<Premium>(context).isPremiumUser?Theme.of(context).bottomNavigationBarTheme.backgroundColor!:Colors.white),
              label: Padding(
                padding: EdgeInsets.only(left: 12),
-               child: Text(Provider.of<Premium>(context).isPremiumUser?'Purchased':'Get Access',style: dosis.copyWith(fontSize: 20,color: Provider.of<Premium>(context).isPremiumUser?Colors.black:Colors.white)),
+               child: Text(Provider.of<Premium>(context).isPremiumUser?'Purchased':'Get Access',style: dosis.copyWith(fontSize: 20,color: Provider.of<Premium>(context).isPremiumUser? (Prefrences.instance.isDarkMode) ?Colors.white :Colors.black:Colors.white)),
              )),
           ),
         ),

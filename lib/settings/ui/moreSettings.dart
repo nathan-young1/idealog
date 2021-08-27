@@ -45,7 +45,7 @@ class MoreSettings extends StatelessWidget {
               child: Column(
                 children: [
                   ListTile(
-                    leading: Icon(Icons.alarm_rounded,color: Colors.teal[800],size: 35),
+                    leading: Icon(Icons.person_outlined,color: Colors.teal[800],size: 35),
                     title: Text('Account settings',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
                     trailing: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -99,7 +99,7 @@ class MoreSettings extends StatelessWidget {
 
                 Padding(
                   padding: const EdgeInsets.only(left: 35, right: 35, top: 5),
-                  child: Text('Enable/Disable the biometric authentication (fingerprint, face ID e.t.c) before accessing this application.', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_15)),
+                  child: Text('Secure your ideas by enabling biometric lock (fingerprint, face ID e.t.c) to access this application.', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_15)),
                 )
               ],
             )

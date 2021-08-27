@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
+import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/customWidget/alertDialog/alertDialogComponents.dart';
@@ -9,6 +11,7 @@ import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/internetConnectionChecker.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IntroPages extends StatelessWidget {
   IntroPages({ Key? key }) : super(key: key);
@@ -56,10 +59,10 @@ class Intro1 extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Image.asset(Paths.Welcome_Intro_Pic, width: 300, fit: BoxFit.contain),
-                  SizedBox(height: 20),
+                  Image.asset(Paths.Welcome_Intro_Pic, width: 300.w, fit: BoxFit.contain),
+                  SizedBox(height: 20.h),
                   Text("Welcome to idealog", style: AppFontWeight.semibold.copyWith(fontSize: AppFontSize.fontSize_26)),
-                  SizedBox(height: 10),
+                  SizedBox(height: 10.h),
           
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30),
@@ -106,7 +109,7 @@ class Intro2 extends StatelessWidget {
           
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30),
-                    child: Text("Increase productivity by breaking down your idea’s into chunk of tasks for higher effiency.", style: AppFontWeight.light.copyWith(fontSize: AppFontSize.fontSize_23), textAlign: TextAlign.center),
+                    child: Text("Increase productivity by breaking down your idea’s into chunk of tasks for higher efficiency.", style: AppFontWeight.light.copyWith(fontSize: AppFontSize.fontSize_23), textAlign: TextAlign.center),
                   ),
                 ],
               ),
@@ -131,7 +134,10 @@ class Intro3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Future<dynamic> changeRoute() => Navigator.pushReplacement(context, PageTransition(child: MenuPageView(), type: PageTransitionType.rightToLeftWithFade));
+    Future<void> changeRoute() async { 
+      await Prefrences.instance.setThatUserIsNoLongerAFirstTimer();
+      Navigator.pushReplacement(context, PageTransition(child: MenuPageView(), type: PageTransitionType.rightToLeftWithFade));
+      }
     
     return Scaffold(
       body: Column(

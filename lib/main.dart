@@ -43,6 +43,7 @@ class Idealog extends StatelessWidget {
                     builder: (_, constraints) {
                       ScreenUtil.init(constraints);
                       return ScreenUtilInit(
+                        designSize: constraints.biggest,
                         builder: () => MultiProvider(
                           providers: [
                             StreamProvider<List<Idea>>.value(value: IdealogDb.instance.readFromDb,initialData: [],catchError: (_,__)=>[]),

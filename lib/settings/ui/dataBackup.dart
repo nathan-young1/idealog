@@ -71,22 +71,27 @@ class DataBackup extends StatelessWidget {
                               topLeft: Radius.circular(20),
                               bottomRight: Radius.circular(20)),
                           ),
-                          child: Center(child: Text((nativeCodeCaller.lastBackupTime == "0") ?'No backup yet' :'Last backup at: ${nativeCodeCaller.lastBackupTime ?? ""}',
-                          style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20, color: Colors.white))),
+                          child: Center(child: Text((nativeCodeCaller.lastBackupTime == "0") ?'No backed up data yet.' :'Last backup at: ${nativeCodeCaller.lastBackupTime ?? ""}',
+                          style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_18, color: Colors.white))),
                         ),
                       )
                     ],),
                   ),
             
                   SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.info_outline,color: Colors.teal.withOpacity(0.5),size: 30),
-                      SizedBox(width: 10),
-                      Text('Your data will be backed up every 24 hours.',
-                      style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.small))
-                    ],
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.info_outline,color: Colors.teal.withOpacity(0.5),size: 30),
+                        SizedBox(width: 10),
+                        Flexible(
+                          child: Text('Your data will be backed up every 24 hours, if you enable auto start.',
+                          style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.small)),
+                        )
+                      ],
+                    ),
                   ),
                   SizedBox(height: 40),
                   Padding(

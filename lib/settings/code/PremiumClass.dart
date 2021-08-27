@@ -147,7 +147,11 @@ class Premium with ChangeNotifier{
     
     // when the user has internet connection.
     if (_hasPurchased() != null) return true;
-    else return false;
+    else {
+      // when _hasPurchased() is null first cross check with userIsPremiumWhenOffline
+      if(userIsPremiumWhenOffline == false) return false;
+      else return true;
+      }
     }
   
   /// Completed all the purchases in user purchase list and then add it to the _purchases list.

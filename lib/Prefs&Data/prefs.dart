@@ -39,11 +39,18 @@ class Prefrences with ChangeNotifier{
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     // check if sharedPrefrences contains the key , if it does not contain the key it means it is the first time the user is opening the app.
     bool isUserFirstTime = sharedPref.containsKey(key) ?sharedPref.getBool(key)! :true;
-    // then set preference to it's not the user first time.
-    sharedPref.setBool(key, false);
-
+    
     return isUserFirstTime;
   } 
+
+  /// set shared preference to it's no longer the user first time opening the app.
+  Future<void> setThatUserIsNoLongerAFirstTimer() async {
+    String key = "isUserFirstTimeOpeningTheApp";
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+
+    // then set preference to it's not the user first time.
+    sharedPref.setBool(key, false);
+  }
 
   Future<void> setFingerPrintAuth(bool allowFingerAuth) async {
       // Is the user authenticated to either ON or OFF biometric authentication
@@ -75,9 +82,12 @@ class Prefrences with ChangeNotifier{
         /// if the phone needs auto start permission then show the user the alertDialog. if the user
         /// dismisses the dialog then the guard statement (return;)will end this method.
         if (phoneNeedsAutoStartPermission) {
-          bool userClickedEnableAutoStartNow = (await showAutoStartDialog(context: context!))!;
+          bool? userClickedEnableAutoStartNow = (await showAutoStartDialog(context: context!));
+          // when the user press the close button or back button on the phone.
+          if(userClickedEnableAutoStartNow == null) return;
+
+          // only go to settings when the user clicked on enable now.
           if(userClickedEnableAutoStartNow) await autoStart.getAutoStartPermission();
-          else return;
         }
 
       // if auto sync is set to true and the user is not signed in , then sign the user in before it start auto sync

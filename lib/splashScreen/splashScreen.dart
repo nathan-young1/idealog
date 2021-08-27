@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:idealog/Prefs&Data/applicationInfo.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/design/textStyles.dart';
@@ -28,10 +29,12 @@ class _SplashScreenState extends State<SplashScreen> {
     void initState() {
       super.initState(); 
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+        /// initialize the phone size.
+        PhoneSizeInfo.instance.initialize(context);
         
         timer = Timer(Duration(milliseconds: 800),() async {
 
-          if(await Prefrences.instance.isUserFirstTimeOpeningTheApp){
+          if(/*true*/await Prefrences.instance.isUserFirstTimeOpeningTheApp){
             // navigate to the introPages on user first time opening the app.
             Navigator.pushReplacement(context, PageTransition(child: IntroPages(), type: PageTransitionType.fade));
             return;

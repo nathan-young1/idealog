@@ -3,8 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/controllers/bottomNavController.dart';
 import 'package:idealog/design/colors.dart';
-import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/design/theme.dart';
 import 'package:provider/provider.dart';
 
 class MenuBottomNav extends StatelessWidget {

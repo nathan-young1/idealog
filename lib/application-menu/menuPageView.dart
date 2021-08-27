@@ -33,7 +33,7 @@ class MenuPageView extends StatelessWidget {
                       children: [
                         IdeaListPage(searchFieldController: searchFieldController),
                         Productivity(),
-                        Settings()
+                        Settings(searchFieldController: searchFieldController) 
                       ],
                     ),
                     floatingActionButton: MenuFloatingActionButton(searchFieldController: searchFieldController),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 final InputDecoration formTextField = InputDecoration(
   filled: true,
-  fillColor: Colors.white,
   hintStyle: TextStyle(fontSize: 15),
   errorStyle: TextStyle(fontSize: 15),
   border: UnderlineInputBorder(

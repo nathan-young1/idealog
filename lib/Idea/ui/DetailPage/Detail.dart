@@ -76,6 +76,7 @@ class IdeaDetail extends StatelessWidget {
 
                                         decoration: formTextField.copyWith(
                                           filled: (isEnabled),
+                                          fillColor: Theme.of(context).cardTheme.color,
                                           labelText: 'Description',
                                         ),
                                       ),
