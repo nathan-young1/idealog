@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/menuPageView.dart';
 import 'package:idealog/core-models/ideaModel.dart';
@@ -58,7 +59,7 @@ class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
               child: Column(
                 children: [
                 Container(
-                 height: 250,
+                 height: percentHeight(32),
                  padding: EdgeInsets.only(top: 15,left: 20,right: 10),
                  color: (Prefrences.instance.isDarkMode) ?LightDark :LightGray,
                  child: Column(
@@ -96,7 +97,8 @@ class _AddTasksToExistingIdeaState extends State<AddTasksToExistingIdea> {
                           ListOfTasksToAdd(tasks: allNewTasks),
                           SizedBox(height: 20),
         
-                          OpenBottomSheet(addBottomSheetTaskToList, idea: widget.idea)
+                          OpenBottomSheet(addBottomSheetTaskToList, idea: widget.idea),
+                          SizedBox(height: 40),
                         ],
                       ),
                     ),

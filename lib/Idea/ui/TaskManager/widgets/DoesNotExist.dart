@@ -1,7 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SearchNotFoundIllustration extends StatelessWidget {
 
@@ -11,15 +14,16 @@ class SearchNotFoundIllustration extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: 230,
-            width: 250,
+            width: percentWidth(70),
+            constraints: BoxConstraints(maxWidth: 250.w),
+            
             child: Image.asset(Paths.Search_Pic, fit: BoxFit.contain)),
           Text("Search not found", style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23))
       ]);
   }
 }
 
-class IdeaDoesNotExistIllustration extends StatelessWidget {
+class NoIdeaYetIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +35,15 @@ class IdeaDoesNotExistIllustration extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                height: 300,
-                width: 300,
+                width: percentWidth(77),
+                constraints: BoxConstraints(maxWidth: 300.w),
+
                 child: Image.asset(Provider.of<Paths>(context).pathToNoIdeaPic, fit: BoxFit.contain)),
-              Text("Press + to add idea", style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23))
+                AutoSizeText("Press + to add idea",
+                     style: AppFontWeight.medium,
+                    textAlign: TextAlign.center,
+                    maxFontSize: AppFontSize.medium,
+                    minFontSize: AppFontSize.fontSize_23)
           ]),
       ),
     );

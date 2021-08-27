@@ -1,9 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show LengthLimitingTextInputFormatter;
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/SearchBar/SearchNotifier.dart';
 import 'package:idealog/core-models/ideaModel.dart';
-import 'package:idealog/customAppBar/appBar.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
@@ -56,7 +56,21 @@ class _NewIdeaState extends State<NewIdea> {
                   padding: const EdgeInsets.only(left: 20,right: 15),
                   child: Column(
                     children: [
-                      CustomAppBar(title: 'ADD IDEA'),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15,bottom: 15),
+                        child: Row(
+                          children: [
+                          IconButton(icon: Icon(Icons.arrow_back),
+                          iconSize: 32,
+                          onPressed: ()=>Navigator.pop(context)),
+                          SizedBox(width: 8),
+                          AutoSizeText("ADD IDEA", 
+                          style: AppFontWeight.medium,
+                          maxFontSize: AppFontSize.fontSize_28,
+                          minFontSize: AppFontSize.medium,
+                          ),
+                        ],),
+                      ),
                       SizedBox(height: 10),
                       Container(
                         decoration: elevatedBoxDecoration,

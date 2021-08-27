@@ -24,7 +24,7 @@ Future<bool?> showPremiumDialog({required BuildContext context}) async {
             headerTextColor: (Prefrences.instance.isDarkMode) ?DarkRed :DarkBlue,
             context: context,
             headerIcon: FeatherIcons.creditCard,
-            hasCloseButton: true,
+            hasCloseButton: false,
             headerText: "Premium Access"),
 
           DottedLine(lineThickness: 3, dashColor: (Prefrences.instance.isDarkMode) ?DarkRed :DarkBlue),
@@ -34,11 +34,11 @@ Future<bool?> showPremiumDialog({required BuildContext context}) async {
               text: TextSpan(
                 children: [
                   TextSpan(text: 'You require',
-                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(text: ' Premium access',
-                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(text: ' to use this feature.',
-                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
                 ]
               )),
           ),
@@ -50,8 +50,7 @@ Future<bool?> showPremiumDialog({required BuildContext context}) async {
             primaryActionButtonColor: (Prefrences.instance.isDarkMode) ?DarkRed :DarkBlue, 
             secondaryButtonOutlineColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :DarkBlue, 
             secondaryActionTextColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :DarkBlue,
-            actionButtonsHeight: 40, 
-            actionButtonsWidth: 110)
+            actionButtonsHeight: 40)
       ]),
     ),
   ), barrierDismissible: true);

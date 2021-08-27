@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
@@ -7,6 +8,7 @@ import 'package:idealog/Prefs&Data/GoogleUserData.dart';
 import 'package:idealog/Prefs&Data/backupJson.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:http/http.dart' as http;
+import 'package:idealog/customWidget/alertDialog/alertDialogComponents.dart';
 
 GoogleSignIn googleSignIn = GoogleSignIn(scopes: [DriveApi.driveAppdataScope]);
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -57,10 +59,17 @@ Future<bool> signInWithGoogle() async {
   }
 }
 
-Future<void> downloadBackupFileIfAnyExistsThenWriteToDb() async {
+Future<void> downloadBackupFileIfAnyExistsThenWriteToDb(BuildContext context) async {
   await BackupJson.instance.initialize();
   // if the user has a file backed up then download it and write to db.
-  if(BackupJson.instance.lastBackupFileIfExists != null) await BackupJson.instance.downloadFromDrive();
+  if(BackupJson.instance.lastBackupFileIfExists != null) {
+    showDownloadingDataAlertDialog(context: context);
+    await BackupJson.instance.downloadFromDrive();
+    
+    await Future.delayed(Duration(seconds: 2));
+    // remove downloading from drive dialog.
+    Navigator.of(context).pop();
+    }
 }
 
 

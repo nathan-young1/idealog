@@ -27,6 +27,7 @@ class MenuPageView extends StatelessWidget {
           builder: (context) {
             return SafeArea(
                 child: Scaffold(
+                  resizeToAvoidBottomInset: false,
                     body: PageView(
                       physics: NeverScrollableScrollPhysics(),
                       controller: Provider.of<BottomNavController>(context,listen: false).controller,

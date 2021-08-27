@@ -1,6 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 enum DeleteDialog{Idea,Task,Multi_Select_Task}
 
@@ -15,11 +18,46 @@ AlertDialog progressAlertDialog = AlertDialog(
 showSigningInAlertDialog({required BuildContext context}){
   return showDialog(context: context, 
   builder: (context)=> AlertDialog(
-  title: Row(children: [
-    CircularProgressIndicator(),
-    SizedBox(width: 25),
-    Text('Authenticating with google', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.small))
-  ],),
+  contentPadding: EdgeInsets.zero,
+  content: Container(
+    padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 5.w),
+    constraints: BoxConstraints(maxWidth: 380.w, minWidth: 375.w),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+      Container(
+        constraints: BoxConstraints(maxHeight: 27.h, maxWidth: 27.w),
+        child: CircularProgressIndicator()),
+
+      AutoSizeText('Authenticating with google', 
+      style: AppFontWeight.medium,
+      maxFontSize: AppFontSize.small,
+      minFontSize: AppFontSize.fontSize_15)
+    ],),
+  ),
+), barrierDismissible: false);
+}
+
+showDownloadingDataAlertDialog({required BuildContext context}){
+  return showDialog(context: context, 
+  builder: (context)=> AlertDialog(
+  contentPadding: EdgeInsets.zero,
+  content: Container(
+    padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 5.w),
+    constraints: BoxConstraints(maxWidth: 380.w, minWidth: 375.w),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+      Container(
+        constraints: BoxConstraints(maxHeight: 27.h, maxWidth: 27.w),
+        child: CircularProgressIndicator()),
+
+      AutoSizeText('Downloading your ideas', 
+      style: AppFontWeight.medium,
+      maxFontSize: AppFontSize.small,
+      minFontSize: AppFontSize.fontSize_15)
+    ],),
+  ),
 ), barrierDismissible: false);
 }
 
@@ -66,34 +104,36 @@ Widget AlertDialogActionButtons
   Color? primaryActionTextColor,
   Color? secondaryActionTextColor,
   required double actionButtonsHeight,
-  required double actionButtonsWidth
+  bool? isAutoStartDialog
 }){
   return Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton(onPressed: ()=> Navigator.pop(context, false),
                  child: Container(
                    height: actionButtonsHeight,
-                   width: actionButtonsWidth,
+                   constraints: BoxConstraints(maxWidth: PhoneSizeInfo.width * 0.32, minWidth:  PhoneSizeInfo.width * 0.25),
+                   width: (isAutoStartDialog == null) ?PhoneSizeInfo.width * 0.25 :null,
                    decoration: BoxDecoration(
                      border: Border.all(width: 2, color: secondaryButtonOutlineColor),
                      borderRadius: BorderRadius.circular(10)
                    ),
-                   child: Center(child: Text(secondaryActionText, 
-                    style: dosis.copyWith(fontSize: 17, color: secondaryActionTextColor ?? DarkBlue, fontWeight: FontWeight.w600))))),
-                SizedBox(width: 10),
+                   child: Center(child: AutoSizeText(secondaryActionText, 
+                    style: dosis.copyWith(color: secondaryActionTextColor ?? DarkBlue, fontWeight: FontWeight.w600))))),
+
+
                 TextButton(onPressed: ()=> Navigator.pop(context, true),
                  child: Container(
                    height: actionButtonsHeight,
-                   width: actionButtonsWidth,
+                   width: PhoneSizeInfo.width * 0.25,
                    decoration: BoxDecoration(
                      borderRadius: BorderRadius.circular(10),
                      color: primaryActionButtonColor
                    ),
-                  child: Center(child: Text(primaryActionText,
-                   style: dosis.copyWith(color: primaryActionTextColor ?? Colors.white, fontSize: 17, fontWeight: FontWeight.w600))))),
+                  child: Center(child: AutoSizeText(primaryActionText,
+                   style: dosis.copyWith(color: primaryActionTextColor ?? Colors.white, fontWeight: FontWeight.w600))))),
               ]),
           );
 }

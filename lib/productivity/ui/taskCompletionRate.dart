@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -37,27 +39,34 @@ class TaskCompletionRate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: EdgeInsets.symmetric(horizontal: percentWidth(7)),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Tasks Completion Rate',
-            style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.medium)),
+            AutoSizeText('Tasks Completion Rate',
+            style: AppFontWeight.medium,
+            maxFontSize: AppFontSize.medium,
+            minFontSize: AppFontSize.fontSize_23),
+
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 100,
-                  width: 100,
+                  constraints: BoxConstraints(maxHeight: 100, maxWidth: 100),
+                  height: percentHeight(15),
+                  width: percentWidth(30),
                   child: SfCircularChart(
                     annotations: [
                       CircularChartAnnotation(
                         horizontalAlignment: ChartAlignment.center,
                         verticalAlignment: ChartAlignment.center,
-                         widget: Container( child: Text('$percentageCompletion%',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20))))
+                         widget: Container( child: AutoSizeText('$percentageCompletion%',
+                         style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_20),
+                         maxFontSize: AppFontSize.fontSize_20,
+                         minFontSize: AppFontSize.fontSize_18)))
                     ],
                     series: <CircularSeries>[
                       DoughnutSeries<CompletionRateModel,String>(
@@ -91,10 +100,16 @@ class TaskCompletionRate extends StatelessWidget {
                   child: Center(
                     child: Row(
                     children: [
-                      Container(height: 25, width: 25, decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: PieChartCompletedColor)),
+                      Container(
+                        constraints: BoxConstraints(maxHeight: 25, maxWidth: 25),
+                        height: percentHeight(3.2), width: percentWidth(6.4),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: PieChartCompletedColor)),
+                      
                       SizedBox(width: 6),
-                      Text('Completed Tasks',
-                      style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20)),
+                      AutoSizeText('Completed Tasks',
+                      style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20),
+                      maxFontSize: AppFontSize.fontSize_20,
+                      minFontSize: AppFontSize.fontSize_19),
                     ],)
                   ),
                 ),
@@ -103,10 +118,16 @@ class TaskCompletionRate extends StatelessWidget {
                   child: Center(
                     child: Row(
                     children: [
-                      Container(height: 25, width: 25, decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: PieChartUncompletedColor)),
+                      Container(
+                        constraints: BoxConstraints(maxHeight: 25, maxWidth: 25),
+                        height: percentHeight(3.2), width: percentWidth(6.4),
+                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: PieChartUncompletedColor)),
+                      
                       SizedBox(width: 6),
-                      Text('Uncompleted Tasks',
-                      style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20)),
+                      AutoSizeText('Uncompleted Tasks',
+                      style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20),
+                      maxFontSize: AppFontSize.fontSize_20,
+                      minFontSize: AppFontSize.fontSize_19),
                     ],
                   ),),
                 ),

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:idealog/Idea/code/ideaManager.dart';
@@ -55,7 +56,11 @@ class DataBackup extends StatelessWidget {
                               iconSize: 35,
                               onPressed: ()=>Navigator.pop(context)),
                             SizedBox(width: 12),
-                            Text('Data Backup', style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28))
+                            AutoSizeText("Data Backup", 
+                            style: AppFontWeight.medium,
+                            maxFontSize: AppFontSize.fontSize_28,
+                            minFontSize: AppFontSize.medium,
+                            ),
                           ],
                         ),
                       ),

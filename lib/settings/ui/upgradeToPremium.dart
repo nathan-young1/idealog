@@ -1,5 +1,7 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/design/colors.dart';
@@ -7,6 +9,7 @@ import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:idealog/settings/code/PremiumClass.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class UpgradeToPremium extends StatefulWidget {
@@ -21,70 +24,82 @@ class _UpgradeToPremiumState extends State<UpgradeToPremium> {
 
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20),
-              Row(
-                children: [
-                  SizedBox(width: 12),
-                  IconButton(icon: Icon(Icons.arrow_back),
-                  iconSize: 35,
-                  onPressed: ()=>Navigator.pop(context)),
-                  SizedBox(width: 10),
-                  Text('Premium Access',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28))
-                ],
-              ),
-
-              Center(
-                child: Container(
-                child: Image.asset(
-                Provider.of<Paths>(context).pathToPremiumAccessPic,
-                height: 250,
-                width: 250,
-                fit: BoxFit.contain)
-                ),
-              ),
-
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 25),
-                child: Text('Features',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28)),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 30,top: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: percentHeight(2.5)),
+                Row(
                   children: [
-                    PremiumFeatureTile('Backup Data'),
-                    SizedBox(height: 10),
-                    PremiumFeatureTile('Biometric Authentication')
+                    SizedBox(width: 12),
+                    IconButton(icon: Icon(Icons.arrow_back),
+                    iconSize: 35,
+                    onPressed: ()=>Navigator.pop(context)),
+                    SizedBox(width: 10),
+                    AutoSizeText("Premium Access", 
+                          style: AppFontWeight.medium,
+                          maxFontSize: AppFontSize.fontSize_28,
+                          minFontSize: AppFontSize.medium,
+                          ),
                   ],
                 ),
-              ),
-              SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.only(right: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    RichText(
-                      text: TextSpan(children: [
-                        TextSpan(
-                          text: 'Duration: ',
-                          style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28, color: Black242424)
-                        ),
-                        TextSpan(text: '1 year',
-                        style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.normal, color: Black242424)
+        
+                Center(
+                  child: Container(
+                    width: percentWidth(70),
+                    constraints: BoxConstraints(maxWidth: 250.w),
+
+                  child: Image.asset(
+                  Provider.of<Paths>(context).pathToPremiumAccessPic,
+                  fit: BoxFit.contain)
+                  ),
+                ),
+        
+                SizedBox(height: 10),
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: AutoSizeText("Features", 
+                          style: AppFontWeight.medium,
+                          maxFontSize: AppFontSize.fontSize_28,
+                          minFontSize: AppFontSize.medium,
+                          ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 30,top: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PremiumFeatureTile('Backup Data'),
+                      SizedBox(height: 10),
+                      PremiumFeatureTile('Biometric Authentication')
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      RichText(
+                        text: TextSpan(children: [
+                          TextSpan(
+                            text: 'Duration: ',
+                            style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.medium, color: Black242424)
+                          ),
+                          TextSpan(text: '1 year',
+                          style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.normal, color: Black242424)
+                          )
+                        ]
                         )
-                      ]
-                      )
-                      )
-                ]),
-              ),
-              SizedBox(height: 30),
-              _PurchaseButton()
-          ],
+                        )
+                  ]),
+                ),
+                SizedBox(height: 30),
+                _PurchaseButton(),
+                SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );

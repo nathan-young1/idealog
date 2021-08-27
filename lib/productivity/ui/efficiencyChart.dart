@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
 import 'package:idealog/design/colors.dart';
@@ -74,17 +75,22 @@ class EfficiencyChart extends StatelessWidget {
     :Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Container(
-          height: 180,
           color: LightBlue.withOpacity(0.2),
-          padding: EdgeInsets.only(top: 20),
+          padding: EdgeInsets.only(top: 20, bottom: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('Efficiency chart',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.medium)),
+              AutoSizeText('Efficiency chart',
+              style: AppFontWeight.medium,
+              maxFontSize: AppFontSize.medium,
+              minFontSize: AppFontSize.fontSize_23),
               SizedBox(height: 10),
               Icon(Icons.lock_clock,size: 60,color: Colors.black45),
               SizedBox(height: 10),
-              Text('Complete tasks for at least 2 days this month',style: AppFontWeight.reqular.copyWith(fontSize: AppFontSize.fontSize_20))
+              AutoSizeText('Complete tasks for at least 2 days this month',
+              style: AppFontWeight.reqular,
+              maxLines: 1,
+              minFontSize: AppFontSize.small)
             ]),
         ),
     );

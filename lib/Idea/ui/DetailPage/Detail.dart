@@ -4,7 +4,6 @@ import 'package:flutter/services.dart' show LengthLimitingTextInputFormatter;
 import 'package:idealog/Idea/code/ideaManager.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
-import 'package:idealog/design/colors.dart';
 import 'package:provider/provider.dart';
 import '../TaskManager/code/MultiSelectController.dart';
 import '../TaskManager/TaskManager.dart';

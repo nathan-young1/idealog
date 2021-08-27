@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
@@ -8,7 +9,6 @@ import 'package:idealog/customWidget/alertDialog/alertDialogComponents.dart';
 import 'package:idealog/customWidget/flushbar.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
-import 'package:idealog/global/internetConnectionChecker.dart';
 import 'package:idealog/global/paths.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,13 +24,16 @@ class IntroPages extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: PageView(
-          controller: pageController,
-          children: [
-            Intro1(onSkipPressed: skipIntro),
-            Intro2(onSkipPressed: skipIntro),
-            Intro3(onSkipPressed: skipIntro)
-          ],
+        body: Padding(
+          padding: EdgeInsets.only(bottom: 20.h),
+          child: PageView(
+            controller: pageController,
+            children: [
+              Intro1(onSkipPressed: skipIntro),
+              Intro2(onSkipPressed: skipIntro),
+              Intro3(onSkipPressed: skipIntro)
+            ],
+          ),
         ),
       )
     );
@@ -47,26 +50,39 @@ class Intro1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: Column(
         children: [
-
+      
           SkipButton(onSkipPressed: onSkipPressed),
-
+      
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.1),
+            child: Align(
+              alignment: Alignment.center,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(Paths.Welcome_Intro_Pic, width: 300.w, fit: BoxFit.contain),
-                  SizedBox(height: 20.h),
-                  Text("Welcome to idealog", style: AppFontWeight.semibold.copyWith(fontSize: AppFontSize.fontSize_26)),
-                  SizedBox(height: 10.h),
-          
+                  Container(
+                    width: percentWidth(77),
+                    constraints: BoxConstraints(maxWidth: 300.w),
+                    child: Image.asset(Paths.Welcome_Intro_Pic, fit: BoxFit.contain)),
+            
+                  SizedBox(height: percentHeight(2.6)),
+                  AutoSizeText("Welcome to idealog", 
+                    style: AppFontWeight.semibold,
+                    maxFontSize: AppFontSize.fontSize_27,
+                    minFontSize: AppFontSize.fontSize_24,
+                    ),
+                  SizedBox(height: percentHeight(1.3)),
+                    
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
-                    child: Text("Idea management at it’s easiest,  get organized on a button click with idealog.", style: AppFontWeight.light.copyWith(fontSize: AppFontSize.fontSize_23), textAlign: TextAlign.center),
+                    padding: EdgeInsets.symmetric(horizontal: percentWidth(7.7)),
+                    child: AutoSizeText("Idea management at it’s easiest,  get organized on a button click with idealog.",
+                     style: AppFontWeight.light,
+                    textAlign: TextAlign.center,
+                    maxFontSize: AppFontSize.fontSize_24,
+                    minFontSize: 21),
                   ),
                 ],
               ),
@@ -97,19 +113,31 @@ class Intro2 extends StatelessWidget {
           SkipButton(onSkipPressed: onSkipPressed),
 
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.1),
+            child: Align(
+              alignment: Alignment.center,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(Paths.Intro_Pic_2, width: 300, fit: BoxFit.contain),
-                  SizedBox(height: 20),
-                  Text("Get organized", style: AppFontWeight.semibold.copyWith(fontSize: AppFontSize.fontSize_26)),
-                  SizedBox(height: 10),
-          
+                  Container(
+                    width: percentWidth(77),
+                    constraints: BoxConstraints(maxWidth: 300.w),
+                    child: Image.asset(Paths.Intro_Pic_2, fit: BoxFit.contain)),
+            
+                  SizedBox(height: percentHeight(2.6)),
+                  AutoSizeText("Get organized", 
+                    style: AppFontWeight.semibold,
+                    maxFontSize: AppFontSize.fontSize_27,
+                    minFontSize: AppFontSize.fontSize_24,
+                    ),
+                  SizedBox(height: percentHeight(1.3)),
+                      
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
-                    child: Text("Increase productivity by breaking down your idea’s into chunk of tasks for higher efficiency.", style: AppFontWeight.light.copyWith(fontSize: AppFontSize.fontSize_23), textAlign: TextAlign.center),
+                    padding: EdgeInsets.symmetric(horizontal: percentWidth(7.7)),
+                    child: AutoSizeText("Increase productivity by breaking down your idea’s into chunk of tasks for higher efficiency.",
+                     style: AppFontWeight.light,
+                    textAlign: TextAlign.center,
+                    maxFontSize: AppFontSize.fontSize_24,
+                    minFontSize: 21)
                   ),
                 ],
               ),
@@ -144,54 +172,72 @@ class Intro3 extends StatelessWidget {
         children: [
 
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.1),
+            child: Align(
+              alignment: Alignment.center,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(Paths.Intro_Pic_3, width: 300, fit: BoxFit.contain),
-                  SizedBox(height: 20),
+                  Container(
+                    width: percentWidth(77),
+                    constraints: BoxConstraints(maxWidth: 300.w),
+                    child: Image.asset(Paths.Intro_Pic_3, fit: BoxFit.contain)),
+                  SizedBox(height: percentHeight(2.6)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30),
-                    child: Text("Completed your brilliant ideas with the help of Idealog today.", style: AppFontWeight.light.copyWith(fontSize: AppFontSize.fontSize_23), textAlign: TextAlign.center),
+                    child: AutoSizeText("Completed your brilliant ideas with the help of Idealog today.",
+                     style: AppFontWeight.light,
+                    textAlign: TextAlign.center,
+                    maxFontSize: AppFontSize.fontSize_24,
+                    minFontSize: 21)
                   ),
-                  SizedBox(height: 30),
-          
+                  SizedBox(height: percentHeight(3.9)),
+                      
                   Container(
-                    height: 50,
-                    width: 220,
+                    constraints: BoxConstraints(maxHeight: 50.h, maxWidth: 230.w, minWidth: 220.w),
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: DarkBlue),
-
+            
                     child: TextButton.icon(
                       onPressed: () async {
-                        if(UserInternetConnectionChecker.userHasInternetConnection){
-                          showSigningInAlertDialog(context: context);
+
+                        showSigningInAlertDialog(context: context);
+
                           if(await signInWithGoogle()){
+                            // remove authenticating with google dialog.
+                            Navigator.of(context).pop(); 
+
+                            try{
                             // if google sign in was a success.
-                            await downloadBackupFileIfAnyExistsThenWriteToDb();
-                            // remove the dialog.
-                            Navigator.of(context).pop();
+                            await downloadBackupFileIfAnyExistsThenWriteToDb(context);
+                            } catch (e,s) {
+                              debugPrint(e.toString() + s.toString());
+                              await signOutFromGoogle();
+                              // remove the dialog.
+                              Navigator.of(context).pop();
+                              anErrorOccuredFlushBar(context: context);
+                              return;
+                              }
+                          //*************************After a successful sign in**************************//
                             changeRoute();
                           } else {
-                            // remove the dialog.
+                          //*************************No internet connection**************************// 
+                            // remove authenticating with google dialog.
                             Navigator.of(context).pop();
                             anErrorOccuredFlushBar(context: context);
                           }
-
-                        } else anErrorOccuredFlushBar(context: context);
+            
+                      
                       },
                       icon: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(horizontal: percentWidth(2)),
                         child: Icon(FontAwesomeIcons.google, color: Colors.white),
                       ),
                       label: Text("Continue with google", style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_18, color: Colors.white)),
                     )
                   ),
-
-                  SizedBox(height: 15),
+            
+                  SizedBox(height: percentHeight(1.7)),
                   Container(
-                    height: 50,
-                    width: 220,
+                    constraints: BoxConstraints(maxHeight: 50.h, maxWidth: 230.w, minWidth: 220.w),
                     decoration: BoxDecoration(border: Border.all(color: DarkBlue, width: 2), borderRadius: BorderRadius.circular(12)),
                     child: TextButton(
                       onPressed: changeRoute,
@@ -205,7 +251,7 @@ class Intro3 extends StatelessWidget {
         ],
       ),
 
-      bottomNavigationBar: DotIndicatorWrapper(activePage: 3, height: 70),
+      bottomNavigationBar: DotIndicatorWrapper(activePage: 3, height: percentHeight(9)),
     );
   }
 }
@@ -223,14 +269,16 @@ class SkipButton extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: Padding(
-        padding: EdgeInsets.only(top: 25, right: 25),
+        padding: EdgeInsets.only(top: percentHeight(3.2), right: percentWidth(6.4)),
         child: Container(
-        height: 38,
-        width: 75,
+        constraints: BoxConstraints(maxHeight: 38.h, maxWidth: 75.w),
         decoration: BoxDecoration(border: Border.all(color: DarkBlue, width: 2), borderRadius: BorderRadius.circular(10)),
         child: TextButton(
           onPressed: ()=> onSkipPressed(),
-          child: Text("Skip", style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_16, color: DarkBlue)))),
+          child: AutoSizeText("Skip", 
+          style: AppFontWeight.medium.copyWith(color: DarkBlue),
+          maxFontSize: AppFontSize.fontSize_18,
+          minFontSize: AppFontSize.fontSize_15))),
       ),
     );
   }
@@ -249,20 +297,17 @@ class DotIndicatorWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height ?? 100,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          DotIndicator(isActive: activePage == 1),
-          SizedBox(width: 8),
-          DotIndicator(isActive: activePage == 2),
-          SizedBox(width: 8),
-          DotIndicator(isActive: activePage == 3)
-        ],
-      )
-      );
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        DotIndicator(isActive: activePage == 1),
+        SizedBox(width: 8),
+        DotIndicator(isActive: activePage == 2),
+        SizedBox(width: 8),
+        DotIndicator(isActive: activePage == 3)
+      ],
+    );
   }
 }
 
@@ -277,8 +322,9 @@ class DotIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 16,
-      width: 16,
+      constraints: BoxConstraints(maxHeight: 16, maxWidth: 16),
+      height: percentHeight(2),
+      width: percentWidth(4),
       decoration: BoxDecoration(shape: BoxShape.circle, color: (isActive) ?DarkBlue :DarkerLightGray),
     );
   }

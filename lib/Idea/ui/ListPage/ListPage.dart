@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/idealog-db/idealog_Db.dart';
 import 'package:idealog/Idea/ui/ListPage/views/Card.dart';
@@ -36,7 +37,7 @@ class IdeaListPage extends StatelessWidget {
               future: IdealogDb.instance.allIdeasInJsonFormat,
               builder: (context, snapshot){
               // show this illustration if there is no idea in the database.
-              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isEmpty) return IdeaDoesNotExistIllustration();
+              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isEmpty) return NoIdeaYetIllustration();
               // toggle between the widget depending on if the search term exists in the list.
               else if(listOfIdeas.isEmpty && SearchController.instance.searchIsActive) return SearchNotFoundIllustration(); 
 
@@ -76,7 +77,10 @@ class _AppBar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('IDEAS',style: AppFontWeight.semibold.copyWith(fontSize: AppFontSize.large)),
+          AutoSizeText('IDEAS',
+          style: AppFontWeight.semibold,
+          maxFontSize: AppFontSize.large,
+          minFontSize: AppFontSize.fontSize_28),
     
           Consumer<List<Idea>>(
             builder:(_, listOfIdeas, __)=>

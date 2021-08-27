@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:idealog/Idea/ui/Others/AddTasks.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
@@ -21,7 +22,8 @@ class GotoAddTasksPage extends StatelessWidget {
       builder: (context, Idea idea,_) =>
       GestureDetector(
         onTap: ()=> Navigator.of(context).push(PageTransition(child: AddTasksToExistingIdea(idea: idea), type: PageTransitionType.rightToLeftWithFade)),
-        child: Container(height: 100, width: 130,
+        child: Container(
+          height: 100, width: 130,
         decoration: BoxDecoration(borderRadius: borderRadius,color: DarkBlue),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),

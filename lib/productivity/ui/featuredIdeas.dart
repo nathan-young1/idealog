@@ -1,7 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Idea/ui/DetailPage/Detail.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/application-menu/controllers/bottomNavController.dart';
 import 'package:idealog/core-models/ideaModel.dart';
@@ -24,11 +26,13 @@ class FeaturedIdeas extends StatelessWidget {
         decoration: BoxDecoration(
           color: (Prefrences.instance.isDarkMode) ?ProductivityDarkPink :ProductivityPink,
         ),
-        padding: EdgeInsets.symmetric(vertical: 20,horizontal: 30),
+        padding: EdgeInsets.symmetric(vertical: 20,horizontal: percentWidth(7)),
       child: Column(
         children: [
-          Text('Featured Ideas',
-          style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.medium)),
+          AutoSizeText('Featured Ideas',
+              style: AppFontWeight.medium,
+              maxFontSize: AppFontSize.medium,
+              minFontSize: AppFontSize.fontSize_23),
           if(favorites.isNotEmpty)
           Container(
             child: Stack(

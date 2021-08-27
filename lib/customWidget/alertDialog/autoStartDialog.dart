@@ -1,6 +1,8 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
@@ -28,30 +30,30 @@ Future<bool?> showAutoStartDialog({required BuildContext context}) async {
           DottedLine(lineThickness: 3, dashColor: (Prefrences.instance.isDarkMode) ?DarkRed :DarkBlue),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: RichText(
-              text: TextSpan(
+            child: AutoSizeText.rich(
+              TextSpan(
                 children: [
                   TextSpan(text: 'In other to start auto-backup every 24-hours, you need to enable',
-                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(text: ' AutoStart',
-                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(text: ' permission for ',
-                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(text: 'Idealog.',
-                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
                 ]
               )),
           ),
 
           AlertDialogActionButtons(
             context: context,
-            primaryActionText: "Enable now", 
-            secondaryActionText: "Ignore", 
+            isAutoStartDialog: true,
+            primaryActionText: "Enable", 
+            secondaryActionText: "Already enabled", 
             primaryActionButtonColor: (Prefrences.instance.isDarkMode) ?DarkRed :DarkBlue, 
             secondaryButtonOutlineColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :DarkBlue,
             secondaryActionTextColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :DarkBlue, 
-            actionButtonsHeight: 40, 
-            actionButtonsWidth: 110)
+            actionButtonsHeight: 40)
       ]),
     ),
   ), barrierDismissible: false);

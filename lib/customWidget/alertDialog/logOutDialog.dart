@@ -33,11 +33,11 @@ Future<bool?> showLogOutDialog({required BuildContext context}) async {
               text: TextSpan(
                 children: [
                   TextSpan(text: 'If your data is not',
-                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(text: ' Backed up,',
-                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(text: ' it will be lost after you sign out!.',
-                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
                 ]
               )),
           ),
@@ -49,8 +49,7 @@ Future<bool?> showLogOutDialog({required BuildContext context}) async {
             primaryActionButtonColor: LightPink, 
             secondaryButtonOutlineColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424, 
             secondaryActionTextColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424,
-            actionButtonsHeight: 40, 
-            actionButtonsWidth: 110)
+            actionButtonsHeight: 40)
       ]),
     ),
   ), barrierDismissible: true);

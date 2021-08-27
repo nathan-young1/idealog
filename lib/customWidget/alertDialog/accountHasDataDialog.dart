@@ -51,8 +51,7 @@ showAccountHasDataDialog({required BuildContext context, required String email})
             secondaryActionTextColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :LightPink,
             primaryActionButtonColor: (Prefrences.instance.isDarkMode) ?DarkRed :DarkBlue, 
             secondaryButtonOutlineColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :LightPink, 
-            actionButtonsHeight: 40, 
-            actionButtonsWidth: 110)
+            actionButtonsHeight: 40)
       ]),
     ),
   );

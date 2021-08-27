@@ -34,9 +34,9 @@ Future<bool?> showDeleteDialog({required BuildContext context, required String t
               text: TextSpan(
                 children: [
                   TextSpan(text: 'Do you want to really want to delete ',
-                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(text: titleOfIdeaToDelete +" ?",
-                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
                 ]
               )),
           ),
@@ -48,8 +48,7 @@ Future<bool?> showDeleteDialog({required BuildContext context, required String t
             secondaryActionTextColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424,
             primaryActionButtonColor: LightPink, 
             secondaryButtonOutlineColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424, 
-            actionButtonsHeight: 40, 
-            actionButtonsWidth: 110)
+            actionButtonsHeight: 40)
         ],
       )
     ),

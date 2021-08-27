@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/core-models/ideaModel.dart';
 import 'package:idealog/design/colors.dart';
@@ -16,7 +17,7 @@ class DetailAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      height: 250,
+      height: percentHeight(32),
       color: (Prefrences.instance.isDarkMode) ?LightDark :LightGray,
       padding: EdgeInsets.only(top: 15,left: 20,right: 10),
       child: Column(

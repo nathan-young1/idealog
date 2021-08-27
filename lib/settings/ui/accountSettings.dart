@@ -1,8 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:idealog/Prefs&Data/GoogleUserData.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/Prefs&Data/prefs.dart';
 import 'package:idealog/authentication/authHandler.dart';
 import 'package:idealog/customDecoration/inputDecoration.dart';
@@ -18,6 +20,7 @@ import 'package:idealog/global/top_level_methods.dart';
 import 'package:idealog/settings/code/PremiumClass.dart';
 import 'package:idealog/settings/ui/upgradeToPremium.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AccountSettings extends StatelessWidget {
   const AccountSettings({ Key? key }) : super(key: key);
@@ -69,7 +72,11 @@ class _AccountSettingsAvatar extends StatelessWidget {
                   iconSize: 35,
                   onPressed: ()=>Navigator.pop(context)),
                   SizedBox(width: 10),
-                  Text('Account Settings',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_28))
+                  AutoSizeText("Account Settings", 
+                            style: AppFontWeight.medium,
+                            maxFontSize: AppFontSize.fontSize_28,
+                            minFontSize: AppFontSize.medium,
+                            ),
                 ],
               ),
           
@@ -112,7 +119,8 @@ class _SubscriptionStatusContainer extends StatelessWidget {
           SizedBox(height: 30),
           Padding(
             padding: EdgeInsets.only(left: 25),
-            child: Text('Your Account Features',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
+            child: AutoSizeText('Your Account Features',
+            style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
           ),
           Padding(
             padding: EdgeInsets.only(left: 30,top: 10),
@@ -130,7 +138,7 @@ class _SubscriptionStatusContainer extends StatelessWidget {
         
       SizedBox(height: 20),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
+        padding: EdgeInsets.symmetric(horizontal: percentWidth(7)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -153,8 +161,9 @@ class PremiumDateContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
-      width: 155,
+      constraints: BoxConstraints(maxHeight: 60, maxWidth: 155),
+      height: percentHeight(7.7),
+      width: PhoneSizeInfo.width * 0.4,
       decoration: BoxDecoration(
       color: (isExpirationDateContainer) ?LightPink :LightGray,
       borderRadius: BorderRadius.circular(5)
@@ -171,22 +180,24 @@ class PremiumDateContainer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               
-               Text(
+               AutoSizeText(
                (isExpirationDateContainer)
                 ?'Expiration Date:'
                 :'Start Date:', 
-                style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_16,
-                 color: (isExpirationDateContainer) ?Colors.white :null)),
+                style: AppFontWeight.medium.copyWith(
+                 color: (isExpirationDateContainer) ?Colors.white :null),
+                 stepGranularity: 0.8),
 
               Padding(
                 padding: const EdgeInsets.only(left: 10),
-                child: Text(
+                child: AutoSizeText(
                   convertDateTimeObjToAFormattedString(
                   (isExpirationDateContainer)
                     ?Premium.instance.premiumExpirationDate!
                     :Premium.instance.premiumPurchaseDate!),
-                  style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_16,
-                    color: (isExpirationDateContainer) ?Colors.white :null))
+                  style: AppFontWeight.medium.copyWith(
+                    color: (isExpirationDateContainer) ?Colors.white :null),
+                    stepGranularity: 0.8)
               )
             ],
           )
@@ -287,23 +298,31 @@ class _SignInWithGoogleContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: ()async {
-        if(UserInternetConnectionChecker.userHasInternetConnection){
           showSigningInAlertDialog(context: context);
-          if(await signInWithGoogle()){
-            // if google sign in was a success.
-            await downloadBackupFileIfAnyExistsThenWriteToDb();
-            // remove the dialog.
+          if(await signInWithGoogle()){ 
+            // remove authenticating with google dialog.
             Navigator.of(context).pop();
+
+            try{
+              // if google sign in was a success.
+              await downloadBackupFileIfAnyExistsThenWriteToDb(context);
+              } catch (e,s) {
+                debugPrint(e.toString() + s.toString());
+                await signOutFromGoogle();
+                // remove the dialog.
+                Navigator.of(context).pop();
+                anErrorOccuredFlushBar(context: context);
+                return;
+                }
+                
           } else {
             // remove the dialog.
             Navigator.of(context).pop();
             anErrorOccuredFlushBar(context: context);
           }
-
-        } else anErrorOccuredFlushBar(context: context);
         },
       child: Padding(
-        padding: EdgeInsets.only(left: 40,top: 30, right: 40),
+        padding: EdgeInsets.only(left: 30,top: 30, right: 30),
         child: Container(
           padding: EdgeInsets.all(20),
           height: 80,
@@ -313,8 +332,11 @@ class _SignInWithGoogleContainer extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Sign in with Google',style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23)),
-              Icon(FontAwesomeIcons.google,size: 40, color: (Prefrences.instance.isDarkMode) ?DarkRed :Colors.teal[500])
+              AutoSizeText('Sign in with Google',
+              style: AppFontWeight.medium.copyWith(fontSize: AppFontSize.fontSize_23),
+              maxFontSize: AppFontSize.fontSize_23,
+              minFontSize: AppFontSize.normal),
+              Icon(FontAwesomeIcons.google,size: 35, color: (Prefrences.instance.isDarkMode) ?DarkRed :Colors.teal[500])
             ],
           ),
         ),

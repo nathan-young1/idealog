@@ -33,12 +33,12 @@ Future<bool?> showMultiDeleteDialog({required BuildContext context, required int
               text: TextSpan(
                 children: [
                   TextSpan(text: 'Do you want to really want to delete ',
-                    style: dosis.copyWith(fontSize: 22, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424)),
                   TextSpan(
                     text: (numberOfTasksToDelete == 1)
                     ?"this task ?"
                     :"all $numberOfTasksToDelete tasks ?",
-                    style: dosis.copyWith(fontSize: 22, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
+                    style: dosis.copyWith(fontSize: AppFontSize.fontSize_20, fontWeight: FontWeight.w600, color: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424))
                 ]
               )),
           ),
@@ -50,8 +50,7 @@ Future<bool?> showMultiDeleteDialog({required BuildContext context, required int
             secondaryActionTextColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424,
             primaryActionButtonColor: LightPink, 
             secondaryButtonOutlineColor: (Prefrences.instance.isDarkMode) ?Colors.white70 :Black242424, 
-            actionButtonsHeight: 40, 
-            actionButtonsWidth: 110)
+            actionButtonsHeight: 40)
         ],
       )
     ),

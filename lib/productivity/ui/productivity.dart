@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:idealog/productivity/code/productivityManager.dart';
@@ -24,8 +25,10 @@ class _ProductivityState extends State<Productivity> {
         children: [
           Padding(
             padding: EdgeInsets.only(top: 25,left: 20,right: 10),
-            child: Text('Productivity',
-            style: AppFontWeight.semibold.copyWith(fontSize: AppFontSize.large)),
+            child: AutoSizeText('Productivity',
+          style: AppFontWeight.semibold,
+          maxFontSize: AppFontSize.large,
+          minFontSize: AppFontSize.fontSize_28),
           ),
           Expanded(
             child: ListView( 
