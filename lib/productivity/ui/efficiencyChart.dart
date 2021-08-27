@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:idealog/Databases/analytics-db/analyticsSql.dart';
+import 'package:idealog/Prefs&Data/phoneSizeInfo.dart';
 import 'package:idealog/design/colors.dart';
 import 'package:idealog/design/textStyles.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -12,7 +13,7 @@ class EfficiencyChart extends StatelessWidget {
     var listOfAnalyticsData = AnalyticDB.instance.efficiencyChartData;
     return (listOfAnalyticsData.length >= 2)
     ?Container(
-      height: 270,
+      height: percentHeight(40),
       child: SfCartesianChart(
         enableAxisAnimation: true,
             title: ChartTitle(

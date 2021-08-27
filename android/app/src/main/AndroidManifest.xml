@@ -7,9 +7,7 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
 
     <compatible-screens>
-        <!-- all small size screens -->
-        <screen android:screenSize="small" android:screenDensity="ldpi" />
-        <screen android:screenSize="small" android:screenDensity="mdpi" />
+        <!-- specific small size screens -->
         <screen android:screenSize="small" android:screenDensity="hdpi" />
         <screen android:screenSize="small" android:screenDensity="xhdpi" />
         <screen android:screenSize="small" android:screenDensity="xxhdpi" />
@@ -22,6 +20,15 @@
         <screen android:screenSize="normal" android:screenDensity="xhdpi" />
         <screen android:screenSize="normal" android:screenDensity="xxhdpi" />
         <screen android:screenSize="normal" android:screenDensity="xxxhdpi" />
+
+        <!-- specific size screens -->
+        <screen android:screenSize="large" android:screenDensity="ldpi" />
+        <screen android:screenSize="large" android:screenDensity="mdpi" />
+        <screen android:screenSize="large" android:screenDensity="hdpi" />
+        <screen android:screenSize="large" android:screenDensity="xhdpi" />
+        <screen android:screenSize="large" android:screenDensity="xxhdpi" />
+        <screen android:screenSize="large" android:screenDensity="xxxhdpi" />
+
     </compatible-screens>
 
 
